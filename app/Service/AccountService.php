@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Interface\Service\AccountServiceInterface;
+use App\Interface\Repository\AccountRepositoryInterface;
 use App\Http\Resources\AccountResource;
 
 class AccountService implements AccountServiceInterface

@@ -10,6 +10,9 @@ class Supplier extends Model
     use HasFactory;
 
     protected $table = 'suppliers';
+    protected $primaryKey = 'supplier_ID';
+    public $incrementing = true;
+    protected $keyType = 'int';
     protected $fillable = [
         'account_ID',
         'supplier_name',

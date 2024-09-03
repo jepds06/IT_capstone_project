@@ -24,8 +24,8 @@ class AccountStoreRequest extends FormRequest
         return [
             'username' => 'required',
             'email' => 'required',
-            'password' => 'required'
-//            'user_type' => ''
+            'password' => 'required',
+            'acc_type_ID' => 'required|exists:account_types, acc_type_id'
         ];
     }
 }

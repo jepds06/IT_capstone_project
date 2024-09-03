@@ -3,17 +3,20 @@
 namespace App\Repository;
 
 use App\Interface\Repository\AccountRepositoryInterface;
+use App\Models\Account;
+use App\Models\AccountType;
+use Illuminate\Http\Response;
 
 class AccountRepository implements AccountRepositoryInterface
 {
     public function findMany ()
     {
-        return Accounts::paginate(10);
+        return Account::paginate(10);
     }
 
     public function findOneById (int $accountId)
     {
-        return Accounts::FindorFail($accountId);
+        return Account::FindorFail($accountId);
     }
 
     public function create(object $payload) 
@@ -32,7 +35,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function update(object $payload, int $accountId)
     {
-        $account = new Account();
+        $account = Account::FindorFail($accountId);
         $account->username = $payload->username;
         $account->email = $payload->email;
         $account->password = $payload->password;
