@@ -22,10 +22,10 @@ class AccountStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'username' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-            'acc_type_ID' => 'required|exists:account_types, acc_type_id'
+            'username' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|string|min:8',
+            'acc_type_ID' => 'required|integer|exists:account_types,acc_type_ID'
         ];
     }
 }

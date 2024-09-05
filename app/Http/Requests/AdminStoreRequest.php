@@ -23,10 +23,10 @@ class AdminStoreRequest extends FormRequest
     {
         return [
             'account_ID' => 'required|exists:accounts, account_ID',
-            'admin_first_name' => 'required',
-            'admin_last_name' =>'required',
-            'contact_num' => 'nullable',
-            'admin_address' => 'required'
+            'admin_first_name' => 'required|string|max:255',
+            'admin_last_name' =>'required|string|max:255',
+            'contact_num' => 'required|string|max:255',
+            'admin_address' => 'required|string|max:255'
         ];
     }
 }

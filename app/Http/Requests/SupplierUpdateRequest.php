@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AccountTypeStoreRequest extends FormRequest
+class SupplierUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,13 @@ class AccountTypeStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'account_type_name' => 'required|string|max:255'
+            'account_ID' => 'required|exists:accounts, account_ID',
+            'supplier_name' => 'required',
+            'supplier_address' => 'required',
+            'supplier_email' => 'required',
+            'supplier_contact_num' => 'required',
+            'supplier_type' => 'required',
+            'supplier_status' => 'required'
         ];
     }
 }

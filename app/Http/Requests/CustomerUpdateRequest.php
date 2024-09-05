@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AdminUpdateRequest extends FormRequest
+class CustomerUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,10 +23,13 @@ class AdminUpdateRequest extends FormRequest
     {
         return [
             'account_ID' => 'required|exists:accounts, account_ID',
-            'admin_first_name' => 'required|string|max:255',
-            'admin_last_name' =>'required|string|max:255',
+            'cstr_first_name' => 'required|string|max:255',
+            'cstr_last_name' => 'required|string|max:255',
             'contact_num' => 'required|string|max:255',
-            'admin_address' => 'required|string|max:255'
+            'cstr_address' => 'required|string|max:255',
+            'customer_type' => 'required|string|max:255',
+            'pref_contact_method' => 'required|string|max:255',
+            'cstr_status' => 'required|string|max:255'
         ];
     }
 }

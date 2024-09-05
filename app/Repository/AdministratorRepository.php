@@ -16,14 +16,19 @@ class AdministratorRepository implements AdministratorRepositoryInterface
 
     public function findOnebyId(int $adminId)
     {
-        return Administrator::FindorFail($adminId);
+        return Administrator::findOrFail($adminId);
     }
 
     public function create(object $payload)
     {
         $admin = new Administrator();
         $account = Account::find($payload->account_ID);
-        $admin->account()->associate($payload->account);
+        if ($account) {
+            $admin->accountType()->associate($account);
+        } else {
+            // Handle the error: throw an exception, return an error response, or set a default value
+            throw new \Exception("Invalid account ID provided.");
+        }
         $admin->admin_first_name = $payload->admin_first_name;
         $admin->admin_last_name = $payload->admin_last_name;
         $admin->contact_num = $payload->contact_num;
@@ -36,9 +41,14 @@ class AdministratorRepository implements AdministratorRepositoryInterface
 
     public function update(object $payload, int $adminId)
     {
-        $admin = Administrator::FindorFail($adminId);
+        $admin = Administrator::findOrFail($adminId);
         $account = Account::find($payload->account_ID);
-        $admin->account()->associate($payload->account);
+        if ($account) {
+            $admin->account()->associate($account);
+        } else {
+            // Handle the error: throw an exception, return an error response, or set a default value
+            throw new \Exception("Invalid account ID provided.");
+        }
         $admin->admin_first_name = $payload->admin_first_name;
         $admin->admin_last_name = $payload->admin_last_name;
         $admin->contact_num = $payload->contact_num;
@@ -51,7 +61,7 @@ class AdministratorRepository implements AdministratorRepositoryInterface
 
     public function delete(int $adminId)
     {
-        $admin = Administrator::findorFail($adminId);
+        $admin = Administrator::findOrFail($adminId);
         $admin->delete();
 
         return response()->json([

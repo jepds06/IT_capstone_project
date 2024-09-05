@@ -12,7 +12,7 @@ class AccountService implements AccountServiceInterface
 
     public function __construct(AccountRepositoryInterface $accountRepository)
     {
-        $this->$accountRepository = $accountRepository;
+        $this->accountRepository = $accountRepository;
     }
 
     public function findAccounts()

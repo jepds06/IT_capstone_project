@@ -16,7 +16,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function findOneById (int $accountId)
     {
-        return Account::FindorFail($accountId);
+        return Account::findOrFail($accountId);
     }
 
     public function create(object $payload) 
@@ -26,7 +26,13 @@ class AccountRepository implements AccountRepositoryInterface
         $account->email = $payload->email;
         $account->password = $payload->password;
         $accountType = AccountType::find($payload->acc_type_ID);
-        $account->accountType()->associate($payload->$accountType);
+        
+        if ($accountType) {
+            $account->accountType()->associate($accountType);
+        } else {
+            // Handle the error: throw an exception, return an error response, or set a default value
+            throw new \Exception("Invalid account type ID provided.");
+        }
 
         $account->save();
 
@@ -35,22 +41,28 @@ class AccountRepository implements AccountRepositoryInterface
 
     public function update(object $payload, int $accountId)
     {
-        $account = Account::FindorFail($accountId);
+        $account = Account::findOrFail($accountId);
         $account->username = $payload->username;
         $account->email = $payload->email;
         $account->password = $payload->password;
         $accountType = AccountType::find($payload->acc_type_ID);
-        $account->accountType()->associate($payload->$accountType);
+
+        if ($accountType) {
+            $account->accountType()->associate($accountType);
+        } else {
+            // Handle the error: throw an exception, return an error response, or set a default value
+            throw new \Exception("Invalid account type ID provided.");
+        }
 
         $account->save();
 
         return $account->fresh();
     }
 
-    public function delete(int $account_ID)
+    public function delete(int $accountId)
     {
-        $account = Account::findorFail($accountId);
-        $account = delete();
+        $account = Account::findOrFail($accountId);
+        $account->delete();
 
         return response()->json([
             'message' => 'Successfully Deleted'
