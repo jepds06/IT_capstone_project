@@ -9,6 +9,11 @@ class Sales_Delivery extends Model
 {
     use HasFactory;
 
+    protected $table = 'sales_deliveries';
+    protected $primaryKey = 'delivery_ID';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $fillable = [
         'sales_ID',
         'delivery_date',

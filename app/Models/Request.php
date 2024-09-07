@@ -9,6 +9,11 @@ class Request extends Model
 {
     use HasFactory;
 
+    protected $table = 'requests';
+    protected $primaryKey = 'req_ID';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $fillable = [
         'request_date',
         'status'

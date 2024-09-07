@@ -9,6 +9,11 @@ class CustomerPayment extends Model
 {
     use HasFactory;
 
+    protected $table = 'customer_payments';
+    protected $primaryKey = 'cstr_pay_ID';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $fillable = [
         'payment_date',
         'sls_POdr_ID',

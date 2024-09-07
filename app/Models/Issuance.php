@@ -9,6 +9,11 @@ class Issuance extends Model
 {
     use HasFactory;
 
+    protected $table = 'issuances';
+    protected $primaryKey = 'issue_ID';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $fillable = [
         'issuance_date',
         'status'

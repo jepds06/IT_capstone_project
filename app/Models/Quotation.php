@@ -9,6 +9,11 @@ class Quotation extends Model
 {
     use HasFactory;
 
+    protected $table = 'quotations';
+    protected $primaryKey = 'quote_ID';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $fillable =[
         'quotation_date',
         'description',

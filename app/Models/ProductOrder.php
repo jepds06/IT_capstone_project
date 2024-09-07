@@ -9,6 +9,11 @@ class ProductOrder extends Model
 {
     use HasFactory;
 
+    protected $table = 'product_orders';
+    protected $primaryKey = 'prod_ord_ID';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $fillable = [
         'cstr_order_ID',
         'product_ID',
