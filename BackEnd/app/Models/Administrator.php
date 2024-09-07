@@ -10,6 +10,9 @@ class Administrator extends Model
     use HasFactory;
 
     protected $table = 'administrators';
+    protected $primaryKey = 'admin_ID';
+    public $incrementing = true;
+    protected $keyType = 'int';
     protected $fillable = [
         'account_ID',
         'admin_first_name',

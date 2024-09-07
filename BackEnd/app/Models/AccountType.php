@@ -10,6 +10,9 @@ class AccountType extends Model
     use HasFactory;
 
     protected $table = 'account_types';
+    protected $primaryKey = 'acc_type_ID';
+    public $incrementing = true;
+    protected $keyType = 'int';
     protected $fillable = [
         'account_type_name'
     ];

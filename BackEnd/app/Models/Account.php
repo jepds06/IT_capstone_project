@@ -10,6 +10,9 @@ class Account extends Model
     use HasFactory;
     
     protected $table = 'accounts';
+    protected $primaryKey = 'account_ID';
+    public $incrementing = true;
+    protected $keyType = 'int';
     protected $fillable = [
         'username',
         'email',

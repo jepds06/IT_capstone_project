@@ -1,12 +1,56 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: '2024-04-03',
-  devtools: { enabled: true },
-  css: ['~/assets/css/main.css'],
-  postcss: {
-    plugins: {
-      tailwindcss: {},
-      autoprefixer: {},
-    },
+  extends: ['@nuxt/ui-pro'],
+
+  modules: [
+    '@nuxt/content',
+    '@nuxt/eslint',
+    '@nuxt/fonts',
+    '@nuxt/image',
+    '@nuxt/ui',
+    '@nuxthq/studio',
+    '@vueuse/nuxt',
+    'nuxt-og-image'
+  ],
+
+  hooks: {
+    // Define `@nuxt/ui` components as global to use them in `.md` (feel free to add those you need)
+    'components:extend': (components) => {
+      const globals = components.filter(c => ['UButton'].includes(c.pascalName))
+
+      globals.forEach(c => c.global = true)
+    }
   },
+
+  colorMode: {
+    disableTransition: true
+  },
+
+  routeRules: {
+    // Temporary workaround for prerender regression. see https://github.com/nuxt/nuxt/issues/27490
+    '/': { prerender: true }
+  },
+
+  devtools: {
+    enabled: true
+  },
+
+  typescript: {
+    strict: false
+  },
+
+  future: {
+    compatibilityVersion: 4
+  },
+
+  eslint: {
+    config: {
+      stylistic: {
+        commaDangle: 'never',
+        braceStyle: '1tbs'
+      }
+    }
+  },
+
+  compatibilityDate: '2024-07-11'
 })

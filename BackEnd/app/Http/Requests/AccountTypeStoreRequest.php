@@ -22,7 +22,7 @@ class AccountTypeStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'account_type_name' => 'required'
+            'account_type_name' => 'required|string|max:255'
         ];
     }
 }

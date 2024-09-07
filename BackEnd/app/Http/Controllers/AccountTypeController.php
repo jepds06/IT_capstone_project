@@ -36,7 +36,7 @@ class AccountTypeController extends Controller
      */
     public function show(int $accountTypeId)
     {
-        return $this->accounTypeService->findAccountTypeById($accountTypeId);
+        return $this->accountTypeService->findAccountTypeById($accountTypeId);
     }
 
     /**

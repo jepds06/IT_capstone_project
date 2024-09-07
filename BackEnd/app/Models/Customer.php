@@ -10,6 +10,9 @@ class Customer extends Model
     use HasFactory;
 
     protected $table = 'customers';
+    protected $primaryKey = 'customer_ID';
+    public $incrementing = true;
+    protected $keyType = 'int';
     protected $fillable = [
         'account_ID',
         'cstr_first_name',

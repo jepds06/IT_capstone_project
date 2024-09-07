@@ -2,7 +2,8 @@
 
 namespace App\Service;
 
-use App\Interface\Service\AccountServiceInterface;
+use App\Interface\Service\AccountTypeServiceInterface;
+use App\Interface\Repository\AccountTypeRepositoryInterface;
 use App\Http\Resources\AccountTypeResource;
 
 class AccountTypeService implements AccountTypeServiceInterface
@@ -11,7 +12,7 @@ class AccountTypeService implements AccountTypeServiceInterface
 
     public function __construct(AccountTypeRepositoryInterface $accountTypeRepository)
     {
-        $this->accountRepository = $accountRepository;
+        $this->accountTypeRepository = $accountTypeRepository;
     }
 
     public function findAccountTypes()
@@ -21,11 +22,11 @@ class AccountTypeService implements AccountTypeServiceInterface
         return AccountTypeResource::collection($accountTypes);
     }
 
-    public function findAccountTypeById(int $accountTypeRepository)
+    public function findAccountTypeById(int $accountTypeId)
     {
         $accountType = $this->accountTypeRepository->findOneById($accountTypeId);
 
-        return new AccountTypeResource($accountTypeId);
+        return new AccountTypeResource($accountType);
     }
 
     public function createAccountType(object $payload)
