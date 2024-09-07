@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AccountTypeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -45,4 +46,11 @@ Route::prefix('suppliers')->group(function(){
     Route::post('/', [SupplierController::class, 'store']);
     Route::put('/{supplierId}', [SupplierController::class, 'update']);
     Route::delete('/{supplierId}', [SupplierController::class, 'destroy']);
+});
+
+Route::prefix('product_categories')->group(function(){
+    Route::get('/', [ProductCategoryController::class, 'index']);
+    Route::get('/{prodCatId}', [ProductCategoryController::class, 'show']);
+    Route::post('/', [ProductCategoryController::class, 'store']);
+    Route::put('/{prodCatId}', [ProductCategoryController::class, 'update']);
 });
