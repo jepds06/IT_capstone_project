@@ -36,7 +36,7 @@ function onSubmit(data: any) {
 <!-- eslint-disable vue/singleline-html-element-content-newline -->
 <template>
   
-  <UCard class="max-w pl-7 text-center bg-white/75 dark:bg-white/5 backdrop-blur">
+  <UCard class="max-w pl-7  bg-white/75 dark:bg-white/5 backdrop-blur">
     <UAuthForm
       :fields="fields"
       :validate="validate"
