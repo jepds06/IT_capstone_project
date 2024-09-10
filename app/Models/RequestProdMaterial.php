@@ -9,14 +9,14 @@ class RequestProdMaterial extends Model
 {
     use HasFactory;
 
-    protected $table = 'request_prod_materials';
-    protected $primaryKey = 'req_prodmats_ID';
+    protected $table = 'requestProdMaterials';
+    protected $primaryKey = 'reqProdMatsID';
     public $incrementing = true;
     protected $keyType = 'int';
 
     protected $fillable = [
-        'prodtn_mtrl_ID',
-        'req_ID',
-        'qty_requested'
+        'prodtnMtrlID',
+        'reqID',
+        'qtyRequested'
     ];
 }

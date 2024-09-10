@@ -25,7 +25,7 @@ class AccountStoreRequest extends FormRequest
             'username' => 'required|string|max:255',
             'email' => 'required|string|email|max:255',
             'password' => 'required|string|min:8',
-            'acc_type_ID' => 'required|integer|exists:account_types,acc_type_ID'
+            'accTypeID' => 'required|integer|exists:accountTypes,accTypeID'
         ];
     }
 }

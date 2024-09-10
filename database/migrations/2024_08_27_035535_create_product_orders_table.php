@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_orders', function (Blueprint $table) {
-            $table->bigIncrements('prd_ord_ID');
-            $table->unsignedBigInteger('cstr_order_ID');
-            $table->unsignedBigInteger('product_ID');
+        Schema::create('productOrders', function (Blueprint $table) {
+            $table->bigIncrements('prdOrdID');
+            $table->unsignedBigInteger('cstrOrderID');
+            $table->unsignedBigInteger('productID');
             $table->integer('quantity');
-            $table->decimal('unit_price', 10, 2);
+            $table->decimal('unitPrice', 10, 2);
             $table->timestamps();
 
-            $table->foreign('cstr_order_ID')->references('cstr_order_ID')->on('customer_orders')
+            $table->foreign('cstrOrderID')->references('cstrOrderID')->on('customerOrders')
             ->onUpdate('cascade')
             ->onDelete('cascade');
 
-            $table->foreign('product_ID')->references('product_ID')->on('products')
+            $table->foreign('productID')->references('productID')->on('products')
             ->onUpdate('cascade')
             ->onDelete('cascade');
         });
@@ -34,12 +34,12 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('product_orders', function (Blueprint $table) {
+        Schema::table('productOrders', function (Blueprint $table) {
             // Drop the foreign key before dropping the table
-            $table->dropForeign(['cstr_order_ID']);
-            $table->dropForeign(['product_ID']);
+            $table->dropForeign(['cstrOrderID']);
+            $table->dropForeign(['productID']);
         });
         
-        Schema::dropIfExists('product_orders');
+        Schema::dropIfExists('productOrders');
     }
 };

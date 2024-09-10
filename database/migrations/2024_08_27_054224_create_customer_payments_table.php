@@ -11,22 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customer_payments', function (Blueprint $table) {
-            $table->bigIncrements('cstr_pay_ID');
-            $table->unsignedBigInteger('sls_prd_ord_ID');
-            $table->date('payment_date');
-            $table->unsignedBigInteger('pay_mthd_ID');
-            $table->string('payment_status');
-            $table->date('due_date');
-            $table->decimal('amount_to_pay', 10, 2);
-            $table->decimal('amount_paid', 10, 2);
+        Schema::create('customerPayments', function (Blueprint $table) {
+            $table->bigIncrements('cstrPayID');
+            $table->unsignedBigInteger('slsPrdOrdID');
+            $table->date('paymentDate');
+            $table->unsignedBigInteger('payMethodID');
+            $table->string('paymentStatus');
+            $table->date('dueDate');
+            $table->decimal('amountToPay', 10, 2);
+            $table->decimal('amountPaid', 10, 2);
             $table->timestamps();
 
-            $table->Foreign('sls_prd_ord_ID')->references('sls_prd_ord_ID')->on('sales_product_orders')
+            $table->Foreign('slsPrdOrdID')->references('slsPrdOrdID')->on('salesProductOrders')
             ->onUpdate('cascade')
             ->onDelete('cascade');
 
-            $table->Foreign('pay_mthd_ID')->references('pay_mthd_ID')->on('payment_methods')
+            $table->Foreign('payMethodID')->references('payMethodID')->on('paymentMethods')
             ->onUpdate('cascade')
             ->onDelete('cascade');
         });
@@ -37,11 +37,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('customer_payments', function(Blueprint $table){
+        Schema::table('customerPayments', function(Blueprint $table){
             // Drop the foreign key before dropping the table
-            $table->dropForeign(['sls_prd_ord_ID']);
-            $table->dropForeign(['pay_mthd_ID']);
+            $table->dropForeign(['slsPrdOrdID']);
+            $table->dropForeign(['payMethodID']);
         });
-        Schema::dropIfExists('customer_payments');
+        Schema::dropIfExists('customerPayments');
     }
 };

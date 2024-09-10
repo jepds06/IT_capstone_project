@@ -14,7 +14,7 @@ class ProductCategoryRepository implements ProductCategoryRepositoryInterface
 
     public function findOnebyId(int $prodcat_Id)
     {
-        return Product_Category::FindorFail($prodcat_Id);
+        return Product_Category::findOrFail($prodcat_Id);
     }
 
     public function create(object $payload)
@@ -28,7 +28,7 @@ class ProductCategoryRepository implements ProductCategoryRepositoryInterface
 
     public function update(object $payload, int $prodcat_Id)
     {
-        $prodCatType = Product_Category::FindorFail($prodcat_Id);
+        $prodCatType = Product_Category::findOrFail($prodcat_Id);
         $prodCatType->description = $payload->description;
         $prodCatType->save();
 

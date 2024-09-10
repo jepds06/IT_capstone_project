@@ -9,14 +9,14 @@ class Product_Material extends Model
 {
     use HasFactory;
 
-    protected $table = 'product_materials';
-    protected $primaryKey = 'product_mats_ID';
+    protected $table = 'productMaterials';
+    protected $primaryKey = 'productMatsID';
     public $incrementing = true;
     protected $keyType = 'int';
 
     protected $fillable = [
-        'product_ID',
-        'material_ID',
+        'productID',
+        'materialID',
         'quantity'
     ];
 }

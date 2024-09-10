@@ -25,7 +25,7 @@ class AccountRepository implements AccountRepositoryInterface
         $account->username = $payload->username;
         $account->email = $payload->email;
         $account->password = $payload->password;
-        $accountType = AccountType::find($payload->acc_type_ID);
+        $accountType = AccountType::find($payload->accTypeID);
         
         if ($accountType) {
             $account->accountType()->associate($accountType);
@@ -45,7 +45,7 @@ class AccountRepository implements AccountRepositoryInterface
         $account->username = $payload->username;
         $account->email = $payload->email;
         $account->password = $payload->password;
-        $accountType = AccountType::find($payload->acc_type_ID);
+        $accountType = AccountType::find($payload->accTypeID);
 
         if ($accountType) {
             $account->accountType()->associate($accountType);

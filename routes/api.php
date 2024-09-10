@@ -17,7 +17,7 @@ Route::prefix('accounts')->group(function(){
     Route::delete('/{accountId}', [AccountController::class, 'destroy']);
 });
 
-Route::prefix('account_types')->group(function(){
+Route::prefix('accountTypes')->group(function(){
     Route::get('/', [AccountTypeController::class, 'index']);
     Route::get('/{accountTypeId}', [AccountTypeController::class, 'show']);
     Route::post('/', [AccountTypeController::class, 'store']);
@@ -26,10 +26,10 @@ Route::prefix('account_types')->group(function(){
 
 Route::prefix('administrators')->group(function(){
     Route::get('/', [AdminController::class, 'index']);
-    Route::get('/{adminid}', [AdminController::class, 'show']);
+    Route::get('/{adminId}', [AdminController::class, 'show']);
     Route::post('/', [AdminController::class, 'store']);
-    Route::put('/{adminid}', [AdminController::class, 'update']);
-    Route::delete('/{adminid}', [AdminController::class, 'destroy']);
+    Route::put('/{adminId}', [AdminController::class, 'update']);
+    Route::delete('/{adminId}', [AdminController::class, 'destroy']);
 });
 
 Route::prefix('customers')->group(function(){
@@ -48,7 +48,7 @@ Route::prefix('suppliers')->group(function(){
     Route::delete('/{supplierId}', [SupplierController::class, 'destroy']);
 });
 
-Route::prefix('product_categories')->group(function(){
+Route::prefix('productCategories')->group(function(){
     Route::get('/', [ProductCategoryController::class, 'index']);
     Route::get('/{prodCatId}', [ProductCategoryController::class, 'show']);
     Route::post('/', [ProductCategoryController::class, 'store']);

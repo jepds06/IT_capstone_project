@@ -22,20 +22,20 @@ class CustomerRepository implements CustomerRepositoryInterface
     public function create(object $payload)
     {
         $customer = new Customer();
-        $account = Account::find($payload->account_ID);
+        $account = Account::find($payload->accountID);
         if ($account) {
             $customer->account()->associate($account);
         } else {
             // Handle the error: throw an exception, return an error response, or set a default value
             throw new \Exception("Invalid account ID provided.");
         }
-        $customer->cstr_first_name = $payload->cstr_first_name;
-        $customer->cstr_last_name = $payload->cstr_last_name;
-        $customer->contact_num = $payload->contact_num;
-        $customer->cstr_address = $payload->cstr_address;
-        $customer->customer_type = $payload->customer_type;
-        $customer->pref_contact_method = $payload->pref_contact_method;
-        $customer->cstr_status = $payload->cstr_status;
+        $customer->cstrFirstName = $payload->cstrFirstName;
+        $customer->cstrLastName = $payload->cstrLastName;
+        $customer->contactNum = $payload->contactNum;
+        $customer->cstrAddress = $payload->cstrAddress;
+        $customer->customerType = $payload->customerType;
+        $customer->prefContactMethod = $payload->prefContactMethod;
+        $customer->cstrStatus = $payload->cstrStatus;
 
         $customer->save();
 
@@ -45,20 +45,20 @@ class CustomerRepository implements CustomerRepositoryInterface
     public function update(object $payload, int $cstrId)
     {
         $customer = Customer::findOrFail($cstrId);
-        $account = Account::find($payload->account_ID);
+        $account = Account::find($payload->accountID);
         if ($account) {
             $customer->account()->associate($account);
         } else {
             // Handle the error: throw an exception, return an error response, or set a default value
             throw new \Exception("Invalid account ID provided.");
         }
-        $customer->cstr_first_name = $payload->cstr_first_name;
-        $customer->cstr_last_name = $payload->cstr_last_name;
-        $customer->contact_num = $payload->contact_num;
-        $customer->cstr_address = $payload->cstr_address;
-        $customer->customer_type = $payload->customer_type;
-        $customer->pref_contact_method = $payload->pref_contact_method;
-        $customer->cstr_status = $payload->cstr_status;
+        $customer->cstrFirstName = $payload->cstrFirstName;
+        $customer->cstrLastName = $payload->cstrLastName;
+        $customer->contactNum = $payload->contactNum;
+        $customer->cstrAddress = $payload->cstrAddress;
+        $customer->customerType = $payload->customerType;
+        $customer->prefContactMethod = $payload->prefContactMethod;
+        $customer->cstrStatus = $payload->cstrStatus;
 
         $customer->save();
 

@@ -10,7 +10,7 @@ class Material extends Model
     use HasFactory;
 
     protected $table = 'materials';
-    protected $primaryKey = 'material_ID';
+    protected $primaryKey = 'materialID';
     public $incrementing = true;
     protected $keyType = 'int';
 
@@ -18,6 +18,6 @@ class Material extends Model
         'description',
         'specification',
         'brand',
-        'unit_of_measure'
+        'unitOfMeasure'
     ];
 }

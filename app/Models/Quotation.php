@@ -10,14 +10,14 @@ class Quotation extends Model
     use HasFactory;
 
     protected $table = 'quotations';
-    protected $primaryKey = 'quote_ID';
+    protected $primaryKey = 'quoteID';
     public $incrementing = true;
     protected $keyType = 'int';
 
     protected $fillable =[
-        'quotation_date',
+        'quotationDate',
         'description',
-        'validity_date',
+        'validityDate',
         'remarks'
     ];
 }

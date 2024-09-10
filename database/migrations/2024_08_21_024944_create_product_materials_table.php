@@ -11,18 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('product_materials', function (Blueprint $table) {
-            $table->bigIncrements('product_mats_ID');
-            $table->unsignedBigInteger('product_ID');
-            $table->unsignedBigInteger('material_ID');
+        Schema::create('productMaterials', function (Blueprint $table) {
+            $table->bigIncrements('productMatsID');
+            $table->unsignedBigInteger('productID');
+            $table->unsignedBigInteger('materialID');
             $table->integer('quantity');
             $table->timestamps();
 
-            $table->Foreign('product_ID')->references('product_ID')->on('products')
+            $table->Foreign('productID')->references('productID')->on('products')
             ->onUpdate('cascade')
             ->onDelete('cascade');
 
-            $table->Foreign('material_ID')->references('material_ID')->on('materials')
+            $table->Foreign('materialID')->references('materialID')->on('materials')
             ->onUpdate('cascade')
             ->onDelete('cascade');
         });
@@ -34,10 +34,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('product_materials', function(Blueprint $table){
-            $table->dropForeign(['product_ID']);
-            $table->dropForeign(['material_ID']);
+            $table->dropForeign(['productID']);
+            $table->dropForeign(['materialID']);
         });
 
-        Schema::dropIfExists('product_materials');
+        Schema::dropIfExists('productMaterials');
     }
 };

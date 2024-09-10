@@ -9,15 +9,15 @@ class CustomerOrder extends Model
 {
     use HasFactory;
 
-    protected $table = 'customer_orders';
-    protected $primaryKey = 'cstr_order_ID';
+    protected $table = 'customerOrders';
+    protected $primaryKey = 'cstrOrderID';
     public $incrementing = true;
     protected $keyType = 'int';
 
     protected $fillable = [
-        'customer_ID',
-        'order_date',
-        'order_status',
-        'order_remarks'
+        'customerID',
+        'orderDate',
+        'orderStatus',
+        'orderRemarks'
     ];
 }

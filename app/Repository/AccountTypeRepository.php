@@ -21,7 +21,7 @@ class AccountTypeRepository implements AccountTypeRepositoryInterface
     public function create(object $payload)
     {
         $accountType = new AccountType();
-        $accountType->account_type_name = $payload->account_type_name;
+        $accountType->accountTypeName = $payload->accountTypeName;
         $accountType->save();
 
         return $accountType->fresh();
@@ -29,8 +29,8 @@ class AccountTypeRepository implements AccountTypeRepositoryInterface
 
     public function update(object $payload, int $accountTypeId)
     {
-        $accountType = AccountType::FindorFail($accountTypeId);
-        $accountType->account_type_name = $payload->account_type_name;
+        $accountType = AccountType::findOrFail($accountTypeId);
+        $accountType->accountTypeName = $payload->accountTypeName;
         $accountType->save();
 
         return $accountType->fresh();

@@ -9,12 +9,12 @@ class PaymentMethod extends Model
 {
     use HasFactory;
 
-    protected $table = 'payment_methods';
-    protected $primaryKey = 'pay_mthd_ID';
+    protected $table = 'paymentMethods';
+    protected $primaryKey = 'payMethodID';
     public $incrementing = true;
     protected $keyType = 'int';
 
     protected $fillable = [
-        'pay_mthd_name'
+        'payMethodName'
     ];
 }

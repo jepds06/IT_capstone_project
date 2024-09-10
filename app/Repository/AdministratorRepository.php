@@ -22,17 +22,17 @@ class AdministratorRepository implements AdministratorRepositoryInterface
     public function create(object $payload)
     {
         $admin = new Administrator();
-        $account = Account::find($payload->account_ID);
+        $account = Account::find($payload->accountID);
         if ($account) {
             $admin->accountType()->associate($account);
         } else {
             // Handle the error: throw an exception, return an error response, or set a default value
             throw new \Exception("Invalid account ID provided.");
         }
-        $admin->admin_first_name = $payload->admin_first_name;
-        $admin->admin_last_name = $payload->admin_last_name;
-        $admin->contact_num = $payload->contact_num;
-        $admin->admin_address = $payload->admin_address;
+        $admin->adminFirstName = $payload->adminFirstName;
+        $admin->adminLastName = $payload->adminLastName;
+        $admin->contactNum = $payload->contactNum;
+        $admin->adminAddress = $payload->adminAddress;
 
         $admin->save();
 
@@ -42,17 +42,17 @@ class AdministratorRepository implements AdministratorRepositoryInterface
     public function update(object $payload, int $adminId)
     {
         $admin = Administrator::findOrFail($adminId);
-        $account = Account::find($payload->account_ID);
+        $account = Account::find($payload->accountID);
         if ($account) {
             $admin->account()->associate($account);
         } else {
             // Handle the error: throw an exception, return an error response, or set a default value
             throw new \Exception("Invalid account ID provided.");
         }
-        $admin->admin_first_name = $payload->admin_first_name;
-        $admin->admin_last_name = $payload->admin_last_name;
-        $admin->contact_num = $payload->contact_num;
-        $admin->admin_address = $payload->admin_address;
+        $admin->adminFirstName = $payload->adminFirstName;
+        $admin->adminLastName = $payload->adminLastName;
+        $admin->contactNum = $payload->contactNum;
+        $admin->adminAddress = $payload->adminAddress;
 
         $admin->save();
 

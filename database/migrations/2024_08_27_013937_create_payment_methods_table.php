@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('payment_methods', function (Blueprint $table) {
-            $table->bigIncrements('pay_mthd_ID');
-            $table->string('pay_mthd_name');
+        Schema::create('paymentMethods', function (Blueprint $table) {
+            $table->bigIncrements('payMethodID');
+            $table->string('payMethodName');
             $table->timestamps();
         });
     }
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('payment_methods');
+        Schema::dropIfExists('paymentMethods');
     }
 };
