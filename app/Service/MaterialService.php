@@ -2,9 +2,6 @@
 
 namespace App\Service;
 
-use App\Interface\Service\AccountServiceInterface;
-use App\Interface\Repository\AccountRepositoryInterface;
-use App\Http\Resources\AccountResource;
 use App\Http\Resources\MaterialResource;
 use App\Interface\Repository\MaterialRepositoryInterface;
 use App\Interface\Service\MaterialServiceInterface;

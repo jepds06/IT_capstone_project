@@ -51,6 +51,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(SupplierRepositoryInterface::class, SupplierRepository::class);
         $this->app->bind(ProductCategoryRepositoryInterface::class, ProductCategoryRepository::class);
         $this->app->bind(MaterialRepositoryInterface::class, MaterialRepository::class);
+        $this->app->bind(ProductRepositoryInterface::class, ProductRepository::class);
 
         //Service
         $this->app->bind(AccountServiceInterface::class, AccountService::class);
@@ -60,6 +61,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(SupplierServiceInterface::class, SupplierService::class);
         $this->app->bind(ProductCategoryServiceInterface::class, ProductCategoryService::class);
         $this->app->bind(MaterialServiceInterface::class, MaterialService::class);
+        $this->app->bind(ProductServiceInterface::class, ProductService::class);
         
     }
 

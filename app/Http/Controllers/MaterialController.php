@@ -9,7 +9,7 @@ use App\Interface\Service\MaterialServiceInterface;
 
 class MaterialController extends Controller
 {
-     private $materialService;
+    private $materialService;
 
     public function __construct(MaterialServiceInterface $materialService)
     {
@@ -40,7 +40,6 @@ class MaterialController extends Controller
     {
         return $this->materialService->findMaterialByID($materialId);
     }
-
 
     /**
      * Update the specified resource in storage.
