@@ -9,10 +9,15 @@ class Material extends Model
 {
     use HasFactory;
 
+    protected $table = 'materials';
+    protected $primaryKey = 'materialID';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $fillable = [
         'description',
         'specification',
         'brand',
-        'unit_of_measure'
+        'unitOfMeasure'
     ];
 }

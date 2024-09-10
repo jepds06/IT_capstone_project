@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('customer_orders', function (Blueprint $table) {
-            $table->bigIncrements('cstr_order_ID');
-            $table->unsignedBigInteger('customer_ID');
-            $table->date('order_date');
-            $table->string('order_status');
-            $table->string('order_remarks');
+        Schema::create('customerOrders', function (Blueprint $table) {
+            $table->bigIncrements('cstrOrderID');
+            $table->unsignedBigInteger('customerID');
+            $table->date('orderDate');
+            $table->string('orderStatus');
+            $table->string('orderRemarks');
             $table->timestamps();
 
-            $table->foreign('customer_ID')->references('customer_ID')->on('customers')
+            $table->foreign('customerID')->references('customerID')->on('customers')
             ->onUpdate('cascade')
             ->onDelete('cascade');
         });
@@ -30,11 +30,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('customer_orders', function (Blueprint $table) {
+        Schema::table('customerOrders', function (Blueprint $table) {
             // Drop the foreign key before dropping the table
-            $table->dropForeign(['customer_ID']);
+            $table->dropForeign(['customerID']);
         });
         
-        Schema::dropIfExists('customer_orders');
+        Schema::dropIfExists('customerOrders');
     }
 };

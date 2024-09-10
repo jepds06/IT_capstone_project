@@ -9,9 +9,14 @@ class SupplierMaterial extends Model
 {
     use HasFactory;
 
+    protected $table = 'supplierMaterials';
+    protected $primaryKey = 'suppMatrlID';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $fillable =[
-        'supplier_ID',
-        'material_ID',
-        'unit_price',
+        'supplierID',
+        'materialID',
+        'unitPrice',
     ];
 }

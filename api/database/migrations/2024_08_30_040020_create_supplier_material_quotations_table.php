@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('supplier_material_quotations', function (Blueprint $table) {
-            $table->bigIncrements('suppMats_quote_ID');
-            $table->unsignedBigInteger('quote_ID');
-            $table->unsignedBigInteger('supp_matrl_ID');
+        Schema::create('supplierMaterialQuotations', function (Blueprint $table) {
+            $table->bigIncrements('suppMatsQuoteID');
+            $table->unsignedBigInteger('quoteID');
+            $table->unsignedBigInteger('suppMatrlID');
             $table->integer('quantity');
-            $table->decimal('quotation_price', 10, 2);
+            $table->decimal('quotationPrice', 10, 2);
             $table->timestamps();
 
-            $table->Foreign('quote_ID')->references('quote_ID')->on('quotations')
+            $table->Foreign('quoteID')->references('quoteID')->on('quotations')
             ->onUpdate('cascade')
             ->onDelete('cascade');
 
-            $table->Foreign('supp_matrl_ID')->references('supp_matrl_ID')->on('supplier_materials')
+            $table->Foreign('suppMatrlID')->references('suppMatrlID')->on('supplierMaterials')
             ->onUpdate('cascade')
             ->onDelete('cascade');
         });
@@ -34,11 +34,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('supplier_material_quotations', function(Blueprint $table){
+        Schema::table('supplierMaterialQuotations', function(Blueprint $table){
             // Drop the foreign key before dropping the table
-            $table->dropForeign(['quote_ID']);
-            $table->dropForeign(['supp_matrl_ID']);
+            $table->dropForeign(['quoteID']);
+            $table->dropForeign(['suppMatrlID']);
         });
-        Schema::dropIfExists('supplier_material_quotations');
+        Schema::dropIfExists('supplierMaterialQuotations');
     }
 };

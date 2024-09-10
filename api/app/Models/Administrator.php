@@ -10,19 +10,19 @@ class Administrator extends Model
     use HasFactory;
 
     protected $table = 'administrators';
-    protected $primaryKey = 'admin_ID';
+    protected $primaryKey = 'adminID';
     public $incrementing = true;
     protected $keyType = 'int';
     protected $fillable = [
-        'account_ID',
-        'admin_first_name',
-        'admin_last_name',
-        'contact_num',
-        'admin_address'
+        'accountID',
+        'adminFirstName',
+        'adminLastName',
+        'contactNum',
+        'adminAddress'
     ];
 
     public function account()
     {
-        return $this->belongsTo(Account::class, 'account_ID');
+        return $this->belongsTo(Account::class, 'accountID');
     }
 }

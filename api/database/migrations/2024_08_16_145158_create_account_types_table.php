@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('account_types', function (Blueprint $table) {
-            $table->bigIncrements('acc_type_ID');
-            $table->string('account_type_name');
+        Schema::create('accountTypes', function (Blueprint $table) {
+            $table->bigIncrements('accTypeID');
+            $table->string('accountTypeName');
             $table->timestamps();
 
         });
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('account_types');
+        Schema::dropIfExists('accountTypes');
     }
 };

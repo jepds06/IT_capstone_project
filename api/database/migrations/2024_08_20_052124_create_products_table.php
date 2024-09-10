@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
-            $table->bigIncrements('product_ID');
-            $table->string('product_name');
+            $table->bigIncrements('productID');
+            $table->string('productName');
             $table->string('specifications');
-            $table->decimal('unit_price', 10, 2);
-            $table->unsignedBigInteger('prodCat_ID');
+            $table->decimal('unitPrice', 10, 2);
+            $table->unsignedBigInteger('prodCatID');
 
-            $table->foreign('prodCat_ID')->references('prodCat_ID')->on('product_categories')
+            $table->foreign('prodCatID')->references('prodCatID')->on('productCategories')
             ->onUpdate('cascade')
             ->onDelete('cascade');
         });
@@ -31,7 +31,7 @@ return new class extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             // Drop the foreign key before dropping the table
-            $table->dropForeign(['prodCat_ID']);
+            $table->dropForeign(['prodCatID']);
         });
 
         Schema::dropIfExists('products');

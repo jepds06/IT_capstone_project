@@ -2,6 +2,8 @@
 import type { BlogPost } from '~/types'
 
 const { data: page } = await useAsyncData('blog', () => queryContent('/blog').findOne())
+
+console.log('data---',page)
 if (!page.value) {
   throw createError({ statusCode: 404, statusMessage: 'Page not found', fatal: true })
 }

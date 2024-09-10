@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('sales', function (Blueprint $table) {
-            $table->bigIncrements('sales_ID');
-            $table->date('sales_date');
+            $table->bigIncrements('salesID');
+            $table->date('salesDate');
             $table->timestamps();
         });
     }

@@ -10,21 +10,20 @@ class Supplier extends Model
     use HasFactory;
 
     protected $table = 'suppliers';
-    protected $primaryKey = 'supplier_ID';
+    protected $primaryKey = 'supplierID';
     public $incrementing = true;
     protected $keyType = 'int';
     protected $fillable = [
-        'account_ID',
-        'supplier_name',
-        'supplier_address',
-        'supplier_email',
-        'supplier_contact_num',
-        'supplier_type',
-        'supplier_status'
+        'accountID',
+        'supplierName',
+        'supplierAddress',
+        'supplierContactNum',
+        'supplierType',
+        'supplierStatus'
     ];
 
     public function account()
     {
-        return $this->belongsTo(Account::class, 'account_ID');
+        return $this->belongsTo(Account::class, 'accountID');
     }
 }

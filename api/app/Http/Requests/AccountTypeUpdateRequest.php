@@ -22,7 +22,7 @@ class AccountTypeUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'account_type_name' => 'required|string|max:255'
+            'accountTypeName' => 'required|string|max:255'
         ];
     }
 }

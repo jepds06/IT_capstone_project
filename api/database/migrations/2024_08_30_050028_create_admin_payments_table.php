@@ -11,22 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('admin_payments', function (Blueprint $table) {
-            $table->bigIncrements('admin_pay_ID');
-            $table->unsignedBigInteger('admin_ord_ID');
-            $table->unsignedBigInteger('pay_mthd_ID');
-            $table->decimal('amount_to_pay', 10, 2);
-            $table->decimal('amount_paid', 10, 2);
-            $table->date('due_date');
-            $table->string('payment_status');
+        Schema::create('adminPayments', function (Blueprint $table) {
+            $table->bigIncrements('adminPayID');
+            $table->unsignedBigInteger('adminOrdID');
+            $table->unsignedBigInteger('payMethodID');
+            $table->decimal('amountToPay', 10, 2);
+            $table->decimal('amountPaid', 10, 2);
+            $table->date('dueDate');
+            $table->string('paymentStatus');
             $table->string('remarks');
             $table->timestamps();
 
-            $table->foreign('admin_ord_ID')->references('admin_ord_ID')->on('admin_orders')
+            $table->foreign('adminOrdID')->references('adminOrdID')->on('adminOrders')
             ->onUpdate('cascade')
             ->onDelete('cascade');
 
-            $table->Foreign('pay_mthd_ID')->references('pay_mthd_ID')->on('payment_methods')
+            $table->Foreign('payMethodID')->references('payMethodID')->on('paymentMethods')
             ->onUpdate('cascade')
             ->onDelete('cascade');
         });
@@ -37,11 +37,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('admin_payments', function(Blueprint $table){
+        Schema::table('adminPayments', function(Blueprint $table){
             // Drop the foreign key before dropping the table
-            $table->dropForeign(['admin_ord_ID']);
-            $table->dropForeign(['pay_mthd_ID']);
+            $table->dropForeign(['adminOrdID']);
+            $table->dropForeign(['payMethodID']);
         });
-        Schema::dropIfExists('admin_payments');
+        Schema::dropIfExists('adminPayments');
     }
 };

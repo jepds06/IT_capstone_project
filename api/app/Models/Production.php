@@ -9,10 +9,15 @@ class Production extends Model
 {
     use HasFactory;
 
+    protected $table = 'productions';
+    protected $primaryKey = 'productionID';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $fillable = [
-        'production_date',
-        'est_production_days',
-        'end_date',
+        'productionDate',
+        'estProductionDays',
+        'endDate',
         'quantity',
         'status'
     ];

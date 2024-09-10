@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { useNuxtApp } from '#app';
+import type { AxiosInstance } from 'axios';
+
 definePageMeta({
   layout: "auth",
 });
@@ -7,6 +10,7 @@ useSeoMeta({
   title: "Sign up",
 });
 
+const { $axios } = useNuxtApp() as { $axios: AxiosInstance };
 const userType = ref<string>(null);
 const customerFields = [
   {
@@ -48,7 +52,7 @@ const customerFields = [
   {
     name: "prefContactMethod",
     type: "select",
-    label: "Preferred Contact Method",
+    label: "Preffered Contact Method",
     placeholder: "Enter your Preferred Contact Method",
     options: [
       { value: "email", label: "Email" },
@@ -81,14 +85,14 @@ const supplierFields = [
   {
     name: "supplierName",
     type: "text",
-    label: "Name",
+    label: "supplierName",
     placeholder: "Enter your name",
     attributes: "required",
   },
   {
-    name: "contactNumber",
+    name: "supplierContactNum",
     type: "tel",
-    label: "Contact Number",
+    label: "supplierContactNum",
     placeholder: "Ex: 09xxxxxxxxx",
     attributes: 'required pattern="[0-9]{11}" maxlength="11"',
   },
@@ -131,27 +135,27 @@ const supplierFields = [
 ];
 
 const adminFields = [{
-  name: 'firstName',
+  name: 'adminFirstName',
   type: 'text',
   label: 'First Name',
   placeholder: 'Enter your first name',
   attributes: 'required'
 }, 
 {
-  name: 'lastName',
+  name: 'adminLastName',
   type: 'text',
   label: 'Last Name',
   placeholder: 'Enter your last name'
 },
 {
-  name: 'contactNumber',
+  name: 'contactNum',
   type: 'tel',
   label: 'Contact Number',
   placeholder: 'Ex: 09xxxxxxxxx',
   attributes: 'required pattern="[0-9]{11}" maxlength="11"'
 },
 {
-  name: 'address',
+  name: 'adminAddress',
   type: 'text',
   label: 'Address',
   placeholder: 'Enter your address'
@@ -180,7 +184,7 @@ const adminFields = [{
 const validateCustomer = (state: any) => {
   const errors = [];
   if (!state.email)
-    errors.push({ path: "email", message: "Email is required" });
+    errors.push({ path: "email", message: "This field is required" });
   if (!state.password)
     errors.push({ path: "password", message: "Password is required" });
   if (!/^(?=.*[a-zA-Z])(?=.*[0-9])[A-Za-z0-9]{8,}$/.test(state.password))
@@ -188,18 +192,33 @@ const validateCustomer = (state: any) => {
       path: "password",
       message: "Password must be alphanumeric between 8-32 character length",
     });
-  if (!/^\d{11}$/.test(state.contactNumber))
+  if (!state.username)
+    errors.push({ path: "username", message: "Username is required" });
+  if (!state.cstrFirstName)
+    errors.push({ path: "cstrFirstName", message: "First Name is required" });
+  if (!state.cstrLastName)
+    errors.push({ path: "cstrLastName", message: "Last Name is required" });
+  if (!state.cstrAddress)
+    errors.push({ path: "cstrAddress", message: "Address is required" });
+  if (!state.customerType)
+    errors.push({ path: "customerType", message: "Customer Type is required" });
+  if (!state.prefContactMethod)
+    errors.push({ path: "prefContactMethod", message: "pref Contact Method is required" });
+
+  if (!/^\d{11}$/.test(state.contactNum))
     errors.push({
-      path: "contactNumber",
+      path: "contactNum",
       message: "Contact number must be 11 digits",
     });
+    if (!state.name)
+    errors.push({ path: "name", message: "Email is required",
+   });
   return errors;
 };
 
 function onSubmitCustomer(data: any) {
   console.log("Submitted", data);
 }
-
 
 const validateSupplier= (state: any) => {
   const errors = [];
@@ -212,9 +231,11 @@ const validateSupplier= (state: any) => {
       path: "password",
       message: "Password must be alphanumeric between 8-32 character length",
     });
-  if (!/^\d{11}$/.test(state.contactNumber))
+  if (!state.username)
+    errors.push({ path: "username", message: "Username is required" });
+  if (!/^\d{11}$/.test(state.supplierContactNum))
     errors.push({
-      path: "contactNumber",
+      path: "supplierContactNum",
       message: "Contact number must be 11 digits",
     });
   return errors;
@@ -235,66 +256,24 @@ const validateAdministrator = (state: any) => {
       path: "password",
       message: "Password must be alphanumeric between 8-32 character length",
     });
-  if (!/^\d{11}$/.test(state.contactNumber))
+  if (!state.username)
+    errors.push({ path: "username", message: "Username is required" });
+  if (!/^\d{11}$/.test(state.contactNum))
     errors.push({
-      path: "contactNumber",
+      path: "contactNum",
       message: "Contact number must be 11 digits",
     });
   return errors;
 };
 
-const fields = [{
-  name: 'firstName',
-  type: 'text',
-  label: 'First Name',
-  placeholder: 'Enter your first name',
-  attributes: 'required'
-}, 
-{
-  name: 'lastName',
-  type: 'text',
-  label: 'Last Name',
-  placeholder: 'Enter your last name'
-},
-{
-  name: 'contactNumber',
-  type: 'tel',
-  label: 'Contact Number',
-  placeholder: 'Ex: 09xxxxxxxxx',
-  attributes: 'required pattern="[0-9]{11}" maxlength="11"'
-},
-{
-  name: 'address',
-  type: 'text',
-  label: 'Address',
-  placeholder: 'Enter your address'
-},
-{
-  name: 'PrefContactMethod',
-  type: 'select',
-  label: 'Preferred Contact Method',
-  placeholder: 'Enter your Preferred Contact Method',
-  options: [
-    { value: 'email', label: 'Email' },
-    { value: 'phone', label: 'Contact Number' },
-  ]
-},
-{
-  name: 'email',
-  type: 'email',
-  label: 'Email',
-  placeholder: 'Enter your email'
-}, {
-  name: 'password',
-  label: 'Password',
-  type: 'password',
-  placeholder: 'Enter your password',
-  attributes: 'required pattern="(?=.*[a-zA-Z])(?=.*[0-9])[A-Za-z0-9]{8,}"',
-  helpText: 'Password must be alphanumeric between 8-32 character length'
-}]
-
-function onSubmitAdministrator(data: any) {
-  console.log("Submitted", data);
+async function onSubmitAdministrator(data: any) {
+  try {
+    console.log("Submitted", data);
+    const payload = {...data, accTypeID: 1 }
+    await $axios.post("/account/register", payload);
+    } catch (error) {
+    console.error("Error creating admin:", error);
+  }
 }
 </script>
 

@@ -9,7 +9,12 @@ class Sale extends Model
 {
     use HasFactory;
 
+    protected $table = 'sales';
+    protected $primaryKey = 'salesID';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $fillable = [
-        'sales_date',
+        'salesDate',
     ];
 }

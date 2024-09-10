@@ -12,19 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('customers', function (Blueprint $table) {
-            $table->bigIncrements('customer_ID');
-            $table->unsignedBigInteger('account_ID');
-            $table->string('cstr_first_name');
-            $table->string('cstr_last_name');
-            $table->string('contact_num');
-            $table->string('cstr_address');
-            $table->string('customer_type');
-            $table->string('pref_contact_method');
-            $table->string('cstr_status');
+            $table->bigIncrements('customerID');
+            $table->unsignedBigInteger('accountID');
+            $table->string('cstrFirstName');
+            $table->string('cstrLastName');
+            $table->string('contactNum');
+            $table->string('cstrAddress');
+            $table->string('customerType');
+            $table->string('prefContactMethod');
+            $table->string('cstrStatus');
             $table->timestamps();
 
             //foreign key constraint
-            $table->foreign('account_ID')->references('account_ID')->on('accounts')
+            $table->foreign('accountID')->references('accountID')->on('accounts')
             ->onUpdate('cascade')
             ->onDelete('cascade');
         });
@@ -37,7 +37,7 @@ return new class extends Migration
     {
         Schema::table('customers', function (Blueprint $table) {
             // Drop the foreign key before dropping the table
-            $table->dropForeign(['account_ID']);
+            $table->dropForeign(['accountID']);
         });
 
         Schema::dropIfExists('customers');

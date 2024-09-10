@@ -22,13 +22,12 @@ class SupplierUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'account_ID' => 'required|exists:accounts, account_ID',
-            'supplier_name' => 'required',
-            'supplier_address' => 'required',
-            'supplier_email' => 'required',
-            'supplier_contact_num' => 'required',
-            'supplier_type' => 'required',
-            'supplier_status' => 'required'
+            'accountID' => 'required|exists:accounts, accountID',
+            'supplierName' => 'required|string|max:255',
+            'supplierAddress' => 'required|string|max:255',
+            'supplierContactNum' => 'required|string|max:255',
+            'supplierType' => 'required|string|max:255',
+            'supplierStatus' => 'required|string|max:255'
         ];
     }
 }

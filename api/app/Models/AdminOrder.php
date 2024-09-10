@@ -9,10 +9,15 @@ class AdminOrder extends Model
 {
     use HasFactory;
 
+    protected $table = 'adminOrders';
+    protected $primaryKey = 'adminOrdID';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $fillable = [
-        'admin_ID',
-        'supp_matrl_ID',
-        'qty_ordered',
+        'adminID',
+        'suppMatrlID',
+        'qtyOrdered',
         'amount'
     ];
 }

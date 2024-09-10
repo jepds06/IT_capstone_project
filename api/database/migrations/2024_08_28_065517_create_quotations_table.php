@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('quotations', function (Blueprint $table) {
-            $table->bigIncrements('quote_ID');
-            $table->date('quotation_date');
+            $table->bigIncrements('quoteID');
+            $table->date('quotationDate');
             $table->string('description');
-            $table->date('validity_date');
+            $table->date('validityDate');
             $table->string('remarks');
             $table->timestamps();
         });

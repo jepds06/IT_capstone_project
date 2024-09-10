@@ -9,16 +9,16 @@ class AccountType extends Model
 {
     use HasFactory;
 
-    protected $table = 'account_types';
-    protected $primaryKey = 'acc_type_ID';
+    protected $table = 'accountTypes';
+    protected $primaryKey = 'accTypeID';
     public $incrementing = true;
     protected $keyType = 'int';
     protected $fillable = [
-        'account_type_name'
+        'accountTypeName'
     ];
 
     public function accounts()
     {
-        return $this->hasMany(Account::class, 'acc_type_ID');
+        return $this->hasMany(Account::class, 'accTypeID');
     }
 }

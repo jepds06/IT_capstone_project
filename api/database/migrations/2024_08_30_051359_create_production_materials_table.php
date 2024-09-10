@@ -11,17 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('production_materials', function (Blueprint $table) {
-            $table->bigIncrements('prodtn_mtrl_ID');
-            $table->unsignedBigInteger('product_mats_ID');
-            $table->unsignedBigInteger('production_ID');
+        Schema::create('productionMaterials', function (Blueprint $table) {
+            $table->bigIncrements('prodtnMtrlID');
+            $table->unsignedBigInteger('productMatsID');
+            $table->unsignedBigInteger('productionID');
             $table->timestamps();
 
-            $table->Foreign('product_mats_ID')->references('product_mats_ID')->on('product_materials')
+            $table->Foreign('productMatsID')->references('productMatsID')->on('productMaterials')
             ->onUpdate('cascade')
             ->onDelete('cascade');
 
-            $table->Foreign('production_ID')->references('production_ID')->on('productions')
+            $table->Foreign('productionID')->references('productionID')->on('productions')
             ->onUpdate('cascade')
             ->onDelete('cascade');
         });
@@ -32,11 +32,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('production_materials', function(Blueprint $table){
+        Schema::table('productionMaterials', function(Blueprint $table){
             // Drop the foreign key before dropping the table
-            $table->dropForeign(['product_mats_ID']);
-            $table->dropForeign(['production_ID']);
+            $table->dropForeign(['productMatsID']);
+            $table->dropForeign(['productionID']);
         });
-        Schema::dropIfExists('production_materials');
+        Schema::dropIfExists('productionMaterials');
     }
 };
