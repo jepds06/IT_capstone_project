@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AccountTypeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Http\Request;
@@ -53,4 +54,11 @@ Route::prefix('productCategories')->group(function(){
     Route::get('/{prodCatId}', [ProductCategoryController::class, 'show']);
     Route::post('/', [ProductCategoryController::class, 'store']);
     Route::put('/{prodCatId}', [ProductCategoryController::class, 'update']);
+});
+
+Route::prefix('materials')->group(function(){
+    Route::get('/', [MaterialController::class, 'index']);
+    Route::get('/{materialId}', [MaterialController::class, 'show']);
+    Route::post('/', [MaterialController::class, 'store']);
+    Route::put('/{materialId}', [MaterialController::class, 'update']);
 });

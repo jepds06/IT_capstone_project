@@ -9,7 +9,7 @@ use App\Interface\Service\MaterialServiceInterface;
 
 class MaterialController extends Controller
 {
-    private $materialService;
+     private $materialService;
 
     public function __construct(MaterialServiceInterface $materialService)
     {
