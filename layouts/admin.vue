@@ -6,11 +6,15 @@
     <div class="flex-1 flex flex-col">
       <!-- Navbar Component with Toggle Functionality -->
       <Navbar @toggleSidebar="toggleSidebar" />
-      <main class="py-5">
+
+      <!-- Main Content Area -->
+      <main :class="['py-5 transition-transform duration-300', { 'ml-0': !isSidebarOpen, 'ml-64': isSidebarOpen }]">
         <div class="px-4 sm:px-6">
+          <!-- Keep the currently active route component alive -->
           <keep-alive>
-            <router-view />
+            <NuxtPage />
           </keep-alive>
+          <!-- Slot for additional content or components -->
           <slot />
         </div>
       </main>
@@ -19,45 +23,44 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import Sidebar from '/components/Sidebar.vue'
-import Navbar from '/components/Navbar.vue'
+import { ref } from 'vue';
+import Sidebar from '~/components/Sidebar.vue';
+import Navbar from '~/components/Navbar.vue';
 
-const isSidebarOpen = ref(true)
+const isSidebarOpen = ref(true); // Start with sidebar open for testing
 
 function toggleSidebar() {
-  isSidebarOpen.value = !isSidebarOpen.value
+  isSidebarOpen.value = !isSidebarOpen.value;
+  console.log('Sidebar Toggled:', isSidebarOpen.value); // Debug log
 }
 </script>
 
 <style scoped>
+/* Smooth transition for the sidebar */
 .sidebar {
-  /* Base styles for small screens */
-  width: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  overflow-y: auto;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, width 0.3s ease;
 }
 
-@media (min-width: 768px) {
-  .sidebar {
-    width: 250px; /* Fixed width on larger screens */
-  }
-}
-.navbar {
-  /* Base styles for small screens */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.sidebar-collapsed {
+  transform: translateX(-100%);
+  width: 0;
 }
 
-@media (min-width: 768px) {
-  .navbar {
-    /* Adjustments for larger screens */
-    padding: 0 2rem;
-  }
+.sidebar-expanded {
+  transform: translateX(0);
+  width: 16rem; /* Adjust according to sidebar width */
+}
+
+/* Smooth transition for the main content */
+.transition-transform {
+  transition: margin-left 0.3s ease;
+}
+
+.ml-0 {
+  margin-left: 0;
+}
+
+.ml-64 {
+  margin-left: 16rem; /* Adjust according to sidebar width */
 }
 </style>
