@@ -20,4 +20,9 @@ class Product extends Model
         'unitPrice',
         'prodCatID'
     ];
+
+    public function prdCategory()
+    {
+        return $this->belongsTo(ProductCategory::class, 'prodCatID');
+    }
 }
