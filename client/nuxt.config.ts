@@ -15,7 +15,6 @@ export default defineNuxtConfig({
     'nuxt-og-image',
     
   ],
-  plugins: [],
   hooks: {
     // Define `@nuxt/ui` components as global to use them in `.md` (feel free to add those you need)
     'components:extend': (components) => {

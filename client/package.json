@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-ui-pro-template-saas",
+  "name": "supplyease",
   "private": true,
   "type": "module",
   "scripts": {
@@ -19,7 +19,6 @@
     "@nuxt/image": "^1.7.0",
     "@nuxt/ui-pro": "^1.4.1",
     "@vueuse/nuxt": "^10.11.1",
-    "axios": "^1.7.7",
     "nuxt": "^3.12.4",
     "nuxt-og-image": "^3.0.0-rc.65"
   },
