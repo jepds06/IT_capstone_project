@@ -16,6 +16,7 @@ class ProductionMaterial extends Model
 
     protected $fillable = [
         'productMatsID',
-        'productionID'
+        'productionID',
+        'quantity'
     ];
 }

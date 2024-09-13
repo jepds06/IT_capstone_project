@@ -21,8 +21,15 @@ class Product extends Model
         'prodCatID'
     ];
 
+    public $timestamps = false;
+    
     public function prdCategory()
     {
         return $this->belongsTo(ProductCategory::class, 'prodCatID');
+    }
+
+    public function productMaterials()
+    {
+        return $this->hasMany(ProductMaterial::class, 'productID');
     }
 }
