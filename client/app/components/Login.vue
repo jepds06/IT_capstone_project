@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const route = useRoute()
+
 definePageMeta({
   layout: 'auth'
 })
@@ -29,6 +31,8 @@ const validate = (state: any) => {
 
 function onSubmit(data: any) {
   console.log('Submitted', data)
+  navigateTo('/admin')
+  
 }
 </script>
 

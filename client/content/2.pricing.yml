@@ -8,6 +8,8 @@ hero:
 plans:
   - title: Basic
     description: A basic plan for individuals.
+    badge:
+      label: Chair
     price:
       month: $9.9
       year: $99.9
@@ -24,6 +26,8 @@ plans:
       - 1 SSL Certificate
       - 1 Support Ticket
   - title: Standard
+    badge:
+      label: Table
     description: A standard plan for small teams.
     price:
       month: $19.9
@@ -42,6 +46,8 @@ plans:
       - 10 SSL Certificates
       - 10 Support Tickets
   - title: Premium
+    badge:
+      label: Sofa
     description: A premium plan for large teams.
     price:
       month: $29.9
