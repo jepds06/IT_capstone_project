@@ -7,6 +7,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductMaterialsController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -70,4 +71,11 @@ Route::prefix('products')->group(function(){
     Route::post('/', [ProductController::class, 'store']);
     Route::put('/{productId}', [ProductController::class, 'update']);
     Route::delete('/{productId}', [ProductController::class, 'destroy']);
+});
+
+Route::prefix('productsMaterials')->group(function(){
+    Route::get('/', [ProductMaterialsController::class, 'index']);
+    Route::get('/{productId}', [ProductMaterialsController::class, 'show']);
+    Route::post('/', [ProductMaterialsController::class, 'store']);
+    Route::put('/{productId}', [ProductMaterialsController::class, 'update']);
 });
