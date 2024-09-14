@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('specifications');
             $table->decimal('unitPrice', 10, 2);
             $table->unsignedBigInteger('prodCatID');
+            $table->timestamps();
 
             $table->foreign('prodCatID')->references('prodCatID')->on('productCategories')
             ->onUpdate('cascade')

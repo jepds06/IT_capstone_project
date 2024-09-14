@@ -22,7 +22,7 @@ class CustomerStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'accountID' => 'required|exists:accounts, accountID',
+            'accountID' => 'required|exists:accounts,accountID',
             'cstrFirstName' => 'required|string|max:255',
             'cstrLastName' => 'required|string|max:255',
             'contactNum' => 'required|string|max:255',

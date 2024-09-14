@@ -23,6 +23,6 @@ class Product extends Model
 
     public function prdCategory()
     {
-        return $this->belongsTo(ProductCategory::class, 'prodCatID');
+        return $this->belongsTo(ProductCategory::class,'prodCatID');
     }
 }
