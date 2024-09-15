@@ -9,8 +9,8 @@
           </CollapsibleMenu>
   
           <CollapsibleMenu icon="material-symbols:auto-stories-outline" title="Product Management">
-            <router-link to="/product-categories" class="block p-4 hover:bg-gray-800">Product Categories</router-link>
-            <router-link to="/products" class="block p-4 hover:bg-gray-800">Products</router-link>
+            <router-link to="/admin/product-categories" :class="route.path === '/admin/product-categories' ? 'block p-4 bg-gray-400' : 'block p-4 hover:bg-gray-800'">Product Categories</router-link>
+            <router-link to="/admin/product" :class="route.path === '/admin/product' ? 'block p-4 bg-gray-400' : 'block p-4 hover:bg-gray-800'">Products</router-link>
           </CollapsibleMenu>
   
           <CollapsibleMenu  icon="mdi:align-horizontal-left" title="Stock Management">
@@ -56,9 +56,16 @@
   
   <script setup>
   import CollapsibleMenu from './AdminCollapsibleMenu.vue';
+  const route = useRoute()
   </script>
   
   <style scoped>
-  /* Add additional styles if needed */
+  .static-class {
+    padding: 10px;
+  }
+  
+  .active-class {
+    color: blue;
+  }
   </style>
   

@@ -55,4 +55,5 @@ defineOgImage({
       </UBlogList>
     </UPageBody>
   </UContainer>
+  <NuxtPage />
 </template>

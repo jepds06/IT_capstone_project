@@ -7,6 +7,8 @@ hero:
   align: center
 plans:
   - title: Basic
+    image:
+      src: https://picsum.photos/id/1/200/300
     description: A basic plan for individuals.
     badge:
       label: Chair

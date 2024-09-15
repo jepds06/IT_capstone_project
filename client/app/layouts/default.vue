@@ -63,12 +63,18 @@ provide('navigation', navigation)
     </ClientOnly>
   </div>
 
-  <div v-else-if="route.path === '/admin'">
+  <div v-else-if="route.path.includes('/admin')">
     <AdminHeader/>
-    <UMain>
-    <slot />
-    </UMain>
-
+    <div class="flex">
+      <AdminSidebar />
+      <div class="flex-1 p-6">
+        <main>
+          <UMain>
+            <slot />
+            </UMain>
+        </main>
+      </div>
+    </div>
     <AppFooter />
 
     <ClientOnly>
@@ -77,5 +83,18 @@ provide('navigation', navigation)
         :navigation="navigation"
       />
     </ClientOnly>
+  </div>
+
+  <div v-else>
+    <CustomerHeader/>
+    <UMain>
+    <slot />
+    </UMain>
+    <!-- <ClientOnly>
+      <LazyUContentSearch
+        :files="files"
+        :navigation="navigation"
+      />
+    </ClientOnly> -->
   </div>
 </template>
