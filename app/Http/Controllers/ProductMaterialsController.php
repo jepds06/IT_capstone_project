@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductMaterialsStoreRequest;
+use App\Http\Requests\ProductMaterialsUpdateRequest;
 use App\Interface\Service\ProductMaterialServiceInterface;
 use Illuminate\Http\Request;
 
@@ -43,16 +44,8 @@ class ProductMaterialsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ProductMaterialsUpdateRequest $request, int $productMatsId)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return $this->productMaterialsService->updateProductMats($request, $productMatsId);
     }
 }

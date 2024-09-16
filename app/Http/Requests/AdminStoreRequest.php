@@ -22,7 +22,7 @@ class AdminStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'accountID' => 'required|exists:accounts,accountID',
+            'accountID' => 'required|integer|exists:accounts,accountID',
             'adminFirstName' => 'required|string|max:255',
             'adminLastName' =>'required|string|max:255',
             'contactNum' => 'required|string|max:255',

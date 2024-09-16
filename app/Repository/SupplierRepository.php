@@ -32,6 +32,7 @@ class SupplierRepository implements SupplierRepositoryInterface
         $supplier->supplierName = $payload->supplierName;
         $supplier->supplierAddress = $payload->supplierAddress;
         $supplier->supplierContactNum = $payload->supplierContactNum;
+        $supplier->supplierContactPerson = $payload->supplierContactPerson;
         $supplier->supplierType = $payload->supplierType;
         $supplier->supplierStatus = $payload->supplierStatus;
 
@@ -53,6 +54,7 @@ class SupplierRepository implements SupplierRepositoryInterface
         $supplier->supplierName = $payload->supplierName;
         $supplier->supplierAddress = $payload->supplierAddress;
         $supplier->supplierContactNum = $payload->supplierContactNum;
+        $supplier->supplierContactPerson = $payload->supplierContactPerson;
         $supplier->supplierType = $payload->supplierType;
         $supplier->supplierStatus = $payload->supplierStatus;
 

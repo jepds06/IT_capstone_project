@@ -9,9 +9,11 @@ use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductMaterialsController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\SupplierMaterialController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+//accounts route
 Route::prefix('accounts')->group(function(){
     Route::get('/', [AccountController::class, 'index']);
     Route::get('/{accountId}', [AccountController::class, 'show']);
@@ -20,6 +22,7 @@ Route::prefix('accounts')->group(function(){
     Route::delete('/{accountId}', [AccountController::class, 'destroy']);
 });
 
+//accountTypes route
 Route::prefix('accountTypes')->group(function(){
     Route::get('/', [AccountTypeController::class, 'index']);
     Route::get('/{accountTypeId}', [AccountTypeController::class, 'show']);
@@ -27,6 +30,7 @@ Route::prefix('accountTypes')->group(function(){
     Route::put('/{accountTypeId}',[AccountTypeController::class, 'update']);
 });
 
+//administrators route
 Route::prefix('administrators')->group(function(){
     Route::get('/', [AdminController::class, 'index']);
     Route::get('/{adminId}', [AdminController::class, 'show']);
@@ -35,6 +39,7 @@ Route::prefix('administrators')->group(function(){
     Route::delete('/{adminId}', [AdminController::class, 'destroy']);
 });
 
+//customers route
 Route::prefix('customers')->group(function(){
     Route::get('/', [CustomerController::class, 'index']);
     Route::get('/{cstrId}', [CustomerController::class, 'show']);
@@ -43,6 +48,7 @@ Route::prefix('customers')->group(function(){
     Route::delete('/{cstrId}', [CustomerController::class, 'destroy']);
 });
 
+//suppliers route
 Route::prefix('suppliers')->group(function(){
     Route::get('/', [SupplierController::class, 'index']);
     Route::get('/{supplierId}', [SupplierController::class, 'show']);
@@ -51,6 +57,7 @@ Route::prefix('suppliers')->group(function(){
     Route::delete('/{supplierId}', [SupplierController::class, 'destroy']);
 });
 
+//productCategories route
 Route::prefix('productCategories')->group(function(){
     Route::get('/', [ProductCategoryController::class, 'index']);
     Route::get('/{prodCatId}', [ProductCategoryController::class, 'show']);
@@ -58,6 +65,7 @@ Route::prefix('productCategories')->group(function(){
     Route::put('/{prodCatId}', [ProductCategoryController::class, 'update']);
 });
 
+//materials route
 Route::prefix('materials')->group(function(){
     Route::get('/', [MaterialController::class, 'index']);
     Route::get('/{materialId}', [MaterialController::class, 'show']);
@@ -65,6 +73,7 @@ Route::prefix('materials')->group(function(){
     Route::put('/{materialId}', [MaterialController::class, 'update']);
 });
 
+//products route
 Route::prefix('products')->group(function(){
     Route::get('/', [ProductController::class, 'index']);
     Route::get('/{productId}', [ProductController::class, 'show']);
@@ -73,9 +82,18 @@ Route::prefix('products')->group(function(){
     Route::delete('/{productId}', [ProductController::class, 'destroy']);
 });
 
-Route::prefix('productsMaterials')->group(function(){
+//productMaterials route
+Route::prefix('productMaterials')->group(function(){
     Route::get('/', [ProductMaterialsController::class, 'index']);
-    Route::get('/{productId}', [ProductMaterialsController::class, 'show']);
+    Route::get('/{productMatsId}', [ProductMaterialsController::class, 'show']);
     Route::post('/', [ProductMaterialsController::class, 'store']);
-    Route::put('/{productId}', [ProductMaterialsController::class, 'update']);
+    Route::put('/{productMatsId}', [ProductMaterialsController::class, 'update']);
+});
+
+//supplierMaterials route
+Route::prefix('supplierMaterials')->group(function(){
+    Route::get('/', [SupplierMaterialController::class, 'index']);
+    Route::get('/{suppMtrlId}', [SupplierMaterialController::class, 'show']);
+    Route::post('/', [SupplierMaterialController::class, 'store']);
+    Route::put('/{suppMtrlId}', [SupplierMaterialController::class, 'update']);
 });

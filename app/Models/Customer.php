@@ -24,6 +24,7 @@ class Customer extends Model
         'cstrStatus'
     ];
 
+    //eloquent/relationship between accounts & customers
     public function account()
     {
         return $this->belongsTo(Account::class, 'accountID');

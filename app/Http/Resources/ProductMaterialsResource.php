@@ -14,6 +14,11 @@ class ProductMaterialsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'productMatsID' => $this->productMatsID,
+            'productID' => $this->productID,
+            'materialID' => $this->materialID,
+            'quantity' => $this->quantity
+        ];
     }
 }
