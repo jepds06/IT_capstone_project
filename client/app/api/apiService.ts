@@ -47,6 +47,19 @@ export class ApiService {
     }
   }
 
+  async put(endpoint: string, body?: Record<string, any>) {
+    try {
+      const url = this.constructUrl(endpoint);
+      return await $fetch(url, {
+        method: 'PUT',
+        body,
+      });
+    } catch (error) {
+      console.error('API POST Error:', error);
+      throw error;
+    }
+  }
+
   // Add more methods if needed (put, delete, etc.)
 }
 

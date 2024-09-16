@@ -196,6 +196,12 @@ export const adminFields = [
       attributes: 'required pattern="[0-9]{11}" maxlength="11"',
     },
     {
+      name: "supplierContactPerson",
+      type: "text",
+      label: "Contact Person",
+      placeholder: "Enter your contact person",
+    },
+    {
       name: "supplierAddress",
       type: "text",
       label: "Address",
@@ -252,6 +258,8 @@ export const adminFields = [
         errors.push({ path: "username", message:  validationMessage.required });
     if (!state.email)
       errors.push({ path: "email", message:  validationMessage.required });
+    if (!state.supplierContactPerson)
+      errors.push({ path: "supplierContactPerson", message:  validationMessage.required });
     if (!state.password)
       errors.push({ path: "password", message: validationMessage.required });
     if (!/^(?=.*[a-zA-Z])(?=.*[0-9])[A-Za-z0-9]{8,}$/.test(state.password))

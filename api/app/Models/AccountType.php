@@ -17,6 +17,7 @@ class AccountType extends Model
         'accountTypeName'
     ];
 
+    //eloquent/relationship between accounts & account types
     public function accounts()
     {
         return $this->hasMany(Account::class, 'accTypeID');

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('supplierName');
             $table->string('supplierAddress');
             $table->string('supplierContactNum');
+            $table->string('supplierContactPerson');
             $table->string('supplierType');
             $table->string('supplierStatus');
             $table->timestamps();

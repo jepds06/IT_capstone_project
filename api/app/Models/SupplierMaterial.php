@@ -17,6 +17,22 @@ class SupplierMaterial extends Model
     protected $fillable =[
         'supplierID',
         'materialID',
-        'unitPrice',
+        'unitPrice'
     ];
+
+    protected $casts = [
+        'unitPrice' => 'decimal:2'
+    ];
+
+    //eloquent/relationship between suppliers & supplierMaterials
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class,'supplierID');
+    }
+
+    //eloquent/relationship between materials & supplierMaterials
+    public function material()
+    {
+        return $this->belongsTo(Material::class,'materialID');
+    }
 }

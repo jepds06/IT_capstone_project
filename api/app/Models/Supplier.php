@@ -18,12 +18,20 @@ class Supplier extends Model
         'supplierName',
         'supplierAddress',
         'supplierContactNum',
+        'supplierContactPerson',
         'supplierType',
         'supplierStatus'
     ];
 
+    //eloquent/relationship between accounts & suppliers
     public function account()
     {
         return $this->belongsTo(Account::class, 'accountID');
+    }
+
+    //eloquent/relationship betweeen supplier & supplierMaterials
+    public function supplierMaterials()
+    {
+        return $this->hasMany(SupplierMaterial::class, 'supplierID');
     }
 }

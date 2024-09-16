@@ -39,7 +39,7 @@ function onSubmit(data: any) {
   console.log("Submitted", data);
   // return variable with accountype that user signing in API Call
   // const result = apiService.post('')
-  const result = { accountType: 3 };
+  const result = { accountType: 1 };
 
   if (result.accountType === 1) {
     navigateTo("/admin");

@@ -42,7 +42,14 @@
             <router-link to="/customers/view" class="block p-4 hover:bg-gray-800">View Customers</router-link>
             <router-link to="/customers/orders" class="block p-4 hover:bg-gray-800">Customer Orders</router-link>
           </CollapsibleMenu>
-  
+          
+          <li>
+            <div :class="route.path === '/admin/material' ? 'block p-4 bg-gray-400' : 'block p-4 hover:bg-gray-800'">
+            <UIcon name="material-symbols:list-rounded" class="w-5 h-5 mr-5"/>
+            <router-link to="/admin/material" class="text-center">Materials</router-link>
+          </div>
+          </li>
+
           <li>
             <div class="block p-4 hover:bg-gray-800">
             <UIcon name="mdi:receipt-text-arrow-right-outline" class="w-5 h-5 mr-5"/>

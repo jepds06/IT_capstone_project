@@ -17,29 +17,29 @@
           </button>
           <h2 class="text-lg font-semibold mb-4">{{ formMode === 'add' ? 'Add Product' : 'Edit Product' }}</h2>
           <form @submit.prevent="saveProduct">
-            <div class="mb-4">
+            <div class="mb-4" v-if="formMode === 'edit'">
               <label for="id" class="block text-sm font-medium text-gray-700">Id</label>
-              <input v-model="form.id" type="text" id="id" class="mt-1 block w-full border border-gray-300 rounded-lg p-2" :readonly="formMode === 'edit'"/>
+              <input v-model="form.productID" type="text" id="id" class="mt-1 block w-full border border-gray-300 rounded-lg p-2" :readonly="formMode === 'edit'"/>
             </div>
             <div class="mb-4">
               <label for="prodCat" class="block text-sm font-medium text-gray-700">Product Category</label>
-              <select v-model="form.prodCat" id="prodCat" class="mt-1 block w-full border border-gray-300 rounded-lg p-2">
-                <option v-for="category in categories" :key="category.id" :value="category.id">
+              <select v-model="form.prodCatID" id="prodCat" class="mt-1 block w-full border border-gray-300 rounded-lg p-2">
+                <option v-for="category in categories" :key="category.prodCatID" :value="category.prodCatID">
                   {{ category.description }}
                 </option>
               </select>
             </div>
             <div class="mb-4">
               <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-              <input v-model="form.name" type="text" id="name" class="mt-1 block w-full border border-gray-300 rounded-lg p-2"/>
+              <input v-model="form.productName" type="text" id="name" class="mt-1 block w-full border border-gray-300 rounded-lg p-2"/>
             </div>
             <div class="mb-4">
-              <label for="specs" class="block text-sm font-medium text-gray-700">Specs</label>
-              <textarea v-model="form.specs" id="specs" rows="3" class="mt-1 block w-full border border-gray-300 rounded-lg p-2"></textarea>
+              <label for="specs" class="block text-sm font-medium text-gray-700">Specifications</label>
+              <textarea v-model="form.specifications" id="specs" rows="3" class="mt-1 block w-full border border-gray-300 rounded-lg p-2"></textarea>
             </div>
             <div class="mb-4">
               <label for="unitPrice" class="block text-sm font-medium text-gray-700">Unit Price</label>
-              <input v-model="form.unitPrice" type="number" id="unitPrice" class="mt-1 block w-full border border-gray-300 rounded-lg p-2"/>
+              <input @change="(e) => e.target.value ? parseFloat(e.target.value) : null" v-model="form.unitPrice" id="unitPrice" class="mt-1 block w-full border border-gray-300 rounded-lg p-2"/>
             </div>
             <div class="flex justify-end">
               <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
@@ -144,19 +144,19 @@
           <tr>
             <th class="p-2 border-b text-center">Id</th>
             <th class="p-2 border-b text-center">Name</th>
-            <th class="p-2 border-b text-center">Specs</th>
+            <th class="p-2 border-b text-center">Specifications</th>
             <th class="p-2 border-b text-center">Unit Price</th>
             <th class="p-2 border-b text-center">Category</th>
             <th class="p-2 border-b text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="product in products" :key="product.id">
-            <td class="p-2 border-b text-center">{{ product.id }}</td>
-            <td class="p-2 border-b text-center">{{ product.name }}</td>
-            <td class="p-2 border-b text-center">{{ product.specs }}</td>
-            <td class="p-2 border-b text-center">{{ product.unitPrice | currency }}</td>
-            <td class="p-2 border-b text-center">{{ getCategoryDescription(product.prodCat) }}</td>
+          <tr v-for="product in products" :key="product.productID">
+            <td class="p-2 border-b text-center">{{ product.productID }}</td>
+            <td class="p-2 border-b text-center">{{ product.productName }}</td>
+            <td class="p-2 border-b text-center">{{ product.specifications }}</td>
+            <td class="p-2 border-b text-center">{{ product.unitPrice }}</td>
+            <td class="p-2 border-b text-center">{{ getCategoryDescription(product.prodCatID) }}</td>
             <td class="p-2 border-b text-center flex justify-center space-x-2">
               <button @click="viewProduct(product)" class="text-blue-500 hover:underline">
                 <i class="fas fa-eye"></i>
@@ -176,21 +176,19 @@
   
   <script setup>
   import { ref } from 'vue';
+  import { apiService } from "~/api/apiService";
+
   
   const products = ref([]);
-  const categories = ref([
-    // Example categories, replace with real data from your Product Categories
-    { id: '1', description: 'Chair' },
-    { id: '2', description: 'Table' }
-  ]);
+  const categories = ref([]);
   
   const isModalVisible = ref(false);
   const formMode = ref('add'); // 'add' or 'edit'
   const form = ref({
-    id: '',
-    prodCat: '',
-    name: '',
-    specs: '',
+    productID: '',
+    prodCatID: '',
+    productName: '',
+    specifications: '',
     unitPrice: ''
   });
   
@@ -207,7 +205,8 @@
     qty: ''
   });
   
-  function openModal(mode = 'add', product = null) {
+  async function openModal(mode = 'add', product = null) {
+    await fetchCategoriesData()
     formMode.value = mode;
     if (mode === 'edit' && product) {
       form.value = { ...product };
@@ -221,20 +220,24 @@
     isModalVisible.value = false;
   }
   
-  function saveProduct() {
+  async function saveProduct() {
     if (formMode.value === 'add') {
-      products.value.push({ ...form.value });
+      const { data } = await apiService.post("/api/products", form.value);
+      products.value.push(data);
+      alert("Product created successfully!");
     } else if (formMode.value === 'edit') {
-      const index = products.value.findIndex(prod => prod.id === form.value.id);
+      const index = products.value.findIndex(prod => prod.productID === form.value.productID);
       if (index !== -1) {
-        products.value[index] = { ...form.value };
+        const { data } = await apiService.put(`/api/products/${form.value.productID}`, form.value);
+        products.value[index] = data;
+        alert("Product edited successfully!");
       }
     }
     closeModal();
   }
   
   function viewProduct(product) {
-    alert(`Viewing product: ${product.name}`);
+    alert(`Viewing product: ${product.productName}`);
   }
   
   function showMaterials(product) {
@@ -284,9 +287,34 @@
   }
   
   function getCategoryDescription(categoryId) {
-    const category = categories.value.find(cat => cat.id === categoryId);
+    const category = categories.value.find(cat => cat.prodCatID === categoryId);
     return category ? category.description : 'Unknown';
   }
+
+  // Define an async function to fetch categories data
+const fetchCategoriesData = async () => {
+  try {
+    // Call the get method from ApiService
+    const { data } = await apiService.get("/api/productCategories"); // Replace '/endpoint' with your actual API endpoint
+    categories.value = data
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
+const fetchProductsData = async () => {
+  try {
+    // Call the get method from ApiService
+    const { data } = await apiService.get("/api/products"); // Replace '/endpoint' with your actual API endpoint
+    products.value = data
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+onMounted(() => {
+  fetchCategoriesData()
+  fetchProductsData()
+})
   </script>
   
   <style scoped>

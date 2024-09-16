@@ -20,4 +20,16 @@ class Material extends Model
         'brand',
         'unitOfMeasure'
     ];
+
+    //eloquent/relationship between materials & productMaterials
+    public function productMaterials()
+    {
+        return $this->hasMany(ProductMaterial::class, 'materialID');
+    }
+
+    //eloquent/relationship between materials & supplierMaterials
+    public function supplierMaterials()
+    {
+        return $this->hasMany(SupplierMaterial::class, 'materialID');
+    }
 }

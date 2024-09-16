@@ -14,6 +14,12 @@ class MaterialResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'materialID' => $this->materialID,
+            'description' => $this->description,
+            'specification' => $this->specification,
+            'brand' => $this->brand,
+            'unitOfMeasure' => $this->unitOfMeasure
+        ];
     }
 }

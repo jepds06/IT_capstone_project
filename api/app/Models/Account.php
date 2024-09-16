@@ -20,8 +20,27 @@ class Account extends Model
         'accTypeID'
     ];
 
+    //eloquent/relationship between account types & accounts
     public function accountType()
     {
         return $this->belongsTo(AccountType::class, 'accTypeID');
+    }
+
+    //eloquent/relationship between accounts & administrators
+    public function administrators()
+    {
+        return $this->hasMany(Administrator::class, 'accountID');
+    }
+
+    //eloquent/relationship between accounts & customers
+    public function customers()
+    {
+        return $this->hasMany(Customer::class, 'accountID');
+    }
+
+    //eloquent/relationship between accounts & suppliers
+    public function suppliers()
+    {
+        return $this->hasMany(Supplier::class, 'accountID');
     }
 }

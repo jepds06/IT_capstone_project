@@ -20,4 +20,16 @@ class Product extends Model
         'unitPrice',
         'prodCatID'
     ];
+
+    public $timestamps = false;
+    
+    public function prdCategory()
+    {
+        return $this->belongsTo(ProductCategory::class,'prodCatID');
+    }
+
+    public function productMaterials()
+    {
+        return $this->hasMany(ProductMaterial::class, 'productID');
+    }
 }

@@ -22,10 +22,11 @@ class SupplierUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'accountID' => 'required|exists:accounts, accountID',
+            'accountID' => 'required|integer|exists:accounts,accountID',
             'supplierName' => 'required|string|max:255',
             'supplierAddress' => 'required|string|max:255',
             'supplierContactNum' => 'required|string|max:255',
+            'supplierContactPerson' => 'required|string|max:255',
             'supplierType' => 'required|string|max:255',
             'supplierStatus' => 'required|string|max:255'
         ];

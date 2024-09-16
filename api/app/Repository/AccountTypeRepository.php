@@ -15,7 +15,7 @@ class AccountTypeRepository implements AccountTypeRepositoryInterface
 
     public function findOnebyId(int $accTypeId)
     {
-        return AccountType::FindorFail($accTypeId);
+        return AccountType::findOrFail($accTypeId);
     }
 
     public function create(object $payload)

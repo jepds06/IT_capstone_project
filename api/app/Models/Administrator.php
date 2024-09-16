@@ -21,6 +21,7 @@ class Administrator extends Model
         'adminAddress'
     ];
 
+    //eloquent/relationship between accounts & administrators
     public function account()
     {
         return $this->belongsTo(Account::class, 'accountID');
