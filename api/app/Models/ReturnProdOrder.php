@@ -9,11 +9,16 @@ class ReturnProdOrder extends Model
 {
     use HasFactory;
 
+    protected $table = 'returnProdOrders';
+    protected $primaryKey = 'returnPrdOrdID';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $fillable = [
-        'sls_prd_ord_ID',
-        'return_date',
-        'qty_returned',
+        'slsPrdOrdID',
+        'returnDate',
+        'qtyReturned',
         'reason',
-        'refund_amount'
+        'refundAmount'
     ];
 }

@@ -9,10 +9,27 @@ class Material extends Model
 {
     use HasFactory;
 
+    protected $table = 'materials';
+    protected $primaryKey = 'materialID';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $fillable = [
         'description',
         'specification',
         'brand',
-        'unit_of_measure'
+        'unitOfMeasure'
     ];
+
+    //eloquent/relationship between materials & productMaterials
+    public function productMaterials()
+    {
+        return $this->hasMany(ProductMaterial::class, 'materialID');
+    }
+
+    //eloquent/relationship between materials & supplierMaterials
+    public function supplierMaterials()
+    {
+        return $this->hasMany(SupplierMaterial::class, 'materialID');
+    }
 }

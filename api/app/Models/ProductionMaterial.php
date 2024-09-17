@@ -9,8 +9,14 @@ class ProductionMaterial extends Model
 {
     use HasFactory;
 
+    protected $table = 'productionMaterials';
+    protected $primaryKey = 'prodtnMtrlID';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $fillable = [
-        'product_mats_ID',
-        'production_ID'
+        'productMatsID',
+        'productionID',
+        'quantity'
     ];
 }

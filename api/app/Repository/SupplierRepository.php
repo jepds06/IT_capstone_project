@@ -22,19 +22,19 @@ class SupplierRepository implements SupplierRepositoryInterface
     public function create(object $payload)
     {
         $supplier = new Supplier();
-        $account = Account::find($payload->account_ID);
+        $account = Account::find($payload->accountID);
         if ($account) {
             $supplier->account()->associate($account);
         } else {
             // Handle the error: throw an exception, return an error response, or set a default value
             throw new \Exception("Invalid account ID provided.");
         }
-        $supplier->supplier_name = $payload->supplier_name;
-        $supplier->supplier_address = $payload->supplier_address;
-        $supplier->supplier_email = $payload->supplier_email;
-        $supplier->supplier_contact_num = $payload->supplier_contact_num;
-        $supplier->supplier_type = $payload->supplier_type;
-        $supplier->supplier_status = $payload->supplier_status;
+        $supplier->supplierName = $payload->supplierName;
+        $supplier->supplierAddress = $payload->supplierAddress;
+        $supplier->supplierContactNum = $payload->supplierContactNum;
+        $supplier->supplierContactPerson = $payload->supplierContactPerson;
+        $supplier->supplierType = $payload->supplierType;
+        $supplier->supplierStatus = $payload->supplierStatus;
 
         $supplier->save();
 
@@ -44,19 +44,19 @@ class SupplierRepository implements SupplierRepositoryInterface
     public function update(object $payload, int $supplierId)
     {
         $supplier = Supplier::findOrFail($supplierId);
-        $account = Account::find($payload->account_ID);
+        $account = Account::find($payload->accountID);
         if ($account) {
             $supplier->account()->associate($account);
         } else {
             // Handle the error: throw an exception, return an error response, or set a default value
             throw new \Exception("Invalid account ID provided.");
         }
-        $supplier->supplier_name = $payload->supplier_name;
-        $supplier->supplier_address = $payload->supplier_address;
-        $supplier->supplier_email = $payload->supplier_email;
-        $supplier->supplier_contact_num = $payload->supplier_contact_num;
-        $supplier->supplier_type = $payload->supplier_type;
-        $supplier->supplier_status = $payload->supplier_status;
+        $supplier->supplierName = $payload->supplierName;
+        $supplier->supplierAddress = $payload->supplierAddress;
+        $supplier->supplierContactNum = $payload->supplierContactNum;
+        $supplier->supplierContactPerson = $payload->supplierContactPerson;
+        $supplier->supplierType = $payload->supplierType;
+        $supplier->supplierStatus = $payload->supplierStatus;
 
         $supplier->save();
 

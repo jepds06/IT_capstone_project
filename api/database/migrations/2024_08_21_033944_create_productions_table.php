@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('productions', function (Blueprint $table) {
-            $table->bigIncrements('production_ID');
-            $table->integer('est_production_days');
-            $table->date('end_date');
+            $table->bigIncrements('productionID');
+            $table->integer('estProductionDays');
+            $table->date('endDate');
             $table->integer('quantity');
             $table->string('status');
             $table->timestamps();

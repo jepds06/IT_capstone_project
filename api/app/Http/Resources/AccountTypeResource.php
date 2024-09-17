@@ -14,6 +14,9 @@ class AccountTypeResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'accTypeID' => $this->accTypeID,
+            'accountTypeName' => $this->accountTypeName
+        ];
     }
 }

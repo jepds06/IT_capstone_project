@@ -12,17 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('suppliers', function (Blueprint $table) {
-            $table->bigIncrements('supplier_ID');
-            $table->unsignedBigInteger('account_ID');
-            $table->string('supplier_name');
-            $table->string('supplier_address');
-            $table->string('supplier_email');
-            $table->string('supplier_contact_num');
-            $table->string('supplier_type');
-            $table->string('supplier_status');
+            $table->bigIncrements('supplierID');
+            $table->unsignedBigInteger('accountID');
+            $table->string('supplierName');
+            $table->string('supplierAddress');
+            $table->string('supplierContactNum');
+            $table->string('supplierContactPerson');
+            $table->string('supplierType');
+            $table->string('supplierStatus');
             $table->timestamps();
 
-            $table->foreign('account_ID')->references('account_ID')->on('accounts')
+            $table->foreign('accountID')->references('accountID')->on('accounts')
             ->onUpdate('cascade')
             ->onDelete('cascade');
         });
@@ -35,7 +35,7 @@ return new class extends Migration
     {
         Schema::table('suppliers', function (Blueprint $table) {
             // Drop the foreign key before dropping the table
-            $table->dropForeign(['account_ID']);
+            $table->dropForeign(['accountID']);
         });
 
         Schema::dropIfExists('suppliers');

@@ -14,6 +14,13 @@ class AdminResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'adminID' => $this->adminID,
+            'accountID' => $this->accountID,
+            'adminFirstName' => $this->adminFirstName,
+            'adminLastName' => $this->adminLastName,
+            'contactNum' => $this->contactNum,
+            'adminAddress' => $this->adminAddress
+        ];
     }
 }

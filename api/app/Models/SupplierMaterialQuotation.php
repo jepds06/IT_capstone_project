@@ -9,10 +9,15 @@ class SupplierMaterialQuotation extends Model
 {
     use HasFactory;
 
+    protected $table = 'supplierMaterialQuotations';
+    protected $primaryKey = 'suppMatsQuoteID';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $fillable =[
-        'quotation_ID',
-        'supp_matrl_ID',
+        'quoteID',
+        'suppMatrlID',
         'quantity',
-        'quotation_price'
+        'quotationPrice'
     ];
 }

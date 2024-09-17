@@ -11,15 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sales_deliveries', function (Blueprint $table) {
-            $table->bigIncrements('delivery_ID');
-            $table->unsignedBigInteger('sales_ID');
-            $table->date('delivery_date');
-            $table->string('delivery_address');
-            $table->string('delivery_status');
+        Schema::create('salesDeliveries', function (Blueprint $table) {
+            $table->bigIncrements('deliveryID');
+            $table->unsignedBigInteger('salesID');
+            $table->date('deliveryDate');
+            $table->string('deliveryAddress');
+            $table->string('deliveryStatus');
             $table->timestamps();
 
-            $table->Foreign('sales_ID')->references('sales_ID')->on('sales')
+            $table->Foreign('salesID')->references('salesID')->on('sales')
             ->onUpdate('cascade')
             ->onDelete('cascade');
         });
@@ -30,10 +30,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('sales_deliveries', function(Blueprint $table) {
-            $table->dropForeign('sales_ID');
+        Schema::table('salesDeliveries', function(Blueprint $table) {
+            $table->dropForeign('salesID');
         });
 
-        Schema::dropIfExists('sales_deliveries');
+        Schema::dropIfExists('salesDeliveries');
     }
 };

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import '@fortawesome/fontawesome-free/css/all.min.css';
 const colorMode = useColorMode()
 
 const color = computed(() => colorMode.value === 'dark' ? '#111827' : 'white')
@@ -18,7 +19,7 @@ useHead({
 })
 
 useSeoMeta({
-  titleTemplate: '%s - Nuxt UI Pro - SaaS template',
+  titleTemplate: '%s - Supply Ease',
   ogImage: 'https://saas-template.nuxt.dev/social-card.png',
   twitterImage: 'https://saas-template.nuxt.dev/social-card.png',
   twitterCard: 'summary_large_image'
@@ -36,3 +37,19 @@ useSeoMeta({
     <UNotifications />
   </div>
 </template>
+
+<!-- <template>
+  <div>
+    <NuxtPage/>
+  </div>
+</template>
+
+<script setup>
+// Import FontAwesome CSS globally
+import '@fortawesome/fontawesome-free/css/all.min.css';
+</script>
+
+<style>
+/* Add any global styles here */
+</style> -->
+

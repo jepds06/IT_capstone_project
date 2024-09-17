@@ -11,18 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('request_prod_materials', function (Blueprint $table) {
-            $table->bigIncrements('req_prodmats_ID');
-            $table->unsignedBigInteger('prodtn_mtrl_ID');
-            $table->unsignedBigInteger('req_ID');
-            $table->integer('qty_requested');
+        Schema::create('requestProdMaterials', function (Blueprint $table) {
+            $table->bigIncrements('reqProdMatsID');
+            $table->unsignedBigInteger('prodtnMtrlID');
+            $table->unsignedBigInteger('reqID');
+            $table->integer('qtyRequested');
             $table->timestamps();
 
-            $table->Foreign('prodtn_mtrl_ID')->references('prodtn_mtrl_ID')->on('production_materials')
+            $table->Foreign('prodtnMtrlID')->references('prodtnMtrlID')->on('productionMaterials')
             ->onUpdate('cascade')
             ->onDelete('cascade');
 
-            $table->Foreign('req_ID')->references('req_ID')->on('requests')
+            $table->Foreign('reqID')->references('reqID')->on('requests')
             ->onUpdate('cascade')
             ->onDelete('cascade');
         });
@@ -33,11 +33,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('request_prod_materials', function(Blueprint $table){
+        Schema::table('requestProdMaterials', function(Blueprint $table){
             // Drop the foreign key before dropping the table
-            $table->dropForeign(['prodtn_mtrl_ID']);
-            $table->dropForeign(['req_ID']);
+            $table->dropForeign(['prodtnMtrlID']);
+            $table->dropForeign(['reqID']);
         });
-        Schema::dropIfExists('request_prod_materials');
+        Schema::dropIfExists('requestProdMaterials');
     }
 };

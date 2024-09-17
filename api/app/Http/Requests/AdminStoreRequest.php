@@ -22,11 +22,11 @@ class AdminStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'account_ID' => 'required|exists:accounts, account_ID',
-            'admin_first_name' => 'required|string|max:255',
-            'admin_last_name' =>'required|string|max:255',
-            'contact_num' => 'required|string|max:255',
-            'admin_address' => 'required|string|max:255'
+            'accountID' => 'required|integer|exists:accounts,accountID',
+            'adminFirstName' => 'required|string|max:255',
+            'adminLastName' =>'required|string|max:255',
+            'contactNum' => 'required|string|max:255',
+            'adminAddress' => 'required|string|max:255'
         ];
     }
 }

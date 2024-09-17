@@ -17,6 +17,10 @@ const isSignUpOpen = ref(false);
 //   label: 'Blog',
 //   to: '/blog'
 // }]
+
+const closeModal = () => {
+  isSignUpOpen.value = false;
+};
 </script>
 
 <template>
@@ -42,9 +46,9 @@ const isSignUpOpen = ref(false);
         @click="isSignUpOpen = true"
         class="hidden lg:flex"
       />
-      <UModal v-model="isSignUpOpen" >
+      <UModal v-model="isSignUpOpen" prevent-close>
         <div class="p-4">
-          <SignUp />
+          <SignUp @close-modal="closeModal"/>
         </div>
       </UModal>
     </template>

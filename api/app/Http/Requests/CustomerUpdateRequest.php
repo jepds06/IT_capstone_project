@@ -22,14 +22,14 @@ class CustomerUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'account_ID' => 'required|exists:accounts, account_ID',
-            'cstr_first_name' => 'required|string|max:255',
-            'cstr_last_name' => 'required|string|max:255',
-            'contact_num' => 'required|string|max:255',
-            'cstr_address' => 'required|string|max:255',
-            'customer_type' => 'required|string|max:255',
-            'pref_contact_method' => 'required|string|max:255',
-            'cstr_status' => 'required|string|max:255'
+            'accountID' => 'required|integer|exists:accounts,accountID',
+            'cstrFirstName' => 'required|string|max:255',
+            'cstrLastName' => 'required|string|max:255',
+            'contactNum' => 'required|string|max:255',
+            'cstrAddress' => 'required|string|max:255',
+            'customerType' => 'required|string|max:255',
+            'prefContactMethod' => 'required|string|max:255',
+            'cstrStatus' => 'required|string|max:255'
         ];
     }
 }
