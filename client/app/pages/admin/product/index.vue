@@ -142,12 +142,12 @@
       <table class="min-w-full border border-gray-300 rounded-lg">
         <thead class="bg-gray-100">
           <tr>
-            <th class="p-2 border-b text-center">Id</th>
-            <th class="p-2 border-b text-center">Name</th>
-            <th class="p-2 border-b text-center">Specifications</th>
-            <th class="p-2 border-b text-center">Unit Price</th>
-            <th class="p-2 border-b text-center">Category</th>
-            <th class="p-2 border-b text-center">Actions</th>
+            <th class="p-2 border-b text-black  text-center">Id</th>
+            <th class="p-2 border-b text-black text-center">Name</th>
+            <th class="p-2 border-b text-black text-center">Specifications</th>
+            <th class="p-2 border-b text-black text-center">Unit Price</th>
+            <th class="p-2 border-b text-black text-center">Category</th>
+            <th class="p-2 border-b text-black text-center">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -311,6 +311,7 @@ const fetchProductsData = async () => {
     console.error("Error fetching data:", error);
   }
 };
+
 onMounted(() => {
   fetchCategoriesData()
   fetchProductsData()

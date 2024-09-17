@@ -87,12 +87,12 @@
     <table class="min-w-full border border-gray-300 rounded-lg">
       <thead class="bg-gray-100">
         <tr>
-          <th class="p-2 border-b text-center">Id</th>
-          <th class="p-2 border-b text-center">Description</th>
-          <th class="p-2 border-b text-center">Brand</th>
-          <th class="p-2 border-b text-center">Unit of Measure</th>
+          <th class="p-2 border-b text-black text-center">Id</th>
+          <th class="p-2 border-b text-black text-center">Description</th>
+          <th class="p-2 border-b text-black text-center">Brand</th>
+          <th class="p-2 border-b text-black text-center">Unit of Measure</th>
           <!-- <th class="p-2 border-b text-center">Status</th> -->
-          <th class="p-2 border-b text-center">Actions</th>
+          <th class="p-2 border-b text-black text-center">Actions</th>
         </tr>
       </thead>
       <tbody>
