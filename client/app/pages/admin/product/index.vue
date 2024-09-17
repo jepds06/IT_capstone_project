@@ -15,7 +15,7 @@
           <button @click="closeModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
             <i class="fas fa-times"></i>
           </button>
-          <h2 class="text-lg font-semibold mb-4">{{ formMode === 'add' ? 'Add Product' : 'Edit Product' }}</h2>
+          <h2 class="text-lg text-black font-semibold mb-4">{{ formMode === 'add' ? 'Add Product' : 'Edit Product' }}</h2>
           <form @submit.prevent="saveProduct">
             <div class="mb-4" v-if="formMode === 'edit'">
               <label for="id" class="block text-sm font-medium text-gray-700">Id</label>
@@ -60,26 +60,26 @@
           <button @click="closeProductInfo" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
             <i class="fas fa-times"></i>
           </button>
-          <h2 class="text-lg font-semibold mb-4">Product Materials</h2>
+          <h2 class="text-lg text-black font-semibold mb-4">Product Materials</h2>
           <div class="mb-4">
             <table class="min-w-full border border-gray-300 rounded-lg">
               <thead class="bg-gray-100">
                 <tr>
-                  <th class="p-2 border-b text-center">Material Id</th>
-                  <th class="p-2 border-b text-center">Name</th>
-                  <th class="p-2 border-b text-center">Specs</th>
-                  <th class="p-2 border-b text-center">Qty.</th>
-                  <th class="p-2 border-b text-center">Status</th>
-                  <th class="p-2 border-b text-center">Actions</th>
+                  <th class="p-2 border-b text-black text-center">Material Id</th>
+                  <th class="p-2 border-b text-black text-center">Name</th>
+                  <th class="p-2 border-b text-black text-center">Specs</th>
+                  <th class="p-2 border-b text-black text-center">Qty.</th>
+                  <th class="p-2 border-b text-black text-center">Status</th>
+                  <th class="p-2 border-b text-black text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
                 <tr v-for="material in selectedProductMaterials" :key="material.id">
-                  <td class="p-2 border-b text-center">{{ material.id }}</td>
-                  <td class="p-2 border-b text-center">{{ material.name }}</td>
-                  <td class="p-2 border-b text-center">{{ material.specs }}</td>
-                  <td class="p-2 border-b text-center">{{ material.qty }}</td>
-                  <td class="p-2 border-b text-center">
+                  <td class="p-2 border-b text-black text-center">{{ material.id }}</td>
+                  <td class="p-2 border-b text-black text-center">{{ material.name }}</td>
+                  <td class="p-2 border-b text-black text-center">{{ material.specs }}</td>
+                  <td class="p-2 border-b text-black text-center">{{ material.qty }}</td>
+                  <td class="p-2 border-b text-black text-center">
                     <i :class="material.status === 'active' ? 'fas fa-check text-green-500' : 'fas fa-times text-red-500'"></i>
                   </td>
                   <td class="p-2 border-b text-center flex justify-center space-x-2">
