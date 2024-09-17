@@ -61,6 +61,27 @@
             <i class="fas fa-times"></i>
           </button>
           <h2 class="text-lg text-black font-semibold mb-4">Product Materials</h2>
+          <!-- Product Info View Table (Read-Only) -->
+          <table class="min-w-full border border-gray-300 rounded-lg mb-4">
+            <thead class="bg-gray-200">
+              <tr>
+                <th class="p-2 border-b text-center">Product ID</th>
+                <th class="p-2 border-b text-center">Name</th>
+                <th class="p-2 border-b text-center">Specification</th>
+                <th class="p-2 border-b text-center">Unit Price</th>
+                <th class="p-2 border-b text-center">Category</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="p-2 border-b text-center">{{ selectedProduct?.id }}</td>
+                <td class="p-2 border-b text-center">{{ selectedProduct?.name }}</td>
+                <td class="p-2 border-b text-center">{{ selectedProduct?.specification }}</td>
+                <td class="p-2 border-b text-center">{{ selectedProduct?.unitPrice }}</td>
+                <td class="p-2 border-b text-center">{{ selectedProduct?.category }}</td>
+              </tr>
+            </tbody>
+          </table>
           <div class="mb-4">
             <table class="min-w-full border border-gray-300 rounded-lg">
               <thead class="bg-gray-100">
