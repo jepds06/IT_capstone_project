@@ -92,9 +92,10 @@ Route::prefix('products')->group(function(){
 //productMaterials route
 Route::prefix('productMaterials')->group(function(){
     Route::get('/', [ProductMaterialsController::class, 'index']);
-    Route::get('/{productMatsId}', [ProductMaterialsController::class, 'show']);
+    // Route::get('/{productMatsId}', [ProductMaterialsController::class, 'show']);
     Route::post('/', [ProductMaterialsController::class, 'store']);
     Route::put('/{productMatsId}', [ProductMaterialsController::class, 'update']);
+    Route::get('/materials/{productID}', [ProductMaterialsController::class, 'showMaterialsByProductID']);
 });
 
 //supplierMaterials route

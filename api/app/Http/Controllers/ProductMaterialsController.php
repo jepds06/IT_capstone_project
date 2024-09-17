@@ -36,11 +36,15 @@ class ProductMaterialsController extends Controller
     /**
      * Display the specified resource.
      */
+    public function showMaterialsByProductID(int $productID)
+    {
+        return $this->productMaterialsService->findProdMatsByProductId($productID);
+    }
+
     public function show(int $productMatsId)
     {
         return $this->productMaterialsService->findProductMatsById($productMatsId);
     }
-
     /**
      * Update the specified resource in storage.
      */

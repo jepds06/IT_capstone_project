@@ -131,7 +131,8 @@ function closeForm() {
 }
 
 async function saveCategory() {
-  if (formMode.value === "add") {
+  try {
+    if (formMode.value === "add") {
     const { data } = await apiService.post("/api/productCategories", form.value);
     categories.value.push(data);
     alert("Product Category created successfully!");
@@ -144,6 +145,12 @@ async function saveCategory() {
     }
   }
   closeForm();
+  } catch (error) {
+    console.log('error', error)
+    alert(`${form.value.description} is already exists`)
+    closeForm();
+  }
+ 
 }
 
 function viewCategory(category) {

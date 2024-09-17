@@ -19,4 +19,13 @@ class Product_Material extends Model
         'materialID',
         'quantity'
     ];
+    public function material()
+    {
+        return $this->belongsTo(Material::class, 'materialID');
+    }
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'productID');
+    }
 }

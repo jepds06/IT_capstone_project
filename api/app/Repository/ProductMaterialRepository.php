@@ -67,4 +67,19 @@ class ProductMaterialRepository implements ProductMaterialsRepositoryInterface
         return $productMats->fresh();
     }
 
+    public function findMaterialsByProductId(int $productID){
+        // Fetch the product along with its materials
+        $product = Product::with('productMaterials.material')->find($productID);
+
+        // Check if the product exists
+        if (!$product) {
+            return response()->json([
+                'message' => 'Product not found'
+            ], 404);
+        }
+
+        // Return the product and its associated materials as JSON
+        return response()->json($product);
+    }
+
 }

@@ -32,4 +32,10 @@ class Material extends Model
     {
         return $this->hasMany(SupplierMaterial::class, 'materialID');
     }
+
+    // Optionally, if you need to get the products associated with this material directly:
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'productmaterials', 'materialID', 'productID');
+    }
 }

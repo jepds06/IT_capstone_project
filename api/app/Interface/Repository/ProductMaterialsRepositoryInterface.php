@@ -11,4 +11,6 @@ interface ProductMaterialsRepositoryInterface
     public function create(object $payload);
 
     public function update(object $payload, int $productMatsId);
+
+    public function findMaterialsByProductId(int $productMatsId);
 }

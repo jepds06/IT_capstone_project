@@ -21,4 +21,5 @@ class ProductMaterialsResource extends JsonResource
             'quantity' => $this->quantity
         ];
     }
+    
 }
