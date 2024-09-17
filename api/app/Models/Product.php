@@ -32,4 +32,12 @@ class Product extends Model
     {
         return $this->hasMany(ProductMaterial::class, 'productID');
     }
+
+     /**
+     * Get the materials associated with the product directly.
+     */
+    public function materials()
+    {
+        return $this->belongsToMany(Material::class, 'productmaterials', 'productID', 'materialID');
+    }
 }

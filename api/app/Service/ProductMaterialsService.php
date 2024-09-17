@@ -43,4 +43,10 @@ class ProductMaterialsService implements ProductMaterialServiceInterface
 
         return new ProductMaterialsResource($productMats);
     }
+
+    public function findProdMatsByProductId(int $productId)
+    {
+        $productMats = $this->productMaterialRepository->findMaterialsByProductId($productId);
+        return  $productMats;
+    }
 }

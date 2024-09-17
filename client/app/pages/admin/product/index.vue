@@ -74,11 +74,11 @@
             </thead>
             <tbody>
               <tr>
-                <td class="p-2 border-b text-center">{{ selectedProduct?.id }}</td>
-                <td class="p-2 border-b text-center">{{ selectedProduct?.name }}</td>
-                <td class="p-2 border-b text-center">{{ selectedProduct?.specification }}</td>
+                <td class="p-2 border-b text-center">{{ selectedProduct?.productID }}</td>
+                <td class="p-2 border-b text-center">{{ selectedProduct?.productName }}</td>
+                <td class="p-2 border-b text-center">{{ selectedProduct?.specifications }}</td>
                 <td class="p-2 border-b text-center">{{ selectedProduct?.unitPrice }}</td>
-                <td class="p-2 border-b text-center">{{ selectedProduct?.category }}</td>
+                <td class="p-2 border-b text-center">{{ getCategoryDescription(selectedProduct?.prodCatID) }}</td>
               </tr>
             </tbody>
           </table>
@@ -90,19 +90,15 @@
                   <th class="p-2 border-b text-black text-center">Name</th>
                   <th class="p-2 border-b text-black text-center">Specs</th>
                   <th class="p-2 border-b text-black text-center">Qty.</th>
-                  <th class="p-2 border-b text-black text-center">Status</th>
                   <th class="p-2 border-b text-black text-center">Actions</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr v-for="material in selectedProductMaterials" :key="material.id">
-                  <td class="p-2 border-b text-black text-center">{{ material.id }}</td>
-                  <td class="p-2 border-b text-black text-center">{{ material.name }}</td>
-                  <td class="p-2 border-b text-black text-center">{{ material.specs }}</td>
-                  <td class="p-2 border-b text-black text-center">{{ material.qty }}</td>
-                  <td class="p-2 border-b text-black text-center">
-                    <i :class="material.status === 'active' ? 'fas fa-check text-green-500' : 'fas fa-times text-red-500'"></i>
-                  </td>
+              <tbody v-if="selectedProductMaterials.length > 0">
+                <tr v-for="material in selectedProductMaterials" :key="material.materialID">
+                  <td class="p-2 border-b text-black text-center">{{ material.materialID }}</td>
+                  <td class="p-2 border-b text-black text-center">{{ material.description }}</td>
+                  <td class="p-2 border-b text-black text-center">{{ material.specification }}</td>
+                  <td class="p-2 border-b text-black text-center">{{ material.quantity }}</td>
                   <td class="p-2 border-b text-center flex justify-center space-x-2">
                     <!-- Placeholder for actions, e.g., edit or delete material -->
                     <button @click="editMaterial(material)" class="text-yellow-500 hover:underline">
@@ -131,21 +127,29 @@
           </button>
           <h2 class="text-lg font-semibold mb-4">{{ materialMode === 'add' ? 'Add Material' : 'Edit Material' }}</h2>
           <form @submit.prevent="saveMaterial">
-            <div class="mb-4">
-              <label for="materialId" class="block text-sm font-medium text-gray-700">Material Id</label>
-              <input v-model="materialForm.id" type="text" id="materialId" class="mt-1 block w-full border border-gray-300 rounded-lg p-2" :readonly="materialMode === 'edit'"/>
+            <div class="mb-4" v-if="formMode === 'edit'">
+              <label for="materialId" class="block text-sm font-medium text-gray-700">Product Material Id</label>
+              <input v-model="materialForm.productMatsID" type="text" id="productMatsID" class="mt-1 block w-full border border-gray-300 rounded-lg p-2" :readonly="materialMode === 'edit'"/>
             </div>
             <div class="mb-4">
+              <label for="prodCat" class="block text-sm font-medium text-gray-700">Material</label>
+              <select v-model="materialForm.materialID" id="prodCat" class="mt-1 block w-full border border-gray-300 rounded-lg p-2">
+                <option v-for="material in materials" :key="material.materialID" :value="material.materialID">
+                  {{ material.description }}
+                </option>
+              </select>
+            </div>
+            <!-- <div class="mb-4">
               <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
               <input v-model="materialForm.name" type="text" id="name" class="mt-1 block w-full border border-gray-300 rounded-lg p-2"/>
-            </div>
+            </div> -->
             <div class="mb-4">
               <label for="specs" class="block text-sm font-medium text-gray-700">Specs</label>
-              <textarea v-model="materialForm.specs" id="specs" rows="3" class="mt-1 block w-full border border-gray-300 rounded-lg p-2"></textarea>
+              <textarea id="specs" rows="3" class="mt-1 block w-full border border-gray-300 rounded-lg p-2" readonly>{{getSpecsMaterial(materialForm.materialID)}}</textarea>
             </div>
             <div class="mb-4">
               <label for="qty" class="block text-sm font-medium text-gray-700">Quantity</label>
-              <input v-model="materialForm.qty" type="number" id="qty" class="mt-1 block w-full border border-gray-300 rounded-lg p-2"/>
+              <input v-model="materialForm.quantity" type="number" id="qty" class="mt-1 block w-full border border-gray-300 rounded-lg p-2"/>
             </div>
             <div class="flex justify-end">
               <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
@@ -202,6 +206,7 @@
   
   const products = ref([]);
   const categories = ref([]);
+  const materials = ref([]);
   
   const isModalVisible = ref(false);
   const formMode = ref('add'); // 'add' or 'edit'
@@ -220,10 +225,9 @@
   const isMaterialModalVisible = ref(false);
   const materialMode = ref('add'); // 'add' or 'edit'
   const materialForm = ref({
-    id: '',
-    name: '',
-    specs: '',
-    qty: ''
+    materialID: '',
+    productID: '',
+    quantity: ''
   });
   
   async function openModal(mode = 'add', product = null) {
@@ -261,13 +265,11 @@
     alert(`Viewing product: ${product.productName}`);
   }
   
-  function showMaterials(product) {
+  async function showMaterials(product) {
     selectedProduct.value = product;
     // Simulating fetching materials for the selected product
-    selectedProductMaterials.value = [
-      { id: '1', name: 'Wood', specs: 'Oak', qty: 10, status: 'active' },
-      { id: '2', name: 'Metal', specs: 'Aluminum', qty: 5, status: 'inactive' }
-    ];
+    fetchMaterialsData()
+    await fetchProductMaterialsData()
     isProductInfoVisible.value = true;
   }
   
@@ -276,8 +278,14 @@
   }
   
   function openMaterialModal() {
+
+    fetchMaterialsData()
     materialMode.value = 'add';
-    materialForm.value = { id: '', name: '', specs: '', qty: '' };
+    materialForm.value = {
+    materialID: '',
+    productID: '',
+    quantity: ''
+  };
     isMaterialModalVisible.value = true;
   }
   
@@ -285,13 +293,18 @@
     isMaterialModalVisible.value = false;
   }
   
-  function saveMaterial() {
+  async function saveMaterial() {
     if (materialMode.value === 'add') {
-      selectedProductMaterials.value.push({ ...materialForm.value, status: 'inactive' });
+      const { data } = await apiService.post("/api/productMaterials", {...materialForm.value, productID: selectedProduct.value.productID});
+      materials.value.push(data);
+      alert("Product Material added successfully!");
+      selectedProductMaterials.value.push({ ...materialForm.value });
     } else if (materialMode.value === 'edit') {
       const index = selectedProductMaterials.value.findIndex(mat => mat.id === materialForm.value.id);
       if (index !== -1) {
-        selectedProductMaterials.value[index] = { ...materialForm.value };
+        await apiService.put(`/api/productMaterials/${selectedProduct.value.productID}`, { ...materialForm.value, productID: selectedProduct.value.productID });
+        selectedProductMaterials.value[index] = { ...materialForm.value, productID: selectedProduct.value.productID };
+        alert("Product Material edited successfully!");
       }
     }
     closeMaterialModal();
@@ -311,6 +324,13 @@
     const category = categories.value.find(cat => cat.prodCatID === categoryId);
     return category ? category.description : 'Unknown';
   }
+
+  function getSpecsMaterial(materialId) {
+    console.log('materialId', materialId)
+    const material = materials.value.find(prod => prod.materialID === materialId);
+    return material ? material.specification : 'Unknown';
+  }
+
 
   // Define an async function to fetch categories data
 const fetchCategoriesData = async () => {
@@ -332,6 +352,33 @@ const fetchProductsData = async () => {
     console.error("Error fetching data:", error);
   }
 };
+
+const fetchMaterialsData = async () => {
+  try {
+    // Call the get method from ApiService
+    const { data } = await apiService.get("/api/materials"); // Replace '/endpoint' with your actual API endpoint
+    materials.value = data
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
+const fetchProductMaterialsData = async () => {
+  try {
+    const data = await apiService.get(`/api/productMaterials/materials/${selectedProduct.value.productID}`); // Replace '/endpoint' with your actual API endpoint
+    const transFormData = data['product_materials']?.map((value)=>{
+      return {
+        materialID: value.materialID,
+        description: value.material.description,
+        specification: value.material.specification,
+        quantity: value.quantity
+      }
+    })
+    selectedProductMaterials.value = transFormData
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+}
 
 onMounted(() => {
   fetchCategoriesData()
