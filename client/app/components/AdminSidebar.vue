@@ -28,9 +28,14 @@
             <router-link to="/payments/manage" class="block p-4 hover:bg-gray-800">Manage Payments</router-link>
           </CollapsibleMenu>
   
-          <CollapsibleMenu  icon="mdi:account-supervisor-circle" title="Production">
-            <router-link to="/production/orders" class="block p-4 hover:bg-gray-800">Production Orders</router-link>
+          <!-- <CollapsibleMenu  icon="mdi:account-supervisor-circle" title="Production">
+            <router-link to="/production/orders" :class="route.path === '/admin/orders' ? 'block p-4 bg-gray-400' : 'block p-4 hover:bg-gray-800'">Product Categories</router-link>
             <router-link to="/production/status" class="block p-4 hover:bg-gray-800">Production Status</router-link>
+          </CollapsibleMenu> -->
+
+          <CollapsibleMenu  icon="mdi:account-supervisor-circle" title="Production">
+            <router-link to="/admin/orders" :class="route.path === '/admin/orders' ? 'block p-4 bg-gray-400' : 'block p-4 hover:bg-gray-800'">Production</router-link>
+            <router-link to="/admin /status" :class="route.path === '/admin/status' ? 'block p-4 bg-gray-400' : 'block p-4 hover:bg-gray-800'">Product Details</router-link>
           </CollapsibleMenu>
   
           <CollapsibleMenu  icon="mdi:truck-check" title="Suppliers">
