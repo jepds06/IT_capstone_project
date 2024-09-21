@@ -64,41 +64,41 @@
           <!-- Product Info View Table (Read-Only) -->
           <table class="min-w-full border border-gray-300 rounded-lg mb-4">
             <thead class="bg-gray-200">
-              <tr>
-                <th class="p-2 border-b text-center">Product ID</th>
-                <th class="p-2 border-b text-center">Name</th>
-                <th class="p-2 border-b text-center">Specification</th>
-                <th class="p-2 border-b text-center">Unit Price</th>
-                <th class="p-2 border-b text-center">Category</th>
+              <tr class="p-2 border-b text-black text-center">
+                <th>Product ID</th>
+                <th>Name</th>
+                <th>Specification</th>
+                <th>Unit Price</th>
+                <th>Category</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td class="p-2 border-b text-center">{{ selectedProduct?.productID }}</td>
-                <td class="p-2 border-b text-center">{{ selectedProduct?.productName }}</td>
-                <td class="p-2 border-b text-center">{{ selectedProduct?.specifications }}</td>
-                <td class="p-2 border-b text-center">{{ selectedProduct?.unitPrice }}</td>
-                <td class="p-2 border-b text-center">{{ getCategoryDescription(selectedProduct?.prodCatID) }}</td>
+              <tr class="p-2 border-b text-black text-center">
+                <td>{{ selectedProduct?.productID }}</td>
+                <td>{{ selectedProduct?.productName }}</td>
+                <td>{{ selectedProduct?.specifications }}</td>
+                <td>{{ selectedProduct?.unitPrice }}</td>
+                <td>{{ getCategoryDescription(selectedProduct?.prodCatID) }}</td>
               </tr>
             </tbody>
           </table>
           <div class="mb-4">
             <table class="min-w-full border border-gray-300 rounded-lg">
               <thead class="bg-gray-100">
-                <tr>
-                  <th class="p-2 border-b text-black text-center">Material Id</th>
-                  <th class="p-2 border-b text-black text-center">Name</th>
-                  <th class="p-2 border-b text-black text-center">Specs</th>
-                  <th class="p-2 border-b text-black text-center">Qty.</th>
-                  <th class="p-2 border-b text-black text-center">Actions</th>
+                <tr class="p-2 border-b text-black text-center">
+                  <th>Material Id</th>
+                  <th>Name</th>
+                  <th>Specs</th>
+                  <th>Qty.</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody v-if="selectedProductMaterials.length > 0">
-                <tr v-for="material in selectedProductMaterials" :key="material.materialID">
-                  <td class="p-2 border-b text-black text-center">{{ material.materialID }}</td>
-                  <td class="p-2 border-b text-black text-center">{{ material.description }}</td>
-                  <td class="p-2 border-b text-black text-center">{{ material.specification }}</td>
-                  <td class="p-2 border-b text-black text-center">{{ material.quantity }}</td>
+                <tr v-for="material in selectedProductMaterials" :key="material.materialID" class="p-2 border-b text-black text-center">
+                  <td>{{ material.materialID }}</td>
+                  <td>{{ material.description }}</td>
+                  <td>{{ material.specification }}</td>
+                  <td>{{ material.quantity }}</td>
                   <td class="p-2 border-b text-center flex justify-center space-x-2">
                     <!-- Placeholder for actions, e.g., edit or delete material -->
                     <button @click="editMaterial(material)" class="text-yellow-500 hover:underline">
@@ -262,7 +262,7 @@
   }
   
   function viewProduct(product) {
-    alert(`Viewing product: ${product.productName}`);
+    alert(`Viewing product `);
   }
   
   async function showMaterials(product) {
