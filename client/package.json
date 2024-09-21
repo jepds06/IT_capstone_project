@@ -24,7 +24,6 @@
     "nuxt-og-image": "^3.0.0-rc.65"
   },
   "devDependencies": {
-    "@iconify-json/solar": "^1.2.0",
     "@nuxt/eslint": "^0.5.1",
     "@nuxthq/studio": "^2.0.3",
     "@types/node": "^22.5.4",

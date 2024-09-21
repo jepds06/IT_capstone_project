@@ -39,9 +39,6 @@ importers:
         specifier: ^3.0.0-rc.65
         version: 3.0.0-rc.65(magicast@0.3.4)(rollup@4.18.1)(vite@5.3.4(@types/node@22.5.5)(terser@5.31.2))(vue@3.4.38(typescript@5.6.2))
     devDependencies:
-      '@iconify-json/solar':
-        specifier: ^1.2.0
-        version: 1.2.0
       '@nuxt/eslint':
         specifier: ^0.5.1
         version: 0.5.1(eslint@9.9.0(jiti@1.21.6))(magicast@0.3.4)(rollup@4.18.1)(typescript@5.6.2)(vite@5.3.4(@types/node@22.5.5)(terser@5.31.2))
@@ -764,9 +761,6 @@ packages:
 
   '@iconify-json/simple-icons@1.1.114':
     resolution: {integrity: sha512-KADlAqTH3/vDTVpS+lwDF0pO/RHgaxf40Hata0QLhAPouygLmhQGPj3ojbpUDfoBGPw/WQ1sor38/2PixR2VRg==}
-
-  '@iconify-json/solar@1.2.0':
-    resolution: {integrity: sha512-xMspRoN2S2Op8mgjZHgiMJq2Xqo5oVlBp/1NICTeMByfePpkEKF67Fwh5KdBRF+SBey/cNLhjkTuHmKeSIEkog==}
 
   '@iconify-json/vscode-icons@1.1.37':
     resolution: {integrity: sha512-02+dR2/LdIZTqGfyQerla5snhdN4edwYgpDuFZpI2lK9w8OVm26WYbg8RR8TxXQrlCRs726NQYxl5W+7V1YM/Q==}
@@ -6044,10 +6038,6 @@ snapshots:
       '@iconify/types': 2.0.0
 
   '@iconify-json/simple-icons@1.1.114':
-    dependencies:
-      '@iconify/types': 2.0.0
-
-  '@iconify-json/solar@1.2.0':
     dependencies:
       '@iconify/types': 2.0.0
 
