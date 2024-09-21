@@ -15,6 +15,7 @@
     :isVisible="isFormVisible"
     title="Product Category Form"
     :showSave="true"
+    class="text-black"
     @update:isVisible="isFormVisible = $event"
     @save="saveCategory"
   >
@@ -42,7 +43,7 @@
             v-model="form.description"
             type="text"
             id="description"
-            class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
+            class="mt-1 block text-white w-full border border-gray-300 rounded-lg p-2"
           />
         </div>
         <!-- <div class="mb-4">
