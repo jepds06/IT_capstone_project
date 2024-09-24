@@ -2,7 +2,7 @@
 
 namespace App\Interface\Repository;
 
-interface UserRegRespositoryInterface
+interface UserRegRepositoryInterface
 {
     public function findMany();
 

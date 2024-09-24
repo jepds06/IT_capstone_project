@@ -28,7 +28,7 @@ class UserRegUpdateRequest extends FormRequest
             'email' => 'required|string|email|max:255|unique:users,email',
             'email_verified_at' => 'nullable|date',
             'password' => 'required|string|min:8',
-            'userTypeID' => 'required|integer|exists:userTypes, userTypeID', // Assuming 'user_types' is the related table for user types
+            'userTypeID' => 'required|integer|exists:userTypes,userTypeID', // Assuming 'user_types' is the related table for user types
             'remember_token' => 'nullable|string|max:100',
         ];
     }

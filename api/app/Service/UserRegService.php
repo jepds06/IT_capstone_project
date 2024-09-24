@@ -3,14 +3,14 @@
 namespace App\Service;
 
 use App\Http\Resources\UserResource;
-use App\Interface\Repository\UserRegRespositoryInterface;
+use App\Interface\Repository\UserRegRepositoryInterface;
 use App\Interface\Service\UserRegServiceInterface;
 
 class UserRegService implements UserRegServiceInterface
 {
     private $userRegRepository;
 
-    public function __construct(UserRegRespositoryInterface $userRegRepository)
+    public function __construct(UserRegRepositoryInterface $userRegRepository)
     {
         $this->userRegRepository = $userRegRepository;
     }

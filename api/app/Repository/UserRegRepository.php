@@ -2,11 +2,11 @@
 
 namespace App\Repository;
 
-use App\Interface\Repository\UserRegRespositoryInterface;
+use App\Interface\Repository\UserRegRepositoryInterface;
 use App\Models\User;
 use App\Models\UserType;
 
-class UserRegRepository implements UserRegRespositoryInterface
+class UserRegRepository implements UserRegRepositoryInterface
 {
     public function findMany()
     {

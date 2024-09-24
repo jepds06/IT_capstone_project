@@ -13,11 +13,17 @@ return new class extends Migration
     {
         Schema::create('productions', function (Blueprint $table) {
             $table->bigIncrements('productionID');
-            $table->integer('estProductionDays');
-            $table->date('endDate');
-            $table->integer('quantity');
+            $table->unsignedBigInteger('userID');
+            $table->date('dateEncoded');
+            $table->date('year');
+            $table->date('month');
+            $table->string('remarks');
             $table->string('status');
             $table->timestamps();
+
+            $table->Foreign('userID')->references('userID')->on('users')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
         });
     }
 
@@ -26,6 +32,9 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('productions', function (Blueprint $table) {
+            $table->dropForeign(['userID']);
+        });
         Schema::dropIfExists('productions');
     }
 };

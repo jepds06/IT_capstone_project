@@ -55,12 +55,12 @@ class User extends Authenticatable
     //eloquent/relationship between user & users privileges
     public function userPrivileges()
     {
-        return $this->hasMany(UserPrivilege::class, 'userID');
+        return $this->hasMany(UserPrivilege::class,'userID');
     }
 
     //eloquent/relationship between user types & users
     public function userType()
     {
-        return $this->belongs(UserType::class, 'userTypeID');
+        return $this->belongsTo(UserType::class,'userTypeID');
     }
 }
