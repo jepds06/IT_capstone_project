@@ -22,4 +22,10 @@ class UserType extends Model
     {
         return $this->hasMany(User::class, 'userTypeID');
     }
+
+    public function modules()
+    {
+        return $this->belongsToMany(Module::class, 'user_type_module')
+                    ->withPivot('can_access');
+    }
 }

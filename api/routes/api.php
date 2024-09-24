@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductMaterialsController;
 use App\Http\Controllers\SupplierMaterialController;
 use App\Http\Controllers\UserAuthController;
+use App\Http\Controllers\UserPrivilageController;
 use App\Http\Controllers\UserRegController;
 use App\Http\Controllers\UserTypeController;
 use Illuminate\Http\Request;
@@ -86,4 +87,12 @@ Route::prefix('supplierMaterials')->group(function(){
     Route::get('/{suppMtrlId}', [SupplierMaterialController::class, 'show']);
     Route::post('/', [SupplierMaterialController::class, 'store']);
     Route::put('/{suppMtrlId}', [SupplierMaterialController::class, 'update']);
+});
+
+//UserPrivilage route
+Route::prefix('userPrivilage')->group(function(){
+    Route::get('/', [UserPrivilageController::class, 'index']);
+    Route::get('/{userPrivilageId}', [UserPrivilageController::class, 'show']);
+    Route::post('/', [UserPrivilageController::class, 'store']);
+    Route::put('/{userPrivilageId}', [UserPrivilageController::class, 'update']);
 });
