@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('customerOrders', function (Blueprint $table) {
             $table->bigIncrements('cstrOrderID');
-            $table->unsignedBigInteger('customerID');
+            $table->unsignedBigInteger('userID');
             $table->date('orderDate');
             $table->string('orderStatus');
             $table->string('orderRemarks');
             $table->timestamps();
 
-            $table->foreign('customerID')->references('customerID')->on('customers')
+            $table->foreign('userID')->references('userID')->on('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
         });
@@ -32,7 +32,7 @@ return new class extends Migration
     {
         Schema::table('customerOrders', function (Blueprint $table) {
             // Drop the foreign key before dropping the table
-            $table->dropForeign(['customerID']);
+            $table->dropForeign(['userID']);
         });
         
         Schema::dropIfExists('customerOrders');

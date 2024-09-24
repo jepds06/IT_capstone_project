@@ -15,7 +15,7 @@ class CustomerOrder extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
-        'customerID',
+        'userID',
         'orderDate',
         'orderStatus',
         'orderRemarks'

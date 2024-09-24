@@ -15,7 +15,7 @@ class AdminOrder extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
-        'adminID',
+        'userID',
         'suppMatrlID',
         'qtyOrdered',
         'amount'

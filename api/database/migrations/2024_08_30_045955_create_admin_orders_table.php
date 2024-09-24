@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('adminOrders', function (Blueprint $table) {
             $table->bigIncrements('adminOrdID');
-            $table->unsignedBigInteger('adminID');
+            $table->unsignedBigInteger('userID');
             $table->unsignedBigInteger('suppMatrlID');
             $table->integer('qtyOrdered');
             $table->decimal('amount', 10, 2);
             $table->timestamps();
 
-            $table->foreign('adminID')->references('adminID')->on('administrators')
+            $table->foreign('userID')->references('userID')->on('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
 
@@ -36,7 +36,7 @@ return new class extends Migration
     {
         Schema::table('adminOrders', function(Blueprint $table){
             // Drop the foreign key before dropping the table
-            $table->dropForeign(['adminID']);
+            $table->dropForeign(['userID']);
             $table->dropForeign(['suppMatrlID']);
         });
 
