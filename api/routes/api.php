@@ -1,26 +1,41 @@
 <?php
 
-use App\Http\Controllers\AccountController;
-use App\Http\Controllers\AccountTypeController;
-use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductMaterialsController;
-use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierMaterialController;
+use App\Http\Controllers\UserAuthController;
+use App\Http\Controllers\UserPrivilageController;
+use App\Http\Controllers\UserRegController;
+use App\Http\Controllers\UserTypeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-//accounts route
-Route::prefix('accounts')->group(function(){
-    Route::get('/', [AccountController::class, 'index']);
-    Route::get('/{accountId}', [AccountController::class, 'show']);
-    Route::post('/', [AccountController::class, 'store']);
-    Route::put('/{accountId}', [AccountController::class, 'update']);
-    Route::delete('/{accountId}', [AccountController::class, 'destroy']);
+//userTypes route
+Route::prefix('userTypes')->group(function(){
+    Route::get('/', [UserTypeController::class, 'index']);
+    Route::get('/{userTypeId}', [UserTypeController::class, 'show']);
+    Route::post('/', [UserTypeController::class, 'store']);
+    Route::put('/{userTypeId}',[UserTypeController::class, 'update']);
+});
+
+//users route
+Route::prefix('users')->group(function(){
+    Route::get('/', [UserRegController::class, 'index']);
+    Route::get('/{userid}', [UserRegController::class, 'show']);
+    Route::post('/', [UserRegController::class, 'store']);
+    Route::put('/{userid}', [UserRegController::class, 'update']);
+});
+
+//modules route
+Route::prefix('modules')->group(function(){
+    Route::get('/', [ModuleController::class, 'index']);
+    Route::get('/{moduleId}', [ModuleController::class, 'show']);
+    Route::post('/', [ModuleController::class, 'store']);
+    Route::put('/{moduleId}',[ModuleController::class, 'update']);
 });
 
 //register route
@@ -28,41 +43,9 @@ Route::prefix('account')->group(function(){
     Route::post('/register', [AuthController::class, 'register']);
 });
 
-
-//accountTypes route
-Route::prefix('accountTypes')->group(function(){
-    Route::get('/', [AccountTypeController::class, 'index']);
-    Route::get('/{accountTypeId}', [AccountTypeController::class, 'show']);
-    Route::post('/', [AccountTypeController::class, 'store']);
-    Route::put('/{accountTypeId}',[AccountTypeController::class, 'update']);
-});
-
-//administrators route
-Route::prefix('administrators')->group(function(){
-    Route::get('/', [AdminController::class, 'index']);
-    Route::get('/{adminId}', [AdminController::class, 'show']);
-    Route::post('/', [AdminController::class, 'store']);
-    Route::put('/{adminId}', [AdminController::class, 'update']);
-    Route::delete('/{adminId}', [AdminController::class, 'destroy']);
-});
-
-//customers route
-Route::prefix('customers')->group(function(){
-    Route::get('/', [CustomerController::class, 'index']);
-    Route::get('/{cstrId}', [CustomerController::class, 'show']);
-    Route::post('/', [CustomerController::class, 'store']);
-    Route::put('/{cstrId}', [CustomerController::class, 'update']);
-    Route::delete('/{cstrId}', [CustomerController::class, 'destroy']);
-});
-
-//suppliers route
-Route::prefix('suppliers')->group(function(){
-    Route::get('/', [SupplierController::class, 'index']);
-    Route::get('/{supplierId}', [SupplierController::class, 'show']);
-    Route::post('/', [SupplierController::class, 'store']);
-    Route::put('/{supplierId}', [SupplierController::class, 'update']);
-    Route::delete('/{supplierId}', [SupplierController::class, 'destroy']);
-});
+//login/logout routes
+Route::post('/login', [UserAuthController::class, 'login']);
+Route::post('/logout', [UserAuthController::class, 'logout'])->middleware('auth:sanctum');
 
 //productCategories route
 Route::prefix('productCategories')->group(function(){
@@ -104,4 +87,12 @@ Route::prefix('supplierMaterials')->group(function(){
     Route::get('/{suppMtrlId}', [SupplierMaterialController::class, 'show']);
     Route::post('/', [SupplierMaterialController::class, 'store']);
     Route::put('/{suppMtrlId}', [SupplierMaterialController::class, 'update']);
+});
+
+//UserPrivilage route
+Route::prefix('userPrivilage')->group(function(){
+    Route::get('/', [UserPrivilageController::class, 'index']);
+    Route::get('/{userPrivilageId}', [UserPrivilageController::class, 'show']);
+    Route::post('/', [UserPrivilageController::class, 'store']);
+    Route::put('/{userPrivilageId}', [UserPrivilageController::class, 'update']);
 });

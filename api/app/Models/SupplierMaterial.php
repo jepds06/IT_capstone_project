@@ -15,7 +15,7 @@ class SupplierMaterial extends Model
     protected $keyType = 'int';
 
     protected $fillable =[
-        'supplierID',
+        'userID',
         'materialID',
         'unitPrice'
     ];
@@ -25,9 +25,9 @@ class SupplierMaterial extends Model
     ];
 
     //eloquent/relationship between suppliers & supplierMaterials
-    public function supplier()
+    public function user()
     {
-        return $this->belongsTo(Supplier::class,'supplierID');
+        return $this->belongsTo(User::class,'supplierID');
     }
 
     //eloquent/relationship between materials & supplierMaterials

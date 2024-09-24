@@ -11,18 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('supplierMaterials', function (Blueprint $table) {
-            $table->bigIncrements('suppMatrlID');
+        Schema::create('userPrivileges', function (Blueprint $table) {
+            $table->bigIncrements('privilegeID');
             $table->unsignedBigInteger('userID');
-            $table->unsignedBigInteger('materialID');
-            $table->decimal('unitPrice', 10, 2);
-            $table->timestamps();
+            $table->unsignedBigInteger('moduleID');
+            $table->boolean('create');
+            $table->boolean('update');
+            $table->boolean('view');
+            $table->boolean('cancel');
 
             $table->Foreign('userID')->references('userID')->on('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
 
-            $table->Foreign('materialID')->references('materialID')->on('materials')
+            $table->Foreign('moduleID')->references('moduleID')->on('modules')
             ->onUpdate('cascade')
             ->onDelete('cascade');
         });
@@ -33,12 +35,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('supplierMaterials', function(Blueprint $table){
+        Schema::table('userPrivileges', function(Blueprint $table){
             // Drop the foreign key before dropping the table
             $table->dropForeign(['userID']);
-            $table->dropForeign(['materialID']);
+            $table->dropForeign(['moduleID']);
         });
-        
-        Schema::dropIfExists('supplierMaterials');
+        Schema::dropIfExists('userPrivileges');
     }
 };
