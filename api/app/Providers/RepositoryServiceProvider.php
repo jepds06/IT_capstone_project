@@ -15,7 +15,7 @@ use App\Interface\Repository\SupplierMaterialRepositoryInterface;
 use App\Interface\Repository\SupplierRepositoryInterface;
 use App\Interface\Repository\UserAuthRepositoryInterface;
 use App\Interface\Repository\UserPrivilageRepositoryInterface;
-use App\Interface\Repository\UserRegRespositoryInterface;
+use App\Interface\Repository\UserRegRepositoryInterface;
 use App\Interface\Repository\UserTypeRepositoryInterface;
 use App\Interface\Service\AccountServiceInterface;
 use App\Interface\Service\AccountTypeServiceInterface;
@@ -79,7 +79,7 @@ class RepositoryServiceProvider extends ServiceProvider
         // $this->app->bind(SupplierRepositoryInterface::class, SupplierRepository::class);
         $this->app->bind(UserTypeRepositoryInterface::class, UserTypeRepository::class);
         $this->app->bind(UserAuthRepositoryInterface::class , UserAuthRepository::class);
-        $this->app->bind(UserRegRespositoryInterface::class, UserRegRepository::class);
+        $this->app->bind(UserRegRepositoryInterface::class, UserRegRepository::class);
         $this->app->bind(ModuleRepositoryInterface::class, ModuleRepository::class);
         $this->app->bind(ProductCategoryRepositoryInterface::class, ProductCategoryRepository::class);
         $this->app->bind(MaterialRepositoryInterface::class, MaterialRepository::class);

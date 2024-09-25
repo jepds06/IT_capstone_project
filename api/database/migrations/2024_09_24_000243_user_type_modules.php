@@ -13,10 +13,18 @@ return new class extends Migration
     {
         Schema::create('userTypeModules', function (Blueprint $table) {
             $table->bigIncrements('userTypeModID');
-            $table->foreignId('userTypeID')->constrained()->onDelete('cascade');
-            $table->foreignId('moduleID')->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('userTypeID');
+            $table->unsignedBigInteger('moduleID');
             $table->boolean('canAccess');
             $table->timestamps();
+
+            $table->Foreign('userTypeID')->references('userTypeID')->on('userTypes')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
+
+            $table->Foreign('moduleID')->references('moduleID')->on('modules')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
         });
     }
 
@@ -25,6 +33,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('userTypeModules', function (Blueprint $table) {
+            $table->dropForeign(['userTypeID']);
+            $table->dropForeign(['moduleID']);
+        });
         Schema::dropIfExists('userTypeModules');
     }
 };

@@ -25,9 +25,9 @@ Route::prefix('userTypes')->group(function(){
 //users route
 Route::prefix('users')->group(function(){
     Route::get('/', [UserRegController::class, 'index']);
-    Route::get('/{userid}', [UserRegController::class, 'show']);
+    Route::get('/{userId}', [UserRegController::class, 'show']);
     Route::post('/', [UserRegController::class, 'store']);
-    Route::put('/{userid}', [UserRegController::class, 'update']);
+    Route::put('/{userId}', [UserRegController::class, 'update']);
 });
 
 //modules route
