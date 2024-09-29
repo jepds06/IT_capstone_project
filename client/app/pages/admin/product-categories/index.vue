@@ -147,7 +147,6 @@ async function saveCategory() {
   closeForm();
   } catch (error) {
     console.log('error', error)
-    alert(`${form.value.description} is already exists`)
     closeForm();
   }
  

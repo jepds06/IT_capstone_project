@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { apiService } from "~/api/apiService";
+import { useAuth } from '@/composables/useAuth';
 
 const route = useRoute();
+
+const userTypes = ref([]);
+
+const { setToken, logout } = useAuth();
 
 definePageMeta({
   layout: "auth",
@@ -35,18 +40,31 @@ const validate = (state: any) => {
   return errors;
 };
 
-function onSubmit(data: any) {
-  console.log("Submitted", data);
-  // return variable with accountype that user signing in API Call
-  // const result = apiService.post('')
-  const result = { accountType: 1 };
+function getUserTypeDescription(userTypeId) {
+    const userType = userTypes.value.find(cat => cat.userTypeID === userTypeId);
+    return userType ? userType.userTypeName?.toLowerCase() : 'Unknown';
+  }
 
-  if (result.accountType === 1) {
-    navigateTo("/admin");
-  } else if (result.accountType === 2) {
-    navigateTo("/customer-product");
-  } else {
-    navigateTo("/pricing")
+  
+async function onSubmit(data: any) {
+  try {
+    console.log("Submitted", data);
+    // return variable with accountype that user signing in API Call
+    const result = await apiService.post("/api/login", data);
+    setToken(result.data.token);
+    localStorage.setItem('userInfo', JSON.stringify(result.data.user));
+    const userType = await apiService.get("/api/userTypes");
+    userTypes.value = userType.data
+    
+    if (getUserTypeDescription(result.data.user.userTypeID) === 'administrator') {
+      navigateTo("/admin");
+    } else if (getUserTypeDescription(result.data.user.userTypeID) === 'customer') {
+      navigateTo("/customer-product");
+    } else {
+      navigateTo("/pricing")
+    }
+  } catch (error) {
+    console.error(error);
   }
 }
 </script>

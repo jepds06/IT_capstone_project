@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@nuxt/eslint": "^0.5.1",
+    "@nuxt/types": "^2.18.1",
     "@nuxthq/studio": "^2.0.3",
     "@types/node": "^22.5.4",
     "eslint": "^9.9.0",

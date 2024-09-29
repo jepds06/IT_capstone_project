@@ -37,12 +37,19 @@ console.log(route.path)
 </template> -->
 
 <script setup lang="ts">
-import type { ParsedContent } from '@nuxt/content'
-const route = useRoute()
-const { data: navigation } = await useAsyncData('navigation', () => fetchContentNavigation(), { default: () => [] })
-const { data: files } = useLazyFetch<ParsedContent[]>('/api/search.json', { default: () => [], server: false })
+import type { ParsedContent } from "@nuxt/content";
+const route = useRoute();
+const { data: navigation } = await useAsyncData(
+  "navigation",
+  () => fetchContentNavigation(),
+  { default: () => [] }
+);
+const { data: files } = useLazyFetch<ParsedContent[]>("/api/search.json", {
+  default: () => [],
+  server: false,
+});
 
-provide('navigation', navigation)
+provide("navigation", navigation);
 </script>
 
 <template>
@@ -56,39 +63,33 @@ provide('navigation', navigation)
     <AppFooter />
 
     <ClientOnly>
-      <LazyUContentSearch
-        :files="files"
-        :navigation="navigation"
-      />
+      <LazyUContentSearch :files="files" :navigation="navigation" />
     </ClientOnly>
   </div>
 
   <div v-else-if="route.path.includes('/admin')">
-    <AdminHeader/>
+    <AdminHeader />
     <div class="flex">
       <AdminSidebar />
       <div class="flex-1 p-6">
         <main>
           <UMain>
             <slot />
-            </UMain>
+          </UMain>
         </main>
       </div>
     </div>
     <AppFooter />
 
     <ClientOnly>
-      <LazyUContentSearch
-        :files="files"
-        :navigation="navigation"
-      />
+      <LazyUContentSearch :files="files" :navigation="navigation" />
     </ClientOnly>
   </div>
 
   <div v-else>
-    <CustomerHeader/>
+    <CustomerHeader />
     <UMain>
-    <slot />
+      <slot />
     </UMain>
     <!-- <ClientOnly>
       <LazyUContentSearch
