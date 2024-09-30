@@ -1,15 +1,18 @@
-// composables/useAuth.ts
 import { ref, computed } from 'vue';
 
 export const useAuth = () => {
   const authToken = ref<string | null>(null);
 
-  // Check if running in a client environment
+  // Load the token immediately
   if (process.client) {
-    authToken.value = localStorage.getItem('authToken');
+    const storedToken = localStorage.getItem('authToken');
+    authToken.value = storedToken ? storedToken : null;
   }
 
-  const isAuthenticated = computed(() => !!authToken.value);
+  const isAuthenticated = computed(() => {
+    // Optionally check for token expiration if needed
+    return !!authToken.value;
+  });
 
   const setToken = (token: string) => {
     authToken.value = token;

@@ -1,14 +1,14 @@
 <template>
     <div class="w-70 bg-gray-600 text-white">
-      <nav>
+      <nav :key="userPermission.length">
         <ul>
           <!-- Collapsible Sections -->
-          <CollapsibleMenu icon="material-symbols:filter-7-outline" title="Order Management">
+          <CollapsibleMenu icon="material-symbols:filter-7-outline" title="Order Management" :class="userPermission?.filter((up) => up.moduleName.toLowerCase().includes('orders')).length > 0 ? '' : 'hidden'">
             <router-link to="/orders" class="block p-4 hover:bg-gray-800">Orders</router-link>
             <router-link to="/return-orders" class="block p-4 hover:bg-gray-800">Return Orders</router-link>
           </CollapsibleMenu>
   
-          <CollapsibleMenu icon="material-symbols:auto-stories-outline" title="Product Management">
+          <CollapsibleMenu icon="material-symbols:auto-stories-outline" title="Product Management" :class="userPermission?.filter((up) => up.moduleName.toLowerCase().includes('products')).length > 0 ? '' : 'hidden'">
             <router-link to="/admin/product-categories" :class="route.path === '/admin/product-categories' ? 'block p-4 bg-gray-400' : 'block p-4 hover:bg-gray-800'">Product Categories</router-link>
             <router-link to="/admin/product" :class="route.path === '/admin/product' ? 'block p-4 bg-gray-400' : 'block p-4 hover:bg-gray-800'">Products</router-link>
           </CollapsibleMenu>
@@ -77,6 +77,15 @@
   <script setup>
   import CollapsibleMenu from './AdminCollapsibleMenu.vue';
   const route = useRoute()
+  
+  const userPermission = ref([]);
+
+onMounted(()=>{
+  if (process.client) {
+    const storage = JSON.parse(localStorage.getItem('userPermission'));
+    userPermission.value = storage ? storage : null;
+  }
+})
   </script>
   
   <style scoped>
