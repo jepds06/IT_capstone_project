@@ -18,35 +18,43 @@
         class="border rounded px-2 py-1"
       />
     </div>
-
     <!-- User Table -->
-<table class="min-w-full bg-white border border-gray-300">
-  <thead>
-    <tr>
-      <th class="border px-4 py-2 text-center">ID</th>
-      <th class="border px-4 py-2 text-center">Last Name</th>
-      <th class="border px-4 py-2 text-center">First Name</th>
-      <th class="border px-4 py-2 text-center">Username</th>
-      <th class="border px-4 py-2 text-center">Actions</th> <!-- Actions Column -->
-    </tr>
-  </thead>
-  <tbody>
-    <tr v-for="user in filteredUsers" :key="user.id">
-      <td class="border px-4 py-2 text-center">{{ user.id }}</td>
-      <td class="border px-4 py-2 text-center">{{ user.lname }}</td>
-      <td class="border px-4 py-2 text-center">{{ user.fname }}</td>
-      <td class="border px-4 py-2 text-center">{{ user.username }}</td>
-      <td class="border px-4 py-2 text-center">
-        <button
-          class="bg-green-500 text-white px-2 py-1 rounded"
-          @click="openViewModal(user)"
-        >
-          View
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div v-for="userType in userTypes">
+  <h3 class="font-bold">
+    {{userType.userTypeName}}
+  </h3>
+  <table class="min-w-full bg-white border border-gray-300 mb-8">
+    <thead>
+      <tr>
+        <th class="border px-4 py-2 text-center">ID</th>
+        <th class="border px-4 py-2 text-center">Last Name</th>
+        <th class="border px-4 py-2 text-center">First Name</th>
+        <th class="border px-4 py-2 text-center">Username</th>
+        <th class="border px-4 py-2 text-center">Email</th>
+        <th class="border px-4 py-2 text-center">Actions</th> <!-- Actions Column -->
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="user in filteredUsers.filter((user) => user?.userTypeID === userType?.userTypeID)" :key="user.id">
+        <td class="border px-4 py-2 text-center">{{ user.userID }}</td>
+        <td class="border px-4 py-2 text-center">{{ user.lastName }}</td>
+        <td class="border px-4 py-2 text-center">{{ user.firstName }}</td>
+        <td class="border px-4 py-2 text-center">{{ user.userName }}</td>
+        <td class="border px-4 py-2 text-center">{{ user.email }}</td>
+        <td class="border px-4 py-2 text-center">
+          <button
+            class="bg-green-500 text-white px-2 py-1 rounded"
+            @click="openViewModal(user)"
+          >
+            View
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+</div>
+
 
 
     <!-- Pagination Component -->
@@ -74,10 +82,18 @@
         <h2 class="text-xl font-bold mb-4">{{ isView ? 'View User' : 'Add User' }}</h2>
         <form @submit.prevent="isView ? closeModal() : addUser()">
           <div class="mb-4">
+            <label for="prodCat" class="block text-sm font-medium text-gray-700">User Type:</label>
+            <select v-model="form.userTypeID" id="prodCat" class="mt-1 block w-full border border-gray-300 rounded-lg p-2">
+              <option v-for="userType in userTypes" :key="userType.userTypeID" :value="userType.userTypeID">
+                {{ userType.userTypeName }}
+              </option>
+            </select>
+          </div>
+          <div class="mb-4">
             <label for="lname" class="block text-gray-700">Last Name:</label>
             <input
               type="text"
-              v-model="form.lname"
+              v-model="form.lastName"
               id="lname"
               class="border rounded px-2 py-1 w-full"
               :readonly="isView"
@@ -87,7 +103,7 @@
             <label for="fname" class="block text-gray-700">First Name:</label>
             <input
               type="text"
-              v-model="form.fname"
+              v-model="form.firstName"
               id="fname"
               class="border rounded px-2 py-1 w-full"
               :readonly="isView"
@@ -97,7 +113,17 @@
             <label for="username" class="block text-gray-700">Username:</label>
             <input
               type="text"
-              v-model="form.username"
+              v-model="form.userName"
+              id="username"
+              class="border rounded px-2 py-1 w-full"
+              :readonly="isView"
+            />
+          </div>
+          <div class="mb-4">
+            <label for="username" class="block text-gray-700">Email:</label>
+            <input
+              type="text"
+              v-model="form.email"
               id="username"
               class="border rounded px-2 py-1 w-full"
               :readonly="isView"
@@ -133,20 +159,24 @@
 </template>
 
 <script>
+import { apiService } from '~/api/apiService';
+
 export default {
   data() {
     return {
       users: [], // Fetch users from API
+      userTypes: [], // Fetch users from API
       searchQuery: '',
       currentPage: 1,
       itemsPerPage: 10,
       showModal: false,
       form: {
-        id: '',
-        lname: '',
-        fname: '',
-        username: '',
+        userID: '',
+        lastName: '',
+        firstName: '',
+        userName: '',
         password: '',
+        userTypeID: ''
       },
       isView: false,
     };
@@ -155,9 +185,9 @@ export default {
     filteredUsers() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const filtered = this.users.filter((user) =>
-        user.lname.includes(this.searchQuery) ||
-        user.fname.includes(this.searchQuery) ||
-        user.username.includes(this.searchQuery)
+        user?.lastName.includes(this.searchQuery) ||
+        user?.firstName.includes(this.searchQuery) ||
+        user?.userName.includes(this.searchQuery)
       );
       return filtered.slice(start, start + this.itemsPerPage);
     },
@@ -188,17 +218,28 @@ export default {
         password: '',
       };
     },
-    addUser() {
+    async addUser() {
       // Logic to add user
+      const result = await apiService.post('/api/users', this.form)
       this.users.push({
         ...this.form,
-        id: this.users.length + 1,
+        userID: result.data.userID,
       });
+      alert("User added successfully!");
       this.closeModal();
     },
+    async fetchUserTypesData(){
+      const result = await apiService.get('/api/userTypes')
+      this.userTypes = result.data
+    },
+    async fetchUserData(){
+      const result = await apiService.get('/api/users')
+      this.users = result.data
+    }
   },
-  mounted() {
-    // Fetch user data from your API
+  async mounted() {
+   await this.fetchUserTypesData();
+   await this.fetchUserData();
   },
 };
 </script>

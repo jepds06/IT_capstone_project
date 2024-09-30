@@ -33,26 +33,29 @@
               <td class="border-t px-4 py-2">{{ permission.id }}</td>
               <td class="border-t px-4 py-2">{{ permission.module }}</td>
               <td class="border-t px-4 py-2">
-                <input type="checkbox" v-model="permission.canCreate" class="form-checkbox" />
+                <input type="checkbox" v-model="permission.canCreate" class="form-checkbox" disabled="true" />
               </td>
               <td class="border-t px-4 py-2">
-                <input type="checkbox" v-model="permission.canUpdate" class="form-checkbox" />
+                <input type="checkbox" v-model="permission.canUpdate" class="form-checkbox" disabled="true" />
               </td>
               <td class="border-t px-4 py-2">
-                <input type="checkbox" v-model="permission.canCancel" class="form-checkbox" />
+                <input type="checkbox" v-model="permission.canCancel" class="form-checkbox" disabled="true" />
               </td>
               <td class="border-t px-4 py-2">
-                <input type="checkbox" v-model="permission.canView" class="form-checkbox" />
+                <input type="checkbox" v-model="permission.canView" class="form-checkbox" disabled="true" />
               </td>
               <td class="border-t px-4 py-2">
                 <button @click="editPermission(permission)" class="text-blue-600">
-                <font-awesome-icon :icon="faEdit" />
+                <!-- <font-awesome-icon :icon="faEdit" /> -->
+                <i class="fas fa-edit"></i>
               </button>
               <button @click="deletePermission(permission)" class="text-red-600">
-                <font-awesome-icon :icon="faTrash" />
+                <!-- <font-awesome-icon :icon="faTrash" /> -->
+                <i class="fas fa-trash"></i>
               </button>
               <button @click="viewPermission(permission)" class="text-green-600">
-                <font-awesome-icon :icon="faEye" />
+                <!-- <font-awesome-icon :icon="faEye" /> -->
+                <i class="fas fa-eye"></i>
               </button>
             </td>
           </tr>
