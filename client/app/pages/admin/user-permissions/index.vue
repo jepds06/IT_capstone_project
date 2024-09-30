@@ -38,16 +38,16 @@
             <td class="border-t px-4 py-2">{{ permission.id }}</td>
             <td class="border-t px-4 py-2">{{ permission.module }}</td>
             <td class="border-t px-4 py-2">
-              <input type="checkbox" v-model="permission.canCreate" class="form-checkbox" />
+              <input type="checkbox" v-model="permission.canCreate" class="form-checkbox" :disabled="true" />
             </td>
             <td class="border-t px-4 py-2">
-              <input type="checkbox" v-model="permission.canUpdate" class="form-checkbox" />
+              <input type="checkbox" v-model="permission.canUpdate" class="form-checkbox" :disabled="true"/>
             </td>
             <td class="border-t px-4 py-2">
-              <input type="checkbox" v-model="permission.canCancel" class="form-checkbox" />
+              <input type="checkbox" v-model="permission.canCancel" class="form-checkbox" :disabled="true"/>
             </td>
             <td class="border-t px-4 py-2">
-              <input type="checkbox" v-model="permission.canView" class="form-checkbox" />
+              <input type="checkbox" v-model="permission.canView" class="form-checkbox" :disabled="true"/>
             </td>
             <td class="border-t px-4 py-2">
               <font-awesome-icon v-if="permission.isActive" icon="check-circle" class="text-green-600 cursor-pointer" @click="toggleActive(permission)" />
@@ -59,11 +59,11 @@
     </div>
 
     <!-- Pagination -->
-    <div class="mt-4 flex justify-between">
+    <div class="mt-4 flex text-white justify-between">
       <button
         @click="prevPage"
         :disabled="currentPage === 1"
-        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+        class="px-4 py-2 bg-red-600 rounded hover:bg-red-500"
       >
         Previous
       </button>
@@ -71,7 +71,7 @@
       <button
         @click="nextPage"
         :disabled="currentPage === totalPages"
-        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+        class="px-4 py-2 bg-green-600 rounded hover:bg-green-500"
       >
         Next
       </button>
@@ -108,19 +108,19 @@
             <label class="block text-sm font-medium text-gray-700">Permissions:</label>
             <div class="flex items-center space-x-4">
               <label>
-                <input type="checkbox" v-model="newPermission.canCreate" class="form-checkbox" />
+                <input type="checkbox" v-model="newPermission.canCreate" class="form-checkbox"/>
                 <span class="ml-2">Create</span>
               </label>
               <label>
-                <input type="checkbox" v-model="newPermission.canUpdate" class="form-checkbox" />
+                <input type="checkbox" v-model="newPermission.canUpdate" class="form-checkbox"/>
                 <span class="ml-2">Update</span>
               </label>
               <label>
-                <input type="checkbox" v-model="newPermission.canCancel" class="form-checkbox" />
+                <input type="checkbox" v-model="newPermission.canCancel" class="form-checkbox"/>
                 <span class="ml-2">Cancel</span>
               </label>
               <label>
-                <input type="checkbox" v-model="newPermission.canView" class="form-checkbox" />
+                <input type="checkbox" v-model="newPermission.canView" class="form-checkbox"/>
                 <span class="ml-2">View</span>
               </label>
             </div>

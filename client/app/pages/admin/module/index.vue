@@ -20,15 +20,15 @@
     <table class="min-w-full bg-white border">
       <thead>
         <tr>
-          <th class="border px-4 py-2">Module No.</th>
-          <th class="border px-4 py-2">Module Name</th>
-          <th class="border px-4 py-2">Actions</th>
+          <th class="border px-4 py-2 text-black">Module No.</th>
+          <th class="border px-4 py-2 text-black">Module Name</th>
+          <th class="border px-4 py-2 text-black">Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="module in filteredModules" :key="module.moduleID">
-          <td class="border px-4 py-2">{{ module.moduleID }}</td>
-          <td class="border px-4 py-2">{{ module.moduleName }}</td>
+          <td class="border px-4 py-2 text-black text-center">{{ module.moduleID }}</td>
+          <td class="border px-4 py-2 text-black text-center">{{ module.moduleName }}</td>
           <td class="p-2 border-b flex justify-center space-x-2">
             <button
               @click="viewModule(module)"
