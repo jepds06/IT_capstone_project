@@ -36,6 +36,12 @@
 </template>
 
 <script setup>
+import auth from '../../../../middleware/auth'
+// This page requires authentication
+definePageMeta({
+  middleware: [auth],
+});
+
 import { ref, computed } from 'vue';
 
 const modules = ref([

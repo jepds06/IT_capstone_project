@@ -200,6 +200,12 @@
   </template>
   
   <script setup>
+import auth from '../../../../middleware/auth'
+// This page requires authentication
+definePageMeta({
+  middleware: [auth],
+});
+
   import { ref } from 'vue';
   import { apiService } from "~/api/apiService";
 
