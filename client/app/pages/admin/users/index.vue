@@ -160,6 +160,11 @@
 
 <script>
 import { apiService } from '~/api/apiService';
+import auth from '../../../../middleware/auth'
+// This page requires authentication
+definePageMeta({
+  middleware: [auth],
+});
 
 export default {
   data() {
