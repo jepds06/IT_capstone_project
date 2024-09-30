@@ -43,13 +43,13 @@
     <table class="min-w-full bg-white border border-gray-300">
       <thead class="bg-gray-100">
         <tr>
-          <th class="px-6 py-2 text-left border-b">Select</th>
-          <th class="px-6 py-2 text-left border-b">Product Details No</th>
-          <th class="px-6 py-2 text-left border-b">Production ID</th>
-          <th class="px-6 py-2 text-left border-b">Quantity</th>
-          <th class="px-6 py-2 text-left border-b">Status</th>
-          <th class="px-6 py-2 text-left border-b">Remarks</th>
-          <th class="px-6 py-2 text-left border-b">Actions</th>
+          <th class="px-6 py-2 text-black text-left border-b">Select</th>
+          <th class="px-6 py-2 text-black text-left border-b">Product Details No</th>
+          <th class="px-6 py-2 text-black text-left border-b">Production ID</th>
+          <th class="px-6 py-2 text-black text-left border-b">Quantity</th>
+          <th class="px-6 py-2 text-black text-left border-b">Status</th>
+          <th class="px-6 py-2 text-black text-left border-b">Remarks</th>
+          <th class="px-6 py-2 text-black text-left border-b">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -57,10 +57,10 @@
           <td class="px-6 py-4 border-b">
             <input type="checkbox" v-model="selectedItems" :value="detail.productionId" />
           </td>
-          <td class="px-6 py-4 border-b">{{ detail.productDetailsNo }}</td>
-          <td class="px-6 py-4 border-b">{{ detail.productionId }}</td>
-          <td class="px-6 py-4 border-b">{{ detail.productIdQty }}</td>
-          <td class="px-6 py-4 border-b">
+          <td class="px-6 py-4 text-black border-b">{{ detail.productDetailsNo }}</td>
+          <td class="px-6 py-4 text-black border-b">{{ detail.productionId }}</td>
+          <td class="px-6 py-4 text-black border-b">{{ detail.productIdQty }}</td>
+          <td class="px-6 py-4 text-black border-b">
             <span v-if="detail.status === 'complete'" class="text-green-600">✔️</span>
             <span v-else-if="detail.status === 'pending'" class="text-yellow-600">⚠️</span>
             <span v-else class="text-red-600">❌</span>
@@ -78,7 +78,7 @@
       <button
         @click="prevPage"
         :disabled="currentPage === 1"
-        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-red-600"
       >
         Previous
       </button>
@@ -86,7 +86,7 @@
       <button
         @click="nextPage"
         :disabled="currentPage === totalPages"
-        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-green-400"
       >
         Next
       </button>

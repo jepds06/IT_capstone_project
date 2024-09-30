@@ -25,28 +25,28 @@
     <table class="min-w-full bg-white border border-gray-300">
       <thead class="bg-gray-100">
         <tr>
-          <th class="px-6 py-2 text-left border-b">Production ID</th>
-          <th class="px-6 py-2 text-left border-b">Created By</th>
-          <th class="px-6 py-2 text-left border-b">Date Encoded</th>
-          <th class="px-6 py-2 text-left border-b">Year</th>
-          <th class="px-6 py-2 text-left border-b">Month</th>
+          <th class="px-6 py-2 text-black text-left border-b">Production ID</th>
+          <th class="px-6 py-2 text-black text-left border-b">Created By</th>
+          <th class="px-6 py-2 text-black text-left border-b">Date Encoded</th>
+          <th class="px-6 py-2 text-black text-left border-b">Year</th>
+          <th class="px-6 py-2 text-black text-left border-b">Month</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="production in filteredProductions" :key="production.id" class="hover:bg-gray-50" @click="selectProduction(production)">
-          <td class="px-6 py-4 border-b">{{ production.id }}</td>
-          <td class="px-6 py-4 border-b">{{ production.createdBy }}</td>
-          <td class="px-6 py-4 border-b">{{ production.dateEncoded }}</td>
-          <td class="px-6 py-4 border-b">{{ production.year }}</td>
-          <td class="px-6 py-4 border-b">{{ production.month }}</td>
+          <td class="px-6 py-4 text-black border-b">{{ production.id }}</td>
+          <td class="px-6 py-4 text-black border-b">{{ production.createdBy }}</td>
+          <td class="px-6 py-4 text-black border-b">{{ production.dateEncoded }}</td>
+          <td class="px-6 py-4 text-black border-b">{{ production.year }}</td>
+          <td class="px-6 py-4 text-black border-b">{{ production.month }}</td>
         </tr>
       </tbody>
     </table>
 
     <div class="mt-4 flex justify-between">
-      <button @click="prevPage" :disabled="currentPage === 1" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Previous</button>
+      <button @click="prevPage" :disabled="currentPage === 1" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-black">Previous</button>
       <span>Page {{ currentPage }} of {{ totalPages }}</span>
-      <button @click="nextPage" :disabled="currentPage === totalPages" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Next</button>
+      <button @click="nextPage" :disabled="currentPage === totalPages" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400 text-black">Next</button>
     </div>
 
     <!-- Modal for Add/Edit Production -->
