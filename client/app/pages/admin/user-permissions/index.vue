@@ -50,8 +50,21 @@
               <input type="checkbox" v-model="permission.canView" class="form-checkbox" />
             </td>
             <td class="border-t px-4 py-2">
-              <font-awesome-icon v-if="permission.isActive" icon="check-circle" class="text-green-600 cursor-pointer" @click="toggleActive(permission)" />
-              <font-awesome-icon v-else icon="times-circle" class="text-red-600 cursor-pointer" @click="toggleActive(permission)" />
+              <font-awesome-icon 
+                icon="fas fa-eye" 
+                class="cursor-pointer" 
+                @click="viewPermission(permission)" 
+              />
+              <font-awesome-icon 
+                icon="fas fa-pencil-alt" 
+                class="cursor-pointer ml-2" 
+                @click="editPermission(permission)" 
+              />
+              <font-awesome-icon 
+                icon="fas fa-trash" 
+                class="cursor-pointer text-red-600 ml-2" 
+                @click="deletePermission(permission)" 
+              />
             </td>
           </tr>
         </tbody>
@@ -140,45 +153,26 @@
 </template>
 
 <script>
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faEye, faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
+
+// Add the icons to the library
+library.add(faEye, faPencilAlt, faTrash);
+
 export default {
+  components: {
+    FontAwesomeIcon,
+  },
   data() {
     return {
-      searchQuery: '', // For the search input
-      currentPage: 1, // For pagination
-      itemsPerPage: 5, // Number of rows per page
+      searchQuery: '',
+      currentPage: 1,
+      itemsPerPage: 5,
       permissions: [
-        {
-          priv_n: 'Admin',
-          id: 1,
-          module: 'User Management',
-          canCreate: true,
-          canUpdate: true,
-          canCancel: false,
-          canView: true,
-          isActive: true,
-        },
-        {
-          priv_n: 'Editor',
-          id: 2,
-          module: 'Quotation Management',
-          canCreate: true,
-          canUpdate: false,
-          canCancel: false,
-          canView: true,
-          isActive: true,
-        },
-        // Add more data here
-        {
-          priv_n: 'User',
-          id: 3,
-          module: 'Order Management',
-          canCreate: false,
-          canUpdate: true,
-          canCancel: false,
-          canView: true,
-          isActive: false,
-        },
-        // Add more sample data here
+        // Sample existing permissions for demonstration
+        { id: 1, priv_n: 'Edit User', module: 'User Management', canCreate: false, canUpdate: true, canCancel: false, canView: true, isActive: true },
+        { id: 2, priv_n: 'Delete User', module: 'User Management', canCreate: false, canUpdate: false, canCancel: true, canView: true, isActive: false },
       ],
       showModal: false,
       newPermission: {
@@ -192,7 +186,6 @@ export default {
     };
   },
   computed: {
-    // Filter permissions based on the search query
     filteredPermissions() {
       return this.permissions.filter((permission) => {
         const search = this.searchQuery.toLowerCase();
@@ -202,54 +195,66 @@ export default {
         );
       });
     },
-    // Get the current page of permissions
     paginatedPermissions() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       const end = start + this.itemsPerPage;
       return this.filteredPermissions.slice(start, end);
     },
-    // Calculate total pages
     totalPages() {
       return Math.ceil(this.filteredPermissions.length / this.itemsPerPage);
     },
   },
   methods: {
     nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
-      }
+        if (this.currentPage < this.totalPages) {
+            this.currentPage++;
+        }
     },
     prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-      }
+        if (this.currentPage > 1) {
+            this.currentPage--;
+        }
     },
     showAddModal() {
-      this.showModal = true;
+        this.showModal = true;
     },
     closeModal() {
-      this.showModal = false;
+        this.showModal = false;
     },
     handleSubmit() {
-      // Handle form submission to add new permission
-      this.permissions.push({ ...this.newPermission, isActive: true }); // Set isActive to true for new permission
-      this.newPermission = {
-        priv_n: '',
-        module: '',
-        canCreate: false,
-        canUpdate: false,
-        canCancel: false,
-        canView: false,
-      };
-      this.showModal = false; // Close modal after submission
+        // Add new permission with isActive set to true
+        this.permissions.push({ ...this.newPermission, isActive: true, id: this.permissions.length + 1 });
+        this.newPermission = {
+            priv_n: '',
+            module: '',
+            canCreate: false,
+            canUpdate: false,
+            canCancel: false,
+            canView: false,
+        };
+        this.showModal = false;
     },
-    toggleActive(permission) {
-      permission.isActive = !permission.isActive; // Toggle isActive property
+    viewPermission(permission) {
+        // Logic to view permission details
+        alert(`Viewing permission: ${permission.priv_n}`);
     },
-  },
+    editPermission(permission) {
+        // Logic to edit permission
+        alert(`Editing permission: ${permission.priv_n}`);
+    },
+    deletePermission(permission) {
+        // Logic to delete permission
+        const index = this.permissions.indexOf(permission);
+        if (index > -1) {
+            this.permissions.splice(index, 1);
+        }
+    },
+},
 };
 </script>
 
 <style scoped>
-
+.form-checkbox {
+  border: 1px solid #cbd5e0;
+}
 </style>
