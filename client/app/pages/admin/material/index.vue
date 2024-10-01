@@ -128,6 +128,11 @@
   </template>
   
   <script setup>
+import auth from '../../../../middleware/auth'
+// This page requires authentication
+definePageMeta({
+  middleware: [auth],
+});
   import { ref } from "vue";
   import Modal from "~/components/Modal.vue"; // Adjust the path if needed
   import { apiService } from "~/api/apiService";

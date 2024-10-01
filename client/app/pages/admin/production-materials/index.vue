@@ -12,14 +12,14 @@
     </div>
 
     <table class="min-w-full border-collapse">
-      <thead>
+      <thead class="bg-gray-100">
         <tr>
-          <th class="border text-center">Production Material No</th>
-          <th class="border text-center">Production Details</th>
-          <th class="border text-center">Product ID</th>
-          <th class="border text-center">Material ID</th>
-          <th class="border text-center">Total</th>
-          <th class="border text-center">Actions</th>
+          <th class="border text-black text-center">Production Material No</th>
+          <th class="border text-black text-center">Production Details</th>
+          <th class="border text-black text-center">Product ID</th>
+          <th class="border text-black text-center">Material ID</th>
+          <th class="border text-black text-center">Total</th>
+          <th class="border text-black text-center">Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -50,6 +50,12 @@
 </template>
 
 <script setup>
+import auth from '../../../../middleware/auth'
+// This page requires authentication
+definePageMeta({
+  middleware: [auth],
+});
+
 import { ref, computed } from 'vue';
 
 const searchQuery = ref('');
