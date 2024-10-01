@@ -51,14 +51,20 @@ export class ApiService {
     }
   }
 
-  async post(endpoint: string, body?: Record<string, any>) {
+  async post(endpoint: string, body?: Record<string, any>, authToken?: string) {
     try {
       const url = this.constructUrl(endpoint);
       const response = await $fetch(url, {
         method: 'POST',
-        headers: {
+        headers: authToken ? 
+        {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        } :
+        {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
         body,
         credentials: 'include',
