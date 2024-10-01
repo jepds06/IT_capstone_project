@@ -149,6 +149,24 @@
         </form>
       </div>
     </div>
+
+    <!-- Modal for Viewing Permission -->
+    <div v-if="showViewModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <h2 class="text-lg font-semibold mb-4">View Permission</h2>
+        <p><strong>Privilege Name:</strong> {{ selectedPermission.priv_n }}</p>
+        <p><strong>Module:</strong> {{ selectedPermission.module }}</p>
+        <p><strong>Create:</strong> {{ selectedPermission.canCreate ? 'Yes' : 'No' }}</p>
+        <p><strong>Update:</strong> {{ selectedPermission.canUpdate ? 'Yes' : 'No' }}</p>
+        <p><strong>Cancel:</strong> {{ selectedPermission.canCancel ? 'Yes' : 'No' }}</p>
+        <p><strong>View:</strong> {{ selectedPermission.canView ? 'Yes' : 'No' }}</p>
+        <div class="flex justify-end">
+          <button @click="closeViewModal" class="ml-2 bg-gray-300 text-gray-700 px-4 py-2 rounded">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -170,11 +188,11 @@ export default {
       currentPage: 1,
       itemsPerPage: 5,
       permissions: [
-        // Sample existing permissions for demonstration
         { id: 1, priv_n: 'Edit User', module: 'User Management', canCreate: false, canUpdate: true, canCancel: false, canView: true, isActive: true },
         { id: 2, priv_n: 'Delete User', module: 'User Management', canCreate: false, canUpdate: false, canCancel: true, canView: true, isActive: false },
       ],
       showModal: false,
+      showViewModal: false, // New state for view modal
       newPermission: {
         priv_n: '',
         module: '',
@@ -183,17 +201,15 @@ export default {
         canCancel: false,
         canView: false,
       },
+      selectedPermission: null, // State to store the selected permission for viewing
     };
   },
   computed: {
     filteredPermissions() {
-      return this.permissions.filter((permission) => {
-        const search = this.searchQuery.toLowerCase();
-        return (
-          permission.priv_n.toLowerCase().includes(search) ||
-          permission.module.toLowerCase().includes(search)
-        );
-      });
+      return this.permissions.filter(permission => 
+        permission.priv_n.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        permission.module.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
     },
     paginatedPermissions() {
       const start = (this.currentPage - 1) * this.itemsPerPage;
@@ -205,54 +221,40 @@ export default {
     },
   },
   methods: {
-    nextPage() {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
-      }
-    },
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-      }
-    },
     showAddModal() {
       this.showModal = true;
     },
     closeModal() {
       this.showModal = false;
     },
+    viewPermission(permission) {
+      this.selectedPermission = permission;
+      this.showViewModal = true;
+    },
+    closeViewModal() {
+      this.showViewModal = false;
+    },
     handleSubmit() {
-      // Add new permission with isActive set to true
-      this.permissions.push({ ...this.newPermission, isActive: true, id: this.permissions.length + 1 });
-      this.newPermission = {
-        priv_n: '',
-        module: '',
-        canCreate: false,
-        canUpdate: false,
-        canCancel: false,
-        canView: false,
-      };
+      this.permissions.push({ ...this.newPermission, id: this.permissions.length + 1 });
+      this.newPermission = { priv_n: '', module: '', canCreate: false, canUpdate: false, canCancel: false, canView: false };
       this.showModal = false;
     },
-    viewPermission(permission) {
-      // View permission details (for demonstration)
-      alert(`Viewing Permission: ${permission.priv_n}`);
+    prevPage() {
+      if (this.currentPage > 1) this.currentPage--;
+    },
+    nextPage() {
+      if (this.currentPage < this.totalPages) this.currentPage++;
     },
     editPermission(permission) {
-      // Edit permission functionality (for demonstration)
-      alert(`Editing Permission: ${permission.priv_n}`);
+      this.showModal = true;
     },
     deletePermission(permission) {
-      // Delete permission functionality (for demonstration)
-      const index = this.permissions.indexOf(permission);
-      if (index !== -1) {
-        this.permissions.splice(index, 1);
-      }
+      this.permissions = this.permissions.filter(p => p.id !== permission.id);
     },
   },
 };
 </script>
 
 <style scoped>
-/* Add any additional styling here if needed */
+/* Add your styles here */
 </style>
