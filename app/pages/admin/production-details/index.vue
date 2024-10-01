@@ -1,0 +1,194 @@
+<template>
+  <div class="p-6">
+    <!-- Page Title -->
+    <h2 class="text-2xl font-bold mb-4">Production Details</h2>
+
+    <!-- Modal for Generating Materials -->
+    <div v-if="showModal" class="modal">
+      <div class="modal-content">
+        <h3 class="text-lg font-semibold mb-2">Generated Materials</h3>
+        <div v-if="generatedMaterials.length > 0">
+          <ul>
+            <li v-for="(material, index) in generatedMaterials" :key="index">
+              {{ material }}
+            </li>
+          </ul>
+        </div>
+        <div v-else>
+          <p>No materials generated.</p>
+        </div>
+        <div class="flex justify-end">
+          <button @click="showModal = false" class="bg-gray-300 text-black px-4 py-2 rounded">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="flex justify-between mb-4">
+      <input
+        type="text"
+        v-model="searchQuery"
+        placeholder="Search..."
+        class="w-1/3 p-2 border rounded-lg"
+      />
+    </div>
+
+    <!-- Buttons for Generating Materials -->
+    <div class="flex justify-between mb-4">
+      <button @click="generateAllMaterials" class="bg-blue-500 text-white px-4 py-2 rounded">Generate for All Productions</button>
+      <button @click="generateSelectedMaterials" class="bg-green-500 text-white px-4 py-2 rounded" :disabled="!anySelected">Generate for Selected Productions</button>
+    </div>
+
+    <!-- Production Details Table -->
+    <table class="min-w-full bg-white border border-gray-300">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-6 py-2 text-left border-b">Select</th>
+          <th class="px-6 py-2 text-left border-b">Product Details No</th>
+          <th class="px-6 py-2 text-left border-b">Production ID</th>
+          <th class="px-6 py-2 text-left border-b">Quantity</th>
+          <th class="px-6 py-2 text-left border-b">Status</th>
+          <th class="px-6 py-2 text-left border-b">Remarks</th>
+          <th class="px-6 py-2 text-left border-b">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="detail in filteredDetails" :key="detail.productDetailsNo" class="hover:bg-gray-50">
+          <td class="px-6 py-4 border-b">
+            <input type="checkbox" v-model="selectedItems" :value="detail.productionId" />
+          </td>
+          <td class="px-6 py-4 border-b">{{ detail.productDetailsNo }}</td>
+          <td class="px-6 py-4 border-b">{{ detail.productionId }}</td>
+          <td class="px-6 py-4 border-b">{{ detail.productIdQty }}</td>
+          <td class="px-6 py-4 border-b">
+            <span v-if="detail.status === 'complete'" class="text-green-600">✔️</span>
+            <span v-else-if="detail.status === 'pending'" class="text-yellow-600">⚠️</span>
+            <span v-else class="text-red-600">❌</span>
+          </td>
+          <td class="px-6 py-4 border-b">{{ detail.remarks }}</td>
+          <td class="px-6 py-4 border-b">
+            <button @click="generateMaterials(detail.productionId)" class="text-blue-500">Generate</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="mt-4 flex justify-between">
+      <button
+        @click="prevPage"
+        :disabled="currentPage === 1"
+        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+      >
+        Previous
+      </button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button
+        @click="nextPage"
+        :disabled="currentPage === totalPages"
+        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+      >
+        Next
+      </button>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed } from 'vue';
+
+// Sample data (replace with actual data)
+const productionDetails = ref([
+  { productDetailsNo: 1, productionId: 101, productIdQty: 50, status: 'complete', remarks: 'All good' },
+  { productDetailsNo: 2, productionId: 102, productIdQty: 30, status: 'pending', remarks: 'Awaiting approval' },
+  // Add more sample details here...
+]);
+
+const searchQuery = ref('');
+const currentPage = ref(1);
+const itemsPerPage = 10;
+const showModal = ref(false);
+const generatedMaterials = ref([]);
+const selectedItems = ref([]); // To store selected production IDs
+
+// Check if any item is selected
+const anySelected = computed(() => selectedItems.value.length > 0);
+
+// Filtered production details based on search
+const filteredDetails = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+
+  if (!searchQuery.value) {
+    return productionDetails.value.slice(start, end);
+  }
+
+  return productionDetails.value.filter(
+    (detail) =>
+      detail.productDetailsNo.toString().includes(searchQuery.value) ||
+      detail.productionId.toString().includes(searchQuery.value) ||
+      detail.remarks.toLowerCase().includes(searchQuery.value.toLowerCase())
+  ).slice(start, end);
+});
+
+// Function to generate materials for a specific production ID
+const generateMaterials = (productionId) => {
+  generatedMaterials.value = [
+    `Material A for Production ID ${productionId}`,
+    `Material B for Production ID ${productionId}`,
+    `Material C for Production ID ${productionId}`
+  ];
+  showModal.value = true;
+};
+
+// Function to generate materials for all production IDs
+const generateAllMaterials = () => {
+  generatedMaterials.value = productionDetails.value.map(
+    (detail) => `Materials for Production ID ${detail.productionId}`
+  );
+  showModal.value = true;
+};
+
+// Function to generate materials for selected production IDs
+const generateSelectedMaterials = () => {
+  generatedMaterials.value = selectedItems.value.map(
+    (productionId) => `Materials for Production ID ${productionId}`
+  );
+  showModal.value = true;
+};
+
+// Pagination methods
+const totalPages = computed(() => Math.ceil(filteredDetails.value.length / itemsPerPage));
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
+};
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
+};
+</script>
+
+<style scoped>
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000; /* Ensure modal is above other content */
+}
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  width: 300px; /* Fixed width for the modal */
+}
+</style>
