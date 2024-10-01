@@ -11,7 +11,7 @@ class UserPrivilageStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,12 @@ class UserPrivilageStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'userID' => 'required|exists:users,userID',         
+            'moduleID' => 'required|exists:modules,moduleID',     
+            'create' => 'required|boolean',              
+            'update' => 'required|boolean',                
+            'view' => 'required|boolean',
+            'cancel' => 'required|boolean',
         ];
     }
 }

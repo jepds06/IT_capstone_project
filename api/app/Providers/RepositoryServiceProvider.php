@@ -9,6 +9,9 @@ use App\Interface\Repository\CustomerRepositoryInterface;
 use App\Interface\Repository\MaterialRepositoryInterface;
 use App\Interface\Repository\ModuleRepositoryInterface;
 use App\Interface\Repository\ProductCategoryRepositoryInterface;
+use App\Interface\Repository\ProductionDetailRepositoryInterface;
+use App\Interface\Repository\ProductionMaterialRepositoryInterface;
+use App\Interface\Repository\ProductionRepositoryInterface;
 use App\Interface\Repository\ProductMaterialsRepositoryInterface;
 use App\Interface\Repository\ProductRepositoryInterface;
 use App\Interface\Repository\SupplierMaterialRepositoryInterface;
@@ -24,6 +27,9 @@ use App\Interface\Service\CustomerServiceInterface;
 use App\Interface\Service\MaterialServiceInterface;
 use App\Interface\Service\ModuleServiceInterface;
 use App\Interface\Service\ProductCategoryServiceInterface;
+use App\Interface\Service\ProductionDetailServiceInterface;
+use App\Interface\Service\ProductionMaterialServiceInterface;
+use App\Interface\Service\ProductionServiceInterface;
 use App\Interface\Service\ProductMaterialServiceInterface;
 use App\Interface\Service\ProductServiceInterface;
 use App\Interface\Service\SupplierMaterialServiceInterface;
@@ -39,6 +45,9 @@ use App\Repository\CustomerRepository;
 use App\Repository\MaterialRepository;
 use App\Repository\ModuleRepository;
 use App\Repository\ProductCategoryRepository;
+use App\Repository\ProductionDetailRepository;
+use App\Repository\ProductionMaterialRepository;
+use App\Repository\ProductionRepository;
 use App\Repository\ProductMaterialRepository;
 use App\Repository\ProductRepository;
 use App\Repository\SupplierMaterialRepository;
@@ -54,6 +63,9 @@ use App\Service\CustomerService;
 use App\Service\MaterialService;
 use App\Service\ModuleService;
 use App\Service\ProductCategoryService;
+use App\Service\ProductionDetailService;
+use App\Service\ProductionMaterialService;
+use App\Service\ProductionService;
 use App\Service\ProductMaterialsService;
 use App\Service\ProductService;
 use App\Service\SupplierMaterialService;
@@ -87,6 +99,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ProductMaterialsRepositoryInterface::class, ProductMaterialRepository::class);
         $this->app->bind(SupplierMaterialRepositoryInterface::class, SupplierMaterialRepository::class);
         $this->app->bind(UserPrivilageRepositoryInterface::class, UserPrivilageRepository::class);
+        $this->app->bind(ProductionRepositoryInterface::class, ProductionRepository::class);
+        $this->app->bind(ProductionDetailRepositoryInterface::class, ProductionDetailRepository::class);
+        $this->app->bind(ProductionMaterialRepositoryInterface::class, ProductionMaterialRepository::class);
 
         //Service
         // $this->app->bind(AccountServiceInterface::class, AccountService::class);
@@ -104,6 +119,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ProductMaterialServiceInterface::class, ProductMaterialsService::class);
         $this->app->bind(SupplierMaterialServiceInterface::class, SupplierMaterialService::class);
         $this->app->bind(UserPrivilageServiceInterface::class, UserPrivilageService::class);
+        $this->app->bind(ProductionServiceInterface::class, ProductionService::class);
+        $this->app->bind(ProductionDetailServiceInterface::class, ProductionDetailService::class);
+        $this->app->bind(ProductionMaterialServiceInterface::class, ProductionMaterialService::class);
     }
 
     /**

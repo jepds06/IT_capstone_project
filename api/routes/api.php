@@ -5,6 +5,9 @@ use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductionController;
+use App\Http\Controllers\ProductionDetailController;
+use App\Http\Controllers\ProductionMaterialController;
 use App\Http\Controllers\ProductMaterialsController;
 use App\Http\Controllers\SupplierMaterialController;
 use App\Http\Controllers\UserAuthController;
@@ -36,6 +39,14 @@ Route::prefix('modules')->group(function(){
     Route::get('/{moduleId}', [ModuleController::class, 'show']);
     Route::post('/', [ModuleController::class, 'store']);
     Route::put('/{moduleId}',[ModuleController::class, 'update']);
+});
+
+//UserPrivilage route
+Route::prefix('userPrivilage')->group(function(){
+    Route::get('/', [UserPrivilageController::class, 'index']);
+    Route::get('/{userPrivilageId}', [UserPrivilageController::class, 'show']);
+    Route::post('/', [UserPrivilageController::class, 'store']);
+    Route::put('/{userPrivilageId}', [UserPrivilageController::class, 'update']);
 });
 
 //register route
@@ -89,10 +100,27 @@ Route::prefix('supplierMaterials')->group(function(){
     Route::put('/{suppMtrlId}', [SupplierMaterialController::class, 'update']);
 });
 
-//UserPrivilage route
-Route::prefix('userPrivilage')->group(function(){
-    Route::get('/', [UserPrivilageController::class, 'index']);
-    Route::get('/{userPrivilageId}', [UserPrivilageController::class, 'show']);
-    Route::post('/', [UserPrivilageController::class, 'store']);
-    Route::put('/{userPrivilageId}', [UserPrivilageController::class, 'update']);
+//productions route
+Route::prefix('productions')->group(function(){
+    Route::get('/', [ProductionController::class, 'index']);
+    Route::get('/{productionId}', [ProductionController::class, 'show']);
+    Route::post('/', [ProductionController::class, 'store']);
+    Route::put('/{productionId}', [ProductionController::class, 'update']);
+});
+
+//productions details route
+Route::prefix('productionDetails')->group(function(){
+    Route::get('/', [ProductionDetailController::class, 'index']);
+    Route::get('/{prodtnDetailId}', [ProductionDetailController::class, 'show']);
+    Route::post('/', [ProductionDetailController::class, 'store']);
+    Route::put('/{prodtnDetailId}', [ProductionDetailController::class, 'update']);
+});
+
+//production materials route
+Route::prefix('productionMaterials')->group(function(){
+    Route::get('/', [ProductionMaterialController::class, 'index']);
+    Route::get('/{prodtnMtrlId}', [ProductionMaterialController::class, 'show']);
+    Route::get('/productionDetails/{prodtnMtrlId}', [ProductionMaterialController::class, 'showProdDetailbyProdMatsID']);
+    Route::post('/', [ProductionMaterialController::class, 'store']);
+    Route::put('/{prodtnMtrlId}', [ProductionMaterialController::class, 'update']);
 });

@@ -14,14 +14,16 @@ return new class extends Migration
         Schema::create('productionMaterials', function (Blueprint $table) {
             $table->bigIncrements('prodtnMtrlID');
             $table->unsignedBigInteger('productMatsID');
-            $table->unsignedBigInteger('productionID');
+            $table->unsignedBigInteger('prodtnDetailID');
+            $table->integer('qtyNeeded');
+            $table->string('status');
             $table->timestamps();
 
             $table->Foreign('productMatsID')->references('productMatsID')->on('productMaterials')
             ->onUpdate('cascade')
             ->onDelete('cascade');
 
-            $table->Foreign('productionID')->references('productionID')->on('productions')
+            $table->Foreign('prodtnDetailID')->references('prodtnDetailID')->on('productionDetails')
             ->onUpdate('cascade')
             ->onDelete('cascade');
         });
@@ -35,7 +37,7 @@ return new class extends Migration
         Schema::table('productionMaterials', function(Blueprint $table){
             // Drop the foreign key before dropping the table
             $table->dropForeign(['productMatsID']);
-            $table->dropForeign(['productionID']);
+            $table->dropForeign(['prodtnDetailID']);
         });
         Schema::dropIfExists('productionMaterials');
     }

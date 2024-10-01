@@ -15,10 +15,21 @@ class Production extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
-        'productionDate',
-        'estProductionDays',
-        'endDate',
-        'quantity',
-        'status'
+        'userID',
+        'dateEncoded',
+        'year',
+        'month',
+        'status',
+        'remarks'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'userID');
+    }
+
+    public function productionDetails()
+    {
+        return $this->hasMany(ProductionDetail::class, 'productionID');
+    }
 }

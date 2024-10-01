@@ -27,15 +27,15 @@ class ProductMaterialRepository implements ProductMaterialsRepositoryInterface
             $productMats->product()->associate($product);
         } else {
             // Handle the error: throw an exception, return an error response, or set a default value
-            throw new \Exception("Invalid account type ID provided.");
+            throw new \Exception("Invalid product ID provided.");
         }
         $material = Material::find($payload->materialID);
         if($material){
             $productMats->material()->associate($material);
         } else {
             // Handle the error: throw an exception, return an error response, or set a default value
-            throw new \Exception("Invalid account type ID provided.");
-        };
+            throw new \Exception("Invalid material ID provided.");
+        }
         $productMats->quantity = $payload->quantity;
     
         $productMats->save();
@@ -51,15 +51,15 @@ class ProductMaterialRepository implements ProductMaterialsRepositoryInterface
             $productMats->product()->associate($product);
         } else {
             // Handle the error: throw an exception, return an error response, or set a default value
-            throw new \Exception("Invalid account type ID provided.");
+            throw new \Exception("Invalid product ID provided.");
         }
         $material = Material::find($payload->materialID);
         if($material){
             $productMats->material()->associate($material);
         } else {
             // Handle the error: throw an exception, return an error response, or set a default value
-            throw new \Exception("Invalid account type ID provided.");
-        };
+            throw new \Exception("Invalid material ID provided.");
+        }
         $productMats->quantity = $payload->quantity;
 
         $productMats->save();

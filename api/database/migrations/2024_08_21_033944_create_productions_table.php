@@ -15,8 +15,8 @@ return new class extends Migration
             $table->bigIncrements('productionID');
             $table->unsignedBigInteger('userID');
             $table->date('dateEncoded');
-            $table->date('year');
-            $table->date('month');
+            $table->year('year');
+            $table->string('month');
             $table->string('remarks');
             $table->string('status');
             $table->timestamps();

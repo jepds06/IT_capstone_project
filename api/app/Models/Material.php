@@ -36,6 +36,6 @@ class Material extends Model
     // Optionally, if you need to get the products associated with this material directly:
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'productmaterials', 'materialID', 'productID');
+        return $this->belongsToMany(Product::class, 'productMaterials', 'materialID', 'productID');
     }
 }

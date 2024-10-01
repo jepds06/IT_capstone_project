@@ -27,7 +27,7 @@ class SupplierMaterialRepository implements SupplierMaterialRepositoryInterface
             $suppMatrl->supplier()->associate($supplier);
         } else {
             // Handle the error: throw an exception, return an error response, or set a default value
-            throw new \Exception("Invalid account type ID provided.");
+            throw new \Exception("Invalid user ID provided.");
         }
 
         $material = Material::find($payload->materialID);
@@ -35,7 +35,7 @@ class SupplierMaterialRepository implements SupplierMaterialRepositoryInterface
             $suppMatrl->material()->associate($material);
         } else {
             // Handle the error: throw an exception, return an error response, or set a default value
-            throw new \Exception("Invalid account type ID provided.");
+            throw new \Exception("Invalid material ID provided.");
         }
         $suppMatrl->unitPrice = $payload->unitPrice;
         //Log::debug('Supplier Material Data: ' . json_encode($suppMatrl->toArray()));
@@ -53,7 +53,7 @@ class SupplierMaterialRepository implements SupplierMaterialRepositoryInterface
             $suppMatrl->supplier()->associate($supplier);
         } else {
             // Handle the error: throw an exception, return an error response, or set a default value
-            throw new \Exception("Invalid account type ID provided.");
+            throw new \Exception("Invalid user ID provided.");
         }
 
         $material = Material::find($payload->materialID);
@@ -61,7 +61,7 @@ class SupplierMaterialRepository implements SupplierMaterialRepositoryInterface
             $suppMatrl->material()->associate($material);
         } else {
             // Handle the error: throw an exception, return an error response, or set a default value
-            throw new \Exception("Invalid account type ID provided.");
+            throw new \Exception("Invalid material ID provided.");
         }
         $suppMatrl->unitPrice = $payload->unitPrice;
 

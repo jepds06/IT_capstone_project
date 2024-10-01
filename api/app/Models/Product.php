@@ -33,11 +33,16 @@ class Product extends Model
         return $this->hasMany(ProductMaterial::class, 'productID');
     }
 
-     /**
+    /**
      * Get the materials associated with the product directly.
      */
     public function materials()
     {
-        return $this->belongsToMany(Material::class, 'productmaterials', 'productID', 'materialID');
+        return $this->belongsToMany(Material::class, 'productMaterials', 'productID', 'materialID');
+    }
+
+    public function productionDetails()
+    {
+        return $this->hasMany(ProductionDetail::class, 'productID');
     }
 }

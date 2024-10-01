@@ -31,7 +31,7 @@ class ProductRepository implements ProductRepositoryInterface
             $product->prdCategory()->associate($prodCategory);
         } else {
             // Handle the error: throw an exception, return an error response, or set a default value
-            throw new \Exception("Invalid account type ID provided.");
+            throw new \Exception("Invalid product category ID provided.");
         }
 
         $product->save();
@@ -51,7 +51,7 @@ class ProductRepository implements ProductRepositoryInterface
             $product->prdCategory()->associate($prodCategory);
         } else {
             // Handle the error: throw an exception, return an error response, or set a default value
-            throw new \Exception("Invalid account type ID provided.");
+            throw new \Exception("Invalid product category ID provided.");
         }
 
         $product->save();
