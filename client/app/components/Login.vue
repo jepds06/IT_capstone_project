@@ -1,7 +1,12 @@
 <script setup lang="ts">
-import { apiService } from "~/api/apiService";
+import { ref } from 'vue';
+import { navigateTo } from 'nuxt/app';
+import { apiService } from '~/api/apiService';
+import { useAuth } from '@/composables/useAuth';
 
-const route = useRoute();
+const userTypes = ref([]);
+
+const { setToken, logout } = useAuth();
 
 definePageMeta({
   layout: "auth",
@@ -28,31 +33,53 @@ const fields = [
 
 const validate = (state: any) => {
   const errors = [];
-  if (!state.email)
-    errors.push({ path: "email", message: "Email is required" });
-  if (!state.password)
-    errors.push({ path: "password", message: "Password is required" });
+  if (!state.email) errors.push({ path: "email", message: "Email is required" });
+  if (!state.password) errors.push({ path: "password", message: "Password is required" });
   return errors;
 };
 
-function onSubmit(data: any) {
-  console.log("Submitted", data);
-  // return variable with accountype that user signing in API Call
-  // const result = apiService.post('')
-  const result = { accountType: 1 };
+function getUserTypeDescription(userTypeId: number) {
+  const userType = userTypes.value.find(cat => cat.userTypeID === userTypeId);
+  return userType ? userType.userTypeName?.toLowerCase() : 'Unknown';
+}
 
-  if (result.accountType === 1) {
-    navigateTo("/admin");
-  } else if (result.accountType === 2) {
-    navigateTo("/customer-product");
-  } else {
-    navigateTo("/pricing")
+async function onSubmit(data: any) {
+  try {
+    console.log("Submitted", data);
+    
+    // Login API call
+    const result = await apiService.post("/api/login", data);
+    
+    // Set token in Vuex and localStorage
+    setToken(result.data.token);
+    localStorage.setItem('userInfo', JSON.stringify(result.data.user));
+
+    // Dispatch setPermission to Vuex store
+    localStorage.setItem('userPermission', JSON.stringify([
+      { moduleName: 'Products', create: true, update: false, view: true },
+      { moduleName: 'Users', create: true, update: true, view: true },
+      { moduleName: 'Modules', create: false, update: false, view: false },
+    ]));
+
+    // Fetch user types
+    const userType = await apiService.get("/api/userTypes");
+    userTypes.value = userType.data;
+    
+    // Navigate based on user type
+    const userTypeDescription = getUserTypeDescription(result.data.user.userTypeID);
+    if (userTypeDescription === 'administrator') {
+      navigateTo("/admin");
+    } else if (userTypeDescription === 'customer') {
+      navigateTo("/customer-product");
+    } else {
+      navigateTo("/pricing");
+    }
+  } catch (error) {
+    console.error(error);
   }
 }
 </script>
 
-<!-- eslint-disable vue/multiline-html-element-content-newline -->
-<!-- eslint-disable vue/singleline-html-element-content-newline -->
 <template>
   <UCard class="max-w pl-7 bg-white/75 dark:bg-white/5 backdrop-blur">
     <UAuthForm
@@ -70,18 +97,12 @@ function onSubmit(data: any) {
     >
       <template #description>
         Don't have an account?
-        <NuxtLink to="/signup" class="text-primary font-medium"
-          >Sign up</NuxtLink
-        >.
+        <NuxtLink to="/signup" class="text-primary font-medium">Sign up</NuxtLink>.
       </template>
-
       <template #password-hint>
-        <NuxtLink to="/" class="text-primary font-medium"
-          >Forgot password?</NuxtLink
-        >
+        <NuxtLink to="/" class="text-primary font-medium">Forgot password?</NuxtLink>
       </template>
-
-      <template #footer> </template>
+      <template #footer></template>
     </UAuthForm>
   </UCard>
 </template>

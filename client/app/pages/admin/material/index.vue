@@ -15,7 +15,6 @@
       :isVisible="isFormVisible"
       title="Material Form"
       :showSave="true"
-      class="text-black"
       @update:isVisible="isFormVisible = $event"
       @save="saveMaterial"
     >
@@ -29,7 +28,7 @@
               v-model="form.materialID"
               type="text"
               id="id"
-              class="mt-1 block w-full border border-gray-300 rounded-lg p-2 text-white"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
               :readonly="formMode === 'edit'"
             />
           </div>
@@ -43,12 +42,12 @@
               v-model="form.description"
               type="text"
               id="description"
-              class="mt-1 block w-full border border-gray-300 rounded-lg p-2 text-white"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
             />
           </div>
           <div class="mb-4">
             <label for="specs" class="block text-sm font-medium text-gray-700">Specification</label>
-            <textarea v-model="form.specification" id="specs" rows="3" class="mt-1 block w-full border border-gray-300 rounded-lg p-2 text-white"></textarea>
+            <textarea v-model="form.specification" id="specs" rows="3" class="mt-1 block w-full border border-gray-300 rounded-lg p-2"></textarea>
           </div>
           <div class="mb-4">
             <label
@@ -60,12 +59,12 @@
               v-model="form.brand"
               type="text"
               id="description"
-              class="mt-1 block w-full border border-gray-300 rounded-lg p-2 text-white"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
             />
           </div>
           <div class="mb-4">
             <label for="unitOfMeasure" class="block text-sm font-medium text-gray-700">Unit of Measure</label>
-            <input v-model="form.unitOfMeasure" id="unitPrice" class="mt-1 block w-full border border-gray-300 rounded-lg p-2 text-white"/>
+            <input v-model="form.unitOfMeasure" id="unitPrice" class="mt-1 block w-full border border-gray-300 rounded-lg p-2"/>
           </div>
           <!-- <div class="mb-4">
             <label for="status" class="block text-sm font-medium text-gray-700"
@@ -74,7 +73,7 @@
             <select
               v-model="form.status"
               id="status"
-              class="mt-1 block w-full border border-gray-300 rounded-lg p-2 text-white"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
             >
               <option value="active">Active</option>
               <option value="inactive">Inactive</option>
@@ -87,21 +86,21 @@
     <!--  Materials Table -->
     <table class="min-w-full border border-gray-300 rounded-lg">
       <thead class="bg-gray-100">
-        <tr class="p-2 border-b text-black text-center">
-          <th>Id</th>
-          <th>Description</th>
-          <th>Brand</th>
-          <th>Unit of Measure</th>
+        <tr>
+          <th class="p-2 border-b text-black text-center">Id</th>
+          <th class="p-2 border-b text-black text-center">Description</th>
+          <th class="p-2 border-b text-black text-center">Brand</th>
+          <th class="p-2 border-b text-black text-center">Unit of Measure</th>
           <!-- <th class="p-2 border-b text-center">Status</th> -->
-          <th>Actions</th>
+          <th class="p-2 border-b text-black text-center">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="material in materials" :key="material.materialID" class="p-2 border-b text-center">
-          <td>{{ material.description }}</td>
-          <td>{{ material.specification }}</td>
-          <td>{{ material.brand }}</td>
-          <td>{{ material.unitOfMeasure }}</td>
+        <tr v-for="material in materials" :key="material.materialID">
+          <td class="p-2 border-b text-center">{{ material.description }}</td>
+          <td class="p-2 border-b text-center">{{ material.specification }}</td>
+          <td class="p-2 border-b text-center">{{ material.brand }}</td>
+          <td class="p-2 border-b text-center">{{ material.unitOfMeasure }}</td>
           <!-- <td class="p-2 border-b text-center">
             <i
               v-if="category.status === 'active'"
@@ -129,6 +128,11 @@
   </template>
   
   <script setup>
+import auth from '../../../../middleware/auth'
+// This page requires authentication
+definePageMeta({
+  middleware: [auth],
+});
   import { ref } from "vue";
   import Modal from "~/components/Modal.vue"; // Adjust the path if needed
   import { apiService } from "~/api/apiService";

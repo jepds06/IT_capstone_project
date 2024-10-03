@@ -73,7 +73,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr class="p-2 border-b text-black text-center">
+              <tr  class="p-2 border-b text-black text-center">
                 <td>{{ selectedProduct?.productID }}</td>
                 <td>{{ selectedProduct?.productName }}</td>
                 <td>{{ selectedProduct?.specifications }}</td>
@@ -167,7 +167,7 @@
       <table class="min-w-full border border-gray-300 rounded-lg">
         <thead class="bg-gray-100">
           <tr>
-            <th class="p-2 border-b text-black  text-center">Id</th>
+            <th class="p-2 border-b text-black text-center">Id</th>
             <th class="p-2 border-b text-black text-center">Name</th>
             <th class="p-2 border-b text-black text-center">Specifications</th>
             <th class="p-2 border-b text-black text-center">Unit Price</th>
@@ -200,6 +200,12 @@
   </template>
   
   <script setup>
+import auth from '../../../../middleware/auth'
+// This page requires authentication
+definePageMeta({
+  middleware: [auth],
+});
+
   import { ref } from 'vue';
   import { apiService } from "~/api/apiService";
 
@@ -262,7 +268,7 @@
   }
   
   function viewProduct(product) {
-    alert(`Viewing product `);
+    alert(`Viewing product: ${product.productName}`);
   }
   
   async function showMaterials(product) {

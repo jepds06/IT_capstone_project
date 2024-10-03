@@ -13,6 +13,10 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.6.0",
+    "@fortawesome/fontawesome-svg-core": "^6.6.0",
+    "@fortawesome/free-regular-svg-icons": "^6.6.0",
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/vue-fontawesome": "^3.0.8",
     "@iconify-json/heroicons": "^1.1.24",
     "@iconify-json/simple-icons": "^1.1.114",
     "@nuxt/content": "^2.13.2",
@@ -25,6 +29,7 @@
   },
   "devDependencies": {
     "@nuxt/eslint": "^0.5.1",
+    "@nuxt/types": "^2.18.1",
     "@nuxthq/studio": "^2.0.3",
     "@types/node": "^22.5.4",
     "eslint": "^9.9.0",

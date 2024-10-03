@@ -1,8 +1,6 @@
-// services/apiService.ts
-
 import { $fetch } from 'ofetch';
 
-const BASE_URL = process.env.API_BASE_URL || 'http://127.0.0.1:8000/api'; // Base URL including /api
+const BASE_URL = process.env.API_BASE_URL || 'http://127.0.0.1:8000/api';
 
 export class ApiService {
   private readonly baseUrl: string;
@@ -12,7 +10,6 @@ export class ApiService {
   }
 
   private constructUrl(endpoint: string, params?: Record<string, any>): string {
-    // Ensure the endpoint does not start with a slash if baseUrl ends with /api
     const normalizedBaseUrl = this.baseUrl.endsWith('/') ? this.baseUrl.slice(0, -1) : this.baseUrl;
     const normalizedEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
     const url = new URL(normalizedEndpoint, normalizedBaseUrl);
@@ -24,25 +21,61 @@ export class ApiService {
     return url.toString();
   }
 
+  private handleError(status: number, data?: any) {
+    if (status !== 200 && status !== 500) {
+      const message = data?.message || data?.error || 'An error occurred';
+      console.log('data-----',)
+      alert(message); // Show alert for errors only
+    }
+  }
+
   async get(endpoint: string, params?: Record<string, any>) {
     try {
       const url = this.constructUrl(endpoint, params);
-      return await $fetch(url, { method: 'GET' });
+      const response = await $fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        credentials: 'include',
+      });
+
+      return response; // Return response directly for successful requests
     } catch (error) {
       console.error('API GET Error:', error);
+      if (error.response) {
+        this.handleError(error.response.status, error.response['_data']);
+      }
       throw error;
     }
   }
 
-  async post(endpoint: string, body?: Record<string, any>) {
+  async post(endpoint: string, body?: Record<string, any>, authToken?: string) {
     try {
       const url = this.constructUrl(endpoint);
-      return await $fetch(url, {
+      const response = await $fetch(url, {
         method: 'POST',
+        headers: authToken ? 
+        {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        } :
+        {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
         body,
+        credentials: 'include',
       });
+
+      return response; // Return response directly for successful requests
     } catch (error) {
       console.error('API POST Error:', error);
+      if (error.response) {
+        this.handleError(error.response.status, error.response['_data']);
+      }
       throw error;
     }
   }
@@ -50,17 +83,25 @@ export class ApiService {
   async put(endpoint: string, body?: Record<string, any>) {
     try {
       const url = this.constructUrl(endpoint);
-      return await $fetch(url, {
+      const response = await $fetch(url, {
         method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
         body,
+        credentials: 'include',
       });
+
+      return response; // Return response directly for successful requests
     } catch (error) {
-      console.error('API POST Error:', error);
+      console.error('API PUT Error:', error);
+      if (error.response) {
+        this.handleError(error.response.status, error.response['_data']);
+      }
       throw error;
     }
   }
-
-  // Add more methods if needed (put, delete, etc.)
 }
 
 export const apiService = new ApiService(BASE_URL);
