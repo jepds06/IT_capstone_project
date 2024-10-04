@@ -50,21 +50,9 @@
               <input type="checkbox" v-model="permission.canView" class="form-checkbox" />
             </td>
             <td class="border-t px-4 py-2">
-              <font-awesome-icon 
-                icon="fas fa-eye" 
-                class="cursor-pointer" 
-                @click="viewPermission(permission)" 
-              />
-              <font-awesome-icon 
-                icon="fas fa-pencil-alt" 
-                class="cursor-pointer ml-2" 
-                @click="editPermission(permission)" 
-              />
-              <font-awesome-icon 
-                icon="fas fa-trash" 
-                class="cursor-pointer text-red-600 ml-2" 
-                @click="deletePermission(permission)" 
-              />
+              <span class="cursor-pointer" @click="viewPermission(permission)">👁️</span>
+              <span class="cursor-pointer ml-2" @click="editPermission(permission)">✏️</span>
+              <span class="cursor-pointer text-red-600 ml-2" @click="deletePermission(permission)">🗑️</span>
             </td>
           </tr>
         </tbody>
@@ -90,10 +78,10 @@
       </button>
     </div>
 
-    <!-- Modal for Adding Permission -->
+    <!-- Modal for Adding/Editing Permission -->
     <div v-if="showModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
       <div class="bg-white p-6 rounded-lg shadow-md">
-        <h2 class="text-lg font-semibold mb-4">Add New Permission</h2>
+        <h2 class="text-lg font-semibold mb-4">{{ isEditing ? 'Edit Permission' : 'Add New Permission' }}</h2>
         <form @submit.prevent="handleSubmit">
           <div class="mb-4">
             <label for="privilegeName" class="block text-sm font-medium text-gray-700">Privilege Name:</label>
@@ -140,7 +128,7 @@
           </div>
           <div class="flex justify-end">
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
-              Add
+              {{ isEditing ? 'Update' : 'Add' }}
             </button>
             <button @click="closeModal" class="ml-2 bg-gray-300 text-gray-700 px-4 py-2 rounded">
               Cancel
@@ -149,8 +137,6 @@
         </form>
       </div>
     </div>
-
-    <!-- Modal for Viewing Permission -->
     <div v-if="showViewModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
       <div class="bg-white p-6 rounded-lg shadow-md">
         <h2 class="text-lg font-semibold mb-4">View Permission</h2>
@@ -171,17 +157,7 @@
 </template>
 
 <script>
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faEye, faPencilAlt, faTrash } from '@fortawesome/free-solid-svg-icons';
-
-// Add the icons to the library
-library.add(faEye, faPencilAlt, faTrash);
-
 export default {
-  components: {
-    FontAwesomeIcon,
-  },
   data() {
     return {
       searchQuery: '',
@@ -192,7 +168,8 @@ export default {
         { id: 2, priv_n: 'Delete User', module: 'User Management', canCreate: false, canUpdate: false, canCancel: true, canView: true, isActive: false },
       ],
       showModal: false,
-      showViewModal: false, // New state for view modal
+      showViewModal: false, // New flag for the View Permission modal
+      isEditing: false, // State to track if we're editing
       newPermission: {
         priv_n: '',
         module: '',
@@ -201,7 +178,7 @@ export default {
         canCancel: false,
         canView: false,
       },
-      selectedPermission: null, // State to store the selected permission for viewing
+      selectedPermission: null, // State to store the selected permission for viewing or editing
     };
   },
   computed: {
@@ -221,40 +198,66 @@ export default {
     },
   },
   methods: {
-    showAddModal() {
-      this.showModal = true;
-    },
-    closeModal() {
-      this.showModal = false;
-    },
-    viewPermission(permission) {
-      this.selectedPermission = permission;
-      this.showViewModal = true;
-    },
-    closeViewModal() {
-      this.showViewModal = false;
-    },
-    handleSubmit() {
-      this.permissions.push({ ...this.newPermission, id: this.permissions.length + 1 });
-      this.newPermission = { priv_n: '', module: '', canCreate: false, canUpdate: false, canCancel: false, canView: false };
-      this.showModal = false;
-    },
     prevPage() {
       if (this.currentPage > 1) this.currentPage--;
     },
     nextPage() {
       if (this.currentPage < this.totalPages) this.currentPage++;
     },
-    editPermission(permission) {
+    showAddModal() {
+      this.isEditing = false;
+      this.newPermission = {
+        priv_n: '',
+        module: '',
+        canCreate: false,
+        canUpdate: false,
+        canCancel: false,
+        canView: false,
+      };
       this.showModal = true;
     },
+    handleSubmit() {
+      if (this.isEditing) {
+        // Update existing permission
+        const index = this.permissions.findIndex(p => p.id === this.selectedPermission.id);
+        if (index !== -1) {
+          this.permissions.splice(index, 1, { ...this.selectedPermission, ...this.newPermission });
+        }
+      } else {
+        // Add new permission
+        const newId = this.permissions.length ? Math.max(this.permissions.map(p => p.id)) + 1 : 1;
+        this.permissions.push({ id: newId, ...this.newPermission });
+      }
+      this.closeModal();
+    },
+    editPermission(permission) {
+      this.isEditing = true;
+      this.selectedPermission = { ...permission }; // Store selected permission
+      this.newPermission = { ...permission }; // Fill form with selected permission details
+      this.showModal = true;
+    },
+    viewPermission(permission) {
+      this.selectedPermission = { ...permission }; // Store selected permission for viewing
+      this.showViewModal = true; // Show view modal
+    },
     deletePermission(permission) {
-      this.permissions = this.permissions.filter(p => p.id !== permission.id);
+      const index = this.permissions.findIndex(p => p.id === permission.id);
+      if (index !== -1) {
+        this.permissions.splice(index, 1);
+      }
+    },
+    closeModal() {
+      this.showModal = false;
+      this.newPermission = { priv_n: '', module: '', canCreate: false, canUpdate: false, canCancel: false, canView: false };
+    },
+    closeViewModal() {
+      this.showViewModal = false;
+      this.selectedPermission = null; // Reset selected permission
     },
   },
 };
 </script>
 
 <style scoped>
-/* Add your styles here */
+
 </style>

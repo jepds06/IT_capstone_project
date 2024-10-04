@@ -47,12 +47,12 @@
           </CollapsibleMenu>
   
           <CollapsibleMenu  icon="mdi:truck-check" title="Suppliers">
-            <router-link to="/suppliers/manage" class="block p-4 hover:bg-gray-800">Manage Suppliers</router-link>
+            <router-link to="/admin/manage-suppliers" class="block p-4 hover:bg-gray-800">Manage Suppliers</router-link>
             <router-link to="/suppliers/materials" class="block p-4 hover:bg-gray-800">Supplier Materials</router-link>
           </CollapsibleMenu>
   
           <CollapsibleMenu  icon="mdi:account-group" title="Customers">
-            <router-link to="/customers/view" class="block p-4 hover:bg-gray-800">View Customers</router-link>
+            <router-link to="/admin/view-customer" class="block p-4 hover:bg-gray-800">View Customers</router-link>
             <router-link to="/customers/orders" class="block p-4 hover:bg-gray-800">Customer Orders</router-link>
           </CollapsibleMenu>
           
