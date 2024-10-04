@@ -47,7 +47,7 @@
           </CollapsibleMenu>
   
           <CollapsibleMenu  icon="mdi:truck-check" title="Suppliers">
-            <router-link to="/admin/manage-suppliers" class="block p-4 hover:bg-gray-800">Manage Suppliers</router-link>
+            <router-link to="/admin/supplier-quotations" class="block p-4 hover:bg-gray-800">Supplier Quotations</router-link>
             <router-link to="/suppliers/materials" class="block p-4 hover:bg-gray-800">Supplier Materials</router-link>
           </CollapsibleMenu>
   
