@@ -9,6 +9,8 @@ use App\Http\Controllers\ProductionController;
 use App\Http\Controllers\ProductionDetailController;
 use App\Http\Controllers\ProductionMaterialController;
 use App\Http\Controllers\ProductMaterialsController;
+use App\Http\Controllers\QuotationController;
+use App\Http\Controllers\QuotationDetailController;
 use App\Http\Controllers\SupplierMaterialController;
 use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\UserPrivilageController;
@@ -123,4 +125,20 @@ Route::prefix('productionMaterials')->group(function(){
     Route::get('/productionDetails/{prodtnMtrlId}', [ProductionMaterialController::class, 'showProdDetailbyProdMatsID']);
     Route::post('/', [ProductionMaterialController::class, 'store']);
     Route::put('/{prodtnMtrlId}', [ProductionMaterialController::class, 'update']);
+});
+
+//quotations route
+Route::prefix('quotations')->group(function(){
+    Route::get('/', [QuotationController::class, 'index']);
+    Route::get('/{quoteId}', [QuotationController::class, 'show']);
+    Route::post('/', [QuotationController::class, 'store']);
+    Route::put('/{quoteId}', [QuotationController::class, 'update']);
+});
+
+//quotation details route
+Route::prefix('quotationDetails')->group(function(){
+    Route::get('/', [QuotationDetailController::class, 'index']);
+    Route::get('/{qteDetailId}', [QuotationDetailController::class, 'show']);
+    Route::post('/', [QuotationDetailController::class, 'store']);
+    Route::put('/{qteDetailId}', [QuotationDetailController::class, 'update']);
 });

@@ -14,10 +14,8 @@ return new class extends Migration
         Schema::create('quotations', function (Blueprint $table) {
             $table->bigIncrements('quoteID');
             $table->date('quotationDate');
-            $table->string('description');
-            $table->date('validityDate');
+            $table->string('userID');
             $table->string('remarks');
-            $table->timestamps();
         });
     }
 

@@ -16,8 +16,19 @@ class Quotation extends Model
 
     protected $fillable =[
         'quotationDate',
-        'description',
-        'validityDate',
+        'userID',
         'remarks'
     ];
+
+    public $timestamps = false;
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'userID');
+    }
+
+    public function quotationDetails()
+    {
+        return $this->hasMany(QuotationDetail::class, 'quoteID');
+    }
 }

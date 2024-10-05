@@ -14,6 +14,8 @@ use App\Interface\Repository\ProductionMaterialRepositoryInterface;
 use App\Interface\Repository\ProductionRepositoryInterface;
 use App\Interface\Repository\ProductMaterialsRepositoryInterface;
 use App\Interface\Repository\ProductRepositoryInterface;
+use App\Interface\Repository\QuotationDetailRepositoryInterface;
+use App\Interface\Repository\QuotationRepositoryInterface;
 use App\Interface\Repository\SupplierMaterialRepositoryInterface;
 use App\Interface\Repository\SupplierRepositoryInterface;
 use App\Interface\Repository\UserAuthRepositoryInterface;
@@ -32,6 +34,8 @@ use App\Interface\Service\ProductionMaterialServiceInterface;
 use App\Interface\Service\ProductionServiceInterface;
 use App\Interface\Service\ProductMaterialServiceInterface;
 use App\Interface\Service\ProductServiceInterface;
+use App\Interface\Service\QuotationDetailServiceInterface;
+use App\Interface\Service\QuotationServiceInterface;
 use App\Interface\Service\SupplierMaterialServiceInterface;
 use App\Interface\Service\SupplierServiceInterface;
 use App\Interface\Service\UserAuthServiceInterface;
@@ -50,6 +54,8 @@ use App\Repository\ProductionMaterialRepository;
 use App\Repository\ProductionRepository;
 use App\Repository\ProductMaterialRepository;
 use App\Repository\ProductRepository;
+use App\Repository\QuotationDetailRepository;
+use App\Repository\QuotationRepository;
 use App\Repository\SupplierMaterialRepository;
 use App\Repository\SupplierRepository;
 use App\Repository\UserAuthRepository;
@@ -68,6 +74,8 @@ use App\Service\ProductionMaterialService;
 use App\Service\ProductionService;
 use App\Service\ProductMaterialsService;
 use App\Service\ProductService;
+use App\Service\QuotationDetailService;
+use App\Service\QuotationService;
 use App\Service\SupplierMaterialService;
 use App\Service\SupplierService;
 use App\Service\UserAuthService;
@@ -102,6 +110,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ProductionRepositoryInterface::class, ProductionRepository::class);
         $this->app->bind(ProductionDetailRepositoryInterface::class, ProductionDetailRepository::class);
         $this->app->bind(ProductionMaterialRepositoryInterface::class, ProductionMaterialRepository::class);
+        $this->app->bind(QuotationRepositoryInterface::class, QuotationRepository::class);
+        $this->app->bind(QuotationDetailRepositoryInterface::class, QuotationDetailRepository::class);
 
         //Service
         // $this->app->bind(AccountServiceInterface::class, AccountService::class);
@@ -122,6 +132,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ProductionServiceInterface::class, ProductionService::class);
         $this->app->bind(ProductionDetailServiceInterface::class, ProductionDetailService::class);
         $this->app->bind(ProductionMaterialServiceInterface::class, ProductionMaterialService::class);
+        $this->app->bind(QuotationServiceInterface::class, QuotationService::class);
+        $this->app->bind(QuotationDetailServiceInterface::class, QuotationDetailService::class);
     }
 
     /**

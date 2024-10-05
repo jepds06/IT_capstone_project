@@ -32,7 +32,7 @@ class UserRegRepository implements UserRegRepositoryInterface
             $user->userType()->associate($userType);
         } else {
             // Handle the error: throw an exception, return an error response, or set a default value
-            throw new \Exception("Invalid account type ID provided.");
+            throw new \Exception("Invalid user type ID provided.");
         }
 
         $user->save();

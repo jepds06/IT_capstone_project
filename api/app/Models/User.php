@@ -68,4 +68,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Production::class, 'moduleID');
     }
+
+    public function quotations()
+    {
+        return $this->hasMany(Quotation::class, 'userID');
+    }
 }
