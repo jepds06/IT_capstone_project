@@ -7,23 +7,18 @@
 
     <!-- Filters -->
     <div class="flex justify-between items-center mb-4">
-      <!-- Search Bar -->
       <input
         type="text"
         placeholder="Search quotations..."
         class="w-1/3 p-3 border rounded"
         v-model="searchQuery"
       />
-
-      <!-- Status Filter -->
       <select v-model="statusFilter" class="p-3 border rounded w-1/4">
         <option value="">All Status</option>
-        <option value="Submitted">Submitted</option>
+        <option value="Pending">Pending</option>
         <option value="Approved">Approved</option>
         <option value="Rejected">Rejected</option>
       </select>
-
-      <!-- Date Filter -->
       <input
         type="date"
         v-model="dateFilter"
@@ -53,21 +48,34 @@
             <td class="p-4">{{ quotation.supplierName }}</td>
             <td class="p-4">{{ quotation.supplierId }}</td>
             <td class="p-4">
-              <span v-if="quotation.status === 'Submitted'" class="text-yellow-500">📄 Submitted</span>
-              <span v-if="quotation.status === 'Approved'" class="text-green-500">✔️ Approved</span>
-              <span v-if="quotation.status === 'Rejected'" class="text-red-500">❌ Rejected</span>
+              <span v-if="quotation.status === 'Pending'" class="text-yellow-500"> Pending</span>
+              <span v-if="quotation.status === 'Approved'" class="text-green-500"> Approved</span>
+              <span v-if="quotation.status === 'Rejected'" class="text-red-500"> Rejected</span>
             </td>
             <td class="p-4 flex space-x-4">
               <button @click="openDetailsModal(quotation)" class="text-blue-500 hover:underline">View Details</button>
-              <button @click="approveQuotation(quotation)" class="text-green-500 hover:underline">✔️</button>
-              <button @click="rejectQuotation(quotation)" class="text-red-500 hover:underline">❌</button>
+              <button
+                v-if="quotation.status === 'Pending'"
+                @click="openPurchaseOrderModal(quotation)"
+                class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+              >
+                Purchase
+              </button>
+              <button
+                v-if="quotation.status === 'Pending'"
+                @click="openRejectConfirmationModal(quotation)"
+                class="text-red-500 hover:underline"
+                title="Reject Quotation"
+              >
+                <i class="fas fa-trash"></i>
+              </button>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Pagination (if necessary) -->
+    <!-- Pagination -->
     <div class="flex justify-between items-center mt-6">
       <span class="text-gray-600">Showing 1-10 of {{ totalQuotations }}</span>
       <div class="flex space-x-2">
@@ -104,11 +112,35 @@
         </div>
       </div>
     </div>
+
+    <!-- Purchase Order Modal -->
+    <div v-if="showPurchaseOrderModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div class="bg-white p-6 rounded-lg shadow-lg w-1/2">
+        <h2 class="text-xl font-bold mb-4">Purchase Order</h2>
+        <p>Please confirm the purchase order for {{ selectedQuotation ? selectedQuotation.quotationNo : '' }}.</p>
+        <div class="mt-6 flex justify-end space-x-4">
+          <button @click="closePurchaseOrderModal" class="bg-red-500 text-white px-4 py-2 rounded">Cancel</button>
+          <button @click="confirmPurchaseOrder" class="bg-green-500 text-white px-4 py-2 rounded">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reject Quotation Confirmation Modal -->
+    <div v-if="showRejectConfirmationModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div class="bg-white p-6 rounded-lg shadow-lg w-1/2">
+        <h2 class="text-xl font-bold mb-4">Confirm Rejection</h2>
+        <p>Are you sure you want to reject quotation {{ selectedQuotation ? selectedQuotation.quotationNo : '' }}?</p>
+        <div class="mt-6 flex justify-end space-x-4">
+          <button @click="closeRejectConfirmationModal" class="bg-red-500 text-white px-4 py-2 rounded">Cancel</button>
+          <button @click="rejectQuotation" class="bg-green-500 text-white px-4 py-2 rounded">Reject</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { jsPDF } from 'jspdf'; // Add this import statement at the top
+import { jsPDF } from 'jspdf';
 
 export default {
   data() {
@@ -119,7 +151,7 @@ export default {
           quotationNo: 'Q-001',
           supplierName: 'Supplier 1',
           supplierId: 'SUP-123',
-          status: 'Submitted',
+          status: 'Pending', // Initial status is Pending
           date: '2024-09-01',
           items: [
             { materialId: 'MAT-001', quantity: 10, price: '$100', totalPrice: '$1000' },
@@ -131,16 +163,18 @@ export default {
           quotationNo: 'Q-002',
           supplierName: 'Supplier 2',
           supplierId: 'SUP-456',
-          status: 'Approved',
+          status: 'Pending', // Initial status is also Pending
           date: '2024-09-05',
           items: [
             { materialId: 'MAT-003', quantity: 15, price: '$150', totalPrice: '$2250' },
           ],
         },
       ],
-      totalQuotations: 2, // Adjust this dynamically
+      totalQuotations: 2,
       showDetailsModal: false,
       selectedQuotation: null,
+      showPurchaseOrderModal: false,
+      showRejectConfirmationModal: false,
       searchQuery: '',
       statusFilter: '',
       dateFilter: '',
@@ -152,11 +186,11 @@ export default {
         const matchesSearch = quotation.quotationNo.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
           quotation.supplierName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
           quotation.supplierId.toLowerCase().includes(this.searchQuery.toLowerCase());
-        
+
         const matchesStatus = this.statusFilter ? quotation.status === this.statusFilter : true;
-        
+
         const matchesDate = this.dateFilter ? quotation.date === this.dateFilter : true;
-        
+
         return matchesSearch && matchesStatus && matchesDate;
       });
     },
@@ -168,51 +202,55 @@ export default {
     },
     closeDetailsModal() {
       this.showDetailsModal = false;
-      this.selectedQuotation = null;
     },
-    approveQuotation(quotation) {
-      // Update the status to 'Approved'
-      quotation.status = 'Approved';
+    openPurchaseOrderModal(quotation) {
+      this.selectedQuotation = quotation;
+      this.showPurchaseOrderModal = true;
     },
-    rejectQuotation(quotation) {
-      // Update the status to 'Rejected'
-      quotation.status = 'Rejected';
+    closePurchaseOrderModal() {
+      this.showPurchaseOrderModal = false;
+    },
+    confirmPurchaseOrder() {
+      // Update the status to Approved when confirmed
+      this.selectedQuotation.status = 'Approved';
+      this.closePurchaseOrderModal();
+    },
+    openRejectConfirmationModal(quotation) {
+      this.selectedQuotation = quotation;
+      this.showRejectConfirmationModal = true;
+    },
+    closeRejectConfirmationModal() {
+      this.showRejectConfirmationModal = false;
+    },
+    rejectQuotation() {
+      // Update the status to Rejected when rejected
+      this.selectedQuotation.status = 'Rejected';
+      this.closeRejectConfirmationModal();
     },
     downloadQuotation(quotation) {
       const doc = new jsPDF();
-      doc.setFontSize(20);
-      doc.text('Quotation Details', 14, 22);
-      doc.setFontSize(12);
-      doc.text(`Quotation No: ${quotation.quotationNo}`, 14, 35);
-      doc.text(`Supplier Name: ${quotation.supplierName}`, 14, 42);
-      doc.text(`Supplier ID: ${quotation.supplierId}`, 14, 49);
-      doc.text(`Status: ${quotation.status}`, 14, 56);
-      doc.text('Items:', 14, 63);
-
-      const headers = ['Material ID', 'Quantity', 'Price', 'Total Price'];
-      const data = quotation.items.map(item => [item.materialId, item.quantity, item.price, item.totalPrice]);
-      
-      let startY = 70;
-      const columnWidths = [40, 30, 30, 30];
-      headers.forEach((header, i) => {
-        doc.text(header, 14 + columnWidths.slice(0, i).reduce((a, b) => a + b, 0), startY);
+      doc.text(`Quotation No: ${quotation.quotationNo}`, 10, 10);
+      doc.text(`Supplier Name: ${quotation.supplierName}`, 10, 20);
+      doc.text(`Supplier ID: ${quotation.supplierId}`, 10, 30);
+      doc.text(`Status: ${quotation.status}`, 10, 40);
+      doc.text('Items:', 10, 50);
+      quotation.items.forEach((item, index) => {
+        const yPosition = 60 + index * 10;
+        doc.text(`Material ID: ${item.materialId}, Quantity: ${item.quantity}, Price: ${item.price}, Total Price: ${item.totalPrice}`, 10, yPosition);
       });
-
-      startY += 7;
-
-      data.forEach(row => {
-        row.forEach((cell, i) => {
-          doc.text(cell.toString(), 14 + columnWidths.slice(0, i).reduce((a, b) => a + b, 0), startY);
-        });
-        startY += 7;
-      });
-
-      doc.save(`quotation-${quotation.quotationNo}.pdf`);
+      doc.save(`quotation_${quotation.quotationNo}.pdf`);
     },
   },
 };
 </script>
 
-<style>
 
+<style scoped>
+.table-auto {
+  border-collapse: collapse;
+}
+.table-auto th,
+.table-auto td {
+  border: 1px solid #ddd;
+}
 </style>
