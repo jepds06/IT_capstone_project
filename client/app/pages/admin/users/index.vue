@@ -19,10 +19,10 @@
       />
     </div>
     <!-- User Table -->
-<div v-for="userType in userTypes">
+<!-- <div v-for="userType in userTypes">
   <h3 class="font-bold">
     {{userType.userTypeName}}
-  </h3>
+  </h3> -->
   <table class="min-w-full bg-white border border-gray-300 mb-8">
     <thead>
       <tr>
@@ -31,16 +31,18 @@
         <th class="border px-4 py-2 text-black text-center">First Name</th>
         <th class="border px-4 py-2 text-black text-center">Username</th>
         <th class="border px-4 py-2 text-black text-center">Email</th>
+        <th class="border px-4 py-2 text-black text-center">User Type</th>
         <th class="border px-4 py-2 text-black text-center">Actions</th> <!-- Actions Column -->
       </tr>
     </thead>
     <tbody>
-      <tr v-for="user in filteredUsers.filter((user) => user?.userTypeID === userType?.userTypeID)" :key="user.id">
+      <tr v-for="user in filteredUsers" :key="user.id">
         <td class="border px-4 py-2 text-black text-center">{{ user.userID }}</td>
         <td class="border px-4 py-2 text-black text-center">{{ user.lastName }}</td>
         <td class="border px-4 py-2 text-black text-center">{{ user.firstName }}</td>
         <td class="border px-4 py-2 text-black text-center">{{ user.userName }}</td>
         <td class="border px-4 py-2 text-black text-center">{{ user.email }}</td>
+        <td class="border px-4 py-2 text-black text-center">{{ getUserTypeName(user.userTypeID) }}</td>
         <td class="border px-4 py-2 text-black text-center">
           <button
             class="bg-green-500 text-white px-2 py-1 rounded"
@@ -53,7 +55,7 @@
     </tbody>
   </table>
 
-</div>
+<!-- </div> -->
 
 
 
@@ -222,6 +224,10 @@ export default {
         username: '',
         password: '',
       };
+    },
+    getUserTypeName(userTypeID){
+      const userType = this.userTypes.find((userType) => userType.userTypeID === userTypeID);
+      return userType.userTypeName
     },
     async addUser() {
       // Logic to add user

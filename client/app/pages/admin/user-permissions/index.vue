@@ -12,7 +12,10 @@
           class="border p-2 w-full rounded-lg"
         />
       </div>
-      <button @click="showAddModal" class="bg-blue-500 text-white px-4 py-2 rounded">
+      <button
+        @click="showAddModal"
+        class="bg-blue-500 text-white px-4 py-2 rounded"
+      >
         Add Permission
       </button>
     </div>
@@ -33,21 +36,49 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(permission, index) in paginatedPermissions" :key="index" class="text-center">
-            <td class="border-t px-4 py-2">{{ getUserName(permission.userID) }}</td>
+          <tr
+            v-for="(permission, index) in paginatedPermissions"
+            :key="index"
+            class="text-center"
+          >
+            <td class="border-t px-4 py-2">
+              {{ getUserName(permission.userID) }}
+            </td>
             <!-- <td class="border-t px-4 py-2">{{ permission.id }}</td> -->
-            <td class="border-t px-4 py-2">{{ getModuleName(permission.moduleID) }}</td>
             <td class="border-t px-4 py-2">
-              <input type="checkbox" :checked="permission.create === 1 ? true : false" class="form-checkbox" :disabled="true" />
+              {{ getModuleName(permission.moduleID) }}
             </td>
             <td class="border-t px-4 py-2">
-              <input type="checkbox" :checked="permission.update === 1 ? true : false" class="form-checkbox" :disabled="true"/>
+              <input
+                type="checkbox"
+                :checked="permission.create === 1 ? true : false"
+                class="form-checkbox"
+                :disabled="true"
+              />
             </td>
             <td class="border-t px-4 py-2">
-              <input type="checkbox" :checked="permission.cancel === 1 ? true : false" class="form-checkbox" :disabled="true"/>
+              <input
+                type="checkbox"
+                :checked="permission.update === 1 ? true : false"
+                class="form-checkbox"
+                :disabled="true"
+              />
             </td>
             <td class="border-t px-4 py-2">
-              <input type="checkbox" :checked="permission.view === 1 ? true : false" class="form-checkbox" :disabled="true"/>
+              <input
+                type="checkbox"
+                :checked="permission.cancel === 1 ? true : false"
+                class="form-checkbox"
+                :disabled="true"
+              />
+            </td>
+            <td class="border-t px-4 py-2">
+              <input
+                type="checkbox"
+                :checked="permission.view === 1 ? true : false"
+                class="form-checkbox"
+                :disabled="true"
+              />
             </td>
             <!-- <td class="border-t px-4 py-2">
               <font-awesome-icon v-if="permission.isActive" icon="check-circle" class="text-green-600 cursor-pointer" @click="toggleActive(permission)" />
@@ -78,7 +109,10 @@
     </div>
 
     <!-- Modal for Adding Permission -->
-    <div v-if="showModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+    <div
+      v-if="showModal"
+      class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50"
+    >
       <div class="bg-white p-6 rounded-lg shadow-md">
         <h2 class="text-lg font-semibold mb-4">Add New Permission</h2>
         <form @submit.prevent="handleSubmit">
@@ -95,47 +129,91 @@
           </div> -->
 
           <div class="mb-4">
-            <label for="prodCat" class="block text-sm font-medium text-gray-700">User: </label>
-            <select v-model="newPermission.userID" id="userID" class="mt-1 block w-full border border-gray-300 rounded-lg p-2">
-              <option v-for="user in users" :key="user.userID" :value="user.userID">
+            <label for="prodCat" class="block text-sm font-medium text-gray-700"
+              >User:
+            </label>
+            <select
+              v-model="newPermission.userID"
+              id="userID"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
+            >
+              <option
+                v-for="user in users"
+                :key="user.userID"
+                :value="user.userID"
+              >
                 {{ `${user.lastName}, ${user.firstName}` }}
               </option>
             </select>
           </div>
           <div class="mb-4">
-            <label for="prodCat" class="block text-sm font-medium text-gray-700">Module: </label>
-            <select v-model="newPermission.moduleID" id="moduleID" class="mt-1 block w-full border border-gray-300 rounded-lg p-2">
-              <option v-for="module in modules" :key="module.moduleID" :value="module.moduleID">
+            <label for="prodCat" class="block text-sm font-medium text-gray-700"
+              >Module:
+            </label>
+            <select
+              v-model="newPermission.moduleID"
+              id="moduleID"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
+            >
+              <option
+                v-for="module in modules"
+                :key="module.moduleID"
+                :value="module.moduleID"
+              >
                 {{ module.moduleName }}
               </option>
             </select>
           </div>
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700">Permissions:</label>
+            <label class="block text-sm font-medium text-gray-700"
+              >Permissions:</label
+            >
             <div class="flex items-center space-x-4">
               <label>
-                <input type="checkbox" v-model="newPermission.create" class="form-checkbox"/>
+                <input
+                  type="checkbox"
+                  v-model="newPermission.create"
+                  class="form-checkbox"
+                />
                 <span class="ml-2">Create</span>
               </label>
               <label>
-                <input type="checkbox" v-model="newPermission.update" class="form-checkbox"/>
+                <input
+                  type="checkbox"
+                  v-model="newPermission.update"
+                  class="form-checkbox"
+                />
                 <span class="ml-2">Update</span>
               </label>
               <label>
-                <input type="checkbox" v-model="newPermission.cancel" class="form-checkbox"/>
+                <input
+                  type="checkbox"
+                  v-model="newPermission.cancel"
+                  class="form-checkbox"
+                />
                 <span class="ml-2">Cancel</span>
               </label>
               <label>
-                <input type="checkbox" v-model="newPermission.view" class="form-checkbox"/>
+                <input
+                  type="checkbox"
+                  v-model="newPermission.view"
+                  class="form-checkbox"
+                />
                 <span class="ml-2">View</span>
               </label>
             </div>
           </div>
           <div class="flex justify-end">
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">
+            <button
+              type="submit"
+              class="bg-blue-500 text-white px-4 py-2 rounded"
+            >
               Add
             </button>
-            <button @click="closeModal" class="ml-2 bg-gray-300 text-gray-700 px-4 py-2 rounded">
+            <button
+              @click="closeModal"
+              class="ml-2 bg-gray-300 text-gray-700 px-4 py-2 rounded"
+            >
               Cancel
             </button>
           </div>
@@ -146,8 +224,8 @@
 </template>
 
 <script>
-import { apiService } from '~/api/apiService';
-import auth from '../../../../middleware/auth'
+import { apiService } from "~/api/apiService";
+import auth from "../../../../middleware/auth";
 // This page requires authentication
 definePageMeta({
   middleware: [auth],
@@ -156,7 +234,7 @@ definePageMeta({
 export default {
   data() {
     return {
-      searchQuery: '', // For the search input
+      searchQuery: "", // For the search input
       currentPage: 1, // For pagination
       itemsPerPage: 5, // Number of rows per page
       users: [],
@@ -197,8 +275,8 @@ export default {
       ],
       showModal: false,
       newPermission: {
-        userID: '',
-        moduleID: '',
+        userID: "",
+        moduleID: "",
         create: false,
         update: false,
         cancel: false,
@@ -247,13 +325,22 @@ export default {
     },
     async handleSubmit() {
       // Handle form submission to add new permission
-      const result = await apiService.post('/api/userPrivilage', this.newPermission)
-      console.log('result-----', result)
-      
-      this.permissions.push({ ...this.newPermission }); // Set isActive to true for new permission
+      const result = await apiService.post(
+        "/api/userPrivilage",
+        this.newPermission
+      );
+      console.log("result-----", result);
+
+      this.permissions.push({
+        ...this.newPermission,
+        create: this.newPermission.create ? 1 : 0,
+        cancel: this.newPermission.cancel ? 1 : 0,
+        view: this.newPermission.view ? 1 : 0,
+        update: this.newPermission.update ? 1 : 0,
+      }); // Set isActive to true for new permission
       this.newPermission = {
-        userID: '',
-        moduleID: '',
+        userID: "",
+        moduleID: "",
         create: false,
         update: false,
         cancel: false,
@@ -265,36 +352,33 @@ export default {
     toggleActive(permission) {
       permission.isActive = !permission.isActive; // Toggle isActive property
     },
-    async fetchModulesData(){
-      const result = await apiService.get('/api/modules')
-      this.modules = result.data
+    async fetchModulesData() {
+      const result = await apiService.get("/api/modules");
+      this.modules = result.data;
     },
-    async fetchUserData(){
-      const result = await apiService.get('/api/users')
-      this.users = result.data
+    async fetchUserData() {
+      const result = await apiService.get("/api/users");
+      this.users = result.data;
     },
-    async fetchUserPermissionData(){
-      const result = await apiService.get('/api/userPrivilage')
-      this.permissions = result.data
+    async fetchUserPermissionData() {
+      const result = await apiService.get("/api/userPrivilage");
+      this.permissions = result.data;
     },
     getUserName(userID) {
-    const user = this.users?.find(us => us.userID === userID);
-    return user ? `${user.lastName}, ${user.firstName}` : 'Unknown';
-  },
+      const user = this.users?.find((us) => us.userID === userID);
+      return user ? `${user.lastName}, ${user.firstName}` : "Unknown";
+    },
     getModuleName(moduleID) {
-    const module = this.modules?.find(mod => mod.moduleID === moduleID);
-    return module ? module.moduleName : 'Unknown';
-  }
-
+      const module = this.modules?.find((mod) => mod.moduleID === moduleID);
+      return module ? module.moduleName : "Unknown";
+    },
   },
   async mounted() {
-   await this.fetchModulesData();
-   await this.fetchUserData();
-   await this.fetchUserPermissionData();
+    await this.fetchModulesData();
+    await this.fetchUserData();
+    await this.fetchUserPermissionData();
   },
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
