@@ -64,4 +64,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(UserType::class,'userTypeID');
     }
+
+    public function productions()
+    {
+        return $this->hasMany(Production::class, 'moduleID');
+    }
 }

@@ -15,8 +15,19 @@ class ProductionMaterial extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
+        'prodtnDetailID',
         'productMatsID',
-        'productionID',
-        'quantity'
+        'qtyNeeded',
+        'status'
     ];
+
+    public function productMaterial()
+    {
+        return $this->belongsTo(ProductMaterial::class, 'productMatsID');
+    }
+
+    public function productionDetail()
+    {
+        return $this->belongsTo(ProductionDetail::class, 'prodtnDetailID');
+    }
 }

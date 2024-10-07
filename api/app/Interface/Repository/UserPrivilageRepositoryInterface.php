@@ -6,9 +6,9 @@ interface UserPrivilageRepositoryInterface
 {
     public function findMany();
 
-    public function findOnebyId(int $privilageId);
+    public function findOnebyId(int $userPrivilegeId);
 
     public function create(object $payload);
 
-    public function update(object $payload, int $privilageId);
+    public function update(object $payload, int $userPrivilegeId);
 }

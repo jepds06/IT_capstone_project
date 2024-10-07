@@ -23,6 +23,8 @@ class UserPrivilege extends Model
         'cancel',
     ];
 
+    public $timestamps = false;
+
     //eloquent/relationship for users & user privileges
     public function user()
     {

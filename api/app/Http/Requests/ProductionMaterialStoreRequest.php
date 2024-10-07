@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserPrivilageUpdateRequest extends FormRequest
+class ProductionMaterialStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,12 +22,10 @@ class UserPrivilageUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'userID' => 'required|exists:users,userID',         
-            'moduleID' => 'required|exists:modules,moduleID',     
-            'create' => 'required|boolean',              
-            'update' => 'required|boolean',                
-            'view' => 'required|boolean',
-            'cancel' => 'required|boolean',
+            'prodtnDetailID' => 'required|integer|exists:productionDetails,prodtnDetailID',
+            'productMatsID' => 'required|integer|exists:productMaterials,productMatsID',
+            'qtyNeeded' => 'required|integer|min:1',
+            'status' => 'required|string|max:255'
         ];
     }
 }

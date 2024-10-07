@@ -13,5 +13,4 @@ interface ProductMaterialServiceInterface
     public function updateProductMats(object $payload, int $productMatsId);
 
     public function findProdMatsByProductId(int $productMatsId);
-
 }
