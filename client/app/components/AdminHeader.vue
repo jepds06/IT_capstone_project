@@ -18,7 +18,7 @@
 
 <template>
   <UHeader>
-    <template #logo> Administrator Dashboard </template>
+    <template #logo> Supplier Dashboard </template>
 
     <template #right>
       <!-- <UButton label="Notifications" color="gray" />
