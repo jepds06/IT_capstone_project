@@ -32,7 +32,7 @@
             <th class="py-2 px-4">Update</th>
             <th class="py-2 px-4">Cancel</th>
             <th class="py-2 px-4">View</th>
-            <!-- <th class="py-2 px-4">Actions</th> -->
+            <th class="py-2 px-4">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -80,10 +80,21 @@
                 :disabled="true"
               />
             </td>
-            <!-- <td class="border-t px-4 py-2">
-              <font-awesome-icon v-if="permission.isActive" icon="check-circle" class="text-green-600 cursor-pointer" @click="toggleActive(permission)" />
-              <font-awesome-icon v-else icon="times-circle" class="text-red-600 cursor-pointer" @click="toggleActive(permission)" />
-            </td> -->
+            <td class="border-t px-4 py-2">
+              <span class="cursor-pointer" @click="viewPermission(permission)"
+                >👁️</span
+              >
+              <span
+                class="cursor-pointer ml-2"
+                @click="editPermission(permission)"
+                >✏️</span
+              >
+              <!-- <span
+                class="cursor-pointer text-red-600 ml-2"
+                @click="deletePermission(permission)"
+                >🗑️</span -->
+              >
+            </td>
           </tr>
         </tbody>
       </table>
@@ -114,7 +125,9 @@
       class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50"
     >
       <div class="bg-white p-6 rounded-lg shadow-md">
-        <h2 class="text-lg font-semibold mb-4">Add New Permission</h2>
+        <h2 class="text-lg font-semibold mb-4">
+          {{ isEditing ? "Edit Permission" : "Add New Permission" }}
+        </h2>
         <form @submit.prevent="handleSubmit">
           <!-- <div class="mb-4">
             <label for="privilegeName" class="block text-sm font-medium text-gray-700">Privilege Name:</label>
@@ -208,7 +221,7 @@
               type="submit"
               class="bg-blue-500 text-white px-4 py-2 rounded"
             >
-              Add
+              {{ isEditing ? "Update" : "Add" }}
             </button>
             <button
               @click="closeModal"
@@ -218,6 +231,48 @@
             </button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <div
+      v-if="showViewModal"
+      class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-md">
+        <div style="display: flex; justify-content: flex-end">
+          <h2 class="text-lg font-semibold">View Permission</h2>
+          <UButton
+            size="xs"
+            color="gray"
+            variant="ghost"
+            icon="i-heroicons-x-mark-20-solid"
+            @click="closeViewModal"
+            :ui="{ inline: 'justifiy-end' }"
+          />
+        </div>
+        <p>
+          <strong>User:</strong> {{ getUserName(selectedPermission.userID) }}
+        </p>
+        <p>
+          <strong>Module:</strong>
+          {{ getModuleName(selectedPermission.moduleID) }}
+        </p>
+        <p>
+          <strong>Create:</strong>
+          {{ selectedPermission.create === 1 ? "Yes" : "No" }}
+        </p>
+        <p>
+          <strong>Update:</strong>
+          {{ selectedPermission.update === 1 ? "Yes" : "No" }}
+        </p>
+        <p>
+          <strong>Cancel:</strong>
+          {{ selectedPermission.cancel === 1 ? "Yes" : "No" }}
+        </p>
+        <p>
+          <strong>View:</strong>
+          {{ selectedPermission.view === 1 ? "Yes" : "No" }}
+        </p>
       </div>
     </div>
   </div>
@@ -239,42 +294,12 @@ export default {
       itemsPerPage: 5, // Number of rows per page
       users: [],
       modules: [],
-      permissions: [
-        // {
-        //   priv_n: 'Admin',
-        //   id: 1,
-        //   module: 'User Management',
-        //   canCreate: true,
-        //   canUpdate: true,
-        //   canCancel: false,
-        //   canView: true,
-        //   isActive: true,
-        // },
-        // {
-        //   priv_n: 'Editor',
-        //   id: 2,
-        //   module: 'Quotation Management',
-        //   canCreate: true,
-        //   canUpdate: false,
-        //   canCancel: false,
-        //   canView: true,
-        //   isActive: true,
-        // },
-        // // Add more data here
-        // {
-        //   priv_n: 'User',
-        //   id: 3,
-        //   module: 'Order Management',
-        //   canCreate: false,
-        //   canUpdate: true,
-        //   canCancel: false,
-        //   canView: true,
-        //   isActive: false,
-        // },
-        // Add more sample data here
-      ],
+      permissions: [],
       showModal: false,
+      showViewModal: false,
+      isEditing: false, // State to track if we're editing
       newPermission: {
+        privilegeID: "",
         userID: "",
         moduleID: "",
         create: false,
@@ -282,6 +307,7 @@ export default {
         cancel: false,
         view: false,
       },
+      selectedPermission: null,
     };
   },
   computed: {
@@ -307,6 +333,10 @@ export default {
     },
   },
   methods: {
+    viewPermission(permission) {
+      this.selectedPermission = { ...permission }; // Store selected permission for viewing
+      this.showViewModal = true; // Show view modal
+    },
     nextPage() {
       if (this.currentPage < this.totalPages) {
         this.currentPage++;
@@ -318,27 +348,66 @@ export default {
       }
     },
     showAddModal() {
-      this.showModal = true;
+      this.isEditing = false;
+      (this.newPermission = {
+        privilegeID: "",
+        userID: "",
+        moduleID: "",
+        create: false,
+        update: false,
+        cancel: false,
+        view: false,
+      }),
+        (this.showModal = true);
     },
     closeModal() {
       this.showModal = false;
     },
     async handleSubmit() {
-      // Handle form submission to add new permission
-      const result = await apiService.post(
-        "/api/userPrivilage",
-        this.newPermission
-      );
-      console.log("result-----", result);
+      if (this.isEditing) {
+        // Update existing permission
+        await apiService.put(
+          `/api/userPrivilage/${this.selectedPermission.privilegeID}`,
+          this.newPermission
+        );
+        const index = this.permissions.findIndex(
+          (p) => p.privilegeID === this.selectedPermission.privilegeID
+        );
+        if (index !== -1) {
+          this.permissions.splice(index, 1, {
+            ...this.selectedPermission,
+            ...this.newPermission,
+            create: this.newPermission.create ? 1 : 0,
+            cancel: this.newPermission.cancel ? 1 : 0,
+            view: this.newPermission.view ? 1 : 0,
+            update: this.newPermission.update ? 1 : 0,
+          });
+        }
 
-      this.permissions.push({
-        ...this.newPermission,
-        create: this.newPermission.create ? 1 : 0,
-        cancel: this.newPermission.cancel ? 1 : 0,
-        view: this.newPermission.view ? 1 : 0,
-        update: this.newPermission.update ? 1 : 0,
-      }); // Set isActive to true for new permission
+        alert("User permission edited successfully!");
+      } else {
+        // Handle form submission to add new permission
+        const result = await apiService.post(
+          "/api/userPrivilage",
+          this.newPermission
+        );
+        console.log("result-----", result);
+
+        this.permissions.push({
+          ...this.newPermission,
+          create: this.newPermission.create ? 1 : 0,
+          cancel: this.newPermission.cancel ? 1 : 0,
+          view: this.newPermission.view ? 1 : 0,
+          update: this.newPermission.update ? 1 : 0,
+        }); // Set isActive to true for new permission
+        alert("User permission created successfully!");
+      }
+      this.closeModal();
+    },
+    closeModal() {
+      this.showModal = false;
       this.newPermission = {
+        privilegeID: "",
         userID: "",
         moduleID: "",
         create: false,
@@ -346,8 +415,31 @@ export default {
         cancel: false,
         view: false,
       };
-      this.showModal = false; // Close modal after submission
-      alert("User permission created successfully!");
+    },
+    deletePermission(permission) {
+      const index = this.permissions.findIndex(p => p.privilegeID === permission.privilegeID);
+      if (index !== -1) {
+        this.permissions.splice(index, 1);  
+      }
+      alert("User permission deleted successfully!");
+    },
+    editPermission(permission) {
+      this.isEditing = true;
+      this.selectedPermission = {
+        ...permission,
+        create: permission.create === 1 ? true : false,
+        update: permission.update === 1 ? true : false,
+        view: permission.view === 1 ? true : false,
+        cancel: permission.cancel === 1 ? true : false,
+      }; // Store selected permission
+      this.newPermission = {
+        ...permission,
+        create: permission.create === 1 ? true : false,
+        update: permission.update === 1 ? true : false,
+        view: permission.view === 1 ? true : false,
+        cancel: permission.cancel === 1 ? true : false,
+      }; // Fill form with selected permission details
+      this.showModal = true;
     },
     toggleActive(permission) {
       permission.isActive = !permission.isActive; // Toggle isActive property
@@ -371,6 +463,10 @@ export default {
     getModuleName(moduleID) {
       const module = this.modules?.find((mod) => mod.moduleID === moduleID);
       return module ? module.moduleName : "Unknown";
+    },
+    closeViewModal() {
+      this.showViewModal = false;
+      this.selectedPermission = null; // Reset selected permission
     },
   },
   async mounted() {
