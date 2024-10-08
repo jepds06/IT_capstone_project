@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FinishedProductController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ProductCategoryController;
@@ -118,6 +119,14 @@ Route::prefix('productionDetails')->group(function(){
     Route::put('/{prodtnDetailId}', [ProductionDetailController::class, 'update']);
 });
 
+//finished products route
+Route::prefix('finishedProducts')->group(function(){
+    Route::get('/', [FinishedProductController::class, 'index']);
+    Route::get('/{fnshProductId}', [FinishedProductController::class, 'show']);
+    Route::post('/', [FinishedProductController::class, 'store']);
+    Route::put('/{fnshProductId}', [FinishedProductController::class, 'update']);
+});
+
 //production materials route
 Route::prefix('productionMaterials')->group(function(){
     Route::get('/', [ProductionMaterialController::class, 'index']);
@@ -142,3 +151,4 @@ Route::prefix('quotationDetails')->group(function(){
     Route::post('/', [QuotationDetailController::class, 'store']);
     Route::put('/{qteDetailId}', [QuotationDetailController::class, 'update']);
 });
+
