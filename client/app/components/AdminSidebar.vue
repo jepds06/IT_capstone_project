@@ -149,6 +149,23 @@
             >Production Details</router-link
           >
           <router-link
+            to="/admin/finished-product"
+            :class="
+              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
+                ? route.path === '/admin/finished-product'
+                  ? 'block p-4 bg-gray-800'
+                  : 'block p-4 hover:bg-gray-800'
+                : userPermission?.filter((up) =>
+                    up.moduleName.toLowerCase().includes('finished product')
+                  ).length > 0
+                ? route.path === '/admin/finished-product'
+                  ? 'block p-4 bg-gray-800'
+                  : 'block p-4 hover:bg-gray-800'
+                : 'hidden'
+            "
+            >Finished Products</router-link
+          >
+          <router-link
             to="/admin/production-materials"
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
@@ -403,21 +420,21 @@
           "
         >
           <router-link
-            to="/suppliers/manage"
+            to="/admin/supplier-quotations"
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-                ? route.path === '/suppliers/manage'
+                ? route.path === '/admin/supplier-quotations'
                   ? 'block p-4 bg-gray-800'
                   : 'block p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
-                    up.moduleName.toLowerCase().includes('manage suppliers')
+                    up.moduleName.toLowerCase().includes('supplier quotations')
                   ).length > 0
-                ? route.path === '/suppliers/manage'
+                ? route.path === '/admin/supplier-quotations'
                   ? 'block p-4 bg-gray-800'
                   : 'block p-4 hover:bg-gray-800'
                 : 'hidden'
             "
-            >Manage Suppliers</router-link
+            >Suppliers Quotation</router-link
           >
           <router-link
             to="/suppliers/materials"
