@@ -11,4 +11,6 @@ interface ProductionDetailRepositoryInterface
     public function create(object $payload);
 
     public function update(object $payload, int $prodtnDetailId);
+
+    public function findListByProductionId(int $productionID);
 }

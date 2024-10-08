@@ -115,6 +115,7 @@ Route::prefix('productions')->group(function(){
 Route::prefix('productionDetails')->group(function(){
     Route::get('/', [ProductionDetailController::class, 'index']);
     Route::get('/{prodtnDetailId}', [ProductionDetailController::class, 'show']);
+    Route::get('/production/{productionID}', [ProductionDetailController::class, 'showByProductionID']);
     Route::post('/', [ProductionDetailController::class, 'store']);
     Route::put('/{prodtnDetailId}', [ProductionDetailController::class, 'update']);
 });

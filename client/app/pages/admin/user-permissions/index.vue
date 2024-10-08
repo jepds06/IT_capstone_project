@@ -129,18 +129,6 @@
           {{ isEditing ? "Edit Permission" : "Add New Permission" }}
         </h2>
         <form @submit.prevent="handleSubmit">
-          <!-- <div class="mb-4">
-            <label for="privilegeName" class="block text-sm font-medium text-gray-700">Privilege Name:</label>
-            <input
-              v-model="newPermission.priv_n"
-              type="text"
-              id="privilegeName"
-              name="privilegeName"
-              class="border p-2 w-full rounded-lg"
-              required
-            />
-          </div> -->
-
           <div class="mb-4">
             <label for="prodCat" class="block text-sm font-medium text-gray-700"
               >User:

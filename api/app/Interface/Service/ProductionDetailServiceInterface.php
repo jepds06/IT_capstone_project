@@ -11,4 +11,6 @@ interface ProductionDetailServiceInterface
     public function createProductionDetail(object $payload);
 
     public function updateProductionDetail(object $payload, int $prodtnDetailId);
+
+    public function findProductionDetailByProductionID(int $productionID);
 }
