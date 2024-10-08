@@ -28,20 +28,24 @@
           <th class="px-6 py-2 text-left border-b">Date Encoded</th>
           <th class="px-6 py-2 text-left border-b">Year</th>
           <th class="px-6 py-2 text-left border-b">Month</th>
+          <th class="px-6 py-2 text-left border-b">Remarks</th>
           <th class="px-6 py-2 text-left border-b">Actions</th>
         </tr>
       </thead>
       <tbody>
         <tr
           v-for="production in paginatedProductions"
-          :key="production.id"
+          :key="production.productionID"
           class="hover:bg-gray-50"
         >
-          <td class="px-6 py-4 border-b">{{ production.id }}</td>
-          <td class="px-6 py-4 border-b">{{ production.createdBy }}</td>
+          <td class="px-6 py-4 border-b">{{ production.productionID }}</td>
+          <td class="px-6 py-4 border-b">
+            {{ getUserName(production.userID) }}
+          </td>
           <td class="px-6 py-4 border-b">{{ production.dateEncoded }}</td>
           <td class="px-6 py-4 border-b">{{ production.year }}</td>
           <td class="px-6 py-4 border-b">{{ production.month }}</td>
+          <td class="px-6 py-4 border-b">{{ production.remarks }}</td>
           <td class="px-6 py-4 border-b">
             <button
               @click="openViewModal(production)"
@@ -57,13 +61,17 @@
             >
               <i class="fas fa-edit"></i>
             </button>
-            <button
+
+            <button @click="showProductionDetails(production)" class="text-blue-500 hover:underline ml-2">
+              <i class="fas fa-cogs"></i>
+            </button>
+            <!-- <button
               @click="openDeleteModal(production)"
               class="text-red-500 hover:text-red-700 ml-2"
               title="Delete Production"
             >
               <i class="fas fa-trash"></i>
-            </button>
+            </button> -->
           </td>
         </tr>
       </tbody>
@@ -90,17 +98,24 @@
     <!-- Modal for Add/Edit Production -->
     <div v-if="isModalOpen" class="modal-overlay" @click.self="closeModal">
       <div class="modal-content">
-        <h2 class="text-xl font-bold mb-4">{{ isEditMode ? 'Edit Production' : 'Add Production' }}</h2>
+        <h2 class="text-xl font-bold mb-4">
+          {{ isEditMode ? "Edit Production" : "Add Production" }}
+        </h2>
         <form @submit.prevent="saveProduction">
-          <label for="createdBy" class="block mb-2">Created By:</label>
-          <input
-            id="createdBy"
-            v-model="productionForm.createdBy"
-            type="text"
-            placeholder="Enter creator's name"
-            required
-            class="w-full p-2 border rounded"
-          />
+          <label for="month" class="block mb-2 mt-4">Created By:</label>
+          <select
+            v-model="productionForm.userID"
+            id="userID"
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
+          >
+            <option
+              v-for="user in users"
+              :key="user.userID"
+              :value="user.userID"
+            >
+              {{ `${user.lastName}, ${user.firstName}` }}
+            </option>
+          </select>
 
           <label for="dateEncoded" class="block mb-2 mt-4">Date Encoded:</label>
           <input
@@ -120,107 +135,417 @@
           />
 
           <label for="month" class="block mb-2 mt-4">Month:</label>
-          <input
+          <!-- <input
             id="month"
             v-model="productionForm.month"
             type="text"
             placeholder="Enter month"
             class="w-full p-2 border rounded"
+          /> -->
+
+          <select
+            v-model="productionForm.month"
+            id="month"
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
+          >
+            <option v-for="month in months" :key="month" :value="month">
+              {{ month }}
+            </option>
+          </select>
+
+          <label for="remarks" class="block mb-2 mt-4">Remarks:</label>
+          <input
+            id="remarks"
+            v-model="productionForm.remarks"
+            placeholder="Enter remarks"
+            class="w-full p-2 border rounded"
           />
 
+          <div v-if="isEditMode">
+            <label for="status" class="block mb-2 mt-4">Status:</label>
+            <select
+              v-model="productionForm.status"
+              id="userID"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
+            >
+              <option v-for="status in statuses" :key="status" :value="status">
+                {{ status }}
+              </option>
+            </select>
+          </div>
+
           <div class="flex justify-end mt-4">
-            <button type="button" @click="closeModal" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Cancel</button>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">{{ isEditMode ? 'Update' : 'Add' }}</button>
+            <button
+              type="button"
+              @click="closeModal"
+              class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            >
+              {{ isEditMode ? "Update" : "Add" }}
+            </button>
           </div>
         </form>
       </div>
     </div>
 
+
+
     <!-- Modal for Viewing Production Details -->
     <!-- Modal for Viewing Production Details -->
-<div v-if="isViewModalOpen" class="modal-overlay" @click.self="closeViewModal">
-  <div class="modal-content">
-    <h2 class="text-xl font-bold mb-4">Production Details</h2>
-    <div>
-      <p><strong>Production Details No:</strong> {{ selectedProduction.detailsNo }}</p>
-      <p><strong>Production ID:</strong> {{ selectedProduction.id }}</p>
-      <p><strong>Quantity:</strong> {{ selectedProduction.quantity }}</p>
-      <p>
-        <strong>Status:</strong>
-        <span class="inline-flex items-center">
-          <i v-if="selectedProduction.status === 'active'" class="fas fa-check-circle text-green-500"></i>
-          <i v-else-if="selectedProduction.status === 'inactive'" class="fas fa-times-circle text-red-500"></i>
-          <span class="ml-1">{{ selectedProduction.status }}</span>
-        </span>
-      </p>
-      <p><strong>Remarks:</strong> {{ selectedProduction.remarks }}</p>
+    <div
+      v-if="isViewModalOpen"
+      class="modal-overlay"
+      @click.self="closeViewModal"
+    >
+      <div class="modal-content">
+        <h2 class="text-xl font-bold mb-4">Production Details</h2>
+        <div>
+          <p>
+            <strong>Production Details No:</strong>
+            {{ selectedProduction.detailsNo }}
+          </p>
+          <p><strong>Production ID:</strong> {{ selectedProduction.id }}</p>
+          <p><strong>Quantity:</strong> {{ selectedProduction.quantity }}</p>
+          <p>
+            <strong>Status:</strong>
+            <span class="inline-flex items-center">
+              <i
+                v-if="selectedProduction.status === 'active'"
+                class="fas fa-check-circle text-green-500"
+              ></i>
+              <i
+                v-else-if="selectedProduction.status === 'inactive'"
+                class="fas fa-times-circle text-red-500"
+              ></i>
+              <span class="ml-1">{{ selectedProduction.status }}</span>
+            </span>
+          </p>
+          <p><strong>Remarks:</strong> {{ selectedProduction.remarks }}</p>
+        </div>
+        <div class="flex justify-end mt-4">
+          <button
+            @click="openGenerateMaterialsModal(selectedProduction)"
+            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-2"
+          >
+            Generate Materials
+          </button>
+          <button
+            @click="closeViewModal"
+            class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
+          >
+            Close
+          </button>
+        </div>
+      </div>
     </div>
-    <div class="flex justify-end mt-4">
-      <button @click="openGenerateMaterialsModal(selectedProduction)" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-2">
-        Generate Materials
-      </button>
-      <button @click="closeViewModal" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Close</button>
-    </div>
-  </div>
-</div>
 
     <!-- Modal for Generating Materials -->
-    <div v-if="isGenerateMaterialsModalOpen" class="modal-overlay" @click.self="closeGenerateMaterialsModal">
+    <div
+      v-if="isGenerateMaterialsModalOpen"
+      class="modal-overlay"
+      @click.self="closeGenerateMaterialsModal"
+    >
       <div class="modal-content">
-        <h2 class="text-xl font-bold mb-4">Generate Materials for Production ID: {{ selectedProduction.id }}</h2>
+        <h2 class="text-xl font-bold mb-4">
+          Generate Materials for Production ID: {{ selectedProduction.id }}
+        </h2>
         <p>Are you sure you want to generate materials for this production?</p>
         <div class="flex justify-end mt-4">
-          <button @click="confirmGenerateMaterials" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Generate</button>
-          <button @click="closeGenerateMaterialsModal" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Cancel</button>
+          <button
+            @click="confirmGenerateMaterials"
+            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+          >
+            Generate
+          </button>
+          <button
+            @click="closeGenerateMaterialsModal"
+            class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
+          >
+            Cancel
+          </button>
         </div>
       </div>
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div v-if="isDeleteModalOpen" class="modal-overlay" @click.self="closeDeleteModal">
+    <div
+      v-if="isDeleteModalOpen"
+      class="modal-overlay"
+      @click.self="closeDeleteModal"
+    >
       <div class="modal-content">
         <h3 class="text-lg font-bold">Delete Production</h3>
-        <p>Are you sure you want to delete production ID {{ selectedProduction?.id }}?</p>
+        <p>
+          Are you sure you want to delete production ID
+          {{ selectedProduction?.id }}?
+        </p>
         <div class="flex justify-end mt-4">
-          <button @click="confirmDelete" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Delete</button>
-          <button @click="closeDeleteModal" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">Cancel</button>
+          <button
+            @click="confirmDelete"
+            class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+          >
+            Delete
+          </button>
+          <button
+            @click="closeDeleteModal"
+            class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
+          >
+            Cancel
+          </button>
         </div>
       </div>
     </div>
+
+    <div v-if="isProductionDetailsInfo" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+      <div class="bg-white p-6 rounded-lg shadow-lg w-1/2 relative">
+        <!-- Close Button -->
+        <button @click="closeProductionInfo" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
+          <i class="fas fa-times"></i>
+        </button>
+        <h2 class="text-lg text-black font-semibold mb-4">Production Details</h2>
+        <!-- Product Info View Table (Read-Only) -->
+        <table class="min-w-full border border-gray-300 rounded-lg mb-4">
+          <thead class="bg-gray-200">
+            <tr class="p-2 border-b text-black text-center">
+              <th>Production ID</th>
+              <th>Created By</th>
+              <th>Date Encoded</th>
+              <th>Year</th>
+              <th>Month</th>
+              <th>Remarks</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr  class="p-2 border-b text-black text-center">
+              <td class="px-6 py-4 border-b">{{ selectedProduction.productionID }}</td>
+              <td class="px-6 py-4 border-b">
+                {{ getUserName(selectedProduction.userID) }}
+              </td>
+              <td class="px-6 py-4 border-b">{{ selectedProduction.dateEncoded }}</td>
+              <td class="px-6 py-4 border-b">{{ selectedProduction.year }}</td>
+              <td class="px-6 py-4 border-b">{{ selectedProduction.month }}</td>
+              <td class="px-6 py-4 border-b">{{ selectedProduction.remarks }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="mb-4">
+          <table class="min-w-full border border-gray-300 rounded-lg">
+            <thead class="bg-gray-100">
+              <tr class="p-2 border-b text-black text-center">
+                <th>ID</th>
+                <th>Product</th>
+                <th>Qty.</th>
+                <th>Status</th>
+                <th>Remarks</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody v-if="selectedProductionDetails.length > 0">
+              <tr v-for="prodDetail in selectedProductionDetails" :key="prodDetail.prodtnDetailID" class="p-2 border-b text-black text-center">
+                <td>{{ prodDetail.prodtnDetailID }}</td>
+                <td>{{ getProduct(prodDetail.productID) }}</td>
+                <td>{{ prodDetail.quantity }}</td>
+                <td>{{ prodDetail.status }}</td>
+                <td>{{ prodDetail.remarks }}</td>
+                <td class="p-2 border-b text-center flex justify-center space-x-2">
+                  <button @click="editMaterial(material)" class="text-yellow-500 hover:underline">
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <!-- <button @click="removeMaterial(material)" class="text-red-500 hover:underline">
+                    <i class="fas fa-trash"></i>
+                  </button> -->
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <button @click="openProductionDetailModal" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+          Add Production Details
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal for Adding Production Details -->
+    <div v-if="isProductionDetailsModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+      <div class="bg-white p-6 rounded-lg shadow-lg w-1/3 relative">
+        <!-- Close Button -->
+        <button @click="closeProductionDetailModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
+          <i class="fas fa-times"></i>
+        </button>
+        <h2 class="text-lg font-semibold mb-4">{{ productionDetailMode === 'add' ? 'Add Production Detail' : 'Edit Production Detail' }}</h2>
+        <form @submit.prevent="saveProductionDetail">
+          <div class="mb-4" v-if="formMode === 'edit'">
+            <label for="materialId" class="block text-sm font-medium text-gray-700">Product Material Id</label>
+            <input v-model="productionDetailForm.prodtnDetailID" type="text" id="productMatsID" class="mt-1 block w-full border border-gray-300 rounded-lg p-2" :readonly="materialMode === 'edit'"/>
+          </div>
+          <div class="mb-4">
+            <label for="prodCat" class="block text-sm font-medium text-gray-700">Product</label>
+            <select v-model="productionDetailForm.productID" id="prodCat" class="mt-1 block w-full border border-gray-300 rounded-lg p-2">
+              <option v-for="product in products" :key="product.productID" :value="product.productID">
+                {{ product.productName }}
+              </option>
+            </select>
+          </div>
+          <div class="mb-4">
+            <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+            <select
+            v-model="productionDetailForm.status"
+            id="userID"
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
+          >
+            <option v-for="status in statuses" :key="status" :value="status">
+              {{ status }}
+            </option>
+          </select>
+          </div>
+          <div class="mb-4">
+            <label for="specs" class="block text-sm font-medium text-gray-700">Remarks</label>
+            <input v-model="productionDetailForm.remarks" id="remarks" class="mt-1 block w-full border border-gray-300 rounded-lg p-2"/>
+          </div>
+          <div class="mb-4">
+            <label for="qty" class="block text-sm font-medium text-gray-700">Quantity</label>
+            <input v-model="productionDetailForm.quantity" type="number" id="qty" class="mt-1 block w-full border border-gray-300 rounded-lg p-2"/>
+          </div>
+          <div class="flex justify-end">
+            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+              Save
+            </button>
+            <button @click="closeProductionDetailModal" class="ml-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script setup>
-
-import auth from '../../../../middleware/auth'
+import { apiService } from "~/api/apiService";
+import auth from "../../../../middleware/auth";
 // This page requires authentication
 definePageMeta({
   middleware: [auth],
 });
 
-import { ref, computed } from 'vue';
+import { ref, computed } from "vue";
 
 const productions = ref([
-  { id: 1, detailsNo: 'PD-001', quantity: 100, status: 'active', createdBy: 'Admin', dateEncoded: '2024-09-23', year: 2024, month: 'September', remarks: 'Initial production' },
-  { id: 2, detailsNo: 'PD-002', quantity: 200, status: 'inactive', createdBy: 'User1', dateEncoded: '2024-09-22', year: 2024, month: 'September', remarks: 'Follow-up production' },
+  // {
+  //   id: 1,
+  //   detailsNo: "PD-001",
+  //   quantity: 100,
+  //   status: "active",
+  //   createdBy: "Admin",
+  //   dateEncoded: "2024-09-23",
+  //   year: 2024,
+  //   month: "September",
+  //   remarks: "Initial production",
+  // },
+  // {
+  //   id: 2,
+  //   detailsNo: "PD-002",
+  //   quantity: 200,
+  //   status: "inactive",
+  //   createdBy: "User1",
+  //   dateEncoded: "2024-09-22",
+  //   year: 2024,
+  //   month: "September",
+  //   remarks: "Follow-up production",
+  // },
   // Add more sample data as needed for testing pagination
 ]);
 
-const searchQuery = ref('');
+const selectedProductionDetails = ref([]);
+const users = ref([]);
+
+const productionDetailMode = ref('add')
+
+const products = ref([]);
+
+const months = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+const statuses = ["Pending", "In Progress", "Completed"];
+
+const searchQuery = ref("");
 const currentPage = ref(1);
 const itemsPerPage = 5;
 
+const isProductionDetailsInfo = ref(false);
+const isProductionDetailsModal = ref(false);
 const isModalOpen = ref(false);
 const isViewModalOpen = ref(false);
 const isGenerateMaterialsModalOpen = ref(false);
 const isDeleteModalOpen = ref(false);
 const selectedProduction = ref(null);
 const isEditMode = ref(false);
-const productionForm = ref({ createdBy: '', dateEncoded: '', year: '', month: '' });
+const productionForm = ref({
+  userID: "",
+  dateEncoded: "",
+  year: "",
+  month: "",
+  remarks: "",
+  status: "Pending",
+  productionID: ""
+});
+
+const productionDetailForm = ref({
+  prodtnDetailID: "",
+  productionID: "",
+  productID: "",
+  quantity: "",
+  status: "",
+  remarks: ""
+})
+
+const openProductionDetailModal = async () => {
+  await fetchProductsData()
+  productionDetailMode.value = 'add'
+  isProductionDetailsModal.value = true
+  productionDetailForm.value = {
+  prodtnDetailID: "",
+  productionID: "",
+  productID: "",
+  quantity: "",
+  status: "",
+  remarks: ""
+}
+}
+
+const closeProductionDetailModal = () => {
+  isProductionDetailsModal.value = false
+}
+const showProductionDetails = (production) =>{
+  selectedProduction.value = production
+  isProductionDetailsInfo.value = true
+};
+
+const closeProductionInfo = () => {
+  isProductionDetailsInfo.value = false
+};
 
 const filteredProductions = computed(() => {
   return productions.value.filter((production) =>
-    production.createdBy.toLowerCase().includes(searchQuery.value.toLowerCase())
+    getUserName(production.userID).toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 });
 
@@ -236,7 +561,15 @@ const paginatedProductions = computed(() => {
 const openAddModal = () => {
   isModalOpen.value = true;
   isEditMode.value = false;
-  productionForm.value = { createdBy: '', dateEncoded: '', year: '', month: '' };
+  productionForm.value = {
+    productionID: "",
+    userID: "",
+    dateEncoded: "",
+    year: "",
+    month: "",
+    remarks: "",
+    status: "Pending"
+  };
 };
 
 const openEditModal = (production) => {
@@ -245,18 +578,34 @@ const openEditModal = (production) => {
   productionForm.value = { ...production };
 };
 
-const saveProduction = () => {
+const saveProduction = async () => {
   if (isEditMode.value) {
-    const index = productions.value.findIndex(p => p.id === productionForm.value.id);
+    await apiService.put(`/api/productions/${productionForm.value.productionID}`, productionForm.value)
+    const index = productions.value.findIndex(
+      (p) => p.productionID === productionForm.value.productionID
+    );
     if (index !== -1) {
       productions.value[index] = { ...productionForm.value };
     }
+    alert('Production edited successfully!')
   } else {
-    const newId = productions.value.length ? Math.max(productions.value.map(p => p.id)) + 1 : 1;
-    productions.value.push({ ...productionForm.value, id: newId });
+    const result = await apiService.post("/api/productions", productionForm.value)
+    productions.value.push({ ...productionForm.value, productionID: result.data.productionID});
+    alert('Production created successfully!')
   }
   closeModal();
 };
+
+const saveProductionDetail = async () => {
+  if (productionDetailMode.value === 'add') {
+    const result = await apiService.post("/api/productionDetails", {...productionDetailForm.value, productionID: selectedProduction.value.productionID})
+    selectedProductionDetails.value.push({...productionDetailForm.value, productionID: selectedProduction.value.productionID, prodtnDetailID: result.data.prodtnDetailID})
+    alert(`Production detail added successfully for Production No. ${selectedProduction.value.productionID}`)
+  } else {
+
+  }
+  closeProductionDetailModal()
+}
 
 const closeModal = () => {
   isModalOpen.value = false;
@@ -281,7 +630,10 @@ const closeGenerateMaterialsModal = () => {
 };
 
 const confirmGenerateMaterials = () => {
-  console.log('Materials generated for production ID:', selectedProduction.value.id);
+  console.log(
+    "Materials generated for production ID:",
+    selectedProduction.value.id
+  );
   closeGenerateMaterialsModal();
 };
 
@@ -295,7 +647,9 @@ const closeDeleteModal = () => {
 };
 
 const confirmDelete = () => {
-  productions.value = productions.value.filter(p => p.id !== selectedProduction.value.id);
+  productions.value = productions.value.filter(
+    (p) => p.id !== selectedProduction.value.id
+  );
   closeDeleteModal();
 };
 
@@ -311,6 +665,35 @@ const prevPage = () => {
   }
 };
 
+const getUserName = (userID) => {
+  const user = users.value?.find((usr) => usr.userID === userID);
+  return `${user.lastName}, ${user.firstName}`;
+};
+
+const getProduct = (productID) => {
+  const product = products.value?.find((prod) => prod.productID === productID);
+  return product.productName ?? 'Unknown';
+};
+
+const fetchUsersData = async () => {
+  const result = await apiService.get("/api/users")
+  users.value = result.data
+}
+
+const fetchProductionData = async() => {
+  const result = await apiService.get("/api/productions")
+  productions.value = result.data
+}
+
+const fetchProductsData = async() => {
+  const result = await apiService.get("/api/products")
+  products.value = result.data
+}
+
+onMounted(() => {
+  fetchUsersData();
+  fetchProductionData();
+})
 </script>
 
 <style scoped>
