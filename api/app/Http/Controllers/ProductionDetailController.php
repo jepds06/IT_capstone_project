@@ -40,6 +40,11 @@ class ProductionDetailController extends Controller
         return $this->prodtnDetailService->findProductionDetailById($prodtnDetailId);
     }
 
+    public function showByProductionID(int $productionID)
+    {
+        return $this->prodtnDetailService->findProductionDetailByProductionID($productionID);
+    }
+
     /**
      * Update the specified resource in storage.
      */

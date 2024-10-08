@@ -46,6 +46,7 @@
           <th class="px-6 py-2 text-left border-b">Select</th>
           <th class="px-6 py-2 text-left border-b">Product Details No</th>
           <th class="px-6 py-2 text-left border-b">Production ID</th>
+          <th class="px-6 py-2 text-left border-b">Product</th>
           <th class="px-6 py-2 text-left border-b">Quantity</th>
           <th class="px-6 py-2 text-left border-b">Status</th>
           <th class="px-6 py-2 text-left border-b">Remarks</th>
@@ -53,16 +54,17 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="detail in filteredDetails" :key="detail.productDetailsNo" class="hover:bg-gray-50">
+        <tr v-for="detail in filteredDetails" :key="detail.prodtnDetailID" class="hover:bg-gray-50">
           <td class="px-6 py-4 border-b">
             <input type="checkbox" v-model="selectedItems" :value="detail.productionId" />
           </td>
-          <td class="px-6 py-4 border-b">{{ detail.productDetailsNo }}</td>
-          <td class="px-6 py-4 border-b">{{ detail.productionId }}</td>
-          <td class="px-6 py-4 border-b">{{ detail.productIdQty }}</td>
+          <td class="px-6 py-4 border-b">{{ detail.prodtnDetailID  }}</td>
+          <td class="px-6 py-4 border-b">{{ detail.productionID  }}</td>
+          <td class="px-6 py-4 border-b">{{ detail.productID }}</td>
+          <td class="px-6 py-4 border-b">{{ detail.quantity }}</td>
           <td class="px-6 py-4 border-b">
-            <span v-if="detail.status === 'complete'" class="text-green-600">✔️</span>
-            <span v-else-if="detail.status === 'pending'" class="text-yellow-600">⚠️</span>
+            <span v-if="detail.status === 'Complete'" class="text-green-600">✔️</span>
+            <span v-else-if="detail.status === 'Pending'" class="text-yellow-600">⚠️</span>
             <span v-else class="text-red-600">❌</span>
           </td>
           <td class="px-6 py-4 border-b">{{ detail.remarks }}</td>
@@ -95,6 +97,7 @@
 </template>
 
 <script setup>
+import { apiService } from '~/api/apiService';
 import auth from '../../../../middleware/auth'
 // This page requires authentication
 definePageMeta({
@@ -105,8 +108,8 @@ import { ref, computed } from 'vue';
 
 // Sample data (replace with actual data)
 const productionDetails = ref([
-  { productDetailsNo: 1, productionId: 101, productIdQty: 50, status: 'complete', remarks: 'All good' },
-  { productDetailsNo: 2, productionId: 102, productIdQty: 30, status: 'pending', remarks: 'Awaiting approval' },
+  { prodtnDetailID: 1, productionID: 101, productID: 1,  quantity: 50, status: 'Complete', remarks: 'All good' },
+  { prodtnDetailID: 2, productionID: 102, productID: 2, quantity: 30, status: 'Pending', remarks: 'Awaiting approval' },
   // Add more sample details here...
 ]);
 
@@ -116,6 +119,7 @@ const itemsPerPage = 10;
 const showModal = ref(false);
 const generatedMaterials = ref([]);
 const selectedItems = ref([]); // To store selected production IDs
+const products = ref([]);
 
 // Check if any item is selected
 const anySelected = computed(() => selectedItems.value.length > 0);
@@ -175,6 +179,26 @@ const prevPage = () => {
     currentPage.value--;
   }
 };
+
+const getProductName = (productID) => {
+  const product = products.value.find((prod) => prod.productID === productID);
+  return product?.productName ?? 'Unknown';
+}
+
+const fetchProductsData = async() => {
+  const result = await apiService.get("/api/products")
+  products.value = result.data
+}
+
+const fetchProductionDetailsData = async() => {
+  const result = await apiService.get("/api/productionDetails")
+  productionDetails.value = result?.data
+}
+
+// onMounted(() => {
+//   fetchProductsData();
+//   fetchProductionDetailsData();
+// })
 </script>
 
 <style scoped>

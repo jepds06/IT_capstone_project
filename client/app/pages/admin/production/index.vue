@@ -334,7 +334,7 @@
           </tbody>
         </table>
         <div class="mb-4">
-          <table class="min-w-full border border-gray-300 rounded-lg">
+          <table class="min-w-full border border-gray-300 rounded-lg" :key="selectedProductionDetails.length">
             <thead class="bg-gray-100">
               <tr class="p-2 border-b text-black text-center">
                 <th>ID</th>
@@ -353,7 +353,7 @@
                 <td>{{ prodDetail.status }}</td>
                 <td>{{ prodDetail.remarks }}</td>
                 <td class="p-2 border-b text-center flex justify-center space-x-2">
-                  <button @click="editMaterial(material)" class="text-yellow-500 hover:underline">
+                  <button @click="editProductionDetail(prodDetail)" class="text-yellow-500 hover:underline">
                     <i class="fas fa-edit"></i>
                   </button>
                   <!-- <button @click="removeMaterial(material)" class="text-red-500 hover:underline">
@@ -518,7 +518,6 @@ const productionDetailForm = ref({
 })
 
 const openProductionDetailModal = async () => {
-  await fetchProductsData()
   productionDetailMode.value = 'add'
   isProductionDetailsModal.value = true
   productionDetailForm.value = {
@@ -534,8 +533,10 @@ const openProductionDetailModal = async () => {
 const closeProductionDetailModal = () => {
   isProductionDetailsModal.value = false
 }
-const showProductionDetails = (production) =>{
+const showProductionDetails = async (production) =>{
   selectedProduction.value = production
+  await fetchProductsData()
+  await fetchProductionDetailsData()
   isProductionDetailsInfo.value = true
 };
 
@@ -578,6 +579,13 @@ const openEditModal = (production) => {
   productionForm.value = { ...production };
 };
 
+const editProductionDetail = (prodDetail) => {
+    productionDetailMode.value = 'edit';
+    productionDetailForm.value = { ...prodDetail };
+    isProductionDetailsModal.value = true;
+  }
+  
+
 const saveProduction = async () => {
   if (isEditMode.value) {
     await apiService.put(`/api/productions/${productionForm.value.productionID}`, productionForm.value)
@@ -602,7 +610,14 @@ const saveProductionDetail = async () => {
     selectedProductionDetails.value.push({...productionDetailForm.value, productionID: selectedProduction.value.productionID, prodtnDetailID: result.data.prodtnDetailID})
     alert(`Production detail added successfully for Production No. ${selectedProduction.value.productionID}`)
   } else {
-
+    await apiService.put(`/api/productionDetails/${productionDetailForm.value.prodtnDetailID}`, {...productionDetailForm.value, productionID: selectedProduction.value.productionID})
+    const index = selectedProductionDetails.value.findIndex(
+      (p) => p.prodtnDetailID === productionDetailForm.value.prodtnDetailID
+    );
+    if (index !== -1) {
+      selectedProductionDetails.value[index] = { ...productionDetailForm.value };
+    }
+    alert(`Production detail edited successfully for Production No. ${selectedProduction.value.productionID}`)
   }
   closeProductionDetailModal()
 }
@@ -688,6 +703,11 @@ const fetchProductionData = async() => {
 const fetchProductsData = async() => {
   const result = await apiService.get("/api/products")
   products.value = result.data
+}
+
+const fetchProductionDetailsData = async() => {
+  const result = await apiService.get(`/api/productionDetails/production/${selectedProduction.value.productionID}`)
+  selectedProductionDetails.value = result?.production_details
 }
 
 onMounted(() => {

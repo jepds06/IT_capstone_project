@@ -70,4 +70,15 @@ class ProductionDetailRepository implements ProductionDetailRepositoryInterface
 
         return $prodtnDetail->fresh();
     }
+
+    public function findListByProductionId(int $productionID)
+    {
+        $production = Production::with('productionDetails.productionMaterials')->find($productionID);
+
+        if (!$production) {
+            return response()->json(['message' => 'Production not found'], 404);
+        }
+
+        return response()->json($production);
+    }
 }

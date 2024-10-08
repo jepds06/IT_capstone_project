@@ -42,4 +42,10 @@ class ProductionDetailService implements ProductionDetailServiceInterface
 
         return new ProductionDetailResource($prodtnDetail);
     }
+    public function findProductionDetailByProductionID(int $productionID)
+    {
+        $prodtnDetail = $this->prodtnDetailRepository->findListByProductionId($productionID);
+
+        return $prodtnDetail;
+    }
 }
