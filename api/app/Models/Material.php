@@ -38,4 +38,9 @@ class Material extends Model
     {
         return $this->belongsToMany(Product::class, 'productMaterials', 'materialID', 'productID');
     }
+
+    public function quotationDetails()
+    {
+        return $this->hasMany(QuotationDetail::class, 'materialID');
+    }
 }

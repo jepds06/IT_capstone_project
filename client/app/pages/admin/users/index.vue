@@ -43,13 +43,31 @@
         <td class="border px-4 py-2 text-black text-center">{{ user.userName }}</td>
         <td class="border px-4 py-2 text-black text-center">{{ user.email }}</td>
         <td class="border px-4 py-2 text-black text-center">{{ getUserTypeName(user.userTypeID) }}</td>
-        <td class="border px-4 py-2 text-black text-center">
+        <td class="border px-4 py-2 text-center">
+          <!-- View Button -->
           <button
-            class="bg-green-500 text-white px-2 py-1 rounded"
+            class="text-blue-500 hover:text-blue-700"
             @click="openViewModal(user)"
+            title="View User"
           >
-            View
+            👁️
           </button>
+          <!-- Edit Button -->
+          <button
+            class="text-yellow-500 hover:text-yellow-700 mx-2"
+            @click="openEditModal(user)"
+            title="Edit User"
+          >
+            ✏️
+          </button>
+          <!-- Delete Button -->
+          <!-- <button
+            class="text-red-500 hover:text-red-700"
+            @click="openDeleteModal(user)"
+            title="Delete User"
+          >
+            🗑️
+          </button> -->
         </td>
       </tr>
     </tbody>
@@ -81,8 +99,8 @@
     <!-- Add/View User Modal -->
     <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
-        <h2 class="text-xl font-bold mb-4">{{ isView ? 'View User' : 'Add User' }}</h2>
-        <form @submit.prevent="isView ? closeModal() : addUser()">
+        <h2 class="text-xl font-bold mb-4">{{ isView ? 'View User' : (isEdit ? 'Edit User' : 'Add User') }}</h2>
+        <form @submit.prevent="isView ? closeModal() : (isEdit ? saveEdit() : addUser())">
           <div class="mb-4">
             <label for="prodCat" class="block text-sm font-medium text-gray-700">User Type:</label>
             <select v-model="form.userTypeID" id="prodCat" class="mt-1 block w-full border border-gray-300 rounded-lg p-2">
@@ -138,12 +156,14 @@
               v-model="form.password"
               id="password"
               class="border rounded px-2 py-1 w-full"
+              :readonly="isEdit"
             />
           </div>
           <div class="flex justify-end">
             <button
               class="bg-gray-500 text-white px-4 py-2 rounded mr-2"
               @click="closeModal"
+              v-if="!isView"
             >
               Cancel
             </button>
@@ -151,7 +171,7 @@
               type="submit"
               class="bg-blue-500 text-white px-4 py-2 rounded"
             >
-              {{ isView ? 'Close' : 'Save' }}
+            {{ isView ? 'Close' : (isEdit ? 'Save Changes' : 'Save') }}
             </button>
           </div>
         </form>
@@ -177,6 +197,7 @@ export default {
       currentPage: 1,
       itemsPerPage: 10,
       showModal: false,
+      isEdit: false,
       form: {
         userID: '',
         lastName: '',
@@ -207,14 +228,29 @@ export default {
       this.resetForm();
       this.showModal = true;
       this.isView = false;
+      this.isEdit = false;
     },
     openViewModal(user) {
-      this.form = { ...user, password: '' }; // No password in view mode
+      this.form = { ...user, password: '' };
       this.showModal = true;
       this.isView = true;
     },
+    openEditModal(user) {
+      this.form = { ...user };
+      this.showModal = true;
+      this.isEdit = true;
+    },
+    openDeleteModal(user) {
+      this.form = { ...user };
+      this.showDeleteModal = true;
+    },
     closeModal() {
       this.showModal = false;
+      this.isView = false;
+      this.isEdit = false;
+    },
+    closeDeleteModal() {
+      this.showDeleteModal = false;
     },
     resetForm() {
       this.form = {
@@ -237,6 +273,16 @@ export default {
         userID: result.data.userID,
       });
       alert("User added successfully!");
+      this.closeModal();
+    },
+
+    async saveEdit() {
+      await apiService.put(`/api/users/${this.form.userID}`, this.form)
+      const index = this.users.findIndex((u) => u.userID === this.form.userID);
+      if (index !== -1) {
+        this.users.splice(index, 1, { ...this.form });
+      } 
+      alert("User edited successfully!")
       this.closeModal();
     },
     async fetchUserTypesData(){

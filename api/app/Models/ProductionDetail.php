@@ -41,4 +41,9 @@ class ProductionDetail extends Model
     {
         return $this->belongsToMany(ProductMaterial::class, 'productionMaterials', 'productMatsID', 'prodtnDetailID');
     }
+
+    public function finishedProducts()
+    {
+        return $this->hasMany(FinishedProduct::class, 'prodtnDetailID');
+    }
 }

@@ -5,6 +5,7 @@ import { apiService } from '~/api/apiService';
 import { useAuth } from '@/composables/useAuth';
 
 const userTypes = ref([]);
+const modules = ref([]);
 
 const { setToken, logout } = useAuth();
 
@@ -43,30 +44,45 @@ function getUserTypeDescription(userTypeId: number) {
   return userType ? userType.userTypeName?.toLowerCase() : 'Unknown';
 }
 
+function getModuleName(moduleID) {
+      const module = modules?.value?.find((mod) => mod.moduleID === moduleID);
+      return module ? module.moduleName : "Unknown";
+  }
+
 async function onSubmit(data: any) {
   try {
     console.log("Submitted", data);
     
     // Login API call
     const result = await apiService.post("/api/login", data);
-    
-    // Set token in Vuex and localStorage
-    setToken(result.data.token);
-    localStorage.setItem('userInfo', JSON.stringify(result.data.user));
 
-    // Dispatch setPermission to Vuex store
-    localStorage.setItem('userPermission', JSON.stringify([
-      { moduleName: 'Products', create: true, update: false, view: true },
-      { moduleName: 'Users', create: true, update: true, view: true },
-      { moduleName: 'Modules', create: false, update: false, view: false },
-    ]));
-
-    // Fetch user types
-    const userType = await apiService.get("/api/userTypes");
+     // Fetch user types
+     const userType = await apiService.get("/api/userTypes");
     userTypes.value = userType.data;
     
     // Navigate based on user type
     const userTypeDescription = getUserTypeDescription(result.data.user.userTypeID);
+    
+    // Set token in Vuex and localStorage
+    setToken(result.data.token);
+    localStorage.setItem('userInfo', JSON.stringify({...result.data.user, userTypeDescription}));
+
+    const listModules = await apiService.get("/api/modules");
+
+    modules.value = listModules.data;
+
+    // User Permission API Call
+    const permission = await apiService.get("/api/userPrivilage");
+
+    const transformData = permission.data?.filter((per) => per.userID ===  result.data.user.userID).map((per) => {
+      return {
+        ...per,
+        moduleName: getModuleName(per.moduleID)
+      }
+    })
+    // Dispatch setPermission to Vuex store
+    localStorage.setItem('userPermission', JSON.stringify(transformData));
+
     if (userTypeDescription === 'administrator') {
       navigateTo("/admin");
     } else if (userTypeDescription === 'customer') {

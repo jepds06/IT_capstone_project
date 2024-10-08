@@ -182,4 +182,8 @@ const nextPage = () => {
 label, .modal-content h2 {
   color: black; /* Ensure label and title text is black for visibility */
 }
+
+.text-center {
+  text-align: center;
+}
 </style>
