@@ -15,7 +15,6 @@
     :isVisible="isFormVisible"
     title="Product Category Form"
     :showSave="true"
-    class="text-black"
     @update:isVisible="isFormVisible = $event"
     @save="saveCategory"
   >
@@ -43,7 +42,7 @@
             v-model="form.description"
             type="text"
             id="description"
-            class="mt-1 block text-white w-full border border-gray-300 rounded-lg p-2"
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
           />
         </div>
         <!-- <div class="mb-4">
@@ -104,6 +103,13 @@
 </template>
 
 <script setup>
+
+import auth from '../../../../middleware/auth'
+// This page requires authentication
+definePageMeta({
+  middleware: [auth],
+});
+
 import { ref } from "vue";
 import Modal from "~/components/Modal.vue"; // Adjust the path if needed
 import { apiService } from "~/api/apiService";
@@ -148,7 +154,6 @@ async function saveCategory() {
   closeForm();
   } catch (error) {
     console.log('error', error)
-    alert(`${form.value.description} is already exists`)
     closeForm();
   }
  
