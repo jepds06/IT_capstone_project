@@ -83,7 +83,7 @@
           <td class="px-6 py-4 border-b">{{ getProductName(detail.productID) }}</td>
           <td class="px-6 py-4 border-b">{{ detail.quantity }}</td>
           <td class="px-6 py-4 border-b">
-            <span v-if="detail.status === 'Complete'" class="text-green-600">✔️</span>
+            <span v-if="detail.status === 'Completed'" class="text-green-600">✔️</span>
             <span v-else-if="detail.status === 'Pending'" class="text-yellow-600">⚠️</span>
             <span v-else class="text-red-600">❌</span>
           </td>
