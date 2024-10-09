@@ -228,12 +228,12 @@
           <p><strong>Remarks:</strong> {{ selectedProduction.remarks }}</p>
         </div>
         <div class="flex justify-end mt-4">
-          <button
+          <!-- <button
             @click="openGenerateMaterialsModal(selectedProduction)"
             class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 mr-2"
           >
             Generate Materials
-          </button>
+          </button> -->
           <button
             @click="closeViewModal"
             class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"

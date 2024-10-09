@@ -8,11 +8,31 @@
       <div class="modal-content">
         <h3 class="text-lg font-semibold mb-2">Generated Materials</h3>
         <div v-if="generatedMaterials.length > 0">
-          <ul>
+          <!-- <ul>
             <li v-for="(material, index) in generatedMaterials" :key="index">
               {{ material }}
             </li>
-          </ul>
+          </ul> -->
+          <div class="mb-4">
+            <table class="min-w-full border border-gray-300 rounded-lg" :key="generatedMaterials.length">
+              <thead class="bg-gray-100">
+                <tr class="p-2 border-b text-black text-center">
+                  <th>ID</th>
+                  <th>Material</th>
+                  <!-- <th>Status</th> -->
+                  <th>Qty.</th>
+                </tr>
+              </thead>
+              <tbody v-if="generatedMaterials.length > 0">
+                <tr v-for="material in generatedMaterials" :key="material.prodtnMtrlID" class="p-2 border-b text-black text-center">
+                  <td>{{ material.prodtnMtrlID }}</td>
+                  <td>{{ material.productMatsID }}</td>
+                  <!-- <td>{{ material.prodtnDetailID }}</td> -->
+                  <td>{{ material.qtyNeeded }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
         <div v-else>
           <p>No materials generated.</p>
@@ -34,16 +54,16 @@
     </div>
 
     <!-- Buttons for Generating Materials -->
-    <div class="flex justify-between mb-4">
+    <!-- <div class="flex justify-between mb-4">
       <button @click="generateAllMaterials" class="bg-blue-500 text-white px-4 py-2 rounded">Generate for All Productions</button>
       <button @click="generateSelectedMaterials" class="bg-green-500 text-white px-4 py-2 rounded" :disabled="!anySelected">Generate for Selected Productions</button>
-    </div>
+    </div> -->
 
     <!-- Production Details Table -->
     <table class="min-w-full bg-white border border-gray-300">
       <thead class="bg-gray-100">
         <tr>
-          <th class="px-6 py-2 text-left border-b">Select</th>
+          <!-- <th class="px-6 py-2 text-left border-b">Select</th> -->
           <th class="px-6 py-2 text-left border-b">Product Details No</th>
           <th class="px-6 py-2 text-left border-b">Production ID</th>
           <th class="px-6 py-2 text-left border-b">Product</th>
@@ -55,12 +75,12 @@
       </thead>
       <tbody>
         <tr v-for="detail in filteredDetails" :key="detail.prodtnDetailID" class="hover:bg-gray-50">
-          <td class="px-6 py-4 border-b">
+          <!-- <td class="px-6 py-4 border-b">
             <input type="checkbox" v-model="selectedItems" :value="detail.productionId" />
-          </td>
+          </td> -->
           <td class="px-6 py-4 border-b">{{ detail.prodtnDetailID  }}</td>
           <td class="px-6 py-4 border-b">{{ detail.productionID  }}</td>
-          <td class="px-6 py-4 border-b">{{ detail.productID }}</td>
+          <td class="px-6 py-4 border-b">{{ getProductName(detail.productID) }}</td>
           <td class="px-6 py-4 border-b">{{ detail.quantity }}</td>
           <td class="px-6 py-4 border-b">
             <span v-if="detail.status === 'Complete'" class="text-green-600">✔️</span>
@@ -69,7 +89,7 @@
           </td>
           <td class="px-6 py-4 border-b">{{ detail.remarks }}</td>
           <td class="px-6 py-4 border-b">
-            <button @click="generateMaterials(detail.productionId)" class="text-blue-500">Generate</button>
+            <button @click="generateMaterials(detail.productionID, detail.productID)" class="text-blue-500">Generate</button>
           </td>
         </tr>
       </tbody>
@@ -108,8 +128,8 @@ import { ref, computed } from 'vue';
 
 // Sample data (replace with actual data)
 const productionDetails = ref([
-  { prodtnDetailID: 1, productionID: 101, productID: 1,  quantity: 50, status: 'Complete', remarks: 'All good' },
-  { prodtnDetailID: 2, productionID: 102, productID: 2, quantity: 30, status: 'Pending', remarks: 'Awaiting approval' },
+  // { prodtnDetailID: 1, productionID: 101, productID: 1,  quantity: 50, status: 'Complete', remarks: 'All good' },
+  // { prodtnDetailID: 2, productionID: 102, productID: 2, quantity: 30, status: 'Pending', remarks: 'Awaiting approval' },
   // Add more sample details here...
 ]);
 
@@ -142,12 +162,26 @@ const filteredDetails = computed(() => {
 });
 
 // Function to generate materials for a specific production ID
-const generateMaterials = (productionId) => {
-  generatedMaterials.value = [
-    `Material A for Production ID ${productionId}`,
-    `Material B for Production ID ${productionId}`,
-    `Material C for Production ID ${productionId}`
-  ];
+const generateMaterials = async (productionID, productID) => {
+const result = await apiService.get(`/api/productionDetails/production/${productionID}`)
+const material = await apiService.get(`/api/productMaterials/materials/${productID}`)
+
+const materialData = material['product_materials']?.map((value)=>{
+      return {
+        materialID: value.materialID,
+        description: value.material.description,
+        specification: value.material.specification,
+        quantity: value.quantity
+      }
+    })
+console.log('material', material)
+  generatedMaterials.value = result?.production_details?.filter((prod) => prod.productID === productID)[0]?.production_materials?.map((val) =>{
+    const filterData = materialData.find((v) => val.productMatsID === v.materialID)
+    return {
+      ...val,
+      productMatsID: filterData.description ?? ''
+    }
+  }) ?? [];
   showModal.value = true;
 };
 
@@ -181,7 +215,7 @@ const prevPage = () => {
 };
 
 const getProductName = (productID) => {
-  const product = products.value.find((prod) => prod.productID === productID);
+  const product = products.value?.find((prod) => prod.productID === productID);
   return product?.productName ?? 'Unknown';
 }
 
@@ -195,10 +229,10 @@ const fetchProductionDetailsData = async() => {
   productionDetails.value = result?.data
 }
 
-// onMounted(() => {
-//   fetchProductsData();
-//   fetchProductionDetailsData();
-// })
+onMounted(() => {
+  fetchProductsData();
+  fetchProductionDetailsData();
+})
 </script>
 
 <style scoped>
