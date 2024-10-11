@@ -22,17 +22,16 @@
 
     <!-- Table -->
     <div class="overflow-x-auto">
-      <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+      <table class="min-w-full bg-white shadow-md rounded-lg border border-gray-300">
         <thead class="bg-gray-200">
           <tr>
-            <th class="py-2 px-4">User</th>
-            <!-- <th class="py-2 px-4">ID</th> -->
-            <th class="py-2 px-4">Modules</th>
-            <th class="py-2 px-4">Create</th>
-            <th class="py-2 px-4">Update</th>
-            <th class="py-2 px-4">Cancel</th>
-            <th class="py-2 px-4">View</th>
-            <th class="py-2 px-4">Actions</th>
+            <th class="py-2 px-4 border-b border-gray-300">User</th>
+            <th class="py-2 px-4 border-b border-gray-300">Modules</th>
+            <th class="py-2 px-4 border-b border-gray-300">Create</th>
+            <th class="py-2 px-4 border-b border-gray-300">Update</th>
+            <th class="py-2 px-4 border-b border-gray-300">Cancel</th>
+            <th class="py-2 px-4 border-b border-gray-300">View</th>
+            <th class="py-2 px-4 border-b border-gray-300">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -41,14 +40,13 @@
             :key="index"
             class="text-center"
           >
-            <td class="border-t px-4 py-2">
+            <td class="border-t border-b border-gray-300 px-4 py-2" v-if="index === paginatedPermissions.findIndex(p => p.userID === permission.userID)" :rowspan="paginatedPermissions?.filter((per) => per.userID === permission.userID).length">
               {{ getUserName(permission.userID) }}
             </td>
-            <!-- <td class="border-t px-4 py-2">{{ permission.id }}</td> -->
-            <td class="border-t px-4 py-2">
+            <td class="border-t border-b border-gray-300 px-4 py-2">
               {{ getModuleName(permission.moduleID) }}
             </td>
-            <td class="border-t px-4 py-2">
+            <td class="border-t border-b border-gray-300 px-4 py-2">
               <input
                 type="checkbox"
                 :checked="permission.create === 1 ? true : false"
@@ -56,7 +54,7 @@
                 :disabled="true"
               />
             </td>
-            <td class="border-t px-4 py-2">
+            <td class="border-t border-b border-gray-300 px-4 py-2">
               <input
                 type="checkbox"
                 :checked="permission.update === 1 ? true : false"
@@ -64,7 +62,7 @@
                 :disabled="true"
               />
             </td>
-            <td class="border-t px-4 py-2">
+            <td class="border-t border-b border-gray-300 px-4 py-2">
               <input
                 type="checkbox"
                 :checked="permission.cancel === 1 ? true : false"
@@ -72,7 +70,7 @@
                 :disabled="true"
               />
             </td>
-            <td class="border-t px-4 py-2">
+            <td class="border-t border-b border-gray-300 px-4 py-2">
               <input
                 type="checkbox"
                 :checked="permission.view === 1 ? true : false"
@@ -80,25 +78,15 @@
                 :disabled="true"
               />
             </td>
-            <td class="border-t px-4 py-2">
-              <span class="cursor-pointer" @click="viewPermission(permission)"
-                >👁️</span
-              >
-              <span
-                class="cursor-pointer ml-2"
-                @click="editPermission(permission)"
-                >✏️</span
-              >
-              <!-- <span
-                class="cursor-pointer text-red-600 ml-2"
-                @click="deletePermission(permission)"
-                >🗑️</span -->
-              >
+            <td class="border-t border-b border-gray-300 px-4 py-2">
+              <span class="cursor-pointer" @click="viewPermission(permission)">👁️</span>
+              <span class="cursor-pointer ml-2" @click="editPermission(permission)">✏️</span>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
+    
 
     <!-- Pagination -->
     <div class="mt-4 flex text-white justify-between">

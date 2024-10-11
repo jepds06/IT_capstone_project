@@ -237,7 +237,7 @@
           icon="mdi:account-group"
           title="Quotation Management"
           :class="
-            userInfo?.userTypeDescription.toLowerCase() === 'administrator'
+            userInfo?.userTypeDescription.toLowerCase() === 'supplier'
               ? ''
               : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('quotation management')
@@ -249,7 +249,7 @@
           <router-link
             to="/admin/quotations"
             :class="
-              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
+              userInfo?.userTypeDescription.toLowerCase() === 'supplier'
                 ? route.path === '/admin/quotations'
                   ? 'block p-4 bg-gray-800'
                   : 'block p-4 hover:bg-gray-800'
@@ -266,7 +266,7 @@
           <router-link
             to="/admin/quotation-details"
             :class="
-              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
+              userInfo?.userTypeDescription.toLowerCase() === 'supplier'
                 ? route.path === '/admin/quotation-details'
                   ? 'block p-4 bg-gray-800'
                   : 'block p-4 hover:bg-gray-800'

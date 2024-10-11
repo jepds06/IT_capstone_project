@@ -4,8 +4,8 @@
     <h2 class="text-2xl font-bold mb-4">Production Details</h2>
 
     <!-- Modal for Generating Materials -->
-    <div v-if="showModal" class="modal">
-      <div class="modal-content">
+    <div v-if="showModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+      <div class="bg-white p-6 rounded-lg shadow-lg w-2/5">
         <h3 class="text-lg font-semibold mb-2">Generated Materials</h3>
         <div v-if="generatedMaterials.length > 0">
           <!-- <ul>
@@ -19,7 +19,7 @@
                 <tr class="p-2 border-b text-black text-center">
                   <th>ID</th>
                   <th>Material</th>
-                  <!-- <th>Status</th> -->
+                  <th>Status</th>
                   <th>Qty.</th>
                 </tr>
               </thead>
@@ -28,6 +28,11 @@
                   <td>{{ material.prodtnMtrlID }}</td>
                   <td>{{ material.productMatsID }}</td>
                   <!-- <td>{{ material.prodtnDetailID }}</td> -->
+                  <td class="px-6 py-4 border-b">
+                    <span v-if="material.status === 'Completed'" class="text-green-600">✔️ {{material.status}}</span>
+                    <span v-else-if="material.status === 'Pending'" class="text-yellow-600">⚠️ {{material.status}}</span>
+                    <span v-else class="text-red-600">❌ {{material.status}}</span>
+                  </td>
                   <td>{{ material.qtyNeeded }}</td>
                 </tr>
               </tbody>
@@ -83,9 +88,9 @@
           <td class="px-6 py-4 border-b">{{ getProductName(detail.productID) }}</td>
           <td class="px-6 py-4 border-b">{{ detail.quantity }}</td>
           <td class="px-6 py-4 border-b">
-            <span v-if="detail.status === 'Completed'" class="text-green-600">✔️</span>
-            <span v-else-if="detail.status === 'Pending'" class="text-yellow-600">⚠️</span>
-            <span v-else class="text-red-600">❌</span>
+            <span v-if="detail.status === 'Completed'" class="text-green-600">✔️{{detail.status}}</span>
+            <span v-else-if="detail.status === 'Pending'" class="text-yellow-600">⚠️ {{detail.status}}</span>
+            <span v-else class="text-red-600">❌ {{detail.status}}</span>
           </td>
           <td class="px-6 py-4 border-b">{{ detail.remarks }}</td>
           <td class="px-6 py-4 border-b">

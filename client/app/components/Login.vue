@@ -41,7 +41,7 @@ const validate = (state: any) => {
 
 function getUserTypeDescription(userTypeId: number) {
   const userType = userTypes.value.find(cat => cat.userTypeID === userTypeId);
-  return userType ? userType.userTypeName?.toLowerCase() : 'Unknown';
+  return userType ? userType.userTypeName : 'Unknown';
 }
 
 function getModuleName(moduleID) {
@@ -83,12 +83,12 @@ async function onSubmit(data: any) {
     // Dispatch setPermission to Vuex store
     localStorage.setItem('userPermission', JSON.stringify(transformData));
 
-    if (userTypeDescription === 'administrator') {
+    if (userTypeDescription === 'Administrator') {
       navigateTo("/admin");
-    } else if (userTypeDescription === 'customer') {
+    } else if (userTypeDescription === 'Customer') {
       navigateTo("/customer-product");
     } else {
-      navigateTo("/pricing");
+      navigateTo("/admin");
     }
   } catch (error) {
     console.error(error);
