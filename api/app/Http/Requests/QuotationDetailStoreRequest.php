@@ -23,7 +23,7 @@ class QuotationDetailStoreRequest extends FormRequest
     {
         return [
             'quoteID' => 'required|integer|exists:quotations,quoteID',
-            'materialID' => 'required|integer|exists:materials,materialID',
+            'prodtnMtrlID' => 'required|integer|exists:productionMaterials,prodtnMtrlID',
             'quantity' => 'required|integer|min:1',
             'quotePrice' => 'required|numeric'
         ];

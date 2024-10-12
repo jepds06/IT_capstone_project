@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Interface\Repository\QuotationDetailRepositoryInterface;
-use App\Models\Material;
+use App\Models\ProductionMaterial;
 use App\Models\Quotation;
 use App\Models\QuotationDetail;
 
@@ -30,12 +30,12 @@ class QuotationDetailRepository implements QuotationDetailRepositoryInterface
             throw new \Exception("Invalid quotation ID provided.");
         }
 
-        $material = Material::find($payload->materialID);
+        $prodtnMaterial = ProductionMaterial::find($payload->prodtnMtrlID);
 
-        if($material){
-            $qteDetail->material()->associate($material);
+        if($prodtnMaterial){
+            $qteDetail->productionMaterial()->associate($prodtnMaterial);
         } else {
-            throw new \Exception("Invalid material ID provided.");
+            throw new \Exception("Invalid production material ID provided.");
         }
 
         $qteDetail->quantity = $payload->quantity;
@@ -56,12 +56,12 @@ class QuotationDetailRepository implements QuotationDetailRepositoryInterface
             throw new \Exception("Invalid quotation ID provided.");
         }
 
-        $material = Material::find($payload->materialID);
+        $prodtnMaterial = ProductionMaterial::find($payload->prodtnMtrlID);
 
-        if($material){
-            $qteDetail->material()->associate($material);
+        if($prodtnMaterial){
+            $qteDetail->productionMaterial()->associate($prodtnMaterial);
         } else {
-            throw new \Exception("Invalid material ID provided.");
+            throw new \Exception("Invalid production material ID provided.");
         }
 
         $qteDetail->quantity = $payload->quantity;

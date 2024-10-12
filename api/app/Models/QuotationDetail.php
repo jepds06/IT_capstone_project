@@ -16,7 +16,7 @@ class QuotationDetail extends Model
 
     protected $fillable =[
         'quoteID',
-        'materialID',
+        'prodtnMtrlID',
         'quantity',
         'quotePrice'
     ];
@@ -28,8 +28,8 @@ class QuotationDetail extends Model
         return $this->belongsTo(Quotation::class, 'quoteID');
     }
     
-    public function material()
+    public function productionMaterial()
     {
-        return $this->belongsTo(Material::class, 'materialID');
+        return $this->belongsTo(ProductionMaterial::class, 'prodtnMtrlID');
     }
 }
