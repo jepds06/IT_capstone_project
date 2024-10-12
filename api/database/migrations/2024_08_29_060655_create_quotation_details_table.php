@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('quotationDetails', function (Blueprint $table) {
             $table->bigIncrements('qteDetailID');
             $table->unsignedBigInteger('quoteID');
-            $table->unsignedBigInteger('materialID');
+            $table->unsignedBigInteger('prodtnMtrlID');
             $table->integer('quantity');
             $table->decimal('quotePrice', 10, 2);
 
@@ -22,7 +22,7 @@ return new class extends Migration
             ->onUpdate('cascade')
             ->onDelete('cascade');
 
-            $table->Foreign('materialID')->references('materialID')->on('materials')
+            $table->Foreign('prodtnMtrlID')->references('prodtnMtrlID')->on('productionMaterials')
             ->onUpdate('cascade')
             ->onDelete('cascade');
         });
@@ -35,7 +35,7 @@ return new class extends Migration
     {
         Schema::table('quotationDetails', function (Blueprint $table) {
             $table->dropForeign(['quoteID']);
-            $table->dropForeign(['materialID']);
+            $table->dropForeign(['prodtnMtrlID']);
         });
         Schema::dropIfExists('quotationDetails');
     }
