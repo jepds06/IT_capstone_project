@@ -24,7 +24,7 @@
       <thead class="bg-gray-100">
         <tr>
           <th class="px-6 py-2 text-left border-b">Production ID</th>
-          <th class="px-6 py-2 text-left border-b">Created By</th>
+          <!-- <th class="px-6 py-2 text-left border-b">Created By</th> -->
           <th class="px-6 py-2 text-left border-b">Date Encoded</th>
           <th class="px-6 py-2 text-left border-b">Year</th>
           <th class="px-6 py-2 text-left border-b">Month</th>
@@ -39,9 +39,9 @@
           class="hover:bg-gray-50"
         >
           <td class="px-6 py-4 border-b">{{ production.productionID }}</td>
-          <td class="px-6 py-4 border-b">
+          <!-- <td class="px-6 py-4 border-b">
             {{ getUserName(production.userID) }}
-          </td>
+          </td> -->
           <td class="px-6 py-4 border-b">{{ production.dateEncoded }}</td>
           <td class="px-6 py-4 border-b">{{ production.year }}</td>
           <td class="px-6 py-4 border-b">{{ production.month }}</td>
@@ -102,7 +102,7 @@
           {{ isEditMode ? "Edit Production" : "Add Production" }}
         </h2>
         <form @submit.prevent="saveProduction">
-          <label for="month" class="block mb-2 mt-4">Created By:</label>
+          <!-- <label for="month" class="block mb-2 mt-4">Created By:</label>
           <select
             v-model="productionForm.userID"
             id="userID"
@@ -115,7 +115,7 @@
             >
               {{ `${user.lastName}, ${user.firstName}` }}
             </option>
-          </select>
+          </select> -->
 
           <label for="dateEncoded" class="block mb-2 mt-4">Date Encoded:</label>
           <input
@@ -313,7 +313,7 @@
           <thead class="bg-gray-200">
             <tr class="p-2 border-b text-black text-center">
               <th>Production ID</th>
-              <th>Created By</th>
+              <!-- <th>Created By</th> -->
               <th>Date Encoded</th>
               <th>Year</th>
               <th>Month</th>
@@ -323,9 +323,9 @@
           <tbody>
             <tr  class="p-2 border-b text-black text-center">
               <td class="px-6 py-4 border-b">{{ selectedProduction.productionID }}</td>
-              <td class="px-6 py-4 border-b">
+              <!-- <td class="px-6 py-4 border-b">
                 {{ getUserName(selectedProduction.userID) }}
-              </td>
+              </td> -->
               <td class="px-6 py-4 border-b">{{ selectedProduction.dateEncoded }}</td>
               <td class="px-6 py-4 border-b">{{ selectedProduction.year }}</td>
               <td class="px-6 py-4 border-b">{{ selectedProduction.month }}</td>
@@ -364,9 +364,12 @@
             </tbody>
           </table>
         </div>
-        <button @click="openProductionDetailModal" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-          Add Production Details
-        </button>
+        <div class="flex justify-end">
+          <button @click="openProductionDetailModal" class="bg-blue-500 text-white px-4 py-2 mr-2 rounded hover:bg-blue-600">
+            Add Production Details
+          </button>
+          <button @click="requestQuotation" :class="isQuotationRequested ? 'bg-gray-500 text-white px-4 py-2 rounded cursor-not-allowed' : 'bg-green-500 text-white px-4 py-2 rounded'" :disabled="isQuotationRequested">Request Quotation</button>
+        </div>
       </div>
     </div>
 
@@ -391,7 +394,7 @@
               </option>
             </select>
           </div>
-          <div class="mb-4">
+          <div class="mb-4" v-if="productionDetailMode !== 'add'">
             <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
             <select
             v-model="productionDetailForm.status"
@@ -462,6 +465,7 @@ const productions = ref([
   // Add more sample data as needed for testing pagination
 ]);
 
+const userInfo = ref({userID:""})
 const selectedProductionDetails = ref([]);
 const users = ref([]);
 
@@ -490,6 +494,9 @@ const searchQuery = ref("");
 const currentPage = ref(1);
 const itemsPerPage = 5;
 
+const quotations = ref([])
+
+const isQuotationRequested = ref(false);
 const isProductionDetailsInfo = ref(false);
 const isProductionDetailsModal = ref(false);
 const isModalOpen = ref(false);
@@ -499,7 +506,7 @@ const isDeleteModalOpen = ref(false);
 const selectedProduction = ref(null);
 const isEditMode = ref(false);
 const productionForm = ref({
-  userID: "",
+  userID: userInfo.value.userID,
   dateEncoded: "",
   year: "",
   month: "",
@@ -513,7 +520,7 @@ const productionDetailForm = ref({
   productionID: "",
   productID: "",
   quantity: "",
-  status: "",
+  status: "Pending",
   remarks: ""
 })
 
@@ -525,7 +532,7 @@ const openProductionDetailModal = async () => {
   productionID: "",
   productID: "",
   quantity: "",
-  status: "",
+  status: "Pending",
   remarks: ""
 }
 }
@@ -533,7 +540,14 @@ const openProductionDetailModal = async () => {
 const closeProductionDetailModal = () => {
   isProductionDetailsModal.value = false
 }
+
+const filterQuotation = (productionID) => {
+  const data = quotations.value?.filter((value) => value.productionID === productionID);
+  isQuotationRequested.value = data.length > 0
+};
+
 const showProductionDetails = async (production) =>{
+  filterQuotation(production.productionID)
   selectedProduction.value = production
   await fetchProductsData()
   await fetchProductionDetailsData()
@@ -564,7 +578,7 @@ const openAddModal = () => {
   isEditMode.value = false;
   productionForm.value = {
     productionID: "",
-    userID: "",
+    userID: userInfo.value.userID,
     dateEncoded: "",
     year: "",
     month: "",
@@ -584,6 +598,32 @@ const editProductionDetail = (prodDetail) => {
     productionDetailForm.value = { ...prodDetail };
     isProductionDetailsModal.value = true;
   }
+
+  function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+const requestQuotation = async () => {
+  await Promise.all(users.value.filter((user) => user.userTypeID === 3).map(async(user) => {
+    await apiService.post("/api/quotations", {
+    quotationDate: formatDate(new Date()),
+    userID: user.userID,
+    remarks: selectedProduction.value.remarks ?? 'NA',
+    productionID:  selectedProduction.value.productionID
+  })
+  }));
+  alert("Quotation requested successfully");
+}
   
 
 const saveProduction = async () => {
@@ -690,6 +730,12 @@ const getProduct = (productID) => {
   return product.productName ?? 'Unknown';
 };
 
+
+const fetchQuotationData = async () => {
+  const result = await apiService.get("/api/quotations")
+  quotations.value = result.data
+}
+
 const fetchUsersData = async () => {
   const result = await apiService.get("/api/users")
   users.value = result.data
@@ -713,6 +759,11 @@ const fetchProductionDetailsData = async() => {
 onMounted(() => {
   fetchUsersData();
   fetchProductionData();
+  fetchQuotationData();
+  if (process.client) {
+    const storage = JSON.parse(localStorage.getItem("userInfo"));
+    userInfo.value = storage ? storage : null;
+  }
 })
 </script>
 
