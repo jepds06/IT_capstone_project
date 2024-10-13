@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Interface\Repository\QuotationRepositoryInterface;
+use App\Models\Production;
 use App\Models\Quotation;
 use App\Models\User;
 
@@ -30,6 +31,14 @@ class QuotationRepository implements QuotationRepositoryInterface
             throw new \Exception("Invalid user ID provided.");
         }
 
+        $production = Production::find($payload->productionID);
+
+        if($production){
+            $quotation->production()->associate($production);
+        } else {
+            throw new \Exception("Invalid production ID provided.");
+        }
+
         $quotation->remarks = $payload->remarks;
         $quotation->save();
 
@@ -46,6 +55,14 @@ class QuotationRepository implements QuotationRepositoryInterface
             $quotation->user()->associate($user);
         } else {
             throw new \Exception("Invalid user ID provided.");
+        }
+
+        $production = Production::find($payload->productionID);
+
+        if($production){
+            $quotation->production()->associate($production);
+        } else {
+            throw new \Exception("Invalid production ID provided.");
         }
 
         $quotation->remarks = $payload->remarks;

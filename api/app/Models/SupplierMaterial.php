@@ -35,4 +35,8 @@ class SupplierMaterial extends Model
     {
         return $this->belongsTo(Material::class,'materialID');
     }
+    public function adminOrders()
+    {
+        return $this->hasMany(AdminOrder::class, 'suppMatrlID');
+    }
 }

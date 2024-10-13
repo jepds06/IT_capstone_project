@@ -14,8 +14,17 @@ return new class extends Migration
         Schema::create('quotations', function (Blueprint $table) {
             $table->bigIncrements('quoteID');
             $table->date('quotationDate');
-            $table->string('userID');
+            $table->unsignedBigInteger('userID');
+            $table->unsignedBigInteger('productionID');
             $table->string('remarks');
+
+            $table->Foreign('userID')->references('userID')->on('users')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
+
+            $table->Foreign('productionID')->references('productionID')->on('productions')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
         });
     }
 
@@ -24,6 +33,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('quotations', function (Blueprint $table) {
+            $table->dropForeign(['userID']);
+            $table->dropForeign(['productionID']);
+        });
         Schema::dropIfExists('quotations');
     }
 };

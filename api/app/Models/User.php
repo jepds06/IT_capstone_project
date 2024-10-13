@@ -74,4 +74,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Quotation::class, 'userID');
     }
+    // Relationship between User and AdminOrder
+    public function adminOrders()
+    {
+        return $this->hasMany(AdminOrder::class, 'userID');
+    }
 }
