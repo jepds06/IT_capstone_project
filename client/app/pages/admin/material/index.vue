@@ -97,8 +97,9 @@
       </thead>
       <tbody>
         <tr v-for="material in materials" :key="material.materialID">
+          
+          <td class="p-2 border-b text-center">{{ material.materialID }}</td>
           <td class="p-2 border-b text-center">{{ material.description }}</td>
-          <td class="p-2 border-b text-center">{{ material.specification }}</td>
           <td class="p-2 border-b text-center">{{ material.brand }}</td>
           <td class="p-2 border-b text-center">{{ material.unitOfMeasure }}</td>
           <!-- <td class="p-2 border-b text-center">
