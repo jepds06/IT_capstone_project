@@ -5,7 +5,6 @@ namespace App\Service;
 use App\Http\Resources\QuotationResource;
 use App\Interface\Repository\QuotationRepositoryInterface;
 use App\Interface\Service\QuotationServiceInterface;
-use App\Models\Quotation;
 
 class QuotationService implements QuotationServiceInterface
 {

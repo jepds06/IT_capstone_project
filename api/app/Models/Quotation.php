@@ -27,6 +27,11 @@ class Quotation extends Model
         return $this->belongsTo(User::class, 'userID');
     }
 
+    public function production()
+    {
+        return $this->belongsTo(Production::class, 'productionID');
+    }
+
     public function quotationDetails()
     {
         return $this->hasMany(QuotationDetail::class, 'quoteID');

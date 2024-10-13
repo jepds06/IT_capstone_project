@@ -32,4 +32,9 @@ class Production extends Model
     {
         return $this->hasMany(ProductionDetail::class, 'productionID');
     }
+
+    public function quotations()
+    {
+        return $this->hasMany(Quotation::class, 'productionID');
+    }
 }

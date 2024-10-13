@@ -17,4 +17,9 @@ class PaymentMethod extends Model
     protected $fillable = [
         'payMethodName'
     ];
+
+    public function adminPayments()
+    {
+        return $this->hasMany(AdminPayment::class, 'payMethodID');
+    }
 }

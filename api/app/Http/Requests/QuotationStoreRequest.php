@@ -24,6 +24,7 @@ class QuotationStoreRequest extends FormRequest
         return [
             'quotationDate' => 'required|date',
             'userID' => 'required|integer|exists:users,userID',
+            'productionID' => 'required|integer|exists:productions,productionID',
             'remarks' => 'required|string|max:255'
         ];
     }

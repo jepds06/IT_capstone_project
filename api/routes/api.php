@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminOrderControoler;
+use App\Http\Controllers\AdminPaymentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FinishedProductController;
 use App\Http\Controllers\MaterialController;
@@ -151,5 +153,19 @@ Route::prefix('quotationDetails')->group(function(){
     Route::get('/{qteDetailId}', [QuotationDetailController::class, 'show']);
     Route::post('/', [QuotationDetailController::class, 'store']);
     Route::put('/{qteDetailId}', [QuotationDetailController::class, 'update']);
+});
+//Admin Order route
+Route::prefix('adminOrder')->group(function(){
+    Route::get('/', [AdminOrderControoler::class, 'index']);
+    Route::get('/{adminOrderId}', [AdminOrderControoler::class, 'show']);
+    Route::post('/', [AdminOrderControoler::class, 'store']);
+    Route::put('/{adminOrderId}', [AdminOrderControoler::class, 'update']);
+});
+//Admin Payment route
+Route::prefix('adminPayment')->group(function(){
+    Route::get('/', [AdminPaymentController::class, 'index']);
+    Route::get('/{adminPaymentId}', [AdminPaymentController::class, 'show']);
+    Route::post('/', [AdminPaymentController::class, 'store']);
+    Route::put('/{adminPaymentId}', [AdminPaymentController::class, 'update']);
 });
 

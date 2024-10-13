@@ -23,4 +23,15 @@ class AdminPayment extends Model
         'paymentStatus',
         'remarks'
     ];
+
+    public function adminOrder()
+    {
+        return $this->belongsTo(AdminOrder::class, 'adminOrdID');
+    }
+
+    // Relationship with the PaymentMethod model
+    public function paymentMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class, 'payMethodID');
+    }
 }
