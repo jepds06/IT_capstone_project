@@ -23,6 +23,14 @@ class QuotationDetailController extends Controller
         return $this->quoteDetailService->findQuotationDetails();
     }
 
+     /**
+     * Display a listing of the resource.
+     */
+    public function indexByQuotedID($quoteID)
+    {
+        return $this->quoteDetailService->findQuotationDetailsByQuoteID($quoteID);
+    }
+
     /**
      * Store a newly created resource in storage.
      */

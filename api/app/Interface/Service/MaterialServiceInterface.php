@@ -6,6 +6,8 @@ interface MaterialServiceInterface
 {
     public function findMaterials();
 
+    public function findMaterialsFromProduction($productionID);
+
     public function findMaterialById(int $materialId);
 
     public function createMaterial(object $payload);

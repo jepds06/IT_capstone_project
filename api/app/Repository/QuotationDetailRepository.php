@@ -14,6 +14,20 @@ class QuotationDetailRepository implements QuotationDetailRepositoryInterface
         return QuotationDetail::paginate(10);
     }
 
+
+    public function findManyByQuoteID($quoteID)
+    {
+        $quotation = Quotation::with([
+            'quotationDetails.productionMaterial.productMaterial.material'
+        ])->find($quoteID);
+
+        if (!$quotation) {
+            return response()->json(['message' => 'Quotation not found'], 404);
+        }
+
+        return response()->json($quotation);
+    }
+
     public function findOneById(int $qteDetailId)
     {
         return QuotationDetail::findOrFail($qteDetailId);
