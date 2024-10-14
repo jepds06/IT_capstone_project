@@ -74,6 +74,7 @@ Route::prefix('productCategories')->group(function(){
 //materials route
 Route::prefix('materials')->group(function(){
     Route::get('/', [MaterialController::class, 'index']);
+    Route::get('/production/{productionID}', [MaterialController::class, 'indexByProductionID']);
     Route::get('/{materialId}', [MaterialController::class, 'show']);
     Route::post('/', [MaterialController::class, 'store']);
     Route::put('/{materialId}', [MaterialController::class, 'update']);
@@ -150,6 +151,7 @@ Route::prefix('quotations')->group(function(){
 //quotation details route
 Route::prefix('quotationDetails')->group(function(){
     Route::get('/', [QuotationDetailController::class, 'index']);
+    Route::get('/quotation/{quotedID}', [QuotationDetailController::class, 'indexByQuotedID']);
     Route::get('/{qteDetailId}', [QuotationDetailController::class, 'show']);
     Route::post('/', [QuotationDetailController::class, 'store']);
     Route::put('/{qteDetailId}', [QuotationDetailController::class, 'update']);

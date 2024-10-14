@@ -24,6 +24,13 @@ class MaterialController extends Controller
         return $this->materialService->findMaterials();
     }
 
+     /**
+     * Display a listing of the resource.
+     */
+    public function indexByProductionID($productionID)
+    {
+        return $this->materialService->findMaterialsFromProduction($productionID);
+    }
  
     /**
      * Store a newly created resource in storage.

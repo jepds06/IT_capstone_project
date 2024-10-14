@@ -42,4 +42,10 @@ class MaterialService implements MaterialServiceInterface
 
         return new MaterialResource($materials);
     }
+    public function findMaterialsFromProduction($productionID)
+    {
+        $materials = $this->materialRepository->findMaterialFromProductionID($productionID);
+
+        return $materials;
+    }
 }

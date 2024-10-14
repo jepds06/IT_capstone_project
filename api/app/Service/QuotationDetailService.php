@@ -42,4 +42,11 @@ class QuotationDetailService implements QuotationDetailServiceInterface
 
         return new QuotationDetailResource($quotationDetail);
     }
+
+    public function findQuotationDetailsByQuoteID($quoteID)
+    {
+        $quotationDetail = $this->quoteDetailRepository->findManyByQuoteID($quoteID); 
+
+        return $quotationDetail;
+    }
 }
