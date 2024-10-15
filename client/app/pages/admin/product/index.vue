@@ -127,7 +127,7 @@
           </button>
           <h2 class="text-lg font-semibold mb-4">{{ materialMode === 'add' ? 'Add Material' : 'Edit Material' }}</h2>
           <form @submit.prevent="saveMaterial">
-            <div class="mb-4" v-if="formMode === 'edit'">
+            <div class="mb-4" v-if="materialMode === 'edit'">
               <label for="materialId" class="block text-sm font-medium text-gray-700">Product Material Id</label>
               <input v-model="materialForm.productMatsID" type="text" id="productMatsID" class="mt-1 block w-full border border-gray-300 rounded-lg p-2" :readonly="materialMode === 'edit'"/>
             </div>
@@ -233,7 +233,8 @@ definePageMeta({
   const materialForm = ref({
     materialID: '',
     productID: '',
-    quantity: ''
+    quantity: '',
+    productMatsID: ''
   });
   
   async function openModal(mode = 'add', product = null) {
@@ -290,7 +291,8 @@ definePageMeta({
     materialForm.value = {
     materialID: '',
     productID: '',
-    quantity: ''
+    quantity: '',
+    productMatsID: ''
   };
     isMaterialModalVisible.value = true;
   }
@@ -377,7 +379,8 @@ const fetchProductMaterialsData = async () => {
         materialID: value.materialID,
         description: value.material.description,
         specification: value.material.specification,
-        quantity: value.quantity
+        quantity: value.quantity,
+        productMatsID: value.productMatsID
       }
     })
     selectedProductMaterials.value = transFormData

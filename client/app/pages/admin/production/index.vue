@@ -622,7 +622,10 @@ const requestQuotation = async () => {
     productionID:  selectedProduction.value.productionID
   })
   }));
+  await fetchQuotationData();
   alert("Quotation requested successfully");
+  isProductionDetailsInfo.value = false
+
 }
   
 
