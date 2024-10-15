@@ -26,8 +26,8 @@
           <th class="px-6 py-2 text-left border-b">Production ID</th>
           <!-- <th class="px-6 py-2 text-left border-b">Created By</th> -->
           <th class="px-6 py-2 text-left border-b">Date Encoded</th>
-          <th class="px-6 py-2 text-left border-b">Start Date</th>
-          <th class="px-6 py-2 text-left border-b">Expected Completion Date</th>
+          <th class="px-6 py-2 text-left border-b">Year</th>
+          <th class="px-6 py-2 text-left border-b">Month</th>
           <th class="px-6 py-2 text-left border-b">Remarks</th>
           <th class="px-6 py-2 text-left border-b">Actions</th>
         </tr>
@@ -43,8 +43,8 @@
             {{ getUserName(production.userID) }}
           </td> -->
           <td class="px-6 py-4 border-b">{{ production.dateEncoded }}</td>
-          <td class="px-6 py-4 border-b">{{ production.startDate}}</td>
-          <td class="px-6 py-4 border-b">{{ production.expectedCompletionDate }}</td>
+          <td class="px-6 py-4 border-b">{{ production.year }}</td>
+          <td class="px-6 py-4 border-b">{{ production.month }}</td>
           <td class="px-6 py-4 border-b">{{ production.remarks }}</td>
           <td class="px-6 py-4 border-b">
             <button
@@ -125,23 +125,33 @@
             class="w-full p-2 border rounded"
           />
 
-          <label for="startDate" class="block mb-2 mt-4">Start Date:</label>
+          <label for="year" class="block mb-2 mt-4">Year:</label>
           <input
-            id="startDate"
-            v-model="productionForm.startDate"
-            type="date"
-            placeholder="Enter start date"
+            id="year"
+            v-model="productionForm.year"
+            type="number"
+            placeholder="Enter year"
             class="w-full p-2 border rounded"
           />
 
-          <label for="expectedCompletionDate" class="block mb-2 mt-4">Expected Completion Date:</label>
-          <input
-            id="expectedCompletionDate"
-            v-model="productionForm.expectedCompletionDate"
-            type="date"
-            placeholder="Enter expected completion date"
+          <label for="month" class="block mb-2 mt-4">Month:</label>
+          <!-- <input
+            id="month"
+            v-model="productionForm.month"
+            type="text"
+            placeholder="Enter month"
             class="w-full p-2 border rounded"
-          />
+          /> -->
+
+          <select
+            v-model="productionForm.month"
+            id="month"
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
+          >
+            <option v-for="month in months" :key="month" :value="month">
+              {{ month }}
+            </option>
+          </select>
 
           <label for="remarks" class="block mb-2 mt-4">Remarks:</label>
           <input
@@ -257,19 +267,6 @@
             class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
           >
             Cancel
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Modal for Making Quotation -->
-    <div v-if="isMakeQuotationModalOpen" class="modal-overlay" @click.self="closeMakeQuotationModal">
-      <div class="modal-content">
-        <h2 class="text-xl font-bold mb-4">Make Quotation</h2>
-        <p>Quotation details will be displayed here.</p>
-        <div class="flex justify-end mt-4">
-          <button @click="closeMakeQuotationModal" class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400">
-            Close
           </button>
         </div>
       </div>
@@ -428,6 +425,7 @@
         </form>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -490,11 +488,7 @@ const months = [
   "December",
 ];
 
-const statuses = {
-  Pending: "fa fa-hourglass-half",
-  "In Progress": "fa fa-spinner fa-spin",
-  Completed: "fa fa-check-circle",
-};
+const statuses = ["Pending", "In Progress", "Completed"];
 
 const searchQuery = ref("");
 const currentPage = ref(1);
@@ -514,8 +508,8 @@ const isEditMode = ref(false);
 const productionForm = ref({
   userID: userInfo.value.userID,
   dateEncoded: "",
-  startDate: "",
-  expectedCompletionDate: "",
+  year: "",
+  month: "",
   remarks: "",
   status: "Pending",
   productionID: ""
@@ -528,19 +522,7 @@ const productionDetailForm = ref({
   quantity: "",
   status: "Pending",
   remarks: ""
-});
-
-const isMakeQuotationModalOpen = ref(false);
-
-// Function to open the make quotation modal
-const openMakeQuotationModal = () => {
-  isMakeQuotationModalOpen.value = true;
-};
-
-// Function to close the make quotation modal
-const closeMakeQuotationModal = () => {
-  isMakeQuotationModalOpen.value = false;
-};
+})
 
 const openProductionDetailModal = async () => {
   productionDetailMode.value = 'add'
@@ -598,8 +580,8 @@ const openAddModal = () => {
     productionID: "",
     userID: userInfo.value.userID,
     dateEncoded: "",
-    startDate: "",
-    expectedCompletionDate: "",
+    year: "",
+    month: "",
     remarks: "",
     status: "Pending"
   };
@@ -640,7 +622,10 @@ const requestQuotation = async () => {
     productionID:  selectedProduction.value.productionID
   })
   }));
+  await fetchQuotationData();
   alert("Quotation requested successfully");
+  isProductionDetailsInfo.value = false
+
 }
   
 
@@ -803,6 +788,6 @@ onMounted(() => {
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   max-width: 500px;
-  width: 700%;
+  width: 100%;
 }
 </style>
