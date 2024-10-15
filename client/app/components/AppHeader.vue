@@ -38,19 +38,19 @@ const closeModal = () => {
         </div>
       </UModal>
 
-      <UButton
+      <!-- <UButton
         label="Sign up"
         icon="i-heroicons-arrow-right-20-solid"
         trailing
         color="black"
         @click="isSignUpOpen = true"
         class="hidden lg:flex"
-      />
-      <UModal v-model="isSignUpOpen" prevent-close>
+      /> -->
+      <!-- <UModal v-model="isSignUpOpen" prevent-close>
         <div class="p-4">
           <SignUp @close-modal="closeModal"/>
         </div>
-      </UModal>
+      </UModal> -->
     </template>
 
     <!-- <template #panel>

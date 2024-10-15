@@ -111,13 +111,13 @@ async function onSubmit(data: any) {
       :submit-button="{ trailingIcon: 'i-heroicons-arrow-right-20-solid' }"
       @submit="onSubmit"
     >
-      <template #description>
+      <!-- <template #description>
         Don't have an account?
         <NuxtLink to="/signup" class="text-primary font-medium">Sign up</NuxtLink>.
-      </template>
-      <template #password-hint>
+      </template> -->
+      <!-- <template #password-hint>
         <NuxtLink to="/" class="text-primary font-medium">Forgot password?</NuxtLink>
-      </template>
+      </template> -->
       <template #footer></template>
     </UAuthForm>
   </UCard>

@@ -26,8 +26,8 @@
           <th class="px-6 py-2 text-left border-b">Production ID</th>
           <!-- <th class="px-6 py-2 text-left border-b">Created By</th> -->
           <th class="px-6 py-2 text-left border-b">Date Encoded</th>
-          <th class="px-6 py-2 text-left border-b">Year</th>
-          <th class="px-6 py-2 text-left border-b">Month</th>
+          <th class="px-6 py-2 text-left border-b">Start Date</th>
+          <th class="px-6 py-2 text-left border-b">Completion Date</th>
           <th class="px-6 py-2 text-left border-b">Remarks</th>
           <th class="px-6 py-2 text-left border-b">Actions</th>
         </tr>
@@ -43,8 +43,8 @@
             {{ getUserName(production.userID) }}
           </td> -->
           <td class="px-6 py-4 border-b">{{ production.dateEncoded }}</td>
-          <td class="px-6 py-4 border-b">{{ production.year }}</td>
-          <td class="px-6 py-4 border-b">{{ production.month }}</td>
+          <td class="px-6 py-4 border-b">{{ production.startDate }}</td>
+          <td class="px-6 py-4 border-b">{{ production.completionDate }}</td>
           <td class="px-6 py-4 border-b">{{ production.remarks }}</td>
           <td class="px-6 py-4 border-b">
             <button
@@ -117,24 +117,23 @@
             </option>
           </select> -->
 
-          <label for="dateEncoded" class="block mb-2 mt-4">Date Encoded:</label>
+          <!-- <label for="dateEncoded" class="block mb-2 mt-4">Date Encoded:</label>
           <input
             id="dateEncoded"
             v-model="productionForm.dateEncoded"
             type="date"
             class="w-full p-2 border rounded"
-          />
+          /> -->
 
-          <label for="year" class="block mb-2 mt-4">Year:</label>
+          <label for="year" class="block mb-2 mt-4">Start Date:</label>
           <input
-            id="year"
-            v-model="productionForm.year"
-            type="number"
-            placeholder="Enter year"
+            id="startDate"
+            v-model="productionForm.startDate"
+            type="date"
             class="w-full p-2 border rounded"
           />
 
-          <label for="month" class="block mb-2 mt-4">Month:</label>
+          <label for="month" class="block mb-2 mt-4">Completion Date:</label>
           <!-- <input
             id="month"
             v-model="productionForm.month"
@@ -143,15 +142,12 @@
             class="w-full p-2 border rounded"
           /> -->
 
-          <select
-            v-model="productionForm.month"
-            id="month"
-            class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
-          >
-            <option v-for="month in months" :key="month" :value="month">
-              {{ month }}
-            </option>
-          </select>
+          <input
+            id="completionDate"
+            v-model="productionForm.completionDate"
+            type="date"
+            class="w-full p-2 border rounded"
+          />
 
           <label for="remarks" class="block mb-2 mt-4">Remarks:</label>
           <input
@@ -473,20 +469,19 @@ const productionDetailMode = ref('add')
 
 const products = ref([]);
 
-const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
 
 const statuses = ["Pending", "In Progress", "Completed"];
 
@@ -507,9 +502,9 @@ const selectedProduction = ref(null);
 const isEditMode = ref(false);
 const productionForm = ref({
   userID: userInfo.value.userID,
-  dateEncoded: "",
-  year: "",
-  month: "",
+  dateEncoded: formatDate(new Date),
+  completionDate: "",
+  startDate: "",
   remarks: "",
   status: "Pending",
   productionID: ""
@@ -577,14 +572,14 @@ const openAddModal = () => {
   isModalOpen.value = true;
   isEditMode.value = false;
   productionForm.value = {
-    productionID: "",
-    userID: userInfo.value.userID,
-    dateEncoded: "",
-    year: "",
-    month: "",
-    remarks: "",
-    status: "Pending"
-  };
+  userID: userInfo.value.userID,
+  dateEncoded: formatDate(new Date),
+  completionDate: "",
+  startDate: "",
+  remarks: "",
+  status: "Pending",
+  productionID: ""
+};
 };
 
 const openEditModal = (production) => {
@@ -599,32 +594,22 @@ const editProductionDetail = (prodDetail) => {
     isProductionDetailsModal.value = true;
   }
 
-  function formatDate(date) {
-    var d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
-
-    if (month.length < 2) 
-        month = '0' + month;
-    if (day.length < 2) 
-        day = '0' + day;
-
-    return [year, month, day].join('-');
-}
-
 const requestQuotation = async () => {
-  await Promise.all(users.value.filter((user) => user.userTypeID === 3).map(async(user) => {
-    await apiService.post("/api/quotations", {
-    quotationDate: formatDate(new Date()),
-    userID: user.userID,
-    remarks: selectedProduction.value.remarks ?? 'NA',
-    productionID:  selectedProduction.value.productionID
-  })
-  }));
-  await fetchQuotationData();
-  alert("Quotation requested successfully");
-  isProductionDetailsInfo.value = false
+  if(users.value.filter((user) => user.userTypeID === 3).length > 0){
+    await Promise.all(users.value.filter((user) => user.userTypeID === 3).map(async(user) => {
+      await apiService.post("/api/quotations", {
+      quotationDate: formatDate(new Date()),
+      userID: user.userID,
+      remarks: selectedProduction.value.remarks ?? 'NA',
+      productionID:  selectedProduction.value.productionID
+    })
+    }));
+    await fetchQuotationData();
+    alert("Quotation requested successfully");
+    isProductionDetailsInfo.value = false
+  } else {
+    alert ('Supplier list is empty!')
+  }
 
 }
   
