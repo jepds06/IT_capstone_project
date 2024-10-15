@@ -17,8 +17,8 @@ class Production extends Model
     protected $fillable = [
         'userID',
         'dateEncoded',
-        'year',
-        'month',
+        'startDate',
+        'completionDate',
         'status',
         'remarks'
     ];

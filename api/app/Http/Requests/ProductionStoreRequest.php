@@ -23,9 +23,8 @@ class ProductionStoreRequest extends FormRequest
     {
         return [
             'userID' => 'required|integer|exists:users,userID',
-            'dateEncoded' => 'required|date',
-            'year' => 'required|digits:4|integer|min:1900|max:' . date('Y'),
-            'month' => 'required|in:January,February,March,April,May,June,July,August,September,October,November,December',
+            'startDate' => 'required|date',
+            'completionDate' => 'required|date',
             'remarks' => 'nullable|string|max:255',
             'status' => 'required|string|max:255'
         ];

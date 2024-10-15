@@ -14,12 +14,11 @@ return new class extends Migration
         Schema::create('productions', function (Blueprint $table) {
             $table->bigIncrements('productionID');
             $table->unsignedBigInteger('userID');
-            $table->date('dateEncoded');
-            $table->year('year');
-            $table->string('month');
+            $table->timestamp('dateEncoded');
+            $table->date('startDate');
+            $table->date('completionDate');
             $table->string('remarks');
             $table->string('status');
-            $table->timestamps();
 
             $table->Foreign('userID')->references('userID')->on('users')
             ->onUpdate('cascade')

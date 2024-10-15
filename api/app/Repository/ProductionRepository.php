@@ -29,9 +29,8 @@ class ProductionRepository implements ProductionRepositoryInterface
             // Handle the error: throw an exception, return an error response, or set a default value
             throw new \Exception("Invalid account type ID provided.");
         }
-        $production->dateEncoded = $payload->dateEncoded;
-        $production->year = $payload->year;
-        $production->month = $payload->month;
+        $production->startDate = $payload->startDate;
+        $production->completionDate = $payload->completionDate;
         $production->remarks = $payload->remarks;
         $production->status = $payload->status;
 
@@ -50,9 +49,8 @@ class ProductionRepository implements ProductionRepositoryInterface
             // Handle the error: throw an exception, return an error response, or set a default value
             throw new \Exception("Invalid user ID provided.");
         }
-        $production->dateEncoded = $payload->dateEncoded;
-        $production->year = $payload->year;
-        $production->month = $payload->month;
+        $production->startDate = $payload->startDate;
+        $production->completionDate = $payload->completionDate;
         $production->remarks = $payload->remarks;
         $production->status = $payload->status;
 
