@@ -284,9 +284,9 @@ definePageMeta({
     isProductInfoVisible.value = false;
   }
   
-  function openMaterialModal() {
+  async function openMaterialModal () {
 
-    fetchMaterialsData()
+    await fetchMaterialsData()
     materialMode.value = 'add';
     materialForm.value = {
     materialID: '',
@@ -315,6 +315,7 @@ definePageMeta({
         alert("Product Material edited successfully!");
       }
     }
+    await fetchProductMaterialsData()
     closeMaterialModal();
   }
   

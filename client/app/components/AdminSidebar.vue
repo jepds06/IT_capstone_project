@@ -263,7 +263,7 @@
             "
             >Quotations</router-link
           >
-          <router-link
+          <!-- <router-link
             to="/admin/quotation-details"
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'supplier'
@@ -279,7 +279,7 @@
                 : 'hidden'
             "
             >Quotation Details</router-link
-          >
+          > -->
         </CollapsibleMenu>
 
         <li>
