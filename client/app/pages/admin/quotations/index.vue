@@ -144,6 +144,7 @@
       </div>
     </div>
 
+<<<<<<< HEAD
     <!-- Add Quotation Modal -->
     <div
       v-if="showAddQuotationModal"
@@ -197,6 +198,20 @@
               <option value="rejected">Rejected</option>
             </select>
           </div>
+=======
+     <!-- Modal for Adding/Editing Quotations Details -->
+     <div v-if="isQuotationModalOpen" class="modal-overlay" @click.self="closeQuotationModal">
+      <div class="modal-content">
+        <h2 class="text-xl font-bold mb-4 text-black">{{ isQuotationEditMode ? 'Edit Quotation' : 'Add Quotation' }}</h2>
+        <form @submit.prevent="saveQuotaion">
+           <!-- Production ID Field -->
+          <label for="productionId" class="block mb-2 mt-4 text-black">Production ID:</label>
+          <input id="productionId" v-model="quotationForm.productionId" type="text" required class="w-full p-2 border rounded" />
+          <label for="quotationDate" class="block mb-2 mt-4 text-black">Quotation Date:</label>
+          <input id="quotationDate" v-model="quotationForm.quotationDate" type="date" required class="w-full p-2 border rounded"/>
+          <label for="remarks" class="block mb-2 mt-4 text-black">Remarks:</label>
+          <textarea id="remarks" v-model="quotationForm.remarks" placeholder="Enter any remarks" class="w-full p-2 border rounded"></textarea>
+>>>>>>> 5b6dbfb805c04a29aa28a095b71022ed64a0bcf8
 
           <div class="mt-6 flex justify-end space-x-4">
             <button

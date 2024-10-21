@@ -11,8 +11,8 @@
       />
     </div>
 
-    <table class="min-w-full border-collapse">
-      <thead>
+    <table class="min-w-full border border-gray-300 rounded-lg">
+      <thead class="bg-gray-100">
         <tr>
           <th class="border text-center">Production Material No</th>
           <th class="border text-center">Production Details</th>

@@ -23,8 +23,8 @@
   <h3 class="font-bold">
     {{userType.userTypeName}}
   </h3> -->
-  <table class="min-w-full bg-white border border-gray-300 mb-8">
-    <thead>
+  <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+    <thead class="bg-gray-100">
       <tr>
         <th class="border px-4 py-2 text-black text-center">ID</th>
         <th class="border px-4 py-2 text-black text-center">Last Name</th>

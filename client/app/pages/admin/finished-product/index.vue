@@ -7,7 +7,7 @@
       <!-- Finished Products Table -->
       <div class="overflow-x-auto">
         <table class="table-auto w-full bg-white rounded shadow">
-          <thead>
+          <thead class="bg-gray-100">
             <tr class="bg-gray-100 text-left text-gray-600">
               <th class="p-4">FnshProductID</th>
               <th class="p-4">ProdDetailID</th>
