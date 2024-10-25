@@ -4,55 +4,6 @@
       <ul>
         <!-- Collapsible Sections -->
         <CollapsibleMenu
-          icon="material-symbols:filter-7-outline"
-          title="Order Management"
-          :class="
-            userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-              ? ''
-              : userPermission?.filter((up) =>
-                  up.moduleName.toLowerCase().includes('order management')
-                ).length > 0
-              ? ''
-              : 'hidden'
-          "
-        >
-          <router-link
-            to="/orders"
-            :class="
-              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-                ? route.path === '/orders'
-                  ? 'block p-4 hover:bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
-                : userPermission?.filter((up) =>
-                    up.moduleName.toLowerCase().includes('orders')
-                  ).length > 0
-                ? route.path === '/orders'
-                  ? 'block p-4 hover:bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
-                : 'hidden'
-            "
-            >Orders</router-link
-          >
-          <router-link
-            to="/return-orders"
-            :class="
-              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-                ? route.path === '/return-orders'
-                  ? 'block p-4 hover:bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
-                : userPermission?.filter((up) =>
-                    up.moduleName.toLowerCase().includes('return orders')
-                  ).length > 0
-                ? route.path === '/return-orders'
-                  ? 'block p-4 hover:bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
-                : 'hidden'
-            "
-            >Return Orders</router-link
-          >
-        </CollapsibleMenu>
-
-        <CollapsibleMenu
           icon="material-symbols:auto-stories-outline"
           title="Product Management"
           :class="
@@ -131,23 +82,7 @@
             "
             >Productions</router-link
           >
-          <router-link
-            to="/admin/production-details"
-            :class="
-              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-                ? route.path === '/admin/production-details'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
-                : userPermission?.filter((up) =>
-                    up.moduleName.toLowerCase().includes('production details')
-                  ).length > 0
-                ? route.path === '/admin/production-details'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
-                : 'hidden'
-            "
-            >Production Details</router-link
-          >
+
           <router-link
             to="/admin/finished-product"
             :class="
@@ -233,6 +168,32 @@
           >
         </CollapsibleMenu>
 
+        <li>
+          <div
+            :class="
+              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
+                ? route.path === '/admin/module'
+                  ? 'block p-4 bg-gray-800'
+                  : 'block p-4 hover:bg-gray-800'
+                : userPermission?.filter((up) =>
+                    up.moduleName.toLowerCase().includes('modules')
+                  ).length > 0
+                ? route.path === '/admin/module'
+                  ? 'block p-4 bg-gray-800'
+                  : 'block p-4 hover:bg-gray-800'
+                : 'hidden'
+            "
+          >
+            <UIcon
+              name="mdi:receipt-text-arrow-right-outline"
+              class="w-5 h-5 mr-5"
+            />
+            <router-link to="/admin/module" class="text-center"
+              >Modules</router-link
+            >
+          </div>
+        </li>
+
         <CollapsibleMenu
           icon="mdi:account-group"
           title="Quotation Management"
@@ -280,130 +241,6 @@
             "
             >Quotation Details</router-link
           > -->
-        </CollapsibleMenu>
-
-        <li>
-          <div
-            :class="
-              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-                ? route.path === '/admin/module'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
-                : userPermission?.filter((up) =>
-                    up.moduleName.toLowerCase().includes('modules')
-                  ).length > 0
-                ? route.path === '/admin/module'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
-                : 'hidden'
-            "
-          >
-            <UIcon
-              name="mdi:receipt-text-arrow-right-outline"
-              class="w-5 h-5 mr-5"
-            />
-            <router-link to="/admin/module" class="text-center"
-              >Modules</router-link
-            >
-          </div>
-        </li>
-
-        <CollapsibleMenu
-          icon="mdi:align-horizontal-left"
-          title="Stock Management"
-          :class="
-            userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-              ? ''
-              : userPermission?.filter((up) =>
-                  up.moduleName.toLowerCase().includes('stock management')
-                ).length > 0
-              ? ''
-              : 'hidden'
-          "
-        >
-          <router-link
-            to="/stock-overview"
-            :class="
-              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-                ? route.path === '/stock-overview'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
-                : userPermission?.filter((up) =>
-                    up.moduleName.toLowerCase().includes('stock overview')
-                  ).length > 0
-                ? route.path === '/stock-overview'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
-                : 'hidden'
-            "
-            >Stock Overview</router-link
-          >
-          <router-link
-            to="/manage-inventory"
-            :class="
-              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-                ? route.path === '/manage-inventory'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
-                : userPermission?.filter((up) =>
-                    up.moduleName.toLowerCase().includes('manage inventory')
-                  ).length > 0
-                ? route.path === '/manage-inventory'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
-                : 'hidden'
-            "
-            >Manage Inventory</router-link
-          >
-        </CollapsibleMenu>
-
-        <CollapsibleMenu
-          icon="mdi:paypal"
-          title="Payments"
-          :class="
-            userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-              ? ''
-              : userPermission?.filter((up) =>
-                  up.moduleName.toLowerCase().includes('payments')
-                ).length > 0
-              ? ''
-              : 'hidden'
-          "
-        >
-          <router-link
-            to="/payments/view"
-            :class="
-              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-                ? route.path === '/payments/view'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
-                : userPermission?.filter((up) =>
-                    up.moduleName.toLowerCase().includes('view payments')
-                  ).length > 0
-                ? route.path === '/payments/view'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
-                : 'hidden'
-            "
-            >View Payments</router-link
-          >
-          <router-link
-            to="/payments/manage"
-            :class="
-              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-                ? route.path === '/payments/manage'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
-                : userPermission?.filter((up) =>
-                    up.moduleName.toLowerCase().includes('manage payments')
-                  ).length > 0
-                ? route.path === '/payments/manage'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
-                : 'hidden'
-            "
-            >Manage Payments</router-link
-          >
         </CollapsibleMenu>
 
         <CollapsibleMenu
@@ -501,6 +338,153 @@
                 : 'hidden'
             "
             >Customer Orders</router-link
+          >
+        </CollapsibleMenu>
+
+        <CollapsibleMenu
+          icon="material-symbols:filter-7-outline"
+          title=" Purchase Order Management"
+          :class="
+            userInfo?.userTypeDescription.toLowerCase() === 'administrator'
+              ? ''
+              : userPermission?.filter((up) =>
+                  up.moduleName.toLowerCase().includes('purchase order management')
+                ).length > 0
+              ? ''
+              : 'hidden'
+          "
+        >
+          <router-link
+            to="/purchase-orders"
+            :class="
+              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
+                ? route.path === '/purchase-orders'
+                  ? 'block p-4 hover:bg-gray-800'
+                  : 'block p-4 hover:bg-gray-800'
+                : userPermission?.filter((up) =>
+                    up.moduleName.toLowerCase().includes('purchase orders')
+                  ).length > 0
+                ? route.path === '/purchase-orders'
+                  ? 'block p-4 hover:bg-gray-800'
+                  : 'block p-4 hover:bg-gray-800'
+                : 'hidden'
+            "
+            >Purchase Orders</router-link
+          >
+          <router-link
+            to="/delivery-orders"
+            :class="
+              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
+                ? route.path === '/delivery-orders'
+                  ? 'block p-4 hover:bg-gray-800'
+                  : 'block p-4 hover:bg-gray-800'
+                : userPermission?.filter((up) =>
+                    up.moduleName.toLowerCase().includes('delivery orders')
+                  ).length > 0
+                ? route.path === '/delivery-orders'
+                  ? 'block p-4 hover:bg-gray-800'
+                  : 'block p-4 hover:bg-gray-800'
+                : 'hidden'
+            "
+            >delivery Records</router-link
+          >
+        </CollapsibleMenu>
+
+        <CollapsibleMenu
+          icon="mdi:paypal"
+          title="Payments"
+          :class="
+            userInfo?.userTypeDescription.toLowerCase() === 'administrator'
+              ? ''
+              : userPermission?.filter((up) =>
+                  up.moduleName.toLowerCase().includes('payments')
+                ).length > 0
+              ? ''
+              : 'hidden'
+          "
+        >
+          <router-link
+            to="/payments/view"
+            :class="
+              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
+                ? route.path === '/payments/view'
+                  ? 'block p-4 bg-gray-800'
+                  : 'block p-4 hover:bg-gray-800'
+                : userPermission?.filter((up) =>
+                    up.moduleName.toLowerCase().includes('view payments')
+                  ).length > 0
+                ? route.path === '/payments/view'
+                  ? 'block p-4 bg-gray-800'
+                  : 'block p-4 hover:bg-gray-800'
+                : 'hidden'
+            "
+            >View Payments</router-link
+          >
+          <router-link
+            to="/payments/manage"
+            :class="
+              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
+                ? route.path === '/payments/manage'
+                  ? 'block p-4 bg-gray-800'
+                  : 'block p-4 hover:bg-gray-800'
+                : userPermission?.filter((up) =>
+                    up.moduleName.toLowerCase().includes('manage payments')
+                  ).length > 0
+                ? route.path === '/payments/manage'
+                  ? 'block p-4 bg-gray-800'
+                  : 'block p-4 hover:bg-gray-800'
+                : 'hidden'
+            "
+            >Manage Payments</router-link
+          >
+        </CollapsibleMenu>
+
+        <CollapsibleMenu
+          icon="mdi:align-horizontal-left"
+          title="Stock Management"
+          :class="
+            userInfo?.userTypeDescription.toLowerCase() === 'administrator'
+              ? ''
+              : userPermission?.filter((up) =>
+                  up.moduleName.toLowerCase().includes('stock management')
+                ).length > 0
+              ? ''
+              : 'hidden'
+          "
+        >
+          <router-link
+            to="/stock-overview"
+            :class="
+              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
+                ? route.path === '/stock-overview'
+                  ? 'block p-4 bg-gray-800'
+                  : 'block p-4 hover:bg-gray-800'
+                : userPermission?.filter((up) =>
+                    up.moduleName.toLowerCase().includes('stock overview')
+                  ).length > 0
+                ? route.path === '/stock-overview'
+                  ? 'block p-4 bg-gray-800'
+                  : 'block p-4 hover:bg-gray-800'
+                : 'hidden'
+            "
+            >Stock Overview</router-link
+          >
+          <router-link
+            to="/manage-inventory"
+            :class="
+              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
+                ? route.path === '/manage-inventory'
+                  ? 'block p-4 bg-gray-800'
+                  : 'block p-4 hover:bg-gray-800'
+                : userPermission?.filter((up) =>
+                    up.moduleName.toLowerCase().includes('manage inventory')
+                  ).length > 0
+                ? route.path === '/manage-inventory'
+                  ? 'block p-4 bg-gray-800'
+                  : 'block p-4 hover:bg-gray-800'
+                : 'hidden'
+            "
+            >Manage Inventory</router-link
           >
         </CollapsibleMenu>
 
