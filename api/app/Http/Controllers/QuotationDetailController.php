@@ -31,6 +31,12 @@ class QuotationDetailController extends Controller
         return $this->quoteDetailService->findQuotationDetailsByQuoteID($quoteID);
     }
 
+
+    public function indexAll()
+    {
+        return $this->quoteDetailService->findQuotationDetailsListQuotations();
+    }
+
     /**
      * Store a newly created resource in storage.
      */

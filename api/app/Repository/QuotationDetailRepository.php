@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Interface\Repository\QuotationDetailRepositoryInterface;
+use App\Models\Production;
 use App\Models\ProductionMaterial;
 use App\Models\Quotation;
 use App\Models\QuotationDetail;
@@ -14,6 +15,23 @@ class QuotationDetailRepository implements QuotationDetailRepositoryInterface
         return QuotationDetail::paginate(10);
     }
 
+    public function findManyAllInfoQuotations()
+    {
+         // Retrieve productions with their related quotations and details
+        $productions = Production::with([
+            'quotations.quotationDetails.productionMaterial.productMaterial.material'
+        ])
+        ->orderBy('dateEncoded', 'desc') // Order by production name (or any field you prefer)
+        ->get();
+
+        // Prepare the final response structure
+        $response = [
+            'data' => $productions,
+            'count' => $productions->count(),
+        ];
+
+        return response()->json($response);
+    }
 
     public function findManyByQuoteID($quoteID)
     {

@@ -13,4 +13,6 @@ interface QuotationDetailRepositoryInterface
     public function update(object $payload, int $qteDetailId);
 
     public function findManyByQuoteID($quoteID);
+
+    public function findManyAllInfoQuotations();
 }

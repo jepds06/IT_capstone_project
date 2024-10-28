@@ -152,6 +152,7 @@ Route::prefix('quotations')->group(function(){
 Route::prefix('quotationDetails')->group(function(){
     Route::get('/', [QuotationDetailController::class, 'index']);
     Route::get('/quotation/{quotedID}', [QuotationDetailController::class, 'indexByQuotedID']);
+    Route::get('/quotation', [QuotationDetailController::class, 'indexAll']);
     Route::get('/{qteDetailId}', [QuotationDetailController::class, 'show']);
     Route::post('/', [QuotationDetailController::class, 'store']);
     Route::put('/{qteDetailId}', [QuotationDetailController::class, 'update']);
