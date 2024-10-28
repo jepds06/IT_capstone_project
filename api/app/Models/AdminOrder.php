@@ -16,22 +16,30 @@ class AdminOrder extends Model
 
     protected $fillable = [
         'userID',
-        'suppMatrlID',
+        'qteDetailID',
         'qtyOrdered',
         'amount'
     ];
 
-     // Relationship with the User model
+    public $timestamps = false;
+
+    // Relationship with the User model
     public function user()
     {
         return $this->belongsTo(User::class, 'userID');
     }
 
-     // Relationship with the SupplierMaterial model
-    public function supplierMaterial()
+    // Relationship with the SupplierMaterial model
+    public function quotationDetail()
     {
-        return $this->belongsTo(SupplierMaterial::class, 'suppMatrlID');
+        return $this->belongsTo(QuotationDetail::class, 'qteDetailID');
     }
+
+    public function adminDeliveries()
+    {
+        return $this->hasMany(AdminDelivery::class, 'adminOrdID');
+    }
+
     // Relationship with the AdminPayment model
     public function adminPayments()
     {

@@ -23,7 +23,7 @@ class AdminOrderUpdateRequest extends FormRequest
     {
         return [
             'userID' => 'required|integer|exists:users,userID', 
-            'suppMatrlID' => 'required|integer|exists:supplierMaterials,suppMatrlID', 
+            'qteDetailID' => 'required|integer|exists:quotationDetails,qteDetailID', 
             'qtyOrdered' => 'required|integer|min:1',
             'amount' => 'required|numeric|min:0'
         ];
