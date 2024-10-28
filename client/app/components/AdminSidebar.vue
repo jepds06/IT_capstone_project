@@ -82,7 +82,23 @@
             "
             >Productions</router-link
           >
-
+          <router-link
+            to="/admin/production-details"
+            :class="
+              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
+                ? route.path === '/admin/production-details'
+                  ? 'block p-4 bg-gray-800'
+                  : 'block p-4 hover:bg-gray-800'
+                : userPermission?.filter((up) =>
+                    up.moduleName.toLowerCase().includes('production details')
+                  ).length > 0
+                ? route.path === '/admin/production-details'
+                  ? 'block p-4 bg-gray-800'
+                  : 'block p-4 hover:bg-gray-800'
+                : 'hidden'
+            "
+            >Production Details</router-link
+          >
           <router-link
             to="/admin/finished-product"
             :class="
