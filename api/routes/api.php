@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\AdminOrderControoler;
+use App\Http\Controllers\AdminDeliveryController;
+use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\AdminPaymentController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FinishedProductController;
@@ -158,14 +159,23 @@ Route::prefix('quotationDetails')->group(function(){
     Route::put('/{qteDetailId}', [QuotationDetailController::class, 'update']);
 });
 //Admin Order route
-Route::prefix('adminOrder')->group(function(){
-    Route::get('/', [AdminOrderControoler::class, 'index']);
-    Route::get('/{adminOrderId}', [AdminOrderControoler::class, 'show']);
-    Route::post('/', [AdminOrderControoler::class, 'store']);
-    Route::put('/{adminOrderId}', [AdminOrderControoler::class, 'update']);
+Route::prefix('adminOrders')->group(function(){
+    Route::get('/', [AdminOrderController::class, 'index']);
+    Route::get('/{adminOrderId}', [AdminOrderController::class, 'show']);
+    Route::post('/', [AdminOrderController::class, 'store']);
+    Route::put('/{adminOrderId}', [AdminOrderController::class, 'update']);
 });
+
+//admin delivery route
+Route::prefix('adminDeliveries')->group(function(){
+    Route::get('/', [AdminDeliveryController::class, 'index']);
+    Route::get('/{adminDlvrId}', [AdminDeliveryController::class, 'show']);
+    Route::post('/', [AdminDeliveryController::class, 'store']);
+    Route::put('/{adminDlvrId}', [AdminDeliveryController::class, 'update']);
+});
+
 //Admin Payment route
-Route::prefix('adminPayment')->group(function(){
+Route::prefix('adminPayments')->group(function(){
     Route::get('/', [AdminPaymentController::class, 'index']);
     Route::get('/{adminPaymentId}', [AdminPaymentController::class, 'show']);
     Route::post('/', [AdminPaymentController::class, 'store']);
