@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Interface\Repository\AdminOrderRepositoryInterface;
 use App\Models\AdminOrder;
+use App\Models\QuotationDetail;
 use App\Models\SupplierMaterial;
 use App\Models\User;
 
@@ -26,21 +27,19 @@ class AdminOrderRepository implements AdminOrderRepositoryInterface
         $user = User::find($payload->userID);
 
         if($user){
-            $adminOrder->productionDetail()->associate($user);
+            $adminOrder->user()->associate($user);
         } else {
-            throw new \Exception("Invalid production detail ID provided.");
+            throw new \Exception("Invalid user ID provided.");
         }
 
-        $suppMatrl = SupplierMaterial::find($payload->suppMatrlId);
+        $qteDetail = QuotationDetail::find($payload->qteDetailID);
 
-        if($suppMatrl){
-            $adminOrder->productionDetail()->associate($suppMatrl);
+        if($qteDetail){
+            $adminOrder->quotationDetail()->associate($qteDetail);
         } else {
-            throw new \Exception("Invalid production detail ID provided.");
+            throw new \Exception("Invalid quotation detail ID provided.");
         }
 
-        $adminOrder->userID = $payload->userID;
-        $adminOrder->suppMatrlID = $payload->suppMatrlID; 
         $adminOrder->qtyOrdered = $payload->qtyOrdered; 
         $adminOrder->amount = $payload->amount;
 
@@ -52,26 +51,24 @@ class AdminOrderRepository implements AdminOrderRepositoryInterface
     
     public function update(object $payload, int $adminOrderId)
     {
-        $adminOrder = new AdminOrder();
+        $adminOrder = AdminOrder::findOrFail($adminOrderId);
 
         $user = User::find($payload->userID);
 
         if($user){
-            $adminOrder->productionDetail()->associate($user);
+            $adminOrder->user()->associate($user);
         } else {
-            throw new \Exception("Invalid production detail ID provided.");
+            throw new \Exception("Invalid user ID provided.");
         }
 
-        $suppMatrl = SupplierMaterial::find($payload->suppMatrlId);
+        $qteDetail = QuotationDetail::find($payload->qteDetailID);
 
-        if($suppMatrl){
-            $adminOrder->productionDetail()->associate($suppMatrl);
+        if($qteDetail){
+            $adminOrder->quotationDetail()->associate($qteDetail);
         } else {
-            throw new \Exception("Invalid production detail ID provided.");
+            throw new \Exception("Invalid quotation detail ID provided.");
         }
 
-        $adminOrder->userID = $payload->userID;
-        $adminOrder->suppMatrlID = $payload->suppMatrlID; 
         $adminOrder->qtyOrdered = $payload->qtyOrdered; 
         $adminOrder->amount = $payload->amount;
 

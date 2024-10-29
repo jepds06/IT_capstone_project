@@ -86,6 +86,24 @@ provide("navigation", navigation);
     </ClientOnly>
   </div>
 
+  <div v-else-if="route.path.includes('/supplier')">
+    <AdminHeader />
+    <div class="flex">
+      <div class="flex-1 p-6">
+        <main>
+          <UMain>
+            <slot />
+          </UMain>
+        </main>
+      </div>
+    </div>
+    <AppFooter />
+
+    <ClientOnly>
+      <LazyUContentSearch :files="files" :navigation="navigation" />
+    </ClientOnly>
+  </div>
+
   <div v-else>
     <CustomerHeader />
     <UMain>

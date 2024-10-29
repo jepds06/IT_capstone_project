@@ -5,6 +5,8 @@ namespace App\Interface\Service;
 interface QuotationDetailServiceInterface
 {
     public function findQuotationDetails();
+
+    public function findQuotationDetailsListQuotations();
     
     public function findQuotationDetailsByQuoteID($quoteID);
 

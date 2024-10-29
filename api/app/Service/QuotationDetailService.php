@@ -49,4 +49,11 @@ class QuotationDetailService implements QuotationDetailServiceInterface
 
         return $quotationDetail;
     }
+
+    public function findQuotationDetailsListQuotations()
+    {
+        $quotationDetail = $this->quoteDetailRepository->findManyAllInfoQuotations(); 
+
+        return $quotationDetail;
+    }
 }
