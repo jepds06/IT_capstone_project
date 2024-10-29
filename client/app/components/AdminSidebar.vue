@@ -22,13 +22,13 @@
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === '/admin/product-categories'
                   ? 'block pl-10 p-4 bg-gray-900'
-                  : 'block pl-10 p-4 hover:bg-gray-200'
+                  : 'block pl-10 p-4 hover:bg-gray-900'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('product categories')
                 ).length > 0
                   ? route.path === '/admin/product-categories'
                     ? 'block pl-10 p-4 bg-gray-900'
-                    : 'block pl-10 p-4 hover:bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-900'
                   : 'hidden'
             "
           >Product Categories</router-link>
@@ -37,14 +37,14 @@
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === '/admin/product'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('products')
                 ).length > 0
                   ? route.path === '/admin/product'
-                    ? 'block p-4 bg-gray-800'
-                    : 'block p-4 hover:bg-gray-800'
+                    ? 'block pl-10 p-4 bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
           >Products</router-link>
@@ -54,14 +54,14 @@
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === '/admin/material'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('materials')
                 ).length > 0
                   ? route.path === '/admin/material'
-                    ? 'ml-10 block p-4 bg-gray-800'
-                    : 'ml-10 block p-4 hover:bg-gray-800'
+                    ? 'block pl-10 p-4 bg-gray-800'
+                    : ' block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
           >Materials</router-link>
@@ -85,14 +85,14 @@
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === '/admin/production'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('production')
                 ).length > 0
                   ? route.path === '/admin/production'
-                    ? 'block p-4 bg-gray-800'
-                    : 'block p-4 hover:bg-gray-800'
+                    ? 'block pl-10 p-4 bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
           >Productions</router-link>
@@ -101,14 +101,14 @@
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === '/admin/production-details'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('production details')
                 ).length > 0
                   ? route.path === '/admin/production-details'
-                    ? 'block p-4 bg-gray-800'
-                    : 'block p-4 hover:bg-gray-800'
+                    ? 'block pl-10 p-4 bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
           >Production Details</router-link>
@@ -117,14 +117,14 @@
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === '/admin/finished-product'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('finished product')
                 ).length > 0
                   ? route.path === '/admin/finished-product'
-                    ? 'block p-4 bg-gray-800'
-                    : 'block p-4 hover:bg-gray-800'
+                    ? 'block pl-10 p-4 bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
           >Finished Products</router-link>
@@ -133,14 +133,14 @@
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === '/admin/production-materials'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('production materials')
                 ).length > 0
                   ? route.path === '/admin/production-materials'
-                    ? 'block p-4 bg-gray-800'
-                    : 'block p-4 hover:bg-gray-800'
+                    ? 'block pl-10 p-4 bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
           >Production Materials</router-link>
@@ -164,14 +164,14 @@
               :class="
                 userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                   ? route.path === '/admin/module'
-                    ? 'block p-4 bg-gray-800'
-                    : 'block p-4 hover:bg-gray-800'
+                    ? 'block pl-10 p-4 bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-800'
                   : userPermission?.filter((up) =>
                     up.moduleName.toLowerCase().includes('modules')
                   ).length > 0
                     ? route.path === '/admin/module'
-                      ? 'block p-4 bg-gray-800'
-                      : 'block p-4 hover:bg-gray-800'
+                      ? 'block pl-10 p-4 bg-gray-800'
+                      : 'block pl-10 p-4 hover:bg-gray-800'
                     : 'hidden'
               "
             >
@@ -191,14 +191,14 @@
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === '/admin/module'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('modules')
                 ).length > 0
                   ? route.path === '/admin/module'
-                    ? 'block p-4 bg-gray-800'
-                    : 'block p-4 hover:bg-gray-800'
+                    ? 'block pl-10 p-4 bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
           >Modules</router-link>
@@ -207,14 +207,14 @@
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === '/admin/users'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('users')
                 ).length > 0
                   ? route.path === '/admin/users'
-                    ? 'block p-4 bg-gray-800'
-                    : 'block p-4 hover:bg-gray-800'
+                    ? 'block pl-10 p-4 bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
           >Users</router-link>
@@ -223,14 +223,14 @@
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === '/admin/user-permissions'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('user permissions')
                 ).length > 0
                   ? route.path === '/admin/user-permissions'
-                    ? 'block p-4 bg-gray-800'
-                    : 'block p-4 hover:bg-gray-800'
+                    ? 'block pl-10 p-4 bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
           >User Permissions</router-link>
@@ -254,14 +254,14 @@
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'supplier'
                 ? route.path === '/admin/quotations'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('quotations')
                 ).length > 0
                   ? route.path === '/admin/quotations'
-                    ? 'block p-4 bg-gray-800'
-                    : 'block p-4 hover:bg-gray-800'
+                    ? 'block pl-10 p-4 bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
           >Quotations</router-link>
@@ -270,14 +270,14 @@
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'supplier'
                 ? route.path === '/admin/quotation-details'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                     up.moduleName.toLowerCase().includes('quotation details')
                   ).length > 0
                 ? route.path === '/admin/quotation-details'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : 'hidden'
             "
             >Quotation Details</router-link
@@ -302,14 +302,14 @@
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === '/admin/supplier-quotations'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('supplier quotations')
                 ).length > 0
                   ? route.path === '/admin/supplier-quotations'
-                    ? 'block p-4 bg-gray-800'
-                    : 'block p-4 hover:bg-gray-800'
+                    ? 'block pl-10 p-4 bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
           >Suppliers Quotation</router-link>
@@ -318,14 +318,14 @@
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === '/suppliers/materials'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('supplier materials')
                 ).length > 0
                   ? route.path === '/suppliers/materials'
-                    ? 'block p-4 bg-gray-800'
-                    : 'block p-4 hover:bg-gray-800'
+                    ? 'block pl-10 p-4 bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
           >Supplier Materials</router-link>
@@ -349,14 +349,14 @@
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === '/admin/view-customer'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('view customers')
                 ).length > 0
                   ? route.path === '/admin/view-customer'
-                    ? 'block p-4 bg-gray-800'
-                    : 'block p-4 hover:bg-gray-800'
+                    ? 'block pl-10 p-4 bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
           >View Customers</router-link>
@@ -365,14 +365,14 @@
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === '/customers/orders'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('customer orders')
                 ).length > 0
                   ? route.path === '/customers/orders'
-                    ? 'block p-4 bg-gray-800'
-                    : 'block p-4 hover:bg-gray-800'
+                    ? 'block pl-10 p-4 bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
           >Customer Orders</router-link>
@@ -396,14 +396,14 @@
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === '/purchase-orders'
-                  ? 'block p-4 hover:bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 hover:bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('purchase orders')
                 ).length > 0
                   ? route.path === '/purchase-orders'
-                    ? 'block p-4 hover:bg-gray-800'
-                    : 'block p-4 hover:bg-gray-800'
+                    ? 'block pl-10 p-4 hover:bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
           >Purchase Orders</router-link>
@@ -412,14 +412,14 @@
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === '/delivery-orders'
-                  ? 'block p-4 hover:bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 hover:bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('delivery orders')
                 ).length > 0
                   ? route.path === '/delivery-orders'
-                    ? 'block p-4 hover:bg-gray-800'
-                    : 'block p-4 hover:bg-gray-800'
+                    ? 'block pl-10 p-4 hover:bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
           >delivery Records</router-link>
@@ -443,14 +443,14 @@
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === '/payments/view'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('view payments')
                 ).length > 0
                   ? route.path === '/payments/view'
-                    ? 'block p-4 bg-gray-800'
-                    : 'block p-4 hover:bg-gray-800'
+                    ? 'block pl-10 p-4 bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
           >View Payments</router-link>
@@ -459,14 +459,14 @@
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === '/payments/manage'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('manage payments')
                 ).length > 0
                   ? route.path === '/payments/manage'
-                    ? 'block p-4 bg-gray-800'
-                    : 'block p-4 hover:bg-gray-800'
+                    ? 'block pl-10 p-4 bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
           >Manage Payments</router-link>
@@ -490,14 +490,14 @@
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === '/stock-overview'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('stock overview')
                 ).length > 0
                   ? route.path === '/stock-overview'
-                    ? 'block p-4 bg-gray-800'
-                    : 'block p-4 hover:bg-gray-800'
+                    ? 'block pl-10 p-4 bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
           >Stock Overview</router-link>
@@ -506,14 +506,14 @@
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === '/manage-inventory'
-                  ? 'block p-4 bg-gray-800'
-                  : 'block p-4 hover:bg-gray-800'
+                  ? 'block pl-10 p-4 bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('manage inventory')
                 ).length > 0
                   ? route.path === '/manage-inventory'
-                    ? 'block p-4 bg-gray-800'
-                    : 'block p-4 hover:bg-gray-800'
+                    ? 'block pl-10 p-4 bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
           >Manage Inventory</router-link>
