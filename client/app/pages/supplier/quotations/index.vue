@@ -75,7 +75,7 @@
 
         <label for="materialId" class="block mb-2 mt-4 text-black"
           >Quotation Date:
-          <span>{{selectedQuotation.quotationDate}}</span></label
+          <span>{{ selectedQuotation.quotationDate }}</span></label
         >
 
         <table class="min-w-full bg-white border border-gray-300">
@@ -90,7 +90,7 @@
               </th>
               <th class="px-6 py-2 text-black text-left border-b">
                 Unit Price
-              </th> 
+              </th>
               <th class="px-6 py-2 text-black text-left border-b">
                 Total Price
               </th>
@@ -122,10 +122,26 @@
                     class="w-full p-2 border rounded"
                   />
                 </div>
-                <div v-else>${{ quotation.quotePrice ?  quotation.quotePrice : 0 }}</div>
+                <div v-else>
+                  {{
+                    quotation.quotePrice
+                      ? new Intl.NumberFormat("en-PH", {
+                          style: "currency",
+                          currency: "PHP",
+                        }).format(quotation.quotePrice)
+                      : 0
+                  }}
+                </div>
               </td>
               <td class="px-6 py-4 text-black border-b">
-                ${{ quotation.quotePrice ? quotation.quantity * quotation.quotePrice : 0  }}
+                {{
+                  quotation.quotePrice
+                    ? new Intl.NumberFormat("en-PH", {
+                        style: "currency",
+                        currency: "PHP",
+                      }).format(quotation.quantity * quotation.quotePrice)
+                    : 0
+                }}
               </td>
               <td class="px-6 py-4 text-black border-b">
                 <div v-if="quotation.id === selectedQuotationDetail?.id">
@@ -158,14 +174,14 @@
           </tbody>
         </table>
 
-        <div class="flex justify-end mt-2">
+        <div class="flex mt-2">
           <!-- <button @click="openQuotationDetailAddModal" class="p-2 mr-2 bg-blue-500 text-white rounded hover:bg-blue-600" title="Add Quotation Details">
         <i class="fas fa-plus"></i>
         Add Quotation Details
       </button> -->
           <button
             @click="closeQuotationDetailInfo"
-            class="bg-gray-300 text-black px-4 py-2 rounded"
+            class="bg-red-500 text-white px-4 py-2 rounded"
           >
             Close
           </button>

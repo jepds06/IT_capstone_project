@@ -18,7 +18,7 @@
 
 <template>
   <UHeader>
-    <template #logo> {{userInfo.userTypeDescription}} Dashboard </template>
+    <template #left>{{userInfo.userTypeDescription}} Dashboard</template>
 
     <template #right>
       <!-- <UButton label="Notifications" color="gray" />

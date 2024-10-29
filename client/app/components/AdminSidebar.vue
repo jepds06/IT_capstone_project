@@ -2,6 +2,34 @@
   <div class="w-70 bg-gray-950 text-white">
     <nav :key="userPermission.length">
       <ul>
+        <li>
+          <div
+            :class="
+              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
+                ? route.path === '/admin'
+                  ? 'block p-4 bg-gray-800'
+                  : 'block p-4 hover:bg-gray-800'
+                : userPermission?.filter((up) =>
+                  up.moduleName.toLowerCase().includes('reports')
+                ).length > 0
+                  ? route.path === '/admin'
+                    ? 'block p-4 bg-gray-800'
+                    : 'block p-4 hover:bg-gray-800'
+                  : 'hidden'
+            "
+          >
+            <UIcon
+              name="material-symbols:dashboard-2-outline"
+              class="w-5 h-5 mr-5"
+            />
+            <router-link
+              to="/admin"
+              class="text-center"
+            >
+              Dashboard
+            </router-link>
+          </div>
+        </li>
         <!-- Collapsible Sections -->
         <CollapsibleMenu
           icon="material-symbols:auto-stories-outline"
