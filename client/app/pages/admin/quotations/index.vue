@@ -39,8 +39,8 @@
       </tbody>
     </table>
 
-    <!-- Quotation View Modal -->
-    <div v-if="selectedQuotation" class="fixed inset-0 bg-gray-700 bg-opacity-75 flex items-center justify-center">
+     <!-- Quotation View Modal -->
+     <div v-if="selectedQuotation" class="fixed inset-0 bg-gray-700 bg-opacity-75 flex items-center justify-center">
       <div class="bg-white p-6 rounded-md w-1/2">
         <h3 class="text-xl font-bold mb-4">Quotation Details (Quotation No: {{ selectedQuotation.number }})</h3>
         <table class="min-w-full bg-white border border-gray-300 mb-4">
@@ -53,27 +53,16 @@
           </thead>
           <tbody>
             <tr v-for="(supplier, index) in selectedQuotation.suppliers" :key="index">
-              <td class="py-2 px-4 relative">
-                <span
-                  @mouseover="openSupplierDetails(supplier)"
-                  @mouseleave="closeSupplierDetails"
-                  class="text-blue-600 underline cursor-pointer"
-                >
-                  {{ supplier.name }}
-                </span>
-                <div
-                  v-if="hoveredSupplier === supplier"
-                  class="absolute bg-white border border-gray-300 p-2 w-64 top-8 left-0 z-10"
-                >
-                <h3 class="text-xl font-bold mb-4">Supplier Quotation Details</h3>
-                  <p><strong>Quantity:</strong> {{ supplier.qty }}</p>
-                  <p><strong>Amount:</strong> {{ supplier.price }}</p>
-                </div>
-              </td>
+              <td class="py-2 px-4">{{ supplier.name }}</td>
               <td class="py-2 px-4">{{ supplier.remarks }}</td>
               <td class="py-2 px-4">
-                <button @click="confirmPurchaseOrder(supplier)" class="bg-blue-500 text-white py-1 px-3 rounded-md">
+                <!-- Generate PO button -->
+                <button @click="confirmPurchaseOrder(supplier)" class="bg-blue-500 text-white py-1 px-3 rounded-md mr-2">
                   Generate PO
+                </button>
+                <!-- New action button for supplier details modal -->
+                <button @click="openSupplierDetailsModal(supplier)" class="text-blue-600">
+                  <i class="fas fa-info-circle"></i>
                 </button>
               </td>
             </tr>
@@ -82,6 +71,41 @@
         <button @click="closeQuotationModal" class="text-red-600">Close</button>
       </div>
     </div>
+
+    <!-- Supplier Quotation Details Modal -->
+<div v-if="showSupplierDetailsModal" class="fixed inset-0 bg-gray-700 bg-opacity-75 flex items-center justify-center">
+  <div class="bg-white p-6 rounded-md w-1/2">
+    <h3 class="text-xl font-bold mb-4">Supplier Quotation Details</h3>
+    <table class="min-w-full bg-white border border-gray-300 mb-4">
+      <thead class="bg-gray-200">
+        <tr>
+          <th class="py-2 px-4 text-left">Quotation ID</th>
+          <th class="py-2 px-4 text-left">Supplier Name</th>
+          <th class="py-2 px-4 text-left">Material</th>
+          <th class="py-2 px-4 text-left">Quantity</th>
+          <th class="py-2 px-4 text-left">Unit Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="py-2 px-4">{{ selectedSupplier?.quotationId }}</td>
+          <td class="py-2 px-4">{{ selectedSupplier?.name }}</td>
+          <td class="py-2 px-4">{{ selectedSupplier?.material }}</td>
+          <td class="py-2 px-4">{{ selectedSupplier?.qty }}</td>
+          <td class="py-2 px-4">{{ selectedSupplier?.price }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Total Price Calculation -->
+    <div class="mt-4">
+      <strong>Total Price:</strong> {{ getTotalPrice(selectedSupplier?.qty, selectedSupplier?.price) }}
+    </div>
+
+    <button @click="closeSupplierDetailsModal" class="text-red-600">Close</button>
+  </div>
+</div>
+
 
     <!-- Confirmation Modal -->
     <div v-if="showConfirmationModal" class="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center">
@@ -118,14 +142,6 @@
 </template>
 
 <script>
-import { apiService } from "~/api/apiService";
-import auth from "../../../../middleware/auth";
-// This page requires authentication
-definePageMeta({
-  middleware: [auth],
-});
-
-import { ref, computed } from "vue";
 export default {
   data() {
     return {
@@ -156,7 +172,7 @@ export default {
       ],
       selectedQuotation: null,
       selectedSupplier: null,
-      hoveredSupplier: null,
+      showSupplierDetailsModal: false,
       showConfirmationModal: false,
       showSuccessModal: false,
       searchQuery: '',
@@ -188,11 +204,18 @@ export default {
     closeQuotationModal() {
       this.selectedQuotation = null;
     },
-    openSupplierDetails(supplier) {
-      this.hoveredSupplier = supplier;
+    openSupplierDetailsModal(supplier) {
+      this.selectedSupplier = supplier;
+      this.showSupplierDetailsModal = true;
     },
-    closeSupplierDetails() {
-      this.hoveredSupplier = null;
+    getTotalPrice(quantity, price) {
+    if (!quantity || !price) return '0.00'; // return '0.00' if either value is not available
+    const total = quantity * price;
+    return total.toFixed(2); // format to two decimal places
+  },
+    closeSupplierDetailsModal() {
+      this.showSupplierDetailsModal = false;
+      this.selectedSupplier = null;
     },
     confirmPurchaseOrder(supplier) {
       this.showConfirmationModal = true;
