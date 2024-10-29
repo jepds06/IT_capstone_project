@@ -176,7 +176,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="product in products" :key="product.productID">
+          <tr v-for="product in paginatedProducts" :key="product.productID">
             <td class="p-2 border-b text-center">{{ product.productID }}</td>
             <td class="p-2 border-b text-center">{{ product.productName }}</td>
             <td class="p-2 border-b text-center">{{ product.specifications }}</td>
@@ -196,8 +196,26 @@
           </tr>
         </tbody>
       </table>
+      <!-- Pagination Controls -->
+      <div class="mt-4 flex justify-between">
+        <button
+        @click="prevPage"
+        :disabled="currentPage === 1"
+        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+        >
+       Previous
+        </button>
+        <span>Page {{ currentPage }} of {{ totalPages }}</span>
+        <button
+        @click="nextPage"
+        :disabled="currentPage === totalPages"
+        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+        >
+        Next
+      </button>
     </div>
-  </template>
+  </div>
+</template>     
   
   <script setup>
 import auth from '../../../../middleware/auth'
@@ -205,8 +223,7 @@ import auth from '../../../../middleware/auth'
 definePageMeta({
   middleware: [auth],
 });
-
-  import { ref } from 'vue';
+  import { ref, computed } from 'vue';
   import { apiService } from "~/api/apiService";
 
   
@@ -236,7 +253,44 @@ definePageMeta({
     quantity: '',
     productMatsID: ''
   });
-  
+  //PAGINATION START
+  const currentPage = ref(1);
+const itemsPerPage = 10;
+const searchQuery = ref('');
+
+const filteredProducts = computed(() => {
+  return products.value.filter(
+    product =>
+      product.productID.toString().includes(searchQuery.value) ||
+      product.productName.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
+
+const paginatedProducts = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage;
+  return filteredProducts.value.slice(start, start + itemsPerPage);
+});
+
+const totalPages = computed(() => {
+  return Math.ceil(filteredProducts.value.length / itemsPerPage) || 1; // Ensure at least 1 page
+});
+
+function prevPage() {
+  if (currentPage.value > 1) currentPage.value--;
+}
+
+function nextPage() {
+  if (currentPage.value < totalPages.value) currentPage.value++;
+}
+
+// Watch currentPage to reset it if it exceeds totalPages
+watch(filteredProducts, () => {
+  if (currentPage.value > totalPages.value) {
+    currentPage.value = totalPages.value;
+  }
+});
+  //PAGINATION END
+
   async function openModal(mode = 'add', product = null) {
     await fetchCategoriesData()
     formMode.value = mode;
@@ -354,11 +408,10 @@ const fetchCategoriesData = async () => {
 
 const fetchProductsData = async () => {
   try {
-    // Call the get method from ApiService
-    const { data } = await apiService.get("/api/products"); // Replace '/endpoint' with your actual API endpoint
-    products.value = data
+    const { data } = await apiService.get("/api/products"); // Replace with your API endpoint
+    products.value = data; // Store fetched data
   } catch (error) {
-    console.error("Error fetching data:", error);
+    console.error("Error fetching products:", error);
   }
 };
 
