@@ -88,7 +88,7 @@ async function onSubmit(data: any) {
     } else if (userTypeDescription === 'Customer') {
       navigateTo("/customer-product");
     } else {
-      navigateTo("/admin");
+      navigateTo("/admin/quotations");
     }
   } catch (error) {
     console.error(error);
