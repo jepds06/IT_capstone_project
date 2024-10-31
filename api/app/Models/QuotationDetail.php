@@ -27,9 +27,14 @@ class QuotationDetail extends Model
     {
         return $this->belongsTo(Quotation::class, 'quoteID');
     }
-    
+
     public function productionMaterial()
     {
         return $this->belongsTo(ProductionMaterial::class, 'prodtnMtrlID');
+    }
+
+    public function adminOrders()
+    {
+        return $this->hasMany(AdminOrder::class, 'qteDetailID');
     }
 }

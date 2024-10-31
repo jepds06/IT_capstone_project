@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Interface\Repository\QuotationDetailRepositoryInterface;
+use App\Models\Production;
 use App\Models\ProductionMaterial;
 use App\Models\Quotation;
 use App\Models\QuotationDetail;
@@ -14,6 +15,23 @@ class QuotationDetailRepository implements QuotationDetailRepositoryInterface
         return QuotationDetail::paginate(10);
     }
 
+    public function findManyAllInfoQuotations()
+    {
+         // Retrieve productions with their related quotations and details
+        $productions = Production::with([
+            'quotations.quotationDetails.productionMaterial.productMaterial.material'
+        ])
+        ->orderBy('dateEncoded', 'desc') // Order by production name (or any field you prefer)
+        ->get();
+
+        // Prepare the final response structure
+        $response = [
+            'data' => $productions,
+            'count' => $productions->count(),
+        ];
+
+        return response()->json($response);
+    }
 
     public function findManyByQuoteID($quoteID)
     {
@@ -62,24 +80,24 @@ class QuotationDetailRepository implements QuotationDetailRepositoryInterface
     public function update(object $payload, int $qteDetailId)
     {
         $qteDetail = QuotationDetail::findOrFail($qteDetailId);
-        $quotation = QuotationDetail::find($payload->quoteID);
+        // $quotation = QuotationDetail::find($payload->quoteID);
 
-        if($quotation){
-            $qteDetail->quotation()->associate($quotation);
-        } else {
-            throw new \Exception("Invalid quotation ID provided.");
-        }
+        // if($quotation){
+        //     $qteDetail->quotation()->associate($quotation);
+        // } else {
+        //     throw new \Exception("Invalid quotation ID provided.");
+        // }
 
-        $prodtnMaterial = ProductionMaterial::find($payload->prodtnMtrlID);
+        // $prodtnMaterial = ProductionMaterial::find($payload->prodtnMtrlID);
 
-        if($prodtnMaterial){
-            $qteDetail->productionMaterial()->associate($prodtnMaterial);
-        } else {
-            throw new \Exception("Invalid production material ID provided.");
-        }
+        // if($prodtnMaterial){
+        //     $qteDetail->productionMaterial()->associate($prodtnMaterial);
+        // } else {
+        //     throw new \Exception("Invalid production material ID provided.");
+        // }
 
-        $qteDetail->quantity = $payload->quantity;
-        $qteDetail->quotePrice = $payload->quotePrice;
+        // $qteDetail->quantity = $payload->quantity;
+        // $qteDetail->quotePrice = $payload->quotePrice;
         $qteDetail->save();
 
         return $qteDetail->fresh();

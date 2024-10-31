@@ -6,7 +6,7 @@ use App\Http\Requests\AdminOrderStoreRequest;
 use App\Http\Requests\AdminOrderUpdateRequest;
 use App\Interface\Service\AdminOrderServiceInterface;
 
-class AdminOrderControoler extends Controller
+class AdminOrderController extends Controller
 {
     private $adminOrderService;
 

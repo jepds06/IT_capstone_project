@@ -101,7 +101,7 @@
         <h2 class="text-xl font-bold mb-4">
           {{ isEditMode ? "Edit Production" : "Add Production" }}
         </h2>
-        <form @submit.prevent="saveProduction">
+        <form @submit.prevent="confirmProductiontSave">
           <!-- <label for="month" class="block mb-2 mt-4">Created By:</label>
           <select
             v-model="productionForm.userID"
@@ -188,6 +188,37 @@
         </form>
       </div>
     </div>
+
+     <!-- Confirmation Modal Material-->
+     <div v-if="isProductionConfirmationVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+        <h3 class="text-xl font-bold mb-4 text-black">Are you sure you want to proceed?</h3>
+        <div class="flex justify-end mt-4">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-md mr-2" @click="saveProduction">
+            Yes
+          </button>
+          <button class="text-red-600 py-1 px-3 rounded-md" @click="closeProductionConfirmation">
+            No
+          </button>
+        </div>
+      </div>
+    </div>
+
+   <!-- Success Message for Product Modal -->
+<div v-if="isSuccessProductionVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+    <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
+    <p class="text-black">
+      Production has been {{ isEditMode ? 'updated' : 'created' }} successfully!
+    </p>
+    <div class="flex justify-end mt-4">
+      <button class="bg-blue-500 text-white py-1 px-3 rounded-md" @click="closeProductionConfirmation">
+        OK
+      </button>
+    </div>
+  </div>
+</div>
+
 
 
 
@@ -364,20 +395,50 @@
           <button @click="openProductionDetailModal" class="bg-blue-500 text-white px-4 py-2 mr-2 rounded hover:bg-blue-600">
             Add Production Details
           </button>
-          <button @click="requestQuotation" :class="isQuotationRequested ? 'bg-gray-500 text-white px-4 py-2 rounded cursor-not-allowed' : 'bg-green-500 text-white px-4 py-2 rounded'" :disabled="isQuotationRequested">Request Quotation</button>
+          <button @click="confirmQuotationSave" :class="isQuotationRequested ? 'bg-gray-500 text-white px-4 py-2 rounded cursor-not-allowed' : 'bg-green-500 text-white px-4 py-2 rounded'" :disabled="isQuotationRequested">Request Quotation</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmation Modal Request Quotation-->
+    <div v-if="isQuotationConfirmationVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+        <h3 class="text-xl font-bold mb-4 text-black">Are you sure you want to proceed?</h3>
+        <div class="flex justify-end mt-4">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-md mr-2" @click="requestQuotation">
+            Yes
+          </button>
+          <button class="text-red-600 py-1 px-3 rounded-md" @click="closeQuotationConfirmation">
+            No
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Message for Request Quotation -->
+    <div v-if="isSuccessQuotationVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+          <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
+          <p class="text-black">
+            Quotation has been {{ quotationMode ? 'updated' : 'requested' }} successfully!
+          </p>
+        <div class="flex justify-end mt-4">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-md" @click="closeQuotationConfirmation">
+          OK
+          </button>
         </div>
       </div>
     </div>
 
     <!-- Modal for Adding Production Details -->
-    <div v-if="isProductionDetailsModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+        <div v-if="isProductionDetailsModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
       <div class="bg-white p-6 rounded-lg shadow-lg w-1/3 relative">
-        <!-- Close Button -->
+    <!-- Close Button -->
         <button @click="closeProductionDetailModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
           <i class="fas fa-times"></i>
         </button>
         <h2 class="text-lg font-semibold mb-4">{{ productionDetailMode === 'add' ? 'Add Production Detail' : 'Edit Production Detail' }}</h2>
-        <form @submit.prevent="saveProductionDetail">
+        <form @submit.prevent="confirmProductionDetailtSave">
           <div class="mb-4" v-if="formMode === 'edit'">
             <label for="materialId" class="block text-sm font-medium text-gray-700">Product Material Id</label>
             <input v-model="productionDetailForm.prodtnDetailID" type="text" id="productMatsID" class="mt-1 block w-full border border-gray-300 rounded-lg p-2" :readonly="materialMode === 'edit'"/>
@@ -414,14 +475,44 @@
             <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
               Save
             </button>
-            <button @click="closeProductionDetailModal" class="ml-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+            <button type="button" @click="closeProductionDetailModal" class="ml-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
               Cancel
-            </button>
-          </div>
-        </form>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+    <!-- Confirmation Modal Production Details-->
+    <div v-if="isProductionDetailConfirmationVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+        <h3 class="text-xl font-bold mb-4 text-black">Are you sure you want to proceed?</h3>
+        <div class="flex justify-end mt-4">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-md mr-2" @click="saveProductionDetail">
+            Yes
+          </button>
+          <button class="text-red-600 py-1 px-3 rounded-md" @click="closeProductionDetailConfirmation">
+            No
+          </button>
+        </div>
       </div>
     </div>
 
+    <!-- Success Message for Product Production Details -->
+    <div v-if="isSuccessProductionDetailVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+          <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
+          <p class="text-black">
+            Production Detail has been {{ productionDetailMode === 'add' ? 'created' : 'updated' }} successfully!
+          </p>
+        <div class="flex justify-end mt-4">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-md" @click="closeProductionDetailConfirmation">
+          OK
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -466,6 +557,7 @@ const selectedProductionDetails = ref([]);
 const users = ref([]);
 
 const productionDetailMode = ref('add')
+//const quotationMode = ref('add')
 
 const products = ref([]);
 
@@ -490,6 +582,13 @@ const currentPage = ref(1);
 const itemsPerPage = 5;
 
 const quotations = ref([])
+
+const isSuccessProductionVisible = ref(false);
+const isProductionConfirmationVisible = ref(false);
+const isSuccessProductionDetailVisible = ref(false);
+const isProductionDetailConfirmationVisible = ref(false);
+const isSuccessQuotationVisible = ref(false);
+const isQuotationConfirmationVisible = ref(false);
 
 const isQuotationRequested = ref(false);
 const isProductionDetailsInfo = ref(false);
@@ -531,10 +630,50 @@ const openProductionDetailModal = async () => {
   remarks: ""
 }
 }
+const confirmProductiontSave = () => {
+  isProductionConfirmationVisible.value = true;
+};
+const closeProductionConfirmation = () => {
+  isProductionConfirmationVisible.value = false;
+  isSuccessProductionVisible.value = false;
+};
 
-const closeProductionDetailModal = () => {
-  isProductionDetailsModal.value = false
-}
+const showSuccessProductionMessage = (message) => {
+  isSuccessProductionVisible.value = true;
+  setTimeout(() => {
+  }, 3000); // Automatically close after 3 seconds
+  };
+
+  const confirmProductionDetailtSave = () => {
+    isProductionDetailConfirmationVisible.value = true;
+};
+const closeProductionDetailConfirmation = () => {
+  isProductionDetailConfirmationVisible.value = false;
+  isSuccessProductionDetailVisible.value = false;
+};
+
+const showSuccessProductionDetailMessage = (message) => {
+  isSuccessProductionDetailVisible.value = true;
+  setTimeout(() => {
+  }, 3000); // Automatically close after 3 seconds
+  };
+  const closeProductionDetailModal = () => {
+    isProductionDetailsModal.value = false;
+  }
+
+const confirmQuotationSave = () => {
+  isQuotationConfirmationVisible.value = true;
+};
+const closeQuotationConfirmation = () => {
+  isQuotationConfirmationVisible.value = false;
+  isSuccessQuotationVisible.value = false;
+};
+
+const showSuccessQuotationMessage = (message) => {
+  isSuccessQuotationVisible.value = true;
+  setTimeout(() => {
+  }, 3000); // Automatically close after 3 seconds
+  };
 
 const filterQuotation = (productionID) => {
   const data = quotations.value?.filter((value) => value.productionID === productionID);
@@ -570,23 +709,24 @@ const paginatedProductions = computed(() => {
 
 const openAddModal = () => {
   isModalOpen.value = true;
-  isEditMode.value = false;
+  isEditMode.value = false; // Set to false for adding
   productionForm.value = {
-  userID: userInfo.value.userID,
-  dateEncoded: formatDate(new Date),
-  completionDate: "",
-  startDate: "",
-  remarks: "",
-  status: "Pending",
-  productionID: ""
-};
+    userID: userInfo.value.userID,
+    dateEncoded: formatDate(new Date),
+    completionDate: "",
+    startDate: "",
+    remarks: "",
+    status: "Pending",
+    productionID: ""
+  };
 };
 
 const openEditModal = (production) => {
   isModalOpen.value = true;
-  isEditMode.value = true;
-  productionForm.value = { ...production };
+  isEditMode.value = true; // Set to true for editing
+  productionForm.value = { ...production }; // Load existing production data
 };
+
 
 const editProductionDetail = (prodDetail) => {
     productionDetailMode.value = 'edit';
@@ -605,10 +745,10 @@ const requestQuotation = async () => {
     })
     }));
     await fetchQuotationData();
-    alert("Quotation requested successfully");
+    showSuccessQuotationMessage("Quotation requested successfully");
     isProductionDetailsInfo.value = false
   } else {
-    alert ('Supplier list is empty!')
+    showSuccessQuotationMessage ('Supplier list is empty!')
   }
 
 }
@@ -623,11 +763,11 @@ const saveProduction = async () => {
     if (index !== -1) {
       productions.value[index] = { ...productionForm.value };
     }
-    alert('Production edited successfully!')
+    showSuccessProductionMessage('Production edited successfully!')
   } else {
     const result = await apiService.post("/api/productions", productionForm.value)
     productions.value.push({ ...productionForm.value, productionID: result.data.productionID});
-    alert('Production created successfully!')
+    showSuccessProductionMessage('Production created successfully!')
   }
   closeModal();
 };
@@ -636,7 +776,7 @@ const saveProductionDetail = async () => {
   if (productionDetailMode.value === 'add') {
     const result = await apiService.post("/api/productionDetails", {...productionDetailForm.value, productionID: selectedProduction.value.productionID})
     selectedProductionDetails.value.push({...productionDetailForm.value, productionID: selectedProduction.value.productionID, prodtnDetailID: result.data.prodtnDetailID})
-    alert(`Production detail added successfully for Production No. ${selectedProduction.value.productionID}`)
+    showSuccessProductionDetailMessage(`Production detail added successfully for Production No. ${selectedProduction.value.productionID}`)
   } else {
     await apiService.put(`/api/productionDetails/${productionDetailForm.value.prodtnDetailID}`, {...productionDetailForm.value, productionID: selectedProduction.value.productionID})
     const index = selectedProductionDetails.value.findIndex(
@@ -645,7 +785,7 @@ const saveProductionDetail = async () => {
     if (index !== -1) {
       selectedProductionDetails.value[index] = { ...productionDetailForm.value };
     }
-    alert(`Production detail edited successfully for Production No. ${selectedProduction.value.productionID}`)
+    showSuccessProductionDetailMessage(`Production detail edited successfully for Production No. ${selectedProduction.value.productionID}`)
   }
   closeProductionDetailModal()
 }

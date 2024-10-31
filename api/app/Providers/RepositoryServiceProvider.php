@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Interface\Repository\AccountRepositoryInterface;
 use App\Interface\Repository\AccountTypeRepositoryInterface;
+use App\Interface\Repository\AdminDeliveryRepositoryInterface;
 use App\Interface\Repository\AdministratorRepositoryInterface;
 use App\Interface\Repository\AdminOrderRepositoryInterface;
 use App\Interface\Repository\AdminPaymentRepositoryInterface;
@@ -27,6 +28,7 @@ use App\Interface\Repository\UserRegRepositoryInterface;
 use App\Interface\Repository\UserTypeRepositoryInterface;
 use App\Interface\Service\AccountServiceInterface;
 use App\Interface\Service\AccountTypeServiceInterface;
+use App\Interface\Service\AdminDeliveryServiceInterface;
 use App\Interface\Service\AdministratorServiceInterface;
 use App\Interface\Service\AdminOrderServiceInterface;
 use App\Interface\Service\AdminPaymentServiceInterface;
@@ -50,6 +52,7 @@ use App\Interface\Service\UserRegServiceInterface;
 use App\Interface\Service\UserTypeServiceInterface;
 use App\Repository\AccountRepository;
 use App\Repository\AccountTypeRepository;
+use App\Repository\AdminDeliveryRepository;
 use App\Repository\AdministratorRepository;
 use App\Repository\AdminOrderRepository;
 use App\Repository\AdminPaymentRepository;
@@ -73,6 +76,7 @@ use App\Repository\UserRegRepository;
 use App\Repository\UserTypeRepository;
 use App\Service\AccountService;
 use App\Service\AccountTypeService;
+use App\Service\AdminDeliveryService;
 use App\Service\AdministratorService;
 use App\Service\AdminOrderService;
 use App\Service\AdminPaymentService;
@@ -127,6 +131,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(FinishedProductRepositoryInterface::class, FinishedProductRepository::class);
         $this->app->bind(AdminOrderRepositoryInterface::class, AdminOrderRepository::class);
         $this->app->bind(AdminPaymentRepositoryInterface::class, AdminPaymentRepository::class);
+        $this->app->bind(AdminDeliveryRepositoryInterface::class, AdminDeliveryRepository::class);
 
         //Service
         // $this->app->bind(AccountServiceInterface::class, AccountService::class);
@@ -152,6 +157,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(FinishedProductServiceInterface::class, FinishedProductService::class);
         $this->app->bind(AdminOrderServiceInterface::class, AdminOrderService::class);
         $this->app->bind(AdminPaymentServiceInterface::class, AdminPaymentService::class);
+        $this->app->bind(AdminDeliveryServiceInterface::class, AdminDeliveryService::class);
     }
 
     /**

@@ -3,45 +3,43 @@
 namespace App\Service;
 
 use App\Http\Resources\AdminOrderResource;
-use App\Http\Resources\FinishedProductResource;
 use App\Interface\Repository\AdminOrderRepositoryInterface;
-use App\Interface\Repository\FinishedProductRepositoryInterface;
 use App\Interface\Service\AdminOrderServiceInterface;
 
 class AdminOrderService implements AdminOrderServiceInterface
 {
-    private $AdminOrderRepository;
+    private $adminOrderRepository;
 
-    public function __construct(AdminOrderRepositoryInterface $AdminOrderRepository)
+    public function __construct(AdminOrderRepositoryInterface $adminOrderRepository)
     {
-        $this->AdminOrderRepository = $AdminOrderRepository;
+        $this->adminOrderRepository = $adminOrderRepository;
     }
 
     public function findAdminOrder()
     {
-        $AdminOrder = $this->AdminOrderRepository->findMany();
+        $adminOrder = $this->adminOrderRepository->findMany();
 
-        return AdminOrderResource::collection($AdminOrder);
+        return AdminOrderResource::collection($adminOrder);
     }
 
     public function findAdminOrdertById(int $AdminOrderId)
     {
-        $AdminOrder = $this->AdminOrderRepository->findOneById($AdminOrderId);
+        $adminOrder = $this->adminOrderRepository->findOneById($AdminOrderId);
 
-        return new AdminOrderResource($AdminOrder);
+        return new AdminOrderResource($adminOrder);
     }
 
     public function createAdminOrder(object $payload)
     {
-        $AdminOrder = $this->AdminOrderRepository->create($payload);
+        $adminOrder = $this->adminOrderRepository->create($payload);
 
-        return new AdminOrderResource($AdminOrder);
+        return new AdminOrderResource($adminOrder);
     }
 
-    public function updateAdminOrder(object $payload, int $AdminOrderId)
+    public function updateAdminOrder(object $payload, int $adminOrderId)
     {
-        $AdminOrder = $this->AdminOrderRepository->update($payload, $AdminOrderId);
+        $adminOrder = $this->adminOrderRepository->update($payload, $adminOrderId);
 
-        return new AdminOrderResource($AdminOrder);
+        return new AdminOrderResource($adminOrder);
     }
 }
