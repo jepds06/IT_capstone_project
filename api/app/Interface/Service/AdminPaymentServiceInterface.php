@@ -4,7 +4,7 @@ namespace App\Interface\Service;
 
 interface AdminPaymentServiceInterface
 {
-    public function findAdminPayment();
+    public function findAdminPayments();
 
     public function findAdminPaymentById(int $adminPaymentId);
 

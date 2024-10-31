@@ -6,7 +6,6 @@ use App\Interface\Repository\AdminOrderRepositoryInterface;
 use App\Models\AdminOrder;
 use App\Models\AdminOrderDetail;
 use App\Models\Quotation;
-use App\Models\QuotationDetail;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
