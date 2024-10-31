@@ -4,9 +4,11 @@ namespace App\Repository;
 
 use App\Interface\Repository\AdminOrderRepositoryInterface;
 use App\Models\AdminOrder;
+use App\Models\AdminOrderDetail;
+use App\Models\Quotation;
 use App\Models\QuotationDetail;
-use App\Models\SupplierMaterial;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class AdminOrderRepository implements AdminOrderRepositoryInterface
 {
@@ -22,58 +24,96 @@ class AdminOrderRepository implements AdminOrderRepositoryInterface
 
     public function create(object $payload)
     {
-        $adminOrder = new AdminOrder();
+        return DB::transaction(function () use ($payload) {
+            //Create the AdminOrder record (header)
+            $adminOrder = new AdminOrder();
 
-        $user = User::find($payload->userID);
+            //Validate and associate the User
+            $user = User::find($payload->userID);
+            if ($user) {
+                $adminOrder->user()->associate($user);
+            } else {
+                throw new \Exception("Invalid user ID provided.");
+            }
 
-        if($user){
-            $adminOrder->user()->associate($user);
-        } else {
-            throw new \Exception("Invalid user ID provided.");
-        }
+            //Validate and associate the Quotation
+            $quote = Quotation::find($payload->quoteID);
+            if ($quote) {
+                $adminOrder->quotation()->associate($quote);
+            } else {
+                throw new \Exception("Invalid quotation ID provided.");
+            }
 
-        $qteDetail = QuotationDetail::find($payload->qteDetailID);
+            //Save initial AdminOrder record to generate an ID for it
+            $adminOrder->save();
 
-        if($qteDetail){
-            $adminOrder->quotationDetail()->associate($qteDetail);
-        } else {
-            throw new \Exception("Invalid quotation detail ID provided.");
-        }
+            //Retrieve QuotationDetails associated with the Quotation
+            $quotationDetails = $quote->quotationDetails;
 
-        $adminOrder->qtyOrdered = $payload->qtyOrdered; 
-        $adminOrder->amount = $payload->amount;
+            if ($quotationDetails->isEmpty()) {
+                throw new \Exception("No quotation details found for the given quotation ID.");
+            }
 
-        $adminOrder->save();
+            //Create AdminOrderDetails records based on QuotationDetails
+            foreach ($quotationDetails as $quoteDetail) {
+                $adminOrderDetail = new AdminOrderDetail();
+                $adminOrderDetail->AdminOrderID = $adminOrder->AdminOrderID;
+                $adminOrderDetail->ProductionMaterialId = $quoteDetail->ProductionMaterialId;
+                $adminOrderDetail->qtyOrdered = $quoteDetail->Quantity; // Quantity from QuotationDetails
+                $adminOrderDetail->amount = $quoteDetail->QuotationPrice * $quoteDetail->Quantity; // Calculated amount
+                $adminOrderDetail->save();
+            }
 
-        return $adminOrder->fresh();
+            //Return the AdminOrder with details loaded
+            return $adminOrder->fresh('adminOrderDetails');
+        });
     }
 
     
     public function update(object $payload, int $adminOrderId)
     {
-        $adminOrder = AdminOrder::findOrFail($adminOrderId);
+        return DB::transaction(function () use ($payload, $adminOrderId) {
+            //Create the AdminOrder record (header)
+            $adminOrder = AdminOrder::findOrFail($adminOrderId);
 
-        $user = User::find($payload->userID);
+            //Validate and associate the User
+            $user = User::find($payload->userID);
+            if ($user) {
+                $adminOrder->user()->associate($user);
+            } else {
+                throw new \Exception("Invalid user ID provided.");
+            }
 
-        if($user){
-            $adminOrder->user()->associate($user);
-        } else {
-            throw new \Exception("Invalid user ID provided.");
-        }
+            //Validate and associate the Quotation
+            $quote = Quotation::find($payload->quoteID);
+            if ($quote) {
+                $adminOrder->quotation()->associate($quote);
+            } else {
+                throw new \Exception("Invalid quotation ID provided.");
+            }
 
-        $qteDetail = QuotationDetail::find($payload->qteDetailID);
+            //Save initial AdminOrder record to generate an ID for it
+            $adminOrder->save();
 
-        if($qteDetail){
-            $adminOrder->quotationDetail()->associate($qteDetail);
-        } else {
-            throw new \Exception("Invalid quotation detail ID provided.");
-        }
+            //Retrieve QuotationDetails associated with the Quotation
+            $quotationDetails = $quote->quotationDetails;
 
-        $adminOrder->qtyOrdered = $payload->qtyOrdered; 
-        $adminOrder->amount = $payload->amount;
+            if ($quotationDetails->isEmpty()) {
+                throw new \Exception("No quotation details found for the given quotation ID.");
+            }
 
-        $adminOrder->save();
+            //Create AdminOrderDetails records based on QuotationDetails
+            foreach ($quotationDetails as $quoteDetail) {
+                $adminOrderDetail = new AdminOrderDetail();
+                $adminOrderDetail->AdminOrderID = $adminOrder->AdminOrderID;
+                $adminOrderDetail->ProductionMaterialId = $quoteDetail->ProductionMaterialId;
+                $adminOrderDetail->qtyOrdered = $quoteDetail->Quantity; // Quantity from QuotationDetails
+                $adminOrderDetail->amount = $quoteDetail->QuotationPrice * $quoteDetail->Quantity; // Calculated amount
+                $adminOrderDetail->save();
+            }
 
-        return $adminOrder->fresh();
+            //Return the AdminOrder with details loaded
+            return $adminOrder->fresh('adminOrderDetails');
+        });
     }
 }

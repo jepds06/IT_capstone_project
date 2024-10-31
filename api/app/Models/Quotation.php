@@ -36,4 +36,9 @@ class Quotation extends Model
     {
         return $this->hasMany(QuotationDetail::class, 'quoteID');
     }
+
+    public function adminOrders()
+    {
+        return $this->hasMany(AdminOrder::class, 'quoteID');
+    }
 }

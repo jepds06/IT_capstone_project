@@ -14,16 +14,13 @@ return new class extends Migration
         Schema::create('adminOrders', function (Blueprint $table) {
             $table->bigIncrements('adminOrdID');
             $table->unsignedBigInteger('userID');
-            $table->unsignedBigInteger('qteDetailID');
-            $table->integer('qtyOrdered');
-            $table->decimal('amount', 10, 2);
-            $table->timestamps();
+            $table->unsignedBigInteger('quoteID');
 
             $table->foreign('userID')->references('userID')->on('users')
             ->onUpdate('cascade')
             ->onDelete('cascade');
 
-            $table->foreign('qteDetailID')->references('qteDetailID')->on('quotationDetails')
+            $table->foreign('quoteID')->references('quoteID')->on('quotations')
             ->onUpdate('cascade')
             ->onDelete('cascade');
         });
@@ -37,7 +34,7 @@ return new class extends Migration
         Schema::table('adminOrders', function(Blueprint $table){
             // Drop the foreign key before dropping the table
             $table->dropForeign(['userID']);
-            $table->dropForeign(['qteDetailID']);
+            $table->dropForeign(['quoteID']);
         });
 
         Schema::dropIfExists('adminOrders');
