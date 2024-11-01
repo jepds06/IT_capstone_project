@@ -24,13 +24,13 @@ class UserAuthService implements UserAuthServiceInterface
 
         if (!$userAuth) {
             return response()->json([
-                'error' => 'No account found'
+                'message' => 'No account found'
             ], Response::HTTP_UNAUTHORIZED);
         }
 
         if (!Hash::check($payload->password, $userAuth->password)) {
             return response()->json([
-                'error' => 'Invalid Credentials'
+                'message' => 'Invalid Credentials'
             ], Response::HTTP_UNAUTHORIZED);
         }
 
