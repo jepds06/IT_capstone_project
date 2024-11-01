@@ -1,9 +1,111 @@
 <template>
   <div class="p-6">
     <!-- Title -->
-    <h2 class="text-2xl font-bold mb-4">Quotations</h2>
+    <h2 class="text-2xl font-bold mb-4">Supplier Dashboard</h2>
 
-    <!-- Search and Action Buttons -->
+    <!-- Tabs -->
+    <div class="mb-4">
+      <ul class="flex space-x-4 border-b">
+        <li 
+          class="cursor-pointer pb-2 tab" 
+          :class="{'border-b-2 border-blue-500': activeTab === 'quotations'}" 
+          @click="activeTab = 'quotations'">Quotations
+        </li>
+        <li 
+          class="cursor-pointer pb-2 tab" 
+          :class="{'border-b-2 border-blue-500': activeTab === 'purchaseOrder'}" 
+          @click="activeTab = 'purchaseOrder'">Purchase Order
+        </li>
+        <li 
+          class="cursor-pointer pb-2 tab" 
+          :class="{'border-b-2 border-blue-500': activeTab === 'adminPayments'}" 
+          @click="activeTab = 'adminPayments'">Admin Payments
+        </li>
+      </ul>
+    </div>
+    
+    <!-- Sub-tabs for Quotations -->
+    <div class="mb-4" v-if="activeTab === 'quotations'"> <!-- Conditional rendering -->
+      <ul class="flex space-x-4">
+        <li @click="setActiveSubTab('requests')" class="cursor-pointer pb-2 tab" :class="{ 'border-b-2 border-blue-500': activeSubTab === 'requests' }">Quotation Requests</li>
+        <li @click="setActiveSubTab('cancelled')" class="cursor-pointer pb-2 tab" :class="{ 'border-b-2 border-blue-500': activeSubTab === 'cancelled' }">Cancelled Quotations</li>
+      </ul>
+    </div>
+
+    <!-- Quotation Requests Table -->
+    <div v-if="activeTab === 'quotations' && activeSubTab === 'requests'">
+      <h3 class="text-xl font-semibold mb-2">Quotation Requests</h3>
+      <table class="min-w-full bg-white border border-gray-300 mb-4">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-6 py-2 text-black text-left border-b">Request ID</th>
+            <th class="px-6 py-2 text-black text-left border-b">Request Date</th>
+            <th class="px-6 py-2 text-black text-left border-b">Remarks</th>
+            <th class="px-6 py-2 text-black text-left border-b">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="request in paginatedQuotationRequests" :key="request.id" class="hover:bg-gray-50">
+            <td class="px-6 py-4 text-black border-b">{{ request.id }}</td>
+            <td class="px-6 py-4 text-black border-b">{{ request.requestDate }}</td>
+            <td class="px-6 py-4 text-black border-b">{{ request.details }}</td>
+            <td class="px-6 py-4 text-black border-b">
+              <button @click="viewRequestDetails(request)" class="text-blue-500 hover:underline">View Details</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination Controls for Quotation Requests -->
+      <div class="mt-4 flex justify-between">
+        <button @click="prevRequestPage" :disabled="currentRequestPage === 1" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          Previous
+        </button>
+        <span>Page {{ currentRequestPage }} of {{ totalRequestPages }}</span>
+        <button @click="nextRequestPage" :disabled="currentRequestPage === totalRequestPages" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          Next
+        </button>
+      </div>
+    </div>
+
+    <!-- Cancelled Quotations Table -->
+    <div v-if="activeTab === 'quotations' && activeSubTab === 'cancelled'">
+      <h3 class="text-xl font-semibold mb-2">Cancelled Quotations</h3>
+      <table class="min-w-full bg-white border border-gray-300">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-6 py-2 text-black text-left border-b">Request ID</th>
+            <th class="px-6 py-2 text-black text-left border-b">Cancellation Date</th>
+            <th class="px-6 py-2 text-black text-left border-b">Remarks</th>
+            <th class="px-6 py-2 text-black text-left border-b">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="cancelled in paginatedCancelledQuotations" :key="cancelled.id" class="hover:bg-gray-50">
+            <td class="px-6 py-4 text-black border-b">{{ cancelled.id }}</td>
+            <td class="px-6 py-4 text-black border-b">{{ cancelled.cancellationDate }}</td>
+            <td class="px-6 py-4 text-black border-b">{{ cancelled.remarks }}</td>
+            <td class="px-6 py-4 text-black border-b">
+              <button @click="restoreCancelledQuotation(cancelled)" class="text-green-500 hover:underline">Restore</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination Controls for Cancelled Quotations -->
+      <div class="mt-4 flex justify-between">
+        <button @click="prevCancelledPage" :disabled="currentCancelledPage === 1" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          Previous
+        </button>
+        <span>Page {{ currentCancelledPage }} of {{ totalCancelledPages }}</span>
+        <button @click="nextCancelledPage" :disabled="currentCancelledPage === totalCancelledPages" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+          Next
+        </button>
+      </div>
+    </div>
+
+    <!-- Existing Quotation Table and Functionality -->
+    <h2 class="text-2xl font-bold mb-4">Quotations</h2>
     <div class="flex justify-between mb-4">
       <input
         type="text"
@@ -11,49 +113,24 @@
         placeholder="Search..."
         class="w-1/3 p-2 border rounded-lg"
       />
-      <!-- <div class="flex space-x-2">
-        <button @click="openQuotationAddModal" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600" title="Add Quotation">
-          <i class="fas fa-plus"></i>
-          Add Quotation
-        </button>
-      </div> -->
     </div>
 
     <table class="min-w-full bg-white border border-gray-300">
       <thead class="bg-gray-100">
         <tr>
           <th class="px-6 py-2 text-black text-left border-b">Quotation ID</th>
-          <th class="px-6 py-2 text-black text-left border-b">
-            Quotation Date
-          </th>
+          <th class="px-6 py-2 text-black text-left border-b">Quotation Date</th>
           <th class="px-6 py-2 text-black text-left border-b">Remarks</th>
           <th class="px-6 py-2 text-black text-left border-b">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="quotation in filteredQuotationDetails"
-          :key="quotation.id"
-          class="hover:bg-gray-50"
-        >
+        <tr v-for="quotation in filteredQuotationDetails" :key="quotation.id" class="hover:bg-gray-50">
           <td class="px-6 py-4 text-black border-b">{{ quotation.id }}</td>
-          <td class="px-6 py-4 text-black border-b">
-            {{ quotation.quotationDate }}
-          </td>
+          <td class="px-6 py-4 text-black border-b">{{ quotation.quotationDate }}</td>
           <td class="px-6 py-4 text-black border-b">{{ quotation.remarks }}</td>
           <td class="px-6 py-4 text-black border-b">
-            <!-- <button
-               @click="openQuotationEditModal(quotation)"
-              class="text-yellow-500 hover:text-yellow-700 ml-2"
-              title="Edit Production"
-            >
-              <i class="fas fa-edit"></i>
-            </button> -->
-
-            <button
-              @click="openQuotationDetailInfo(quotation)"
-              class="text-blue-500 hover:underline ml-2"
-            >
+            <button @click="openQuotationDetailInfo(quotation)" class="text-blue-500 hover:underline ml-2">
               <i class="fas fa-cogs"></i>
             </button>
           </td>
@@ -61,299 +138,40 @@
       </tbody>
     </table>
 
-    <!-- Quotations Details Table -->
-    <div
-      v-if="isQuotationDetailInfo"
-      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-      @click.self="closeQuotationDetailInfo"
-    >
-      <div class="bg-white p-6 rounded-lg shadow-lg">
-        <h2 class="text-xl font-bold mb-4 text-black">Quotation Details</h2>
-        <label for="materialId" class="block mb-2 mt-4 text-black"
-          >Quotation No:<span>{{ `QN-${selectedQuotation.id}` }}</span></label
-        >
-
-        <label for="materialId" class="block mb-2 mt-4 text-black"
-          >Quotation Date:
-          <span>{{ selectedQuotation.quotationDate }}</span></label
-        >
-
-        <table class="min-w-full bg-white border border-gray-300">
-          <thead class="bg-gray-100">
-            <tr>
-              <th class="px-6 py-2 text-black text-left border-b">ID</th>
-              <th class="px-6 py-2 text-black text-left border-b">
-                Product Material
-              </th>
-              <th class="px-6 py-2 text-black text-left border-b">
-                Quantity Quoted
-              </th>
-              <th class="px-6 py-2 text-black text-left border-b">
-                Unit Price
-              </th>
-              <th class="px-6 py-2 text-black text-left border-b">
-                Total Price
-              </th>
-              <th class="px-6 py-2 text-black text-left border-b">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="quotation in quotationDetails"
-              :key="quotation.id"
-              class="hover:bg-gray-50"
-            >
-              <td class="px-6 py-4 text-black border-b">{{ quotation.id }}</td>
-              <td class="px-6 py-4 text-black border-b">
-                {{ getMaterialProductName(quotation.prodtnMtrlID) }}
-              </td>
-              <td class="px-6 py-4 text-black border-b">
-                {{ quotation.quantity }}
-              </td>
-              <td class="px-6 py-4 text-black border-b">
-                <div v-if="quotation.id === selectedQuotationDetail?.id">
-                  <input
-                    id="totalPrice"
-                    v-model.number="quotationDetailForm.quotePrice"
-                    type="number"
-                    step="0.01"
-                    placeholder="Enter total price"
-                    required
-                    class="w-full p-2 border rounded"
-                  />
-                </div>
-                <div v-else>
-                  {{
-                    quotation.quotePrice
-                      ? new Intl.NumberFormat("en-PH", {
-                          style: "currency",
-                          currency: "PHP",
-                        }).format(quotation.quotePrice)
-                      : 0
-                  }}
-                </div>
-              </td>
-              <td class="px-6 py-4 text-black border-b">
-                {{
-                  quotation.quotePrice
-                    ? new Intl.NumberFormat("en-PH", {
-                        style: "currency",
-                        currency: "PHP",
-                      }).format(quotation.quantity * quotation.quotePrice)
-                    : 0
-                }}
-              </td>
-              <td class="px-6 py-4 text-black border-b">
-                <div v-if="quotation.id === selectedQuotationDetail?.id">
-                  <button
-                    class="p-2 bg-red-500 text-white rounded hover:bg-red-600 mr-2"
-                    title="Cancel"
-                    @click="selectedQuotationDetail = null"
-                  >
-                    <i class="fas fa-close"></i>
-                  </button>
-                  <button
-                    class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    title="Save Quotation Detall"
-                    @click="saveQuotationDetail"
-                  >
-                    <i class="fas fa-save"></i>
-                  </button>
-                </div>
-                <div v-else>
-                  <button
-                    @click="openQuotationDetailEditModal(quotation)"
-                    class="p-2 bg-green-500 text-white rounded hover:bg-green-600"
-                    title="Edit Quotation"
-                  >
-                    <i class="fas fa-edit"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="flex mt-2">
-          <!-- <button @click="openQuotationDetailAddModal" class="p-2 mr-2 bg-blue-500 text-white rounded hover:bg-blue-600" title="Add Quotation Details">
-        <i class="fas fa-plus"></i>
-        Add Quotation Details
-      </button> -->
-          <button
-            @click="closeQuotationDetailInfo"
-            class="bg-red-500 text-white px-4 py-2 rounded"
-          >
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Pagination Controls -->
+    <!-- Pagination Controls for Quotations -->
     <div class="mt-4 flex justify-between">
-      <button
-        @click="prevPage"
-        :disabled="currentPage === 1"
-        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
+      <button @click="prevPage" :disabled="currentPage === 1" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
         Previous
       </button>
       <span>Page {{ currentPage }} of {{ totalPages }}</span>
-      <button
-        @click="nextPage"
-        :disabled="currentPage === totalPages"
-        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
+      <button @click="nextPage" :disabled="currentPage === totalPages" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
         Next
       </button>
     </div>
 
     <!-- Modal for Adding/Editing Quotations Details -->
-    <div
-      v-if="isQuoDetailModalOpen"
-      class="modal-overlay"
-      @click.self="closQuoDetailModal"
-    >
+    <div v-if="isQuoDetailModalOpen" class="modal-overlay" @click.self="closQuoDetailModal">
       <div class="modal-content">
-        <h2 class="text-xl font-bold mb-4 text-black">
-          {{
-            isQuoDetailEditMode
-              ? "Edit Quotation Detail"
-              : "Add Quotation Detail"
-          }}
-        </h2>
-        <form @submit.prevent="saveQuotationDetail">
-          <label for="materialId" class="block mb-2 mt-4 text-black"
-            >Material ID:</label
-          >
-          <select
-            :disabled="isQuoDetailEditMode"
-            v-model="quotationDetailForm.prodtnMtrlID"
-            id="materialID"
-            class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
-            @change="
-              (e) => {
-                getMaterialDetails(e.target.value);
-                return e.target.value;
-              }
-            "
-          >
-            <option
-              v-for="material in materials.filter(
-                (value) =>
-                  !quotationDetails
-                    .map((v) => v.prodtnMtrlID)
-                    .includes(value.prodtnMtrlID)
-              )"
-              :key="material.prodtnMtrlID"
-              :value="material.prodtnMtrlID"
-            >
-              {{ `${material.productName} -> ${material.description}` }}
-            </option>
-          </select>
-          <div v-if="materialDetail" :key="quotationDetailForm.prodtnMtrlID">
-            <label for="quantityQuoted" class="block mb-2 mt-4 text-black"
-              >Quantity Needed: {{ materialDetail.qtyNeeded }}</label
-            >
-          </div>
-          <label for="quantityQuoted" class="block mb-2 mt-4 text-black"
-            >Quantity Quoted:</label
-          >
-          <input
-            id="quantityQuoted"
-            v-model.number="quotationDetailForm.quantity"
-            type="number"
-            placeholder="Enter quantity quoted"
-            required
-            class="w-full p-2 border rounded"
-          />
-
-          <label for="totalPrice" class="block mb-2 mt-4 text-black"
-            >Total Price:</label
-          >
-          <input
-            id="totalPrice"
-            v-model.number="quotationDetailForm.quotePrice"
-            type="number"
-            step="0.01"
-            placeholder="Enter total price"
-            required
-            class="w-full p-2 border rounded"
-          />
-
-          <div class="flex justify-end mt-4">
-            <button
-              type="button"
-              @click="closQuoDetailModal"
-              class="bg-gray-300 px-4 py-2 mr-2 rounded hover:bg-gray-400"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              {{ isQuoDetailEditMode ? "Update" : "Add" }}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- Modal for Adding/Editing Quotations Details -->
-    <div
-      v-if="isQuotationModalOpen"
-      class="modal-overlay"
-      @click.self="closeQuotationModal"
-    >
-      <div class="modal-content">
-        <h2 class="text-xl font-bold mb-4 text-black">
-          {{ isQuotationEditMode ? "Edit Quotation" : "Add Quotation" }}
-        </h2>
-        <form @submit.prevent="saveQuotaion">
-          <label for="quotationDate" class="block mb-2 mt-4 text-black"
-            >Quotation Date:</label
-          >
-          <input
-            id="quotationDate"
-            v-model="quotationForm.quotationDate"
-            type="date"
-            required
-            class="w-full p-2 border rounded"
-          />
-          <label for="remarks" class="block mb-2 mt-4 text-black"
-            >Remarks:</label
-          >
-          <textarea
-            id="remarks"
-            v-model="quotationForm.remarks"
-            placeholder="Enter any remarks"
-            class="w-full p-2 border rounded"
-          ></textarea>
-
-          <div class="flex justify-end mt-4">
-            <button
-              type="button"
-              @click="closeQuotationModal"
-              class="bg-gray-300 px-4 py-2 mr-2 rounded hover:bg-gray-400"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              {{ isQuotationEditMode ? "Update" : "Add" }}
-            </button>
-          </div>
+        <h2 class="text-2xl font-bold mb-4 text-black">{{ isEditMode ? 'Edit' : 'Add' }} Quotation Details</h2>
+        <form @submit.prevent="saveQuotationDetails">
+          <input v-model="quotationDetailData.quotationDate" type="date" class="mb-4" required />
+          <input v-model="quotationDetailData.remarks" type="text" placeholder="Remarks" class="mb-4" required />
+          <button type="submit" class="bg-blue-500 text-white rounded hover:bg-blue-600">
+            {{ isEditMode ? 'Update' : 'Save' }}
+          </button>
+          <button @click="closQuoDetailModal" type="button" class="bg-red-500 text-white rounded hover:bg-red-600 ml-4">Cancel</button>
         </form>
       </div>
     </div>
   </div>
 </template>
 
+
+
+
+
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { apiService } from "~/api/apiService";
 
 const materialDetail = ref(null);
@@ -361,10 +179,9 @@ const userInfo = ref({ userID: "" });
 const users = ref([]);
 const materials = ref([]);
 const quotations = ref([]);
+
 // Mock data for quotation details with new fields
-const quotationDetails = ref([
-  // Add more quotations as needed...
-]);
+const quotationDetails = ref([]);
 
 // State variables
 const isQuotationDetailInfo = ref(false);
@@ -390,11 +207,11 @@ const quotationDetailForm = ref({
   quoteID: "",
 });
 
-// const getUserName = (userID) => {
+// State for tab management
+const activeTab = ref("quotationRequest"); // Default active tab
+const activeSubTab = ref("requests"); // Default sub-tab to show "Quotation Requests"
+const isDemoModalOpen = ref(false); // Modal state
 
-//   const user = users.value?.find((usr) => usr.userID === userID)
-//   return user ? `${user.lastName} ${user.firstName}` : 'Unknown'
-// }
 // Computed properties
 const filteredQuotationDetails = computed(() => {
   return quotations.value?.filter((quotation) => {
@@ -404,7 +221,6 @@ const filteredQuotationDetails = computed(() => {
     );
   });
 });
-
 // Pagination logic
 const currentPage = ref(1);
 const itemsPerPage = 5;
@@ -423,6 +239,48 @@ const nextPage = () => {
     currentPage.value++;
   }
 };
+// Pagination logic for Quotation Requests 
+const currentQuotationRequestPage = ref(1);
+const itemsPerQuotationRequestPage = 5;
+const totalQuotationRequestPages = computed(() =>
+  Math.ceil(filteredQuotationRequests.value.length / itemsPerQuotationRequestPage)
+);
+
+const prevQuotationRequestPage = () => {
+  if (currentQuotationRequestPage.value > 1) {
+    currentQuotationRequestPage.value--;
+  }
+};
+
+const nextQuotationRequestPage = () => {
+  if (currentQuotationRequestPage.value < totalQuotationRequestPages.value) {
+    currentQuotationRequestPage.value++;
+  }
+};
+
+// Pagination logic for Cancelled Quotations
+const currentCancelledQuotationPage = ref(1);
+const itemsPerCancelledQuotationPage = 5;
+const totalCancelledQuotationPages = computed(() =>
+  Math.ceil(filteredCancelledQuotations.value.length / itemsPerCancelledQuotationPage)
+);
+
+const prevCancelledQuotationPage = () => {
+  if (currentCancelledQuotationPage.value > 1) {
+    currentCancelledQuotationPage.value--;
+  }
+};
+
+const nextCancelledQuotationPage = () => {
+  if (currentCancelledQuotationPage.value < totalCancelledQuotationPages.value) {
+    currentCancelledQuotationPage.value++;
+  }
+};
+
+// New methods for managing sub-tabs
+const setActiveSubTab = (subTab) => {
+  activeSubTab.value = subTab; // Set the active sub-tab
+};
 
 // Modal functions
 const openQuotationDetailAddModal = () => {
@@ -438,7 +296,6 @@ const openQuotationDetailEditModal = (quotation) => {
       isQuoDetailEditMode.value = true;
     }
     Object.assign(quotationDetailForm.value, selectedQuotationDetail.value);
-    //isQuoDetailModalOpen.value = true;
     getMaterialDetails(quotation.prodtnMtrlID);
   }
 };
@@ -498,6 +355,7 @@ const openQuotationDetailInfo = async (quotation) => {
     };
   });
 };
+
 const closQuoDetailModal = () => {
   isQuoDetailModalOpen.value = false;
 };
@@ -555,7 +413,7 @@ const saveQuotationDetail = async () => {
     return;
   }
   if (isQuoDetailEditMode.value) {
-    // Update existing quotation detaiil
+    // Update existing quotation detail
     const result = await apiService.put(
       `/api/quotationDetails/${quotationDetailForm.value.qteDetailID}`,
       { ...quotationDetailForm.value, quoteID: selectedQuotation.value.quoteID }
@@ -563,7 +421,6 @@ const saveQuotationDetail = async () => {
     const index = quotationDetails.value?.findIndex(
       (value) => value.id === quotationDetailForm.value.id
     );
-    // Object.assign(selectedQuotationDetail.value, quotationDetailForm.value);
     if (index !== -1) {
       quotationDetails.value[index] = { ...result.data, id: index + 1 };
     }
@@ -608,6 +465,7 @@ const getMaterialProductName = (prodtnMtrlID) => {
   );
   return `${material?.productName} -> ${material?.description}`;
 };
+
 // Fetching of APIs
 const fetchUsers = async () => {
   const result = await apiService.get("/api/users");
@@ -633,6 +491,7 @@ const fetchMaterialsByProductionID = async (productionID) => {
   materials.value = result;
 };
 
+// Fetch quotations on mount
 onMounted(async () => {
   if (process.client) {
     const storage = JSON.parse(localStorage.getItem("userInfo"));
@@ -641,27 +500,36 @@ onMounted(async () => {
   await fetchUsers();
   await fetchQuotations();
 });
+
 </script>
 
+
 <style scoped>
+  .tab {
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.tab:hover {
+  background-color: rgba(0, 0, 255, 0.1); /* Light blue background on hover */
+  color: #000; /* Change text color on hover */
+}
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   z-index: 1000;
 }
 .modal-content {
-  background: white;
+  background-color: white;
   padding: 20px;
   border-radius: 8px;
-  max-height: 80%;
-  overflow-y: auto;
-  width: 600px;
+  max-width: 500px;
+  width: 100%;
 }
 </style>
