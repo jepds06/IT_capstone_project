@@ -420,37 +420,37 @@
           "
         >
           <router-link
-            to="/purchase-orders"
+            to="/admin/purcahse"
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-                ? route.path === '/purchase-orders'
+                ? route.path === '/admin/purchase'
                   ? 'block pl-10 p-4 hover:bg-gray-800'
                   : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('purchase orders')
                 ).length > 0
-                  ? route.path === '/purchase-orders'
+                  ? route.path === '/admin/purchase'
                     ? 'block pl-10 p-4 hover:bg-gray-800'
                     : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
           >Purchase Orders</router-link>
           <router-link
-            to="/delivery-orders"
+            to="/admin/delivery"
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-                ? route.path === '/delivery-orders'
+                ? route.path === '/admin/delivery'
                   ? 'block pl-10 p-4 hover:bg-gray-800'
                   : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('delivery orders')
                 ).length > 0
-                  ? route.path === '/delivery-orders'
+                  ? route.path === '/admin/delivery'
                     ? 'block pl-10 p-4 hover:bg-gray-800'
                     : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
-          >delivery Records</router-link>
+          >delivery Orders</router-link>
         </CollapsibleMenu>
 
         <CollapsibleMenu
@@ -467,21 +467,21 @@
           "
         >
           <router-link
-            to="/payments/view"
+            to="/admin/payment"
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-                ? route.path === '/payments/view'
+                ? route.path === '/admin/payment'
                   ? 'block pl-10 p-4 bg-gray-800'
                   : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
-                  up.moduleName.toLowerCase().includes('view payments')
+                  up.moduleName.toLowerCase().includes('bills payment')
                 ).length > 0
-                  ? route.path === '/payments/view'
+                  ? route.path === '/admin/payment'
                     ? 'block pl-10 p-4 bg-gray-800'
                     : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
-          >View Payments</router-link>
+          >Bills Payment</router-link>
           <router-link
             to="/payments/manage"
             :class="
