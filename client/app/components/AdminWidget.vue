@@ -30,7 +30,9 @@
       <!-- List or table of payments -->
     </div>
   </div>
-  <div class="bg-white mt-10 text-black p-4 rounded shadow">
+
+  
+  <!-- <div class="bg-white mt-10 text-black p-4 rounded shadow">
     <h2 class="text-lg font-semibold">
       Product Stock Details
     </h2>
@@ -80,13 +82,12 @@
             30
           </td>
         </tr>
-        <!-- Add more rows as needed -->
       </tbody>
     </table>
     <p class="mt-4 text-sm">
       Last Updated: <span class="font-semibold">2024-10-29 10:30 AM</span>
     </p>
-  </div>
+  </div> -->
 </template>
 
 <script setup>

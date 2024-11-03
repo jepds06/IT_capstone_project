@@ -12,7 +12,7 @@
     />
 
     <!-- Quotation Table with Remarks Column -->
-    <table class="min-w-full bg-white border border-gray-500">
+    <table class="min-w-full border border-gray-300 rounded-lg mb-4">
       <thead class="bg-gray-200">
         <tr>
           <th class="py-2 px-4 text-left">Quotation No.</th>
@@ -593,10 +593,10 @@ h2 {
   margin-bottom: 20px;
 }
 
-table {
+/* table {
   width: 100%;
   border-collapse: collapse;
-}
+} */
 
 th,
 td {
@@ -605,8 +605,8 @@ td {
 }
 
 th {
-  background-color: #0e8bf1;
-  color: white;
+  /* background-color: #0e8bf1; */
+  color: black;
   text-transform: uppercase;
 }
 
