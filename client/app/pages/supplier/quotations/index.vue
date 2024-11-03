@@ -57,10 +57,22 @@
         </table>
 
         <!-- Pagination Controls -->
-        <div class="mt-4 flex justify-between">
-          <button @click="prevRequestPage" :disabled="currentRequestPage === 1" class="px-4 py-2 bg-blue-500 text-white rounded">Previous</button>
-          <span>Page {{ currentRequestPage }} of {{ totalRequestPages }}</span>
-          <button @click="nextRequestPage" :disabled="currentRequestPage === totalRequestPages" class="px-4 py-2 bg-blue-500 text-white rounded">Next</button>
+        <div class="flex justify-between items-center mt-4">
+          <button
+            :disabled="currentPage === 1"
+            class="bg-gray-300 px-4 py-2 rounded"
+            @click="prevPage"
+          >
+            Previous
+          </button>
+          <span>Page {{ currentPage }} of {{ totalPages }}</span>
+          <button
+            :disabled="currentPage === totalPages"
+            class="bg-gray-300 px-4 py-2 rounded"
+            @click="nextPage"
+          >
+            Next
+          </button>
         </div>
       </div>
 
@@ -90,10 +102,22 @@
         </table>
 
         <!-- Pagination Controls -->
-        <div class="mt-4 flex justify-between">
-          <button @click="prevCancelledPage" :disabled="currentCancelledPage === 1" class="px-4 py-2 bg-blue-500 text-white rounded">Previous</button>
-          <span>Page {{ currentCancelledPage }} of {{ totalCancelledPages }}</span>
-          <button @click="nextCancelledPage" :disabled="currentCancelledPage === totalCancelledPages" class="px-4 py-2 bg-blue-500 text-white rounded">Next</button>
+        <div class="flex justify-between items-center mt-4">
+          <button
+            :disabled="currentPage === 1"
+            class="bg-gray-300 px-4 py-2 rounded"
+            @click="prevPage"
+          >
+            Previous
+          </button>
+          <span>Page {{ currentPage }} of {{ totalPages }}</span>
+          <button
+            :disabled="currentPage === totalPages"
+            class="bg-gray-300 px-4 py-2 rounded"
+            @click="nextPage"
+          >
+            Next
+          </button>
         </div>
       </div>
     </div>
@@ -124,10 +148,22 @@
       </table>
 
       <!-- Pagination Controls -->
-      <div class="mt-4 flex justify-between">
-        <button @click="prevPurchaseOrderPage" :disabled="currentPurchaseOrderPage === 1" class="px-4 py-2 bg-blue-500 text-white rounded">Previous</button>
+      <div class="flex justify-between items-center mt-4">
+        <button
+          :disabled="currentPurchaseOrderPage === 1"
+          class="bg-gray-300 px-4 py-2 rounded"
+          @click="prevPurchaseOrderPage"
+        >
+          Previous
+        </button>
         <span>Page {{ currentPurchaseOrderPage }} of {{ totalPurchaseOrderPages }}</span>
-        <button @click="nextPurchaseOrderPage" :disabled="currentPurchaseOrderPage === totalPurchaseOrderPages" class="px-4 py-2 bg-blue-500 text-white rounded">Next</button>
+        <button
+          :disabled="currentPurchaseOrderPage === totalPurchaseOrderPages"
+          class="bg-gray-300 px-4 py-2 rounded"
+          @click="nextPurchaseOrderPage"
+        >
+          Next
+        </button>
       </div>
     </div>
 
@@ -141,7 +177,7 @@
             <th class="px-6 py-2 text-left border-b">Payment ID</th>
             <th class="px-6 py-2 text-left border-b">Payment Date</th>
             <th class="px-6 py-2 text-left border-b">Amount</th>
-            <th class="px-6 py-2 text-left border-b">Status</th>
+            <th class="px-6 py-2 text-left border-b">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -149,29 +185,38 @@
             <td class="px-6 py-4 border-b">{{ payment.id }}</td>
             <td class="px-6 py-4 border-b">{{ payment.paymentDate }}</td>
             <td class="px-6 py-4 border-b">{{ payment.amount }}</td>
-            <td class="px-6 py-4 border-b">{{ payment.status }}</td>
+            <td class="px-6 py-4 border-b">
+              <button @click="viewPaymentDetails(payment)" class="text-blue-500 hover:underline">View</button>
+            </td>
           </tr>
         </tbody>
       </table>
 
       <!-- Pagination Controls -->
-      <div class="mt-4 flex justify-between">
-        <button @click="prevAdminPaymentsPage" :disabled="currentAdminPaymentsPage === 1" class="px-4 py-2 bg-blue-500 text-white rounded">Previous</button>
-        <span>Page {{ currentAdminPaymentsPage }} of {{ totalAdminPaymentsPages }}</span>
-        <button @click="nextAdminPaymentsPage" :disabled="currentAdminPaymentsPage === totalAdminPaymentsPages" class="px-4 py-2 bg-blue-500 text-white rounded">Next</button>
+      <div class="flex justify-between items-center mt-4">
+        <button
+          :disabled="currentAdminPaymentPage === 1"
+          class="bg-gray-300 px-4 py-2 rounded"
+          @click="prevAdminPaymentPage"
+        >
+          Previous
+        </button>
+        <span>Page {{ currentAdminPaymentPage }} of {{ totalAdminPaymentPages }}</span>
+        <button
+          :disabled="currentAdminPaymentPage === totalAdminPaymentPages"
+          class="bg-gray-300 px-4 py-2 rounded"
+          @click="nextAdminPaymentPage"
+        >
+          Next
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 
-
-
-
-
-
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed } from "vue";
 import { apiService } from "~/api/apiService";
 
 const materialDetail = ref(null);
@@ -179,9 +224,10 @@ const userInfo = ref({ userID: "" });
 const users = ref([]);
 const materials = ref([]);
 const quotations = ref([]);
-
 // Mock data for quotation details with new fields
-const quotationDetails = ref([]);
+const quotationDetails = ref([
+  // Add more quotations as needed...
+]);
 
 // State variables
 const isQuotationDetailInfo = ref(false);
@@ -207,11 +253,21 @@ const quotationDetailForm = ref({
   quoteID: "",
 });
 
+
 // State for tab management
 const activeTab = ref("quotationRequest"); // Default active tab
 const activeSubTab = ref("requests"); // Default sub-tab to show "Quotation Requests"
 const isDemoModalOpen = ref(false); // Modal state
 
+// New methods for managing sub-tabs
+const setActiveSubTab = (subTab) => {
+  activeSubTab.value = subTab; // Set the active sub-tab
+};
+// const getUserName = (userID) => {
+
+//   const user = users.value?.find((usr) => usr.userID === userID)
+//   return user ? `${user.lastName} ${user.firstName}` : 'Unknown'
+// }
 // Computed properties
 const filteredQuotationDetails = computed(() => {
   return quotations.value?.filter((quotation) => {
@@ -222,11 +278,25 @@ const filteredQuotationDetails = computed(() => {
   });
 });
 
+// Pagination logic
+const currentPage = ref(1);
+const itemsPerPage = 5;
+const totalPages = computed(() =>
+  Math.ceil(filteredQuotationDetails.value.length / itemsPerPage)
+);
 
-// New methods for managing sub-tabs
-const setActiveSubTab = (subTab) => {
-  activeSubTab.value = subTab; // Set the active sub-tab
+const prevPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
+  }
 };
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
+  }
+};
+
 
 // Modal functions
 const openQuotationDetailAddModal = () => {
@@ -242,6 +312,7 @@ const openQuotationDetailEditModal = (quotation) => {
       isQuoDetailEditMode.value = true;
     }
     Object.assign(quotationDetailForm.value, selectedQuotationDetail.value);
+    //isQuoDetailModalOpen.value = true;
     getMaterialDetails(quotation.prodtnMtrlID);
   }
 };
@@ -301,7 +372,6 @@ const openQuotationDetailInfo = async (quotation) => {
     };
   });
 };
-
 const closQuoDetailModal = () => {
   isQuoDetailModalOpen.value = false;
 };
@@ -359,7 +429,7 @@ const saveQuotationDetail = async () => {
     return;
   }
   if (isQuoDetailEditMode.value) {
-    // Update existing quotation detail
+    // Update existing quotation detaiil
     const result = await apiService.put(
       `/api/quotationDetails/${quotationDetailForm.value.qteDetailID}`,
       { ...quotationDetailForm.value, quoteID: selectedQuotation.value.quoteID }
@@ -367,6 +437,7 @@ const saveQuotationDetail = async () => {
     const index = quotationDetails.value?.findIndex(
       (value) => value.id === quotationDetailForm.value.id
     );
+    // Object.assign(selectedQuotationDetail.value, quotationDetailForm.value);
     if (index !== -1) {
       quotationDetails.value[index] = { ...result.data, id: index + 1 };
     }
@@ -411,7 +482,6 @@ const getMaterialProductName = (prodtnMtrlID) => {
   );
   return `${material?.productName} -> ${material?.description}`;
 };
-
 // Fetching of APIs
 const fetchUsers = async () => {
   const result = await apiService.get("/api/users");
@@ -437,7 +507,6 @@ const fetchMaterialsByProductionID = async (productionID) => {
   materials.value = result;
 };
 
-// Fetch quotations on mount
 onMounted(async () => {
   if (process.client) {
     const storage = JSON.parse(localStorage.getItem("userInfo"));
@@ -446,7 +515,6 @@ onMounted(async () => {
   await fetchUsers();
   await fetchQuotations();
 });
-
 </script>
 
 
