@@ -32,9 +32,4 @@ class QuotationDetail extends Model
     {
         return $this->belongsTo(ProductionMaterial::class, 'prodtnMtrlID');
     }
-
-    public function adminOrders()
-    {
-        return $this->hasMany(AdminOrder::class, 'qteDetailID');
-    }
 }

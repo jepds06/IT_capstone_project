@@ -11,14 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('adminDeliveries', function (Blueprint $table) {
-            $table->bigIncrements('adminDlvrID');
+        Schema::create('adminOrderDetails', function (Blueprint $table) {
+            $table->bigIncrements('adminOrdDetailID');
             $table->unsignedBigInteger('adminOrdID');
-            $table->date('deliveryDate');
-            $table->string('deliveryStatus');
-            $table->integer('qtyReceived');
+            $table->unsignedBigInteger('prodtnMtrlID');
+            $table->integer('qtyOrdered');
+            $table->decimal('amount', 10, 2);
 
             $table->foreign('adminOrdID')->references('adminOrdID')->on('adminOrders')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
+
+            $table->foreign('prodtnMtrlID')->references('prodtnMtrlID')->on('productionMaterials')
             ->onUpdate('cascade')
             ->onDelete('cascade');
         });
@@ -29,9 +33,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('adminDeliveries', function (Blueprint $table) {
+        Schema::table('adminOrderDetails', function (Blueprint $table) {
             $table->dropForeign(['adminOrdID']);
+            $table->dropForeign(['prodtnMtrlID']);
         });
-        Schema::dropIfExists('adminDeliveries');
+        Schema::dropIfExists('adminOrderDetails');
     }
 };

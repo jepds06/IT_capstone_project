@@ -4,10 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UserPrivilageStoreRequest;
 use App\Http\Requests\UserPrivilageUpdateRequest;
-use App\Http\Requests\UserTypeStoreRequest;
-use App\Http\Requests\UserTypeUpdateRequest;
 use App\Interface\Service\UserPrivilageServiceInterface;
-use App\Interface\Service\UserTypeServiceInterface;
 
 class UserPrivilageController extends Controller
 {

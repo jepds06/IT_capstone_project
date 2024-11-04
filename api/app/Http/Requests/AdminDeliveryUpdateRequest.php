@@ -24,8 +24,7 @@ class AdminDeliveryUpdateRequest extends FormRequest
         return [
             'adminOrdID' => 'required|integer|exists:adminOrders,adminOrdID',
             'deliveryDate' => 'required|date',
-            'deliveryAddress' => 'nullable|string|max:255',
-//            'deliveryStatus' => 'required|string|max:255',
+            'deliveryStatus' => 'required|string|max:255',
             'qtyReceived' => 'required|integer|min:1'
         ];
     }

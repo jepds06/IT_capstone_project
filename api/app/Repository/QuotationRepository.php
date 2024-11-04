@@ -40,6 +40,7 @@ class QuotationRepository implements QuotationRepositoryInterface
         }
 
         $quotation->remarks = $payload->remarks;
+        $quotation->isCompleted = $payload->isCompleted;
         $quotation->save();
 
         return $quotation->fresh();
@@ -66,6 +67,7 @@ class QuotationRepository implements QuotationRepositoryInterface
         }
 
         $quotation->remarks = $payload->remarks;
+        $quotation->isCompleted = $payload->isCompleted;
         $quotation->save();
 
         return $quotation->fresh();
