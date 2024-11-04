@@ -30,8 +30,36 @@
             </router-link>
           </div>
         </li>
+        <li>
+          <div
+            :class="
+              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
+                ? route.path === 'admin/calendar'
+                  ? 'block p-4 bg-gray-800'
+                  : 'block p-4 hover:bg-gray-800'
+                : userPermission?.filter((up) =>
+                  up.moduleName.toLowerCase().includes('calendar')
+                ).length > 0
+                  ? route.path === 'admin/calendar'
+                    ? 'block p-4 bg-gray-800'
+                    : 'block p-4 hover:bg-gray-800'
+                  : 'hidden'
+            "
+          >
+            <UIcon
+              name="mdi:receipt-text-arrow-right-outline"
+              class="w-5 h-5 mr-5"
+            />
+            <router-link
+              to="/admin/calendar"
+              class="text-center"
+            >
+              Calendar
+            </router-link>
+          </div>
+        </li>
 
-                <li>
+        <li>
           <div
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
@@ -211,7 +239,6 @@
                 : 'hidden'
           "
         >
-        
           <router-link
             to="/admin/product-categories"
             :class="
@@ -577,7 +604,7 @@
                 : 'hidden'
           "
         >
-         
+
         </CollapsibleMenu> -->
 
         <CollapsibleMenu
@@ -594,16 +621,16 @@
           "
         >
           <router-link
-            to="/stock-overview"
+            to="/admin/stock-overview"
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-                ? route.path === '/stock-overview'
+                ? route.path === '/admin/stock-overview'
                   ? 'block pl-10 p-4 bg-gray-800'
                   : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('stock overview')
                 ).length > 0
-                  ? route.path === '/stock-overview'
+                  ? route.path === '/admin/stock-overview'
                     ? 'block pl-10 p-4 bg-gray-800'
                     : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
