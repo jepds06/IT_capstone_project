@@ -57,19 +57,19 @@
         </table>
 
         <!-- Pagination Controls -->
-        <div class="flex justify-between items-center mt-4">
+        <div class="flex justify-center items-center space-x-2 mb-4">
           <button
-            :disabled="currentPage === 1"
-            class="bg-gray-300 px-4 py-2 rounded"
             @click="prevPage"
+            :disabled="currentPage === 1"
+            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
           >
             Previous
           </button>
           <span>Page {{ currentPage }} of {{ totalPages }}</span>
           <button
-            :disabled="currentPage === totalPages"
-            class="bg-gray-300 px-4 py-2 rounded"
             @click="nextPage"
+            :disabled="currentPage === totalPages"
+            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
           >
             Next
           </button>
@@ -80,7 +80,7 @@
       <div v-if="activeSubTab === 'cancelled'">
         <h3 class="text-xl font-semibold mb-2">Cancelled Quotations</h3>
         <input type="text" v-model="searchCancelledQuery" placeholder="Search cancelled..." class="w-1/3 p-2 border rounded-lg mb-4" />
-        <table class="min-w-full bg-white border border-gray-300">
+        <table class="min-w-full bg-white border border-gray-300 mb-4">
           <thead class="bg-gray-100">
             <tr>
               <th class="px-6 py-2 text-left border-b">Quotation ID</th>
@@ -102,19 +102,19 @@
         </table>
 
         <!-- Pagination Controls -->
-        <div class="flex justify-between items-center mt-4">
+        <div class="flex justify-center items-center space-x-2 mb-4">
           <button
-            :disabled="currentPage === 1"
-            class="bg-gray-300 px-4 py-2 rounded"
             @click="prevPage"
+            :disabled="currentPage === 1"
+            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
           >
             Previous
           </button>
           <span>Page {{ currentPage }} of {{ totalPages }}</span>
           <button
-            :disabled="currentPage === totalPages"
-            class="bg-gray-300 px-4 py-2 rounded"
             @click="nextPage"
+            :disabled="currentPage === totalPages"
+            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
           >
             Next
           </button>
@@ -148,71 +148,71 @@
       </table>
 
       <!-- Pagination Controls -->
-      <div class="flex justify-between items-center mt-4">
+      <div class="flex justify-center items-center space-x-2 mb-4">
         <button
-          :disabled="currentPurchaseOrderPage === 1"
-          class="bg-gray-300 px-4 py-2 rounded"
-          @click="prevPurchaseOrderPage"
+          @click="prevPage"
+          :disabled="currentPage === 1"
+          class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
         >
           Previous
         </button>
-        <span>Page {{ currentPurchaseOrderPage }} of {{ totalPurchaseOrderPages }}</span>
+        <span>Page {{ currentPage }} of {{ totalPages }}</span>
         <button
-          :disabled="currentPurchaseOrderPage === totalPurchaseOrderPages"
-          class="bg-gray-300 px-4 py-2 rounded"
-          @click="nextPurchaseOrderPage"
-        >
-          Next
-        </button>
-      </div>
-    </div>
-
-    <!-- Admin Payments Table with Search and Pagination -->
-    <div v-if="activeTab === 'adminPayments'">
-      <h3 class="text-xl font-semibold mb-2">Admin Payments</h3>
-      <input type="text" v-model="searchAdminPaymentsQuery" placeholder="Search admin payments..." class="w-1/3 p-2 border rounded-lg mb-4" />
-      <table class="min-w-full bg-white border border-gray-300 mb-4">
-        <thead class="bg-gray-100">
-          <tr>
-            <th class="px-6 py-2 text-left border-b">Payment ID</th>
-            <th class="px-6 py-2 text-left border-b">Payment Date</th>
-            <th class="px-6 py-2 text-left border-b">Amount</th>
-            <th class="px-6 py-2 text-left border-b">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="payment in paginatedAdminPayments" :key="payment.id" class="hover:bg-gray-50">
-            <td class="px-6 py-4 border-b">{{ payment.id }}</td>
-            <td class="px-6 py-4 border-b">{{ payment.paymentDate }}</td>
-            <td class="px-6 py-4 border-b">{{ payment.amount }}</td>
-            <td class="px-6 py-4 border-b">
-              <button @click="viewPaymentDetails(payment)" class="text-blue-500 hover:underline">View</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- Pagination Controls -->
-      <div class="flex justify-between items-center mt-4">
-        <button
-          :disabled="currentAdminPaymentPage === 1"
-          class="bg-gray-300 px-4 py-2 rounded"
-          @click="prevAdminPaymentPage"
-        >
-          Previous
-        </button>
-        <span>Page {{ currentAdminPaymentPage }} of {{ totalAdminPaymentPages }}</span>
-        <button
-          :disabled="currentAdminPaymentPage === totalAdminPaymentPages"
-          class="bg-gray-300 px-4 py-2 rounded"
-          @click="nextAdminPaymentPage"
+          @click="nextPage"
+          :disabled="currentPage === totalPages"
+          class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
         >
           Next
         </button>
       </div>
     </div>
   </div>
+  <!-- Admin Payments Table with Search and Pagination -->
+<div v-if="activeTab === 'adminPayments'">
+  <h3 class="text-xl font-semibold mb-2">Admin Payments</h3>
+  <input type="text" v-model="searchAdminPaymentsQuery" placeholder="Search admin payments..." class="w-1/3 p-2 border rounded-lg mb-4" />
+  <table class="min-w-full bg-white border border-gray-300 mb-4">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="px-6 py-2 text-left border-b">Payment ID</th>
+        <th class="px-6 py-2 text-left border-b">Payment Date</th>
+        <th class="px-6 py-2 text-left border-b">Amount</th>
+        <th class="px-6 py-2 text-left border-b">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="payment in paginatedAdminPayments" :key="payment.id" class="hover:bg-gray-50">
+        <td class="px-6 py-4 border-b">{{ payment.id }}</td>
+        <td class="px-6 py-4 border-b">{{ payment.paymentDate }}</td>
+        <td class="px-6 py-4 border-b">{{ payment.amount }}</td>
+        <td class="px-6 py-4 border-b">
+          <button @click="viewPaymentDetails(payment)" class="text-blue-500 hover:underline">View</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Pagination Controls -->
+  <div class="flex justify-center items-center space-x-2 mb-4">
+    <button
+      @click="prevPage"
+      :disabled="currentPage === 1"
+      class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+    >
+      Previous
+    </button>
+    <span>Page {{ currentPage }} of {{ totalPages }}</span>
+    <button
+      @click="nextPage"
+      :disabled="currentPage === totalPages"
+      class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+    >
+      Next
+    </button>
+  </div>
+</div>
 </template>
+
 
 
 <script setup>
@@ -254,10 +254,19 @@ const quotationDetailForm = ref({
 });
 
 
-// State for tab management
-const activeTab = ref("quotationRequest"); // Default active tab
+const activeTab = ref("quotations"); // Default active tab
 const activeSubTab = ref("requests"); // Default sub-tab to show "Quotation Requests"
-const isDemoModalOpen = ref(false); // Modal state
+
+// Watch for changes on activeTab to reset activeSubTab
+watch(activeTab, (newTab) => {
+  if (newTab === 'quotations') {
+    activeSubTab.value = 'requests'; // Reset to default sub-tab for quotations
+  } else if (newTab === 'purchaseOrder') {
+    activeSubTab.value = ''; // Clear sub-tab for purchase orders
+  }
+  // Add similar logic for other tabs if needed
+});
+
 
 // New methods for managing sub-tabs
 const setActiveSubTab = (subTab) => {
