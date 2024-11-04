@@ -29,7 +29,7 @@
     "jspdf-autotable": "^3.8.4",
     "nuxt": "^3.12.4",
     "nuxt-og-image": "^3.0.0-rc.65",
-    "vue-cal": "^4.10.0"
+    "tui-calendar": "^1.15.3"
   },
   "devDependencies": {
     "@iconify-json/ant-design": "^1.2.1",

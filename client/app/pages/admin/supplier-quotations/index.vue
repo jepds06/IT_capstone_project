@@ -88,7 +88,7 @@
                 {{ supplier?.quotationRemarks }}
               </td>
               <td class="py-2 px-4">
-                <button
+                <!-- <button
                   :class="
                     supplier.quotation_details.length > 0
                       ? 'bg-blue-500 text-white py-1 px-3 rounded-md mr-2'
@@ -98,17 +98,18 @@
                   @click="confirmPurchaseOrder(supplier)"
                 >
                   Generate PO
-                </button>
+                </button> -->
                 <button
                   :class="
                     supplier.quotation_details.length > 0
-                      ? 'bg-green-800 text-white py-1 px-3 rounded-md'
+                      ? 'bg-red-800 text-white py-1 px-3 rounded-md'
                       : 'bg-gray-300 py-1 px-3 rounded-md cursor-not-allowed'
                   "
                   :disabled="!supplier.quotation_details.length > 0"
                   @click="downloadQuotation(supplier)"
                 >
-                  Download PDF
+                <UIcon name="vscode-icons:file-type-pdf2"  class="w-5"/>
+                  Download
                 </button>
               </td>
             </tr>
@@ -136,10 +137,11 @@
         <table class="min-w-full bg-white border border-gray-300 mb-4">
           <thead class="bg-gray-200">
             <tr>
-              <th class="py-2 px-4 text-left">Material</th>
+              <th class="py-2 px-4 text-left">Product Material</th>
               <th class="py-2 px-4 text-left">Quantity</th>
               <th class="py-2 px-4 text-left">Unit Price</th>
               <th class="py-2 px-4 text-left">Total Price</th>
+              <th class="py-2 px-4 text-left">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -171,6 +173,15 @@
                     : 0
                 }}
               </td>
+              <td class="py-2 px-4">
+                <button
+                  class="bg-blue-500 text-white rounded-md mr-2"
+                  @click="confirmPurchaseOrder(material)"
+                >
+                <UIcon name="material-symbols:shopping-cart-checkout" title="Purchase"/>
+                  
+                </button>
+              </td> 
             </tr>
           </tbody>
         </table>
@@ -358,7 +369,6 @@ export default {
     },
     confirmPurchaseOrder(supplier) {
       this.showConfirmationModal = true;
-      this.selectedSupplier = supplier;
     },
     generatePurchaseOrder(supplier) {
       this.showConfirmationModal = false;

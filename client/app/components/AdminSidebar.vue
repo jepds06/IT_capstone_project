@@ -558,7 +558,7 @@
           "
         >
           <router-link
-            to="/admin/purcahse"
+            to="/admin/purchase"
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === '/admin/purchase'
