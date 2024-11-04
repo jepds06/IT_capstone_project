@@ -17,7 +17,9 @@ class Quotation extends Model
     protected $fillable =[
         'quotationDate',
         'userID',
-        'remarks'
+        'productionID',
+        'remarks',
+        'isCompleted'
     ];
 
     public $timestamps = false;
