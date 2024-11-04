@@ -19,7 +19,7 @@ class AdminPaymentController extends Controller
      */
     public function index()
     {
-        return $this->adminPaymentService->findAdminPayment();
+        return $this->adminPaymentService->findAdminPayments();
     }
 
     /**

@@ -16,9 +16,7 @@ class AdminOrder extends Model
 
     protected $fillable = [
         'userID',
-        'qteDetailID',
-        'qtyOrdered',
-        'amount'
+        'quoteID',
     ];
 
     public $timestamps = false;
@@ -29,10 +27,10 @@ class AdminOrder extends Model
         return $this->belongsTo(User::class, 'userID');
     }
 
-    // Relationship with the SupplierMaterial model
-    public function quotationDetail()
+    // Relationship with the quotation detail model
+    public function quotation()
     {
-        return $this->belongsTo(QuotationDetail::class, 'qteDetailID');
+        return $this->belongsTo(Quotation::class, 'quoteID');
     }
 
     public function adminDeliveries()
@@ -44,5 +42,10 @@ class AdminOrder extends Model
     public function adminPayments()
     {
         return $this->hasMany(AdminPayment::class, 'adminOrdID');
+    }
+
+    public function adminOrderDetail()
+    {
+        return $this->hasMany(AdminOrderDetail::class, 'adminOrdID');
     }
 }

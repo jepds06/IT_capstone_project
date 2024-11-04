@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Http\Resources\AdminPaymentResource;
 use App\Interface\Repository\AdminPaymentRepositoryInterface;
-
 use App\Interface\Service\AdminPaymentServiceInterface;
 
 class AdminPaymentService implements AdminPaymentServiceInterface
@@ -16,11 +15,11 @@ class AdminPaymentService implements AdminPaymentServiceInterface
         $this->AdminPaymentRepository = $AdminPaymentRepository;
     }
 
-    public function findAdminPayment()
+    public function findAdminPayments()
     {
-        $adminPayment = $this->AdminPaymentRepository->findMany();
+        $adminPayments = $this->AdminPaymentRepository->findMany();
 
-        return AdminPaymentResource::collection($adminPayment);
+        return AdminPaymentResource::collection($adminPayments);
     }
 
     public function findAdminPaymentById(int $AdminOrderId)

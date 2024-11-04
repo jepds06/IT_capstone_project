@@ -25,7 +25,8 @@ class QuotationStoreRequest extends FormRequest
             'quotationDate' => 'required|date',
             'userID' => 'required|integer|exists:users,userID',
             'productionID' => 'required|integer|exists:productions,productionID',
-            'remarks' => 'required|string|max:255'
+            'remarks' => 'required|string|max:255',
+            'isCompleted' => 'required|boolean'
         ];
     }
 }

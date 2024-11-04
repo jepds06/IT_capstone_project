@@ -30,4 +30,9 @@ class ProductionMaterial extends Model
     {
         return $this->belongsTo(ProductionDetail::class, 'prodtnDetailID');
     }
+
+    public function adminOrderDetail()
+    {
+        return $this->hasMany(AdminOrderDetail::class, 'prodtnMtrlID');
+    }
 }

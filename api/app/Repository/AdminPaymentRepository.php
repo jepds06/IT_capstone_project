@@ -2,48 +2,51 @@
 
 namespace App\Repository;
 
-use App\Interface\Repository\AdminOrderRepositoryInterface;
+use App\Interface\Repository\AdminPaymentRepositoryInterface;
 use App\Models\AdminOrder;
+use App\Models\AdminOrderDetail;
 use App\Models\AdminPayment;
 use App\Models\PaymentMethod;
 
-class AdminPaymentRepository implements AdminOrderRepositoryInterface
+class AdminPaymentRepository implements AdminPaymentRepositoryInterface
 {
     public function findMany()
     {
-        return AdminOrder::paginate(10);
+        return AdminPayment::paginate(10);
     }
 
     public function findOneById(int $adminPaymentId)
     {
-        return AdminOrder::findOrFail($adminPaymentId);
+        return AdminPayment::findOrFail($adminPaymentId);
     }
 
     public function create(object $payload)
     {
         $adminPayment = new AdminPayment();
 
-        $adminOrder = AdminOrder::find($payload->adminOrderID);
+        $orderDetail = AdminOrderDetail::find($payload->adminOrdDetailID);
 
-        if($adminOrder){
-            $adminPayment->productionDetail()->associate($adminOrder);
+        if ($orderDetail) {
+            $adminPayment->adminOrdDetail()->associate($orderDetail);
         } else {
-            throw new \Exception("Invalid production detail ID provided.");
+            throw new \Exception("Invalid admin order detail ID provided.");
         }
 
         $paymentMethod = PaymentMethod::find($payload->payMethodID);
 
         if($paymentMethod){
-            $adminPayment->productionDetail()->associate($paymentMethod);
+            $adminPayment->paymentMethod()->associate($paymentMethod);
         } else {
-            throw new \Exception("Invalid production detail ID provided.");
+            throw new \Exception("Invalid payment method ID provided.");
         }
 
-        $adminPayment->adminOrderID = $payload->adminOrderID;
-        $adminPayment->payMethodID = $payload->payMethodID; 
-        $adminPayment->amountToPay = $payload->amountToPay; 
+        $adminPayment->paymentDate = $payload->paymentDate;
+        $adminPayment->amountToPay = $orderDetail->amount;
+        //retrieving admin order details
+        if (!$orderDetail) {
+            throw new \Exception("Order details not found.");
+        }
         $adminPayment->amountPaid = $payload->amountPaid;
-        $adminPayment->dueDate = $payload->dueDate;
         $adminPayment->paymentStatus = $payload->paymentStatus;
         $adminPayment->remarks = $payload->remarks;
 
@@ -56,29 +59,31 @@ class AdminPaymentRepository implements AdminOrderRepositoryInterface
     
     public function update(object $payload, int $adminPaymentId)
     {
-        $adminPayment = new AdminPayment();
+        $adminPayment = AdminPayment::findOrFail($adminPaymentId);
 
-        $adminOrder = AdminOrder::find($payload->adminOrderID);
+        $orderDetail = AdminOrderDetail::find($payload->adminOrdDetailID);
 
-        if($adminOrder){
-            $adminPayment->productionDetail()->associate($adminOrder);
+        if ($orderDetail) {
+            $adminPayment->adminOrdDetail()->associate($orderDetail);
         } else {
-            throw new \Exception("Invalid production detail ID provided.");
+            throw new \Exception("Invalid admin order detail ID provided.");
         }
 
         $paymentMethod = PaymentMethod::find($payload->payMethodID);
 
         if($paymentMethod){
-            $adminPayment->productionDetail()->associate($paymentMethod);
+            $adminPayment->paymentMethod()->associate($paymentMethod);
         } else {
-            throw new \Exception("Invalid production detail ID provided.");
+            throw new \Exception("Invalid payment method ID provided.");
         }
 
-        $adminPayment->adminOrderID = $payload->adminOrderID;
-        $adminPayment->payMethodID = $payload->payMethodID; 
-        $adminPayment->amountToPay = $payload->amountToPay; 
+        $adminPayment->paymentDate = $payload->paymentDate;
+        $adminPayment->amountToPay = $orderDetail->amount;
+        //retrieving admin order details
+        if (!$orderDetail) {
+            throw new \Exception("Order details not found.");
+        } 
         $adminPayment->amountPaid = $payload->amountPaid;
-        $adminPayment->dueDate = $payload->dueDate;
         $adminPayment->paymentStatus = $payload->paymentStatus;
         $adminPayment->remarks = $payload->remarks;
 
