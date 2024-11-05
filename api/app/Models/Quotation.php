@@ -17,7 +17,9 @@ class Quotation extends Model
     protected $fillable =[
         'quotationDate',
         'userID',
-        'remarks'
+        'productionID',
+        'remarks',
+        'isCompleted'
     ];
 
     public $timestamps = false;
@@ -35,5 +37,10 @@ class Quotation extends Model
     public function quotationDetails()
     {
         return $this->hasMany(QuotationDetail::class, 'quoteID');
+    }
+
+    public function adminOrders()
+    {
+        return $this->hasMany(AdminOrder::class, 'quoteID');
     }
 }

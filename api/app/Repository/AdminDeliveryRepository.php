@@ -29,20 +29,12 @@ class AdminDeliveryRepository implements AdminDeliveryRepositoryInterface
 
             if($adminOrder){
                 $adminDlvry->adminOrder()->associate($adminOrder);
-                // Deduct the qtyReceived from the qtyOrdered in AdminOrder
-                if ($payload->qtyReceived <= $adminOrder->qtyOrdered) {
-                    $adminOrder->qtyOrdered -= $payload->qtyReceived;
-                    $adminOrder->save();
-                } else {
-                throw new \Exception("The received quantity cannot be greater than the ordered quantity.");
-            }
             } else {
                 throw new \Exception("Invalid admin order ID provided.");
             }
 
             $adminDlvry->deliveryDate = $payload->deliveryDate;
-            $adminDlvry->deliveryAddress = $payload->deliveryAddress;
-    //        $adminDlvry->deliveryStatus = $payload->deliveryStatus;
+            $adminDlvry->deliveryStatus = $payload->deliveryStatus;
             $adminDlvry->qtyReceived = $payload->qtyReceived;
 
             $adminDlvry->save();
@@ -59,20 +51,12 @@ class AdminDeliveryRepository implements AdminDeliveryRepositoryInterface
 
             if($adminOrder){
                 $adminDlvry->adminOrder()->associate($adminOrder);
-                // Deduct the qtyReceived from the qtyOrdered in AdminOrder
-                if ($payload->qtyReceived <= $adminOrder->qtyOrdered) {
-                    $adminOrder->qtyOrdered -= $payload->qtyReceived;
-                    $adminOrder->save();
-                } else {
-                throw new \Exception("The received quantity cannot be greater than the ordered quantity.");
-                }
             } else {
                 throw new \Exception("Invalid admin order ID provided.");
             }
 
             $adminDlvry->deliveryDate = $payload->deliveryDate;
-            $adminDlvry->deliveryAddress = $payload->deliveryAddress;
-    //        $adminDlvry->deliveryStatus = $payload->deliveryStatus;
+            $adminDlvry->deliveryStatus = $payload->deliveryStatus;
             $adminDlvry->qtyReceived = $payload->qtyReceived;
 
             $adminDlvry->save();
