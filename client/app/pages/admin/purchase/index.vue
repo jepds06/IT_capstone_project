@@ -1,7 +1,7 @@
 <template>
-  <div class="container mx-auto py-10">
+  <div class="mx-auto py-10">
     <!-- Quotation Table -->
-    <h2 class="text-2xl font-bold mb-6">Purcahse Orders</h2>
+    <h2 class="text-2xl font-bold mb-6">Purchase Orders</h2>
 
     <!-- Search Bar -->
     <input
@@ -22,69 +22,112 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="po in purchaseOrders" :key="po.id" class="border-t">
+        <tr v-for="po in paginatedPurchaseOrders" :key="po.id" class="border-t">
           <td class="p-4 text-center">{{ po.id }}</td>
-          <td class="p-4 text-center">{{ po.supplier }}</td>
-          <td class="p-4 text-center">{{ po.quotationId }}</td>
-          <td class="p-4 text-center">{{ po.total | currency }}</td>
           <td class="p-4 text-center">
-            <span :class="statusClass(po.status)" class="py-1 px-3 rounded-full text-white text-sm">
+            {{ getSupplierName(po?.quotation?.userID) }}
+          </td>
+          <td class="p-4 text-center">{{ `QN-${po.quoteID}` }}</td>
+          <td class="p-4 text-center">
+            {{
+              new Intl.NumberFormat("en-PH", {
+                style: "currency",
+                currency: "PHP",
+              }).format(po.totalAmount)
+            }}
+          </td>
+          <td class="p-4 text-center">
+            <span
+              :class="statusClass(po.status)"
+              class="py-1 px-3 rounded-full text-white text-sm"
+            >
               {{ po.status }}
             </span>
           </td>
           <td class="p-4 text-center">
             <button @click="viewDetails(po)" class="text-blue-600 mr-2">
-              <i class="fas fa-eye"></i> <!-- View Icon -->
+              <i class="fas fa-eye"></i>
+              <!-- View Icon -->
             </button>
-            <button @click="updateStatus(po, 'Waiting for Delivery')" class="text-yellow-600 mr-2">
-              <i class="fas fa-truck"></i> <!-- Mark as Delivered Icon -->
-            </button>
-            <button @click="cancelPO(po)" class="text-red-600">
-              <i class="fas fa-trash"></i> <!-- Cancel Icon -->
-            </button>
+            <!-- Mark as Delivered Icon -->
+            <!-- <button @click="updateStatus(po, 'Waiting for Delivery')" class="text-yellow-600 mr-2">
+              <i class="fas fa-truck"></i> 
+            </button> -->
+            <!-- Cancel Icon -->
+            <!-- <button @click="cancelPO(po)" class="text-red-600">
+              <i class="fas fa-trash"></i> 
+            </button> -->
           </td>
         </tr>
       </tbody>
     </table>
 
-    <div v-if="statusMessage" class="mt-4 p-2 bg-green-100 text-green-700 rounded-md">
+    <div
+      v-if="statusMessage"
+      class="mt-4 p-2 bg-green-100 text-green-700 rounded-md"
+    >
       {{ statusMessage }}
     </div>
-    
-      <!-- Modal for Supplier Material Selection -->
-      <div v-if="selectedPO" class="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50">
-            <div class="bg-white p-6 rounded-md w-1/2">
-              <h3 class="text-lg font-bold mb-2">Select Materials for Purchase Order</h3>
 
+    <!-- Modal for Supplier Material Selection -->
+    <div
+      v-if="selectedPO"
+      class="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50"
+    >
+      <div class="bg-white p-6 rounded-md w-1/2">
+        <h3 class="text-lg font-bold mb-2">{{`Materials for Purchase Order No: ${ selectedPO.id}`}}</h3>
+        
+        <label for="materialId" class="block mb-2 mt-4 text-black"
+          >Supplier:<span>{{
+            `${getSupplierName(selectedPO.quotation?.userID)}`
+          }}</span></label
+        >
+        <label for="materialId" class="block mb-2 mt-4 text-black"
+          >Quotation No: <span>{{ `QN-${selectedPO.quoteID}` }}</span></label
+        >
         <!-- Scrollable Table Container -->
-        <div class="max-h-64 overflow-y-auto border border-gray-300 rounded-md mb-4">
+        <div
+          class="max-h-64 overflow-y-auto border border-gray-300 rounded-md mb-4"
+        >
           <table class="min-w-full bg-white">
             <thead class="bg-gray-200">
               <tr>
                 <th class="py-2 px-4 text-left">Material ID</th>
-                <th class="py-2 px-4 text-left">Material Name</th>
+                <th class="py-2 px-4 text-left">Product Material</th>
                 <th class="py-2 px-4 text-left">Quantity</th>
-                <th class="py-2 px-4 text-left">Action</th>
+                <th class="py-2 px-4 text-left">Amount</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="material in selectedPO.materials" :key="material.id" class="border-t">
-                <td class="py-2 px-4">{{ material.id }}</td>
-                <td class="py-2 px-4">{{ material.name }}</td>
-                <td class="py-2 px-4">{{ material.quantity }}</td>
+              <tr
+                v-for="(material, index) in selectedPO.admin_order_detail"
+                :key="material.id"
+                class="border-t"
+              >
+                <td class="py-2 px-4">{{ index + 1 }}</td>
                 <td class="py-2 px-4">
-                  <button @click="removeMaterial(material)" class="text-red-600">
-                    <i class="fas fa-times"></i> Drop
-                  </button>
+                  {{ this.getMaterialProductName(material?.prodtnMtrlID) }}
+                </td>
+                <td class="py-2 px-4">{{ material.qtyOrdered }}</td>
+                <td class="py-2 px-4">
+                  {{
+                    new Intl.NumberFormat("en-PH", {
+                      style: "currency",
+                      currency: "PHP",
+                    }).format(material.amount)
+                  }}
                 </td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <button @click="confirmMaterialsSelection" class="bg-blue-500 text-white px-4 py-2 rounded-md">Confirm</button>
+        <!-- <button @click="confirmMaterialsSelection" class="bg-blue-500 text-white px-4 py-2 rounded-md">Confirm</button> -->
         <button @click="closeModal" class="text-gray-600 ml-2">Close</button>
-        <div v-if="modalMessage" class="mt-2 p-2 bg-green-100 text-green-700 rounded-md">
+        <div
+          v-if="modalMessage"
+          class="mt-2 p-2 bg-green-100 text-green-700 rounded-md"
+        >
           {{ modalMessage }}
         </div>
       </div>
@@ -92,46 +135,37 @@
 
     <!-- Pagination -->
     <div class="flex justify-between items-center mt-4">
-      <button @click="prevPage" :disabled="currentPage === 1" class="bg-gray-300 px-4 py-2 rounded">Previous</button>
+      <button
+        @click="prevPage"
+        :disabled="currentPage === 1"
+        class="bg-gray-300 px-4 py-2 rounded"
+      >
+        Previous
+      </button>
       <span>Page {{ currentPage }} of {{ totalPages }}</span>
-      <button @click="nextPage" :disabled="currentPage === totalPages" class="bg-gray-300 px-4 py-2 rounded">Next</button>
+      <button
+        @click="nextPage"
+        :disabled="currentPage === totalPages"
+        class="bg-gray-300 px-4 py-2 rounded"
+      >
+        Next
+      </button>
     </div>
   </div>
 </template>
 
 <script>
+import { apiService } from "~/api/apiService";
+
 export default {
   data() {
     return {
-      purchaseOrders: [
-        {
-          id: 'PO001',
-          supplier: 'Supplier A',
-          quotationId: 'Q001',
-          total: 5000,
-          status: 'Pending',
-          materials: [
-            { id: 'M001', name: 'Material 1', quantity: 100 },
-            { id: 'M002', name: 'Material 2', quantity: 50 },
-          ],
-        },
-        {
-          id: 'PO002',
-          supplier: 'Supplier B',
-          quotationId: 'Q002',
-          total: 7000,
-          status: 'Waiting for Delivery',
-          materials: [
-            { id: 'M003', name: 'Material 3', quantity: 75 },
-            { id: 'M004', name: 'Material 4', quantity: 20 },
-          ],
-        },
-        // Additional purchase orders...
-      ],
+      users: [],
+      purchaseOrders: [],
       selectedPO: null,
-      statusMessage: '',
-      modalMessage: '',
-      searchQuery: '',
+      statusMessage: "",
+      modalMessage: "",
+      searchQuery: "",
       currentPage: 1,
       itemsPerPage: 5,
     };
@@ -141,8 +175,7 @@ export default {
     filteredPurchaseOrders() {
       return this.purchaseOrders.filter(
         (po) =>
-          po.id.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-          po.quotationId.toLowerCase().includes(this.searchQuery.toLowerCase())
+          this.getSupplierName(po.quotation.userID).toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     },
     totalPages() {
@@ -154,7 +187,10 @@ export default {
       return this.filteredPurchaseOrders.slice(start, end);
     },
   },
-
+  async mounted() {
+    await this.fetchUserData();
+    await this.fetchAdminOrders();
+  },
   methods: {
     previousPage() {
       if (this.currentPage > 1) {
@@ -167,66 +203,121 @@ export default {
       }
     },
     setTemporaryMessage(messageType, message) {
-      if (messageType === 'status') {
+      if (messageType === "status") {
         this.statusMessage = message;
-      } else if (messageType === 'modal') {
+      } else if (messageType === "modal") {
         this.modalMessage = message;
       }
       setTimeout(() => {
-        if (messageType === 'status') {
-          this.statusMessage = '';
-        } else if (messageType === 'modal') {
-          this.modalMessage = '';
+        if (messageType === "status") {
+          this.statusMessage = "";
+        } else if (messageType === "modal") {
+          this.modalMessage = "";
         }
       }, 3000);
     },
     statusClass(status) {
       switch (status) {
-        case 'Pending':
-          return 'bg-yellow-500';
-        case 'Waiting for Delivery':
-          return 'bg-blue-500';
-        case 'Delivered':
-          return 'bg-green-500';
-        case 'Cancelled':
-          return 'bg-red-500';
+        case "Pending":
+          return "bg-yellow-500";
+        case "Waiting for Delivery":
+          return "bg-blue-500";
+        case "Delivered":
+          return "bg-green-500";
+        case "In Progress":
+          return "bg-red-500";
         default:
-          return 'bg-gray-500';
+          return "bg-gray-500";
       }
     },
-    viewDetails(po) {
+    async viewDetails(po) {
+      await this.fetchMaterialsByProductionID(po.quotation.productionID);
       this.selectedPO = po;
-      this.modalMessage = '';
+      this.modalMessage = "";
     },
     closeModal() {
       this.selectedPO = null;
-      this.modalMessage = '';
+      this.modalMessage = "";
     },
     removeMaterial(material) {
-      this.selectedPO.materials = this.selectedPO.materials.filter((m) => m.id !== material.id);
-      this.setTemporaryMessage('modal', `Material ${material.name} has been removed.`);
+      this.selectedPO.materials = this.selectedPO.materials.filter(
+        (m) => m.id !== material.id
+      );
+      this.setTemporaryMessage(
+        "modal",
+        `Material ${material.name} has been removed.`
+      );
     },
     confirmMaterialsSelection() {
-      this.setTemporaryMessage('status', 'Materials selection confirmed.');
+      this.setTemporaryMessage("status", "Materials selection confirmed.");
       this.closeModal();
     },
     updateStatus(po, newStatus) {
       po.status = newStatus;
-      this.setTemporaryMessage('status', `PO ID ${po.id} marked as ${newStatus}.`);
+      this.setTemporaryMessage(
+        "status",
+        `PO ID ${po.id} marked as ${newStatus}.`
+      );
     },
     cancelPO(po) {
-      po.status = 'Cancelled';
-      this.setTemporaryMessage('status', `PO ID ${po.id} has been cancelled.`);
+      po.status = "Cancelled";
+      this.setTemporaryMessage("status", `PO ID ${po.id} has been cancelled.`);
+    },
+    getSupplierName(userID) {
+      const supplier = this.users?.find((value) => value.userID === userID);
+      return supplier
+        ? `${supplier.lastName} ${supplier.firstName}`
+        : "Unknown";
+    },
+    getMaterialProductName(prodtnMtrlID) {
+      const material = this.materials?.find(
+        (val) => val.prodtnMtrlID == prodtnMtrlID
+      );
+      return `${material?.productName} -> ${material?.description}`;
+    },
+    async fetchMaterialsByProductionID(productionID) {
+      const result = await apiService.get(
+        `/api/materials/production/${productionID}`
+      );
+      this.materials = result;
+    },
+    async fetchUserData() {
+      const result = await apiService.get("/api/users");
+      this.users = result.data;
+    },
+    async fetchAdminOrders() {
+      const result = await apiService.get("/api/adminOrders");
+      const transFormData = result.data?.map((value, index) => {
+        const totalAmount = value.admin_order_detail.reduce((total, detail) => {
+          return total + parseFloat(detail.amount);
+        }, 0);
+        const payment = value.admin_order_detail.filter((value) => {
+          return value.admin_payments.length > 0;
+        });
+        if (payment.length > 0) {
+          value.status = "In Progress";
+        }
+        if (value.admin_deliveries.length > 0) {
+          value.status = "Waiting for Delivery";
+        }
+        if (!value.status) {
+          value.status = "Pending";
+        }
+        return {
+          ...value,
+          totalAmount,
+          id: (index + 1).toString(),
+        };
+      });
+      this.purchaseOrders = transFormData;
     },
   },
 };
 </script>
 
-
-
 <style scoped>
 .container {
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   background-color: #f9fafb;
   padding: 50px;
   border-radius: 10px;
