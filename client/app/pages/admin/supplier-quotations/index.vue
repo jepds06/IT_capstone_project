@@ -154,6 +154,8 @@
                   type="checkbox"
                   class="form-checkbox"
                   @change="(e) => { checkedPurchaseMaterial(e.target.checked, material)}"
+                  :checked="alreadyPurchasedMaterials.includes(material.prodtnMtrlID) ? true : false"
+                  :disabled="alreadyPurchasedMaterials.includes(material.prodtnMtrlID)"
                 />
               </td>
               <td class="py-2 px-4">
@@ -313,6 +315,7 @@ export default {
       itemsPerPage: 5,
       purchasedMaterials: [],
       userInfo: null,
+      alreadyPurchasedMaterials: [],
     };
   },
   computed: {
@@ -344,15 +347,12 @@ export default {
   },
   methods: {
     checkedPurchaseMaterial(isChecked, material) {
-      console.log("purchasedMaterials", this.purchasedMaterials)
       if (isChecked === true){
         this.purchasedMaterials.push(material.prodtnMtrlID)
       } else {
         const newDataSet = this.purchasedMaterials
         const index  = newDataSet.indexOf(material.prodtnMtrlID);
         this.purchasedMaterials.splice(index, 1)
-        console.log("index", index)
-        console.log("remove purchasedMaterials", this.purchasedMaterials)
       }
     },
     openQuotationModal(quotation) {
@@ -367,6 +367,7 @@ export default {
       );
       this.selectedSupplier = supplier;
       this.showSupplierDetailsModal = true;
+      await this.fetchAdminOrders()
     },
     getTotalPrice(supplier) {
       const totalPrice = supplier.reduce(
@@ -388,8 +389,6 @@ export default {
         userID: this.userInfo.userID,
         quoteID: this.selectedSupplier?.quotation_details[0]?.quoteID
       }
-
-      console.log(this.selectedQuotation, adminOrder)
       const adminOrderDetails = this.purchasedMaterials.map((prodtnMtrlID) => {
       const material = this.selectedSupplier?.quotation_details.find((value) => value.prodtnMtrlID === prodtnMtrlID)
         return {
@@ -408,6 +407,7 @@ export default {
     closeSuccessModal() {
       this.showSuccessModal = false;
       this.purchasedMaterials = [];
+      this.showSupplierDetailsModal = false;
     },
     prevPage() {
       if (this.currentPage > 1) {
@@ -454,7 +454,6 @@ export default {
           id: index + 1,
         };
       });
-      console.log("selectedQuotaionDetail--", this.selectedQuotationDetail);
       await this.processPDFFile();
     },
     async processPDFFile() {
@@ -615,6 +614,15 @@ export default {
         };
       });
     },
+
+    async fetchAdminOrders() {
+      const result = await apiService.get("/api/adminOrders");
+
+      const filterData = result.data?.filter((val) => val.quoteID === this.selectedSupplier?.quotation_details[0]?.quoteID)
+
+      this.alreadyPurchasedMaterials = filterData[0]?.admin_order_detail?.map((val) => val.prodtnMtrlID)
+
+    }
   },
 };
 </script>
