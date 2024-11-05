@@ -60,6 +60,7 @@ class AdminOrderRepository implements AdminOrderRepositoryInterface
                 $adminOrderDetail->ProductionMaterialId = $quoteDetail->ProductionMaterialId;
                 $adminOrderDetail->qtyOrdered = $quoteDetail->Quantity; // Quantity from QuotationDetails
                 $adminOrderDetail->amount = $quoteDetail->QuotationPrice * $quoteDetail->Quantity; // Calculated amount
+                $adminOrderDetail->isDropped = $quoteDetail->isDropped;
                 $adminOrderDetail->save();
             }
 
@@ -108,6 +109,7 @@ class AdminOrderRepository implements AdminOrderRepositoryInterface
                 $adminOrderDetail->ProductionMaterialId = $quoteDetail->ProductionMaterialId;
                 $adminOrderDetail->qtyOrdered = $quoteDetail->Quantity; // Quantity from QuotationDetails
                 $adminOrderDetail->amount = $quoteDetail->QuotationPrice * $quoteDetail->Quantity; // Calculated amount
+                $adminOrderDetail->isDropped = $quoteDetail->isDropped;
                 $adminOrderDetail->save();
             }
 
