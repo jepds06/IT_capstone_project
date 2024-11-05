@@ -5,12 +5,16 @@
       <h1 class="text-xl font-bold">
         Products
       </h1>
-      <button
-        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        @click="openModal('add')"
-      >
-        Add Product
-      </button>
+      <UButton
+      icon="material-symbols:add-2-rounded"
+      size="sm"
+      color="primary"
+      variant="solid"
+      label="Product"
+      title="Add Product"
+      @click="openModal('add')"
+      :trailing="false"
+      />
     </div>
 
     <!-- Add/Edit Product Modal -->
@@ -132,9 +136,22 @@
         >
           <i class="fas fa-times" />
         </button>
-        <h2 class="text-lg text-black font-semibold mb-4">
-          Product Materials
-        </h2>
+        
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg text-black font-semibold">
+            Product Materials
+          </h2>
+
+          <UButton
+            icon="material-symbols:add-notes-outline-sharp"
+            size="sm"
+            color="primary"
+            variant="solid"
+            label="Add Material"
+            :trailing="false"
+            @click="openMaterialModal"
+          />
+        </div>
         <!-- Product Info View Table (Read-Only) -->
         <table class="min-w-full border border-gray-300 rounded-lg mb-4">
           <thead class="bg-gray-200">
@@ -148,10 +165,13 @@
           </thead>
           <tbody>
             <tr class="p-2 border-b text-black text-center">
-              <td>{{ selectedProduct?.productID }}</td>
+              <td>{{ selectedProduct?.id }}</td>
               <td>{{ selectedProduct?.productName }}</td>
               <td>{{ selectedProduct?.specifications }}</td>
-              <td>{{ selectedProduct?.unitPrice }}</td>
+              <td>{{ new Intl.NumberFormat("en-PH", {
+                style: "currency",
+                currency: "PHP",
+              }).format(parseFloat(selectedProduct?.unitPrice)) }}</td>
               <td>{{ getCategoryDescription(selectedProduct?.prodCatID) }}</td>
             </tr>
           </tbody>
@@ -173,7 +193,7 @@
                 :key="material.materialID"
                 class="p-2 border-b text-black text-center"
               >
-                <td>{{ material.materialID }}</td>
+                <td>{{ material.id }}</td>
                 <td>{{ material.description }}</td>
                 <td>{{ material.specification }}</td>
                 <td>{{ material.quantity }}</td>
@@ -196,12 +216,6 @@
             </tbody>
           </table>
         </div>
-        <button
-          class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-          @click="openMaterialModal"
-        >
-          Add Material
-        </button>
       </div>
     </div>
 
@@ -257,10 +271,6 @@
               </option>
             </select>
           </div>
-          <!-- <div class="mb-4">
-              <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-              <input v-model="materialForm.name" type="text" id="name" class="mt-1 block w-full border border-gray-300 rounded-lg p-2"/>
-            </div> -->
           <div class="mb-4">
             <label
               for="specs"
@@ -342,7 +352,10 @@
             {{ product.specifications }}
           </td>
           <td class="p-2 border-b text-center">
-            {{ product.unitPrice }}
+            {{ new Intl.NumberFormat("en-PH", {
+              style: "currency",
+              currency: "PHP",
+            }).format(product.unitPrice) }}
           </td>
           <td class="p-2 border-b text-center">
             {{ getCategoryDescription(product.prodCatID) }}
@@ -527,7 +540,12 @@ const fetchProductsData = async () => {
   try {
     // Call the get method from ApiService
     const { data } = await apiService.get('/api/products') // Replace '/endpoint' with your actual API endpoint
-    products.value = data
+    products.value = data?.map((value, index) => {
+      return {
+        ...value,
+        id: index + 1
+      }
+    })
   } catch (error) {
     console.error('Error fetching data:', error)
   }
@@ -546,8 +564,9 @@ const fetchMaterialsData = async () => {
 const fetchProductMaterialsData = async () => {
   try {
     const data = await apiService.get(`/api/productMaterials/materials/${selectedProduct.value.productID}`) // Replace '/endpoint' with your actual API endpoint
-    const transFormData = data['product_materials']?.map((value) => {
+    const transFormData = data['product_materials']?.map((value, index) => {
       return {
+        id: index + 1,
         materialID: value.materialID,
         description: value.material.description,
         specification: value.material.specification,

@@ -62,7 +62,11 @@
               <i class="fas fa-edit"></i>
             </button>
 
-            <button @click="showProductionDetails(production)" class="text-blue-500 hover:underline ml-2">
+            <button
+              @click="showProductionDetails(production)"
+              class="text-blue-500 hover:underline ml-2"
+              title="Production Details View"
+            >
               <i class="fas fa-cogs"></i>
             </button>
             <!-- <button
@@ -102,29 +106,6 @@
           {{ isEditMode ? "Edit Production" : "Add Production" }}
         </h2>
         <form @submit.prevent="saveProduction">
-          <!-- <label for="month" class="block mb-2 mt-4">Created By:</label>
-          <select
-            v-model="productionForm.userID"
-            id="userID"
-            class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
-          >
-            <option
-              v-for="user in users"
-              :key="user.userID"
-              :value="user.userID"
-            >
-              {{ `${user.lastName}, ${user.firstName}` }}
-            </option>
-          </select> -->
-
-          <!-- <label for="dateEncoded" class="block mb-2 mt-4">Date Encoded:</label>
-          <input
-            id="dateEncoded"
-            v-model="productionForm.dateEncoded"
-            type="date"
-            class="w-full p-2 border rounded"
-          /> -->
-
           <label for="year" class="block mb-2 mt-4">Start Date:</label>
           <input
             id="startDate"
@@ -132,16 +113,7 @@
             type="date"
             class="w-full p-2 border rounded"
           />
-
           <label for="month" class="block mb-2 mt-4">Completion Date:</label>
-          <!-- <input
-            id="month"
-            v-model="productionForm.month"
-            type="text"
-            placeholder="Enter month"
-            class="w-full p-2 border rounded"
-          /> -->
-
           <input
             id="completionDate"
             v-model="productionForm.completionDate"
@@ -174,7 +146,7 @@
             <button
               type="button"
               @click="closeModal"
-              class="bg-gray-300 px-4 py-2 rounded hover:bg-gray-400"
+              class="bg-gray-300 px-4 py-2 mr-2 rounded hover:bg-gray-400"
             >
               Cancel
             </button>
@@ -188,8 +160,6 @@
         </form>
       </div>
     </div>
-
-
 
     <!-- Modal for Viewing Production Details -->
     <!-- Modal for Viewing Production Details -->
@@ -297,13 +267,21 @@
       </div>
     </div>
 
-    <div v-if="isProductionDetailsInfo" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+    <div
+      v-if="isProductionDetailsInfo"
+      class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50"
+    >
       <div class="bg-white p-6 rounded-lg shadow-lg w-1/2 relative">
         <!-- Close Button -->
-        <button @click="closeProductionInfo" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
+        <button
+          @click="closeProductionInfo"
+          class="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
+        >
           <i class="fas fa-times"></i>
         </button>
-        <h2 class="text-lg text-black font-semibold mb-4">Production Details</h2>
+        <h2 class="text-lg text-black font-semibold mb-4">
+          Production Details
+        </h2>
         <!-- Product Info View Table (Read-Only) -->
         <table class="min-w-full border border-gray-300 rounded-lg mb-4">
           <thead class="bg-gray-200">
@@ -311,26 +289,39 @@
               <th>Production ID</th>
               <!-- <th>Created By</th> -->
               <th>Date Encoded</th>
-              <th>Year</th>
-              <th>Month</th>
+              <th>Start Date</th>
+              <th>Completion Date</th>
               <th>Remarks</th>
             </tr>
           </thead>
           <tbody>
-            <tr  class="p-2 border-b text-black text-center">
-              <td class="px-6 py-4 border-b">{{ selectedProduction.productionID }}</td>
+            <tr class="p-2 border-b text-black text-center">
+              <td class="px-6 py-4 border-b">
+                {{ selectedProduction.productionID }}
+              </td>
               <!-- <td class="px-6 py-4 border-b">
                 {{ getUserName(selectedProduction.userID) }}
               </td> -->
-              <td class="px-6 py-4 border-b">{{ selectedProduction.dateEncoded }}</td>
-              <td class="px-6 py-4 border-b">{{ selectedProduction.year }}</td>
-              <td class="px-6 py-4 border-b">{{ selectedProduction.month }}</td>
-              <td class="px-6 py-4 border-b">{{ selectedProduction.remarks }}</td>
+              <td class="px-6 py-4 border-b">
+                {{ selectedProduction.dateEncoded }}
+              </td>
+              <td class="px-6 py-4 border-b">
+                {{ selectedProduction.startDate }}
+              </td>
+              <td class="px-6 py-4 border-b">
+                {{ selectedProduction.completionDate }}
+              </td>
+              <td class="px-6 py-4 border-b">
+                {{ selectedProduction.remarks }}
+              </td>
             </tr>
           </tbody>
         </table>
         <div class="mb-4">
-          <table class="min-w-full border border-gray-300 rounded-lg" :key="selectedProductionDetails.length">
+          <table
+            class="min-w-full border border-gray-300 rounded-lg"
+            :key="selectedProductionDetails.length"
+          >
             <thead class="bg-gray-100">
               <tr class="p-2 border-b text-black text-center">
                 <th>ID</th>
@@ -342,14 +333,23 @@
               </tr>
             </thead>
             <tbody v-if="selectedProductionDetails.length > 0">
-              <tr v-for="prodDetail in selectedProductionDetails" :key="prodDetail.prodtnDetailID" class="p-2 border-b text-black text-center">
+              <tr
+                v-for="prodDetail in selectedProductionDetails"
+                :key="prodDetail.prodtnDetailID"
+                class="p-2 border-b text-black text-center"
+              >
                 <td>{{ prodDetail.prodtnDetailID }}</td>
                 <td>{{ getProduct(prodDetail.productID) }}</td>
                 <td>{{ prodDetail.quantity }}</td>
                 <td>{{ prodDetail.status }}</td>
                 <td>{{ prodDetail.remarks }}</td>
-                <td class="p-2 border-b text-center flex justify-center space-x-2">
-                  <button @click="editProductionDetail(prodDetail)" class="text-yellow-500 hover:underline">
+                <td
+                  class="p-2 border-b text-center flex justify-center space-x-2"
+                >
+                  <button
+                    @click="editProductionDetail(prodDetail)"
+                    class="text-yellow-500 hover:underline"
+                  >
                     <i class="fas fa-edit"></i>
                   </button>
                   <!-- <button @click="removeMaterial(material)" class="text-red-500 hover:underline">
@@ -361,67 +361,132 @@
           </table>
         </div>
         <div class="flex justify-end">
-          <button @click="openProductionDetailModal" class="bg-blue-500 text-white px-4 py-2 mr-2 rounded hover:bg-blue-600">
-            Add Production Details
-          </button>
-          <button @click="requestQuotation" :class="isQuotationRequested ? 'bg-gray-500 text-white px-4 py-2 rounded cursor-not-allowed' : 'bg-green-500 text-white px-4 py-2 rounded'" :disabled="isQuotationRequested">Request Quotation</button>
+          <UButton
+            icon="oui:ml-create-single-metric-job"
+            @click="openProductionDetailModal"
+            :color="isQuotationRequested ? 'gray' : 'blue'"
+            :disabled="isQuotationRequested"
+            class="mr-2"
+            label="Add Production Details"
+          />
+          <UButton
+            icon="material-symbols:request-quote-outline"
+            :loading="isLoadingQuotationRequested"
+            @click="requestQuotation"
+            size="sm"
+            :color="isQuotationRequested || selectedProductionDetails.length === 0 ? 'gray' : 'green'"
+            :disabled="isQuotationRequested || selectedProductionDetails.length === 0"
+            label="Request Quotation"
+          />
         </div>
       </div>
     </div>
 
     <!-- Modal for Adding Production Details -->
-    <div v-if="isProductionDetailsModal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+    <div
+      v-if="isProductionDetailsModal"
+      class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50"
+    >
       <div class="bg-white p-6 rounded-lg shadow-lg w-1/3 relative">
         <!-- Close Button -->
-        <button @click="closeProductionDetailModal" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
+        <button
+          @click="closeProductionDetailModal"
+          class="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
+        >
           <i class="fas fa-times"></i>
         </button>
-        <h2 class="text-lg font-semibold mb-4">{{ productionDetailMode === 'add' ? 'Add Production Detail' : 'Edit Production Detail' }}</h2>
+        <h2 class="text-lg font-semibold mb-4">
+          {{
+            productionDetailMode === "add"
+              ? "Add Production Detail"
+              : "Edit Production Detail"
+          }}
+        </h2>
         <form @submit.prevent="saveProductionDetail">
           <div class="mb-4" v-if="formMode === 'edit'">
-            <label for="materialId" class="block text-sm font-medium text-gray-700">Product Material Id</label>
-            <input v-model="productionDetailForm.prodtnDetailID" type="text" id="productMatsID" class="mt-1 block w-full border border-gray-300 rounded-lg p-2" :readonly="materialMode === 'edit'"/>
+            <label
+              for="materialId"
+              class="block text-sm font-medium text-gray-700"
+              >Product Material Id</label
+            >
+            <input
+              v-model="productionDetailForm.prodtnDetailID"
+              type="text"
+              id="productMatsID"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
+              :readonly="materialMode === 'edit'"
+            />
           </div>
           <div class="mb-4">
-            <label for="prodCat" class="block text-sm font-medium text-gray-700">Product</label>
-            <select v-model="productionDetailForm.productID" id="prodCat" class="mt-1 block w-full border border-gray-300 rounded-lg p-2">
-              <option v-for="product in products" :key="product.productID" :value="product.productID">
+            <label for="prodCat" class="block text-sm font-medium text-gray-700"
+              >Product</label
+            >
+            <select
+              v-model="productionDetailForm.productID"
+              id="prodCat"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
+            >
+              <option
+                v-for="product in products"
+                :key="product.productID"
+                :value="product.productID"
+              >
                 {{ product.productName }}
               </option>
             </select>
           </div>
           <div class="mb-4" v-if="productionDetailMode !== 'add'">
-            <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+            <label for="status" class="block text-sm font-medium text-gray-700"
+              >Status</label
+            >
             <select
-            v-model="productionDetailForm.status"
-            id="userID"
-            class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
-          >
-            <option v-for="status in statuses" :key="status" :value="status">
-              {{ status }}
-            </option>
-          </select>
+              v-model="productionDetailForm.status"
+              id="userID"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
+            >
+              <option v-for="status in statuses" :key="status" :value="status">
+                {{ status }}
+              </option>
+            </select>
           </div>
           <div class="mb-4">
-            <label for="specs" class="block text-sm font-medium text-gray-700">Remarks</label>
-            <input v-model="productionDetailForm.remarks" id="remarks" class="mt-1 block w-full border border-gray-300 rounded-lg p-2"/>
+            <label for="specs" class="block text-sm font-medium text-gray-700"
+              >Remarks</label
+            >
+            <input
+              v-model="productionDetailForm.remarks"
+              id="remarks"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
+            />
           </div>
           <div class="mb-4">
-            <label for="qty" class="block text-sm font-medium text-gray-700">Quantity</label>
-            <input v-model="productionDetailForm.quantity" type="number" id="qty" class="mt-1 block w-full border border-gray-300 rounded-lg p-2"/>
+            <label for="qty" class="block text-sm font-medium text-gray-700"
+              >Quantity</label
+            >
+            <input
+              v-model="productionDetailForm.quantity"
+              type="number"
+              id="qty"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
+            />
           </div>
           <div class="flex justify-end">
-            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+            <button
+              type="submit"
+              class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            >
               Save
             </button>
-            <button @click="closeProductionDetailModal" class="ml-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+            <button
+              @click="closeProductionDetailModal"
+              class="ml-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            >
               Cancel
             </button>
           </div>
         </form>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -461,26 +526,24 @@ const productions = ref([
   // Add more sample data as needed for testing pagination
 ]);
 
-const userInfo = ref({userID:""})
+const userInfo = ref({ userID: "" });
 const selectedProductionDetails = ref([]);
 const users = ref([]);
 
-const productionDetailMode = ref('add')
+const productionDetailMode = ref("add");
 
 const products = ref([]);
 
 function formatDate(date) {
-    var d = new Date(date),
-        month = '' + (d.getMonth() + 1),
-        day = '' + d.getDate(),
-        year = d.getFullYear();
+  var d = new Date(date),
+    month = "" + (d.getMonth() + 1),
+    day = "" + d.getDate(),
+    year = d.getFullYear();
 
-    if (month.length < 2) 
-        month = '0' + month;
-    if (day.length < 2) 
-        day = '0' + day;
+  if (month.length < 2) month = "0" + month;
+  if (day.length < 2) day = "0" + day;
 
-    return [year, month, day].join('-');
+  return [year, month, day].join("-");
 }
 
 const statuses = ["Pending", "In Progress", "Completed"];
@@ -489,8 +552,9 @@ const searchQuery = ref("");
 const currentPage = ref(1);
 const itemsPerPage = 5;
 
-const quotations = ref([])
+const quotations = ref([]);
 
+const isLoadingQuotationRequested = ref(false);
 const isQuotationRequested = ref(false);
 const isProductionDetailsInfo = ref(false);
 const isProductionDetailsModal = ref(false);
@@ -502,12 +566,12 @@ const selectedProduction = ref(null);
 const isEditMode = ref(false);
 const productionForm = ref({
   userID: userInfo.value.userID,
-  dateEncoded: formatDate(new Date),
+  dateEncoded: formatDate(new Date()),
   completionDate: "",
   startDate: "",
   remarks: "",
   status: "Pending",
-  productionID: ""
+  productionID: "",
 });
 
 const productionDetailForm = ref({
@@ -516,46 +580,50 @@ const productionDetailForm = ref({
   productID: "",
   quantity: "",
   status: "Pending",
-  remarks: ""
-})
+  remarks: "",
+});
 
 const openProductionDetailModal = async () => {
-  productionDetailMode.value = 'add'
-  isProductionDetailsModal.value = true
+  productionDetailMode.value = "add";
+  isProductionDetailsModal.value = true;
   productionDetailForm.value = {
-  prodtnDetailID: "",
-  productionID: "",
-  productID: "",
-  quantity: "",
-  status: "Pending",
-  remarks: ""
-}
-}
-
-const closeProductionDetailModal = () => {
-  isProductionDetailsModal.value = false
-}
-
-const filterQuotation = (productionID) => {
-  const data = quotations.value?.filter((value) => value.productionID === productionID);
-  isQuotationRequested.value = data.length > 0
+    prodtnDetailID: "",
+    productionID: "",
+    productID: "",
+    quantity: "",
+    status: "Pending",
+    remarks: "",
+  };
 };
 
-const showProductionDetails = async (production) =>{
-  filterQuotation(production.productionID)
-  selectedProduction.value = production
-  await fetchProductsData()
-  await fetchProductionDetailsData()
-  isProductionDetailsInfo.value = true
+const closeProductionDetailModal = () => {
+  isProductionDetailsModal.value = false;
+};
+
+const filterQuotation = (productionID) => {
+  const data = quotations.value?.filter(
+    (value) => value.productionID === productionID
+  );
+  isQuotationRequested.value = data.length > 0;
+};
+
+const showProductionDetails = async (production) => {
+  filterQuotation(production.productionID);
+  selectedProduction.value = production;
+  await fetchProductsData();
+  await fetchProductionDetailsData();
+  isProductionDetailsInfo.value = true;
 };
 
 const closeProductionInfo = () => {
-  isProductionDetailsInfo.value = false
+  isProductionDetailsInfo.value = false;
 };
 
 const filteredProductions = computed(() => {
   return productions.value.filter((production) =>
-    getUserName(production.userID).toLowerCase().includes(searchQuery.value.toLowerCase())
+    getUserName(production.userID)
+      .toLowerCase()
+      .includes(searchQuery.value.toLowerCase())
   );
 });
 
@@ -572,14 +640,14 @@ const openAddModal = () => {
   isModalOpen.value = true;
   isEditMode.value = false;
   productionForm.value = {
-  userID: userInfo.value.userID,
-  dateEncoded: formatDate(new Date),
-  completionDate: "",
-  startDate: "",
-  remarks: "",
-  status: "Pending",
-  productionID: ""
-};
+    userID: userInfo.value.userID,
+    dateEncoded: formatDate(new Date()),
+    completionDate: "",
+    startDate: "",
+    remarks: "",
+    status: "Pending",
+    productionID: "",
+  };
 };
 
 const openEditModal = (production) => {
@@ -589,66 +657,99 @@ const openEditModal = (production) => {
 };
 
 const editProductionDetail = (prodDetail) => {
-    productionDetailMode.value = 'edit';
-    productionDetailForm.value = { ...prodDetail };
-    isProductionDetailsModal.value = true;
-  }
+  productionDetailMode.value = "edit";
+  productionDetailForm.value = { ...prodDetail };
+  isProductionDetailsModal.value = true;
+};
 
 const requestQuotation = async () => {
-  if(users.value.filter((user) => user.userTypeID === 3).length > 0){
-    await Promise.all(users.value.filter((user) => user.userTypeID === 3).map(async(user) => {
-      await apiService.post("/api/quotations", {
-      quotationDate: formatDate(new Date()),
-      userID: user.userID,
-      remarks: selectedProduction.value.remarks ?? 'NA',
-      productionID:  selectedProduction.value.productionID
-    })
-    }));
+  isLoadingQuotationRequested.value = true
+  if (users.value.filter((user) => user.userTypeID === 3).length > 0) {
+    await Promise.all(
+      users.value
+        .filter((user) => user.userTypeID === 3)
+        .map(async (user) => {
+          await apiService.post("/api/quotations", {
+            quotationDate: formatDate(new Date()),
+            userID: user.userID,
+            remarks: selectedProduction.value.remarks ?? "NA",
+            productionID: selectedProduction.value.productionID,
+            isCompleted: false
+          });
+        })
+    );
     await fetchQuotationData();
+    isLoadingQuotationRequested.value = false
     alert("Quotation requested successfully");
-    isProductionDetailsInfo.value = false
+    isProductionDetailsInfo.value = false;
   } else {
-    alert ('Supplier list is empty!')
+    alert("Supplier list is empty!");
   }
-
-}
-  
+};
 
 const saveProduction = async () => {
   if (isEditMode.value) {
-    await apiService.put(`/api/productions/${productionForm.value.productionID}`, productionForm.value)
+    await apiService.put(
+      `/api/productions/${productionForm.value.productionID}`,
+      productionForm.value
+    );
     const index = productions.value.findIndex(
       (p) => p.productionID === productionForm.value.productionID
     );
     if (index !== -1) {
       productions.value[index] = { ...productionForm.value };
     }
-    alert('Production edited successfully!')
+    alert("Production edited successfully!");
   } else {
-    const result = await apiService.post("/api/productions", productionForm.value)
-    productions.value.push({ ...productionForm.value, productionID: result.data.productionID});
-    alert('Production created successfully!')
+    const result = await apiService.post(
+      "/api/productions",
+      productionForm.value
+    );
+    productions.value.push({
+      ...productionForm.value,
+      productionID: result.data.productionID,
+    });
+    alert("Production created successfully!");
   }
   closeModal();
 };
 
 const saveProductionDetail = async () => {
-  if (productionDetailMode.value === 'add') {
-    const result = await apiService.post("/api/productionDetails", {...productionDetailForm.value, productionID: selectedProduction.value.productionID})
-    selectedProductionDetails.value.push({...productionDetailForm.value, productionID: selectedProduction.value.productionID, prodtnDetailID: result.data.prodtnDetailID})
-    alert(`Production detail added successfully for Production No. ${selectedProduction.value.productionID}`)
+  if (productionDetailMode.value === "add") {
+    const result = await apiService.post("/api/productionDetails", {
+      ...productionDetailForm.value,
+      productionID: selectedProduction.value.productionID,
+    });
+    selectedProductionDetails.value.push({
+      ...productionDetailForm.value,
+      productionID: selectedProduction.value.productionID,
+      prodtnDetailID: result.data.prodtnDetailID,
+    });
+    alert(
+      `Production detail added successfully for Production No. ${selectedProduction.value.productionID}`
+    );
   } else {
-    await apiService.put(`/api/productionDetails/${productionDetailForm.value.prodtnDetailID}`, {...productionDetailForm.value, productionID: selectedProduction.value.productionID})
+    await apiService.put(
+      `/api/productionDetails/${productionDetailForm.value.prodtnDetailID}`,
+      {
+        ...productionDetailForm.value,
+        productionID: selectedProduction.value.productionID,
+      }
+    );
     const index = selectedProductionDetails.value.findIndex(
       (p) => p.prodtnDetailID === productionDetailForm.value.prodtnDetailID
     );
     if (index !== -1) {
-      selectedProductionDetails.value[index] = { ...productionDetailForm.value };
+      selectedProductionDetails.value[index] = {
+        ...productionDetailForm.value,
+      };
     }
-    alert(`Production detail edited successfully for Production No. ${selectedProduction.value.productionID}`)
+    alert(
+      `Production detail edited successfully for Production No. ${selectedProduction.value.productionID}`
+    );
   }
-  closeProductionDetailModal()
-}
+  closeProductionDetailModal();
+};
 
 const closeModal = () => {
   isModalOpen.value = false;
@@ -715,34 +816,35 @@ const getUserName = (userID) => {
 
 const getProduct = (productID) => {
   const product = products.value?.find((prod) => prod.productID === productID);
-  return product.productName ?? 'Unknown';
+  return product.productName ?? "Unknown";
 };
 
-
 const fetchQuotationData = async () => {
-  const result = await apiService.get("/api/quotations")
-  quotations.value = result.data
-}
+  const result = await apiService.get("/api/quotations");
+  quotations.value = result.data;
+};
 
 const fetchUsersData = async () => {
-  const result = await apiService.get("/api/users")
-  users.value = result.data
-}
+  const result = await apiService.get("/api/users");
+  users.value = result.data;
+};
 
-const fetchProductionData = async() => {
-  const result = await apiService.get("/api/productions")
-  productions.value = result.data
-}
+const fetchProductionData = async () => {
+  const result = await apiService.get("/api/productions");
+  productions.value = result.data;
+};
 
-const fetchProductsData = async() => {
-  const result = await apiService.get("/api/products")
-  products.value = result.data
-}
+const fetchProductsData = async () => {
+  const result = await apiService.get("/api/products");
+  products.value = result.data;
+};
 
-const fetchProductionDetailsData = async() => {
-  const result = await apiService.get(`/api/productionDetails/production/${selectedProduction.value.productionID}`)
-  selectedProductionDetails.value = result?.production_details
-}
+const fetchProductionDetailsData = async () => {
+  const result = await apiService.get(
+    `/api/productionDetails/production/${selectedProduction.value.productionID}`
+  );
+  selectedProductionDetails.value = result?.production_details;
+};
 
 onMounted(() => {
   fetchUsersData();
@@ -752,7 +854,7 @@ onMounted(() => {
     const storage = JSON.parse(localStorage.getItem("userInfo"));
     userInfo.value = storage ? storage : null;
   }
-})
+});
 </script>
 
 <style scoped>
