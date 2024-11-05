@@ -154,8 +154,8 @@
                   type="checkbox"
                   class="form-checkbox"
                   @change="(e) => { checkedPurchaseMaterial(e.target.checked, material)}"
-                  :checked="alreadyPurchasedMaterials.includes(material.prodtnMtrlID) ? true : false"
-                  :disabled="alreadyPurchasedMaterials.includes(material.prodtnMtrlID)"
+                  :checked="alreadyPurchasedMaterials?.includes(material.prodtnMtrlID) ? true : false"
+                  :disabled="alreadyPurchasedMaterials?.includes(material.prodtnMtrlID)"
                 />
               </td>
               <td class="py-2 px-4">
