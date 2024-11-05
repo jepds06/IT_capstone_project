@@ -365,11 +365,13 @@
             icon="oui:ml-create-single-metric-job"
             @click="openProductionDetailModal"
             :color="isQuotationRequested ? 'gray' : 'blue'"
+            :disabled="isQuotationRequested"
             class="mr-2"
             label="Add Production Details"
           />
           <UButton
             icon="material-symbols:request-quote-outline"
+            :loading="isLoadingQuotationRequested"
             @click="requestQuotation"
             size="sm"
             :color="isQuotationRequested || selectedProductionDetails.length === 0 ? 'gray' : 'green'"
@@ -552,6 +554,7 @@ const itemsPerPage = 5;
 
 const quotations = ref([]);
 
+const isLoadingQuotationRequested = ref(false);
 const isQuotationRequested = ref(false);
 const isProductionDetailsInfo = ref(false);
 const isProductionDetailsModal = ref(false);
@@ -660,6 +663,7 @@ const editProductionDetail = (prodDetail) => {
 };
 
 const requestQuotation = async () => {
+  isLoadingQuotationRequested.value = true
   if (users.value.filter((user) => user.userTypeID === 3).length > 0) {
     await Promise.all(
       users.value
@@ -675,6 +679,7 @@ const requestQuotation = async () => {
         })
     );
     await fetchQuotationData();
+    isLoadingQuotationRequested.value = false
     alert("Quotation requested successfully");
     isProductionDetailsInfo.value = false;
   } else {

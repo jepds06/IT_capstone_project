@@ -86,7 +86,7 @@
                 Product Material
               </th>
               <th class="px-6 py-2 text-black text-left border-b">
-                Quantity Quoted
+                Quantity
               </th>
               <th class="px-6 py-2 text-black text-left border-b">
                 Unit Price
@@ -94,7 +94,7 @@
               <th class="px-6 py-2 text-black text-left border-b">
                 Total Price
               </th>
-              <th class="px-6 py-2 text-black text-left border-b">Actions</th>
+              <th class="px-6 py-2 text-black text-left border-b" v-if="!selectedQuotation.isCompleted">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -143,7 +143,7 @@
                     : 0
                 }}
               </td>
-              <td class="px-6 py-4 text-black border-b">
+              <td class="px-6 py-4 text-black border-b" v-if="!selectedQuotation.isCompleted">
                 <div v-if="quotation.id === selectedQuotationDetail?.id">
                   <button
                     class="p-2 bg-red-500 text-white rounded hover:bg-red-600 mr-2"
@@ -174,17 +174,29 @@
           </tbody>
         </table>
 
-        <div class="flex mt-2">
+        <div class="flex  justify-between mt-2">
           <!-- <button @click="openQuotationDetailAddModal" class="p-2 mr-2 bg-blue-500 text-white rounded hover:bg-blue-600" title="Add Quotation Details">
         <i class="fas fa-plus"></i>
         Add Quotation Details
       </button> -->
-          <button
+          <UButton
             @click="closeQuotationDetailInfo"
-            class="bg-red-500 text-white px-4 py-2 rounded"
-          >
-            Close
-          </button>
+            label="Close"
+            color="red"
+            icon="material-symbols:close"
+          />
+
+          <UButton
+            icon="material-symbols-light:list-alt-check-outline-sharp"
+            @click="completeQuotation"
+            rounded="false"
+            size="sm"
+            :color="selectedQuotation.isCompleted ? 'gray' : 'blue'"
+            :disabled="selectedQuotation.isCompleted"
+            :loading="isCompleteLoading"
+            title="Complete Quotation"
+            label="Complete"
+          />
         </div>
       </div>
     </div>
@@ -367,6 +379,7 @@ const quotationDetails = ref([
 ]);
 
 // State variables
+const isCompleteLoading = ref(false);
 const isQuotationDetailInfo = ref(false);
 const isQuoDetailModalOpen = ref(false);
 const isQuoDetailEditMode = ref(false);
@@ -490,7 +503,6 @@ const openQuotationDetailInfo = async (quotation) => {
     }
     return productMaterial;
   });
-  console.log("transformData---", transformData);
   quotationDetails.value = transformData.map((value, index) => {
     return {
       ...value,
@@ -498,6 +510,18 @@ const openQuotationDetailInfo = async (quotation) => {
     };
   });
 };
+
+const completeQuotation = async() => {
+  isCompleteLoading.value = true
+  const result =  await apiService.put(`/api/quotations/${selectedQuotation.value.quoteID}`, {
+            ...selectedQuotation.value,
+            isCompleted: true
+  });
+  selectedQuotation.value = result.data
+  isCompleteLoading.value = false
+  alert("Quotation successfully completed");
+};
+
 const closQuoDetailModal = () => {
   isQuoDetailModalOpen.value = false;
 };
@@ -508,6 +532,7 @@ const closeQuotationModal = () => {
 
 const closeQuotationDetailInfo = () => {
   isQuotationDetailInfo.value = false;
+  selectedQuotationDetail.value = null
 };
 
 const resetForm = () => {
