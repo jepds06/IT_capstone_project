@@ -495,7 +495,7 @@ async function saveMaterial() {
   } else if (materialMode.value === 'edit') {
     const index = selectedProductMaterials.value.findIndex(mat => mat.id === materialForm.value.id)
     if (index !== -1) {
-      await apiService.put(`/api/productMaterials/${selectedProduct.value.productID}`, { ...materialForm.value, productID: selectedProduct.value.productID })
+      await apiService.put(`/api/productMaterials/${materialForm.value.productMatsID}`, { ...materialForm.value, productID: selectedProduct.value.productID })
       selectedProductMaterials.value[index] = { ...materialForm.value, productID: selectedProduct.value.productID }
       alert('Product Material edited successfully!')
     }

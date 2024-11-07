@@ -283,24 +283,6 @@
       </button>
     </div>
 
-    <!-- Pagination -->
-    <div class="flex justify-between items-center mt-4">
-      <button
-        :disabled="currentPage === 1"
-        class="bg-gray-300 px-4 py-2 rounded"
-        @click="prevPage"
-      >
-        Previous
-      </button>
-      <span>Page {{ currentPage }} of {{ totalPages }}</span>
-      <button
-        :disabled="currentPage === totalPages"
-        class="bg-gray-300 px-4 py-2 rounded"
-        @click="nextPage"
-      >
-        Next
-      </button>
-    </div>
   </div>
 </template>
 
