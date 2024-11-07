@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('userID');
             $table->unsignedBigInteger('productionID');
             $table->string('remarks');
+            $table->boolean('isCompleted');
 
             $table->Foreign('userID')->references('userID')->on('users')
             ->onUpdate('cascade')

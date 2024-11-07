@@ -17,8 +17,7 @@ class AdminDelivery extends Model
     protected $fillable = [
         'adminOrdID',
         'deliveryDate',
-        'deliveryAddress',
-//        'deliveryStatus',
+        'deliveryStatus',
         'qtyReceived'
     ];
 

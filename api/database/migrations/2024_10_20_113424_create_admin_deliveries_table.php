@@ -15,7 +15,7 @@ return new class extends Migration
             $table->bigIncrements('adminDlvrID');
             $table->unsignedBigInteger('adminOrdID');
             $table->date('deliveryDate');
-            $table->string('deliveryAddress');
+            $table->string('deliveryStatus');
             $table->integer('qtyReceived');
 
             $table->foreign('adminOrdID')->references('adminOrdID')->on('adminOrders')

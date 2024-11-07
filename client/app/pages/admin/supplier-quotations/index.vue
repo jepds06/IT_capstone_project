@@ -12,7 +12,7 @@
     />
 
     <!-- Quotation Table with Remarks Column -->
-    <table class="min-w-full bg-white border border-gray-500">
+    <table class="min-w-full border border-gray-300 rounded-lg mb-4">
       <thead class="bg-gray-200">
         <tr>
           <th class="py-2 px-4 text-left">Quotation No.</th>
@@ -88,7 +88,7 @@
                 {{ supplier?.quotationRemarks }}
               </td>
               <td class="py-2 px-4">
-                <button
+                <!-- <button
                   :class="
                     supplier.quotation_details.length > 0
                       ? 'bg-blue-500 text-white py-1 px-3 rounded-md mr-2'
@@ -98,17 +98,18 @@
                   @click="confirmPurchaseOrder(supplier)"
                 >
                   Generate PO
-                </button>
+                </button> -->
                 <button
                   :class="
                     supplier.quotation_details.length > 0
-                      ? 'bg-green-800 text-white py-1 px-3 rounded-md'
+                      ? 'bg-red-800 text-white py-1 px-3 rounded-md'
                       : 'bg-gray-300 py-1 px-3 rounded-md cursor-not-allowed'
                   "
                   :disabled="!supplier.quotation_details.length > 0"
                   @click="downloadQuotation(supplier)"
                 >
-                  Download PDF
+                  <UIcon name="vscode-icons:file-type-pdf2" class="w-5" />
+                  Download
                 </button>
               </td>
             </tr>
@@ -127,7 +128,7 @@
         <h3 class="text-xl font-bold mb-4">Product Material Details</h3>
         <label for="materialId" class="block mb-2 mt-4 text-black"
           >Supplier:<span>{{
-            `${getSupplierName(selectedSupplier.userID)}`
+            `${getSupplierName(selectedSupplier?.userID)}`
           }}</span></label
         >
         <label for="materialId" class="block mb-2 mt-4 text-black"
@@ -136,17 +137,27 @@
         <table class="min-w-full bg-white border border-gray-300 mb-4">
           <thead class="bg-gray-200">
             <tr>
-              <th class="py-2 px-4 text-left">Material</th>
-              <th class="py-2 px-4 text-left">Quantity</th>
+              <th class="py-2 px-4 text-left"></th>
+              <th class="py-2 px-4 text-left">Product Material</th>
+              <th class="py-2 px-4 text-left">Qty.</th>
               <th class="py-2 px-4 text-left">Unit Price</th>
               <th class="py-2 px-4 text-left">Total Price</th>
             </tr>
           </thead>
           <tbody>
             <tr
-              v-for="(material, index) in selectedSupplier.quotation_details"
+              v-for="(material, index) in selectedSupplier?.quotation_details"
               :key="index"
             >
+              <td>
+                <input
+                  type="checkbox"
+                  class="form-checkbox"
+                  @change="(e) => { checkedPurchaseMaterial(e.target.checked, material)}"
+                  :checked="alreadyPurchasedMaterials?.includes(material.prodtnMtrlID) ? true : false"
+                  :disabled="alreadyPurchasedMaterials?.includes(material.prodtnMtrlID)"
+                />
+              </td>
               <td class="py-2 px-4">
                 {{ this.getMaterialProductName(material?.prodtnMtrlID) }}
               </td>
@@ -171,6 +182,13 @@
                     : 0
                 }}
               </td>
+              <!-- <button
+                  class="bg-blue-500 text-white rounded-md mr-2"
+                  @click="confirmPurchaseOrder(material)"
+                >
+                <UIcon name="material-symbols:shopping-cart-checkout" title="Purchase"/>
+                  
+                </button> -->
             </tr>
           </tbody>
         </table>
@@ -186,9 +204,22 @@
           }}
         </div>
 
-        <button @click="closeSupplierDetailsModal" class="text-red-600">
-          Close
-        </button>
+        <div class="flex justify-between mt-2">
+          <button @click="closeSupplierDetailsModal" class="text-red-600">
+            Close
+          </button>
+
+          <UButton
+            :disabled="purchasedMaterials.length === 0"
+            @click="confirmPurchaseOrder(material)"
+          >
+            <UIcon
+              name="material-symbols:shopping-cart-checkout"
+              title="Purchase"
+            />
+            Purchase
+          </UButton>
+        </div>
       </div>
     </div>
 
@@ -204,7 +235,7 @@
         <div class="flex justify-end">
           <button
             class="bg-blue-500 text-white py-1 px-3 rounded-md mr-2"
-            @click="generatePurchaseOrder(selectedSupplier)"
+            @click="generatePurchaseOrder()"
           >
             Yes
           </button>
@@ -251,6 +282,25 @@
         Next
       </button>
     </div>
+
+    <!-- Pagination -->
+    <div class="flex justify-between items-center mt-4">
+      <button
+        :disabled="currentPage === 1"
+        class="bg-gray-300 px-4 py-2 rounded"
+        @click="prevPage"
+      >
+        Previous
+      </button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button
+        :disabled="currentPage === totalPages"
+        class="bg-gray-300 px-4 py-2 rounded"
+        @click="nextPage"
+      >
+        Next
+      </button>
+    </div>
   </div>
 </template>
 
@@ -270,29 +320,6 @@ export default {
     return {
       users: [],
       quotations: [
-        // {
-        //   number: 'Q-1001',
-        //   date: '2024-10-20',
-        //   sentBy: 'Rhea',
-        //   status: '3 suppliers quoted',
-        //   remarks: 'Pending',
-        //   suppliers: [
-        //     { name: 'Supplier A', remarks: 'Lowest price', qty: '100', price: '$5000' },
-        //     { name: 'Supplier B', remarks: 'Higher price', qty: '100', price: '$5500' },
-        //     { name: 'Supplier C', remarks: 'Mid-range price', qty: '100', price: '$5200' },
-        //   ],
-        // },
-        // {
-        //   number: 'Q-1002',
-        //   date: '2024-10-22',
-        //   sentBy: 'Rhy',
-        //   status: '2 suppliers quoted',
-        //   remarks: 'Pending',
-        //   suppliers: [
-        //     { name: 'Supplier D', remarks: 'Lowest price', qty: '50', price: '$4000' },
-        //     { name: 'Supplier E', remarks: 'Higher price', qty: '50', price: '$4500' },
-        //   ],
-        // },
       ],
       selectedQuotation: null,
       selectedQuotationDetail: null,
@@ -305,6 +332,9 @@ export default {
       searchQuery: "",
       currentPage: 1,
       itemsPerPage: 5,
+      purchasedMaterials: [],
+      userInfo: null,
+      alreadyPurchasedMaterials: [],
     };
   },
   computed: {
@@ -329,8 +359,21 @@ export default {
   async mounted() {
     await this.fetchUserData();
     await this.fetchQuotationData();
+    if (process.client) {
+    const storage = JSON.parse(localStorage.getItem("userInfo"));
+    this.userInfo = storage ? storage : null;
+  }
   },
   methods: {
+    checkedPurchaseMaterial(isChecked, material) {
+      if (isChecked === true){
+        this.purchasedMaterials.push(material.prodtnMtrlID)
+      } else {
+        const newDataSet = this.purchasedMaterials
+        const index  = newDataSet.indexOf(material.prodtnMtrlID);
+        this.purchasedMaterials.splice(index, 1)
+      }
+    },
     openQuotationModal(quotation) {
       this.selectedQuotation = quotation;
     },
@@ -343,6 +386,7 @@ export default {
       );
       this.selectedSupplier = supplier;
       this.showSupplierDetailsModal = true;
+      await this.fetchAdminOrders()
     },
     getTotalPrice(supplier) {
       const totalPrice = supplier.reduce(
@@ -358,16 +402,31 @@ export default {
     },
     confirmPurchaseOrder(supplier) {
       this.showConfirmationModal = true;
-      this.selectedSupplier = supplier;
     },
-    generatePurchaseOrder(supplier) {
+    async generatePurchaseOrder() {
+      const adminOrder = {
+        userID: this.userInfo.userID,
+        quoteID: this.selectedSupplier?.quotation_details[0]?.quoteID
+      }
+      const adminOrderDetails = this.purchasedMaterials.map((prodtnMtrlID) => {
+      const material = this.selectedSupplier?.quotation_details.find((value) => value.prodtnMtrlID === prodtnMtrlID)
+        return {
+          prodtnMtrlID,
+          qtyOrdered: material.quantity,
+          amount: material.quantity * material.quotePrice,
+          isDropped: false
+        }
+      })
+
+      await apiService.post("/api/adminOrders", {...adminOrder, quotationDetails: adminOrderDetails});
+
       this.showConfirmationModal = false;
       this.showSuccessModal = true;
-      supplier.remarks = "PO Generated";
     },
     closeSuccessModal() {
       this.showSuccessModal = false;
-      this.selectedSupplier = null;
+      this.purchasedMaterials = [];
+      this.showSupplierDetailsModal = false;
     },
     prevPage() {
       if (this.currentPage > 1) {
@@ -414,7 +473,6 @@ export default {
           id: index + 1,
         };
       });
-      console.log("selectedQuotaionDetail--", this.selectedQuotationDetail);
       await this.processPDFFile();
     },
     async processPDFFile() {
@@ -575,6 +633,15 @@ export default {
         };
       });
     },
+
+    async fetchAdminOrders() {
+      const result = await apiService.get("/api/adminOrders");
+
+      const filterData = result.data?.filter((val) => val.quoteID === this.selectedSupplier?.quotation_details[0]?.quoteID)
+
+      this.alreadyPurchasedMaterials = filterData[0]?.admin_order_detail?.map((val) => val.prodtnMtrlID)
+
+    }
   },
 };
 </script>
@@ -593,10 +660,10 @@ h2 {
   margin-bottom: 20px;
 }
 
-table {
+/* table {
   width: 100%;
   border-collapse: collapse;
-}
+} */
 
 th,
 td {
@@ -605,8 +672,8 @@ td {
 }
 
 th {
-  background-color: #0e8bf1;
-  color: white;
+  /* background-color: #0e8bf1; */
+  color: black;
   text-transform: uppercase;
 }
 

@@ -15,18 +15,25 @@ class AdminPayment extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
-        'adminOrdID',
+        'adminOrdDetailID',
         'payMethodID',
+        'paymentDate',
         'amountToPay',
         'amountPaid',
-        'dueDate',
         'paymentStatus',
         'remarks'
     ];
 
-    public function adminOrder()
+    public $timestamps = false;
+
+    public function adminOrdDetail()
     {
-        return $this->belongsTo(AdminOrder::class, 'adminOrdID');
+        return $this->belongsTo(AdminOrderDetail::class, 'adminOrdDetailID');
+    }
+
+    public function adminOrderDetails()
+    {
+        return $this->belongsTo(AdminOrderDetail::class, 'adminOrdDetailID');
     }
 
     // Relationship with the PaymentMethod model

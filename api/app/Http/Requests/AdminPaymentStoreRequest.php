@@ -22,11 +22,11 @@ class AdminPaymentStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'adminOrdID' => 'required|integer|exists:adminOrders,adminOrdID', 
-            'payMethodID' => 'required|integer|exists:paymentMethods,payMethodID', 
+            'adminOrdDetailID' => 'required|integer|exists:adminOrders,adminOrdID', 
+            'payMethodID' => 'required|integer|exists:paymentMethods,payMethodID',
+            'paymentDate' => 'required|date|after_or_equal:today',
             'amountToPay' => 'required|numeric|min:0', 
             'amountPaid' => 'required|numeric|min:0', 
-            'dueDate' => 'required|date|after_or_equal:today', 
             'paymentStatus' => 'required|string|in:pending,completed,cancelled',
             'remarks' => 'nullable|string|max:255', 
         ];
