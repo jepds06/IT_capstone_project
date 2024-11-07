@@ -6,8 +6,9 @@ import { useAuth } from '@/composables/useAuth';
 
 const userTypes = ref([]);
 const modules = ref([]);
+const errorMessage = ref(""); // To hold error messages
 
-const { setToken, logout } = useAuth();
+const { setToken } = useAuth();
 
 definePageMeta({
   layout: "auth",
@@ -34,8 +35,23 @@ const fields = [
 
 const validate = (state: any) => {
   const errors = [];
-  if (!state.email) errors.push({ path: "email", message: "Email is required" });
-  if (!state.password) errors.push({ path: "password", message: "Password is required" });
+
+  // Check if email is provided
+  if (!state.email) {
+    errors.push({ path: "email", message: "Email is required" });
+  } else if (!/\S+@\S+\.\S+/.test(state.email)) {
+    // Validate email format
+    errors.push({ path: "email", message: "Please enter a valid email address" });
+  }
+
+  // Check if password is provided
+  if (!state.password) {
+    errors.push({ path: "password", message: "Password is required" });
+  } else if (state.password.length < 6) {
+    // Validate password length
+    errors.push({ path: "password", message: "Password must be at least 6 characters long" });
+  }
+
   return errors;
 };
 
@@ -45,54 +61,58 @@ function getUserTypeDescription(userTypeId: number) {
 }
 
 function getModuleName(moduleID) {
-      const module = modules?.value?.find((mod) => mod.moduleID === moduleID);
-      return module ? module.moduleName : "Unknown";
-  }
+  const module = modules?.value?.find((mod) => mod.moduleID === moduleID);
+  return module ? module.moduleName : "Unknown";
+}
 
 async function onSubmit(data: any) {
-  try {
-    console.log("Submitted", data);
-    
-    // Login API call
-    const result = await apiService.post("/api/login", data);
+    errorMessage.value = ""; // Reset error message before submission
 
-     // Fetch user types
-     const userType = await apiService.get("/api/userTypes");
-    userTypes.value = userType.data;
-    
-    // Navigate based on user type
-    const userTypeDescription = getUserTypeDescription(result.data.user.userTypeID);
-    
-    // Set token in Vuex and localStorage
-    setToken(result.data.token);
-    localStorage.setItem('userInfo', JSON.stringify({...result.data.user, userTypeDescription}));
+    try {
+        console.log("Submitted", data);
+        
+        // Login API call
+        const result = await apiService.post("/api/login", data);
 
-    const listModules = await apiService.get("/api/modules");
+        // Check if the result is an error response
+        if (result.status && result.data) {
+            errorMessage.value = result.data.message || "An unexpected error occurred.";
+            return; // Exit the function after setting the error message
+        }
 
-    modules.value = listModules.data;
+        // Proceed with user type fetching and navigation if successful
+        const userType = await apiService.get("/api/userTypes");
+        userTypes.value = userType.data;
+        
+        const userTypeDescription = getUserTypeDescription(result.data.user.userTypeID);
+        
+        setToken(result.data.token);
+        localStorage.setItem('userInfo', JSON.stringify({...result.data.user, userTypeDescription}));
 
-    // User Permission API Call
-    const permission = await apiService.get("/api/userPrivilage");
+        const listModules = await apiService.get("/api/modules");
+        modules.value = listModules.data;
 
-    const transformData = permission.data?.filter((per) => per.userID ===  result.data.user.userID).map((per) => {
-      return {
-        ...per,
-        moduleName: getModuleName(per.moduleID)
-      }
-    })
-    // Dispatch setPermission to Vuex store
-    localStorage.setItem('userPermission', JSON.stringify(transformData));
+        const permission = await apiService.get("/api/userPrivilage");
+        const transformData = permission.data?.filter((per) => per.userID ===  result.data.user.userID).map((per) => {
+            return {
+                ...per,
+                moduleName: getModuleName(per.moduleID)
+            }
+        });
 
-    if (userTypeDescription === 'Administrator') {
-      navigateTo("/admin");
-    } else if (userTypeDescription === 'Customer') {
-      navigateTo("/customer-product");
-    } else {
-      navigateTo("/supplier/quotations");
+        localStorage.setItem('userPermission', JSON.stringify(transformData));
+
+        if (userTypeDescription === 'Administrator') {
+            navigateTo("/admin");
+        } else if (userTypeDescription === 'Customer') {
+            navigateTo("/customer-product");
+        } else {
+            navigateTo("/supplier/quotations");
+        }
+    } catch (error) {
+        console.error(error); // Log the error for debugging
+        errorMessage.value = "An unexpected error occurred. Please try again."; // Fallback error message
     }
-  } catch (error) {
-    console.error(error);
-  }
 }
 </script>
 
@@ -111,14 +131,9 @@ async function onSubmit(data: any) {
       :submit-button="{ trailingIcon: 'i-heroicons-arrow-right-20-solid' }"
       @submit="onSubmit"
     >
-      <!-- <template #description>
-        Don't have an account?
-        <NuxtLink to="/signup" class="text-primary font-medium">Sign up</NuxtLink>.
-      </template> -->
-      <!-- <template #password-hint>
-        <NuxtLink to="/" class="text-primary font-medium">Forgot password?</NuxtLink>
-      </template> -->
-      <template #footer></template>
+      <template #footer>
+        <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p> <!-- Display error message here -->
+      </template>
     </UAuthForm>
   </UCard>
 </template>

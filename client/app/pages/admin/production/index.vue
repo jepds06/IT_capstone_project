@@ -482,9 +482,25 @@
               class="ml-2 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
             >
               Cancel
-            </button>
-          </div>
-        </form>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+    <!-- Confirmation Modal Production Details-->
+    <div v-if="isProductionDetailConfirmationVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+        <h3 class="text-xl font-bold mb-4 text-black">Are you sure you want to proceed?</h3>
+        <div class="flex justify-end mt-4">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-md mr-2" @click="saveProductionDetail">
+            Yes
+          </button>
+          <button class="text-red-600 py-1 px-3 rounded-md" @click="closeProductionDetailConfirmation">
+            No
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -638,7 +654,7 @@ const paginatedProductions = computed(() => {
 
 const openAddModal = () => {
   isModalOpen.value = true;
-  isEditMode.value = false;
+  isEditMode.value = false; // Set to false for adding
   productionForm.value = {
     userID: userInfo.value.userID,
     dateEncoded: formatDate(new Date()),
@@ -652,9 +668,10 @@ const openAddModal = () => {
 
 const openEditModal = (production) => {
   isModalOpen.value = true;
-  isEditMode.value = true;
-  productionForm.value = { ...production };
+  isEditMode.value = true; // Set to true for editing
+  productionForm.value = { ...production }; // Load existing production data
 };
+
 
 const editProductionDetail = (prodDetail) => {
   productionDetailMode.value = "edit";
