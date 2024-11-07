@@ -38,6 +38,7 @@
         <table class="min-w-full bg-white border border-gray-300 mb-4">
           <thead class="bg-gray-100">
             <tr>
+<<<<<<< HEAD
               <th class="px-6 py-2 text-left border-b">Quotation ID</th>
               <th class="px-6 py-2 text-left border-b">Quotation Date</th>
               <th class="px-6 py-2 text-left border-b">Remarks</th>
@@ -51,11 +52,102 @@
               <td class="px-6 py-4 border-b">{{ request.details }}</td>
               <td class="px-6 py-4 border-b">
                 <button @click="viewRequestDetails(request)" class="text-blue-500 hover:underline">View</button>
+=======
+              <th class="px-6 py-2 text-black text-left border-b">ID</th>
+              <th class="px-6 py-2 text-black text-left border-b">
+                Product Material
+              </th>
+              <th class="px-6 py-2 text-black text-left border-b">
+                Quantity
+              </th>
+              <th class="px-6 py-2 text-black text-left border-b">
+                Unit Price
+              </th>
+              <th class="px-6 py-2 text-black text-left border-b">
+                Total Price
+              </th>
+              <th class="px-6 py-2 text-black text-left border-b" v-if="!selectedQuotation.isCompleted">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="quotation in quotationDetails"
+              :key="quotation.id"
+              class="hover:bg-gray-50"
+            >
+              <td class="px-6 py-4 text-black border-b">{{ quotation.id }}</td>
+              <td class="px-6 py-4 text-black border-b">
+                {{ getMaterialProductName(quotation.prodtnMtrlID) }}
+              </td>
+              <td class="px-6 py-4 text-black border-b">
+                {{ quotation.quantity }}
+              </td>
+              <td class="px-6 py-4 text-black border-b">
+                <div v-if="quotation.id === selectedQuotationDetail?.id">
+                  <input
+                    id="totalPrice"
+                    v-model.number="quotationDetailForm.quotePrice"
+                    type="number"
+                    step="0.01"
+                    placeholder="Enter total price"
+                    required
+                    class="w-full p-2 border rounded"
+                  />
+                </div>
+                <div v-else>
+                  {{
+                    quotation.quotePrice
+                      ? new Intl.NumberFormat("en-PH", {
+                          style: "currency",
+                          currency: "PHP",
+                        }).format(quotation.quotePrice)
+                      : 0
+                  }}
+                </div>
+              </td>
+              <td class="px-6 py-4 text-black border-b">
+                {{
+                  quotation.quotePrice
+                    ? new Intl.NumberFormat("en-PH", {
+                        style: "currency",
+                        currency: "PHP",
+                      }).format(quotation.quantity * quotation.quotePrice)
+                    : 0
+                }}
+              </td>
+              <td class="px-6 py-4 text-black border-b" v-if="!selectedQuotation.isCompleted">
+                <div v-if="quotation.id === selectedQuotationDetail?.id">
+                  <button
+                    class="p-2 bg-red-500 text-white rounded hover:bg-red-600 mr-2"
+                    title="Cancel"
+                    @click="selectedQuotationDetail = null"
+                  >
+                    <i class="fas fa-close"></i>
+                  </button>
+                  <button
+                    class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                    title="Save Quotation Detall"
+                    @click="saveQuotationDetail"
+                  >
+                    <i class="fas fa-save"></i>
+                  </button>
+                </div>
+                <div v-else>
+                  <button
+                    @click="openQuotationDetailEditModal(quotation)"
+                    class="p-2 bg-green-500 text-white rounded hover:bg-green-600"
+                    title="Edit Quotation"
+                  >
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </div>
+>>>>>>> 651bd9cc88df68b7a6d3c43a00c7047f36adc934
               </td>
             </tr>
           </tbody>
         </table>
 
+<<<<<<< HEAD
         <!-- Pagination Controls -->
         <div class="flex justify-center items-center space-x-2 mb-4">
           <button
@@ -118,6 +210,31 @@
           >
             Next
           </button>
+=======
+        <div class="flex  justify-between mt-2">
+          <!-- <button @click="openQuotationDetailAddModal" class="p-2 mr-2 bg-blue-500 text-white rounded hover:bg-blue-600" title="Add Quotation Details">
+        <i class="fas fa-plus"></i>
+        Add Quotation Details
+      </button> -->
+          <UButton
+            @click="closeQuotationDetailInfo"
+            label="Close"
+            color="red"
+            icon="material-symbols:close"
+          />
+
+          <UButton
+            icon="material-symbols-light:list-alt-check-outline-sharp"
+            @click="completeQuotation"
+            rounded="false"
+            size="sm"
+            :color="selectedQuotation.isCompleted ? 'gray' : 'blue'"
+            :disabled="selectedQuotation.isCompleted"
+            :loading="isCompleteLoading"
+            title="Complete Quotation"
+            label="Complete"
+          />
+>>>>>>> 651bd9cc88df68b7a6d3c43a00c7047f36adc934
         </div>
       </div>
     </div>
@@ -230,6 +347,7 @@ const quotationDetails = ref([
 ]);
 
 // State variables
+const isCompleteLoading = ref(false);
 const isQuotationDetailInfo = ref(false);
 const isQuoDetailModalOpen = ref(false);
 const isQuoDetailEditMode = ref(false);
@@ -373,7 +491,6 @@ const openQuotationDetailInfo = async (quotation) => {
     }
     return productMaterial;
   });
-  console.log("transformData---", transformData);
   quotationDetails.value = transformData.map((value, index) => {
     return {
       ...value,
@@ -381,6 +498,18 @@ const openQuotationDetailInfo = async (quotation) => {
     };
   });
 };
+
+const completeQuotation = async() => {
+  isCompleteLoading.value = true
+  const result =  await apiService.put(`/api/quotations/${selectedQuotation.value.quoteID}`, {
+            ...selectedQuotation.value,
+            isCompleted: true
+  });
+  selectedQuotation.value = result.data
+  isCompleteLoading.value = false
+  alert("Quotation successfully completed");
+};
+
 const closQuoDetailModal = () => {
   isQuoDetailModalOpen.value = false;
 };
@@ -391,6 +520,7 @@ const closeQuotationModal = () => {
 
 const closeQuotationDetailInfo = () => {
   isQuotationDetailInfo.value = false;
+  selectedQuotationDetail.value = null
 };
 
 const resetForm = () => {

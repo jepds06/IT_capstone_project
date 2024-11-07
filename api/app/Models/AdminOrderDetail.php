@@ -18,7 +18,8 @@ class AdminOrderDetail extends Model
         'adminOrdID',
         'prodtnMtrlID',
         'qtyOrdered',
-        'amount'
+        'amount',
+        'isDropped'
     ];
 
     public $timestamps = false;

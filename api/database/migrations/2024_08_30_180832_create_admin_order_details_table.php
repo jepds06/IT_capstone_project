@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('prodtnMtrlID');
             $table->integer('qtyOrdered');
             $table->decimal('amount', 10, 2);
+            $table->boolean('isDropped');
 
             $table->foreign('adminOrdID')->references('adminOrdID')->on('adminOrders')
             ->onUpdate('cascade')
