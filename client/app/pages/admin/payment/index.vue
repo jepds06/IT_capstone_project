@@ -4,7 +4,26 @@
     <h2 class="text-2xl font-black text-left mb-14">Bills Payment</h2>
 
     <!-- Form Section -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+
+      <div class="col-span-1">
+        <!-- <div class="flex justify-between items-center mb-4">
+          <div>
+            <button @click="editSupplier" class="mr-2 text-blue-600 hover:text-blue-800">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+            <button @click="saveSupplier" class="text-green-600 hover:text-green-800">
+              <i class="fas fa-save"></i> Save
+            </button>
+          </div>
+        </div> -->
+        <label class="block font-semibold text-lg mb-2">Production No</label>
+        <select class="w-full p-2 border rounded text-base">
+          <option>Select Production No</option>
+          <option>1</option>
+          <option>2</option>
+        </select>
+      </div>
       <!-- Supplier Section -->
       <div class="col-span-1">
         <!-- <div class="flex justify-between items-center mb-4">
@@ -36,6 +55,7 @@
             class="w-full p-2 border rounded text-base"
           >
             <option>Select Payment Type</option>
+            <option>All</option>
             <option>Cash</option>
             <option>Cheque</option>
           </select>

@@ -161,6 +161,7 @@ Route::prefix('quotationDetails')->group(function(){
 //Admin Order route
 Route::prefix('adminOrders')->group(function(){
     Route::get('/', [AdminOrderController::class, 'index']);
+    Route::get('/production/{productionID}', [AdminOrderController::class, 'indexByProductionID']);
     Route::get('/{adminOrderId}', [AdminOrderController::class, 'show']);
     Route::post('/', [AdminOrderController::class, 'store']);
     Route::put('/{adminOrderId}', [AdminOrderController::class, 'update']);

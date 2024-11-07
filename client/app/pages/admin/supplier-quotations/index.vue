@@ -150,13 +150,18 @@
               :key="index"
             >
               <td>
-                <input
+                <div v-if="alreadyPurchasedMatOtherSupplier?.includes(material.prodtnMtrlID)">
+                  <UIcon name="solar:bag-cross-bold-duotone" class="w-5 h-5 bg-red-600" title="Material is purchased"/>
+                </div>
+                <div v-else>
+                  <input
                   type="checkbox"
                   class="form-checkbox"
                   @change="(e) => { checkedPurchaseMaterial(e.target.checked, material)}"
                   :checked="alreadyPurchasedMaterials?.includes(material.prodtnMtrlID) ? true : false"
                   :disabled="alreadyPurchasedMaterials?.includes(material.prodtnMtrlID)"
                 />
+                </div>
               </td>
               <td class="py-2 px-4">
                 {{ this.getMaterialProductName(material?.prodtnMtrlID) }}
@@ -317,6 +322,7 @@ export default {
       purchasedMaterials: [],
       userInfo: null,
       alreadyPurchasedMaterials: [],
+      alreadyPurchasedMatOtherSupplier: [],
     };
   },
   computed: {
@@ -618,10 +624,14 @@ export default {
 
     async fetchAdminOrders() {
       const result = await apiService.get("/api/adminOrders");
-
+      const filterDataFromProd = result.data.filter((val) => val.quotation.production.productionID === this.selectedQuotation.productionID).map((value) =>{
+        return value.admin_order_detail
+      }).flat(1)
+     
       const filterData = result.data?.filter((val) => val.quoteID === this.selectedSupplier?.quotation_details[0]?.quoteID)
 
       this.alreadyPurchasedMaterials = filterData[0]?.admin_order_detail?.map((val) => val.prodtnMtrlID)
+      this.alreadyPurchasedMatOtherSupplier = filterDataFromProd.filter((val) => !this.alreadyPurchasedMaterials.includes(val.prodtnMtrlID))?.map((val) => val.prodtnMtrlID)
 
     }
   },

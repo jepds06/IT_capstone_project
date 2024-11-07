@@ -22,6 +22,15 @@ class AdminOrderController extends Controller
         return $this->adminOrderService->findAdminOrder();
     }
 
+        /**
+     * Display a listing of the resource by productionID.
+     */
+    public function indexByProductionID(int $produtionID)
+    {
+        return $this->adminOrderService->findAdminOrderByProductionID($produtionID);
+    }
+
+
     /**
      * Store a newly created resource in storage.
      */
