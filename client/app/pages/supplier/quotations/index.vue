@@ -1,222 +1,231 @@
 <template>
-  <div class="p-6">
-    <!-- Main Tabs -->
-    <div class="mb-4">
-      <ul class="flex space-x-4 border-b">
-        <li class="cursor-pointer pb-2 tab" 
-            :class="{'border-b-2 border-blue-500': activeTab === 'quotations'}" 
-            @click="activeTab = 'quotations'">Quotations
-        </li>
-        <li class="cursor-pointer pb-2 tab" 
-            :class="{'border-b-2 border-blue-500': activeTab === 'purchaseOrder'}" 
-            @click="activeTab = 'purchaseOrder'">Purchase Order
-        </li>
-        <li class="cursor-pointer pb-2 tab" 
-            :class="{'border-b-2 border-blue-500': activeTab === 'adminPayments'}" 
-            @click="activeTab = 'adminPayments'">Admin Payments
-        </li>
-      </ul>
-    </div>
-    
-    <!-- Sub-tabs for Quotations -->
-    <div class="mb-4" v-if="activeTab === 'quotations'"> 
-      <ul class="flex space-x-4">
-        <li @click="setActiveSubTab('requests')" 
-            class="cursor-pointer pb-2 tab" 
-            :class="{ 'border-b-2 border-blue-500': activeSubTab === 'requests' }">Quotation Requests</li>
-        <li @click="setActiveSubTab('cancelled')" 
-            class="cursor-pointer pb-2 tab" 
-            :class="{ 'border-b-2 border-blue-500': activeSubTab === 'cancelled' }">Cancelled Quotations</li>
-      </ul>
-    </div>
+    <div>
+    <ul class="flex border-b">
+      <li
+        :class="{
+          'border-blue-500 text-blue-500': activeMainTab === 'quotations',
+          'border-transparent': activeMainTab !== 'quotations',
+        }"
+        class="cursor-pointer p-4 border-b-2"
+        @click="setActiveMainTab('quotations')"
+      >
+        Quotations
+      </li>
+      <li
+        :class="{
+          'border-blue-500 text-blue-500': activeMainTab === 'purchaseOrder',
+          'border-transparent': activeMainTab !== 'purchaseOrder',
+        }"
+        class="cursor-pointer p-4 border-b-2"
+        @click="setActiveMainTab('purchaseOrder')"
+      >
+        Purchase Order
+      </li>
+      <li
+        :class="{
+          'border-blue-500 text-blue-500': activeMainTab === 'adminPayments',
+          'border-transparent': activeMainTab !== 'adminPayments',
+        }"
+        class="cursor-pointer p-4 border-b-2"
+        @click="setActiveMainTab('adminPayments')"
+      >
+        Admin Payments
+      </li>
+    </ul>
 
-    <!-- Quotations Table with Search and Pagination -->
-    <div v-if="activeTab === 'quotations'">
-      <div v-if="activeSubTab === 'requests'">
-        <h3 class="text-xl font-semibold mb-2">Quotation Requests</h3>
-        <input type="text" v-model="searchRequestQuery" placeholder="Search requests..." class="w-1/3 p-2 border rounded-lg mb-4" />
-        <table class="min-w-full bg-white border border-gray-300 mb-4">
+    <div v-if="activeMainTab === 'quotations'">
+      <ul class="flex border-b mt-4">
+        <li
+          :class="{
+            'border-blue-500 text-blue-500': activeSubTab === 'quotationRequest',
+            'border-transparent': activeSubTab !== 'quotationRequest',
+          }"
+          class="cursor-pointer p-4 border-b-2"
+          @click="setActiveSubTab('quotationRequest')"
+        >
+          Quotation Request
+        </li>
+        <li
+          :class="{
+            'border-blue-500 text-blue-500': activeSubTab === 'cancelledQuotations',
+            'border-transparent': activeSubTab !== 'cancelledQuotations',
+          }"
+          class="cursor-pointer p-4 border-b-2"
+          @click="setActiveSubTab('cancelledQuotations')"
+        >
+          Cancelled Quotations
+        </li>
+      </ul>
+
+      <div v-if="activeSubTab === 'quotationRequest'" class="mt-4">
+        <input type="text" placeholder="Search..." class="mb-4 p-2 border rounded w-full" v-model="searchQuery" />
+        <table class="w-full border border-gray-200">
           <thead class="bg-gray-100">
             <tr>
-              <th class="px-6 py-2 text-left border-b">Quotation ID</th>
-              <th class="px-6 py-2 text-left border-b">Quotation Date</th>
-              <th class="px-6 py-2 text-left border-b">Remarks</th>
-              <th class="px-6 py-2 text-left border-b">Actions</th>
+              <th class="p-2 border-b">Quotation ID</th>
+              <th class="p-2 border-b">Quotation Date</th>
+              <th class="p-2 border-b">Remarks</th>
+              <th class="p-2 border-b">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="request in paginatedQuotationRequests" :key="request.id" class="hover:bg-gray-50">
-              <td class="px-6 py-4 border-b">{{ request.id }}</td>
-              <td class="px-6 py-4 border-b">{{ request.requestDate }}</td>
-              <td class="px-6 py-4 border-b">{{ request.details }}</td>
-              <td class="px-6 py-4 border-b">
-                <button @click="viewRequestDetails(request)" class="text-blue-500 hover:underline">View</button>
+            <tr v-for="item in filteredQuotationRequestData" :key="item.id" class="text-center">
+              <td class="p-2 border-b">{{ item.quotationID }}</td>
+              <td class="p-2 border-b">{{ item.quotationDate }}</td>
+              <td class="p-2 border-b">{{ item.remarks }}</td>
+              <td class="p-2 border-b">
+                <button class="px-2 py-1 bg-blue-500 text-white rounded">Edit</button>
               </td>
             </tr>
           </tbody>
         </table>
-
-        <!-- Pagination Controls -->
-        <div class="flex justify-center items-center space-x-2 mb-4">
-          <button
-            @click="prevPage"
-            :disabled="currentPage === 1"
-            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-          >
-            Previous
-          </button>
+        <div class="mt-4 flex justify-between">
+          <button @click="prevPage" :disabled="currentPage === 1" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Previous</button>
           <span>Page {{ currentPage }} of {{ totalPages }}</span>
-          <button
-            @click="nextPage"
-            :disabled="currentPage === totalPages"
-            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-          >
-            Next
-          </button>
+          <button @click="nextPage" :disabled="currentPage === totalPages" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Next</button>
         </div>
       </div>
 
-      <!-- Cancelled Quotations Table with Search and Pagination -->
-      <div v-if="activeSubTab === 'cancelled'">
-        <h3 class="text-xl font-semibold mb-2">Cancelled Quotations</h3>
-        <input type="text" v-model="searchCancelledQuery" placeholder="Search cancelled..." class="w-1/3 p-2 border rounded-lg mb-4" />
-        <table class="min-w-full bg-white border border-gray-300 mb-4">
+      <div v-if="activeSubTab === 'cancelledQuotations'" class="mt-4">
+        <input type="text" placeholder="Search..." class="mb-4 p-2 border rounded w-full" v-model="searchQuery" />
+        <table class="w-full border border-gray-200">
           <thead class="bg-gray-100">
             <tr>
-              <th class="px-6 py-2 text-left border-b">Quotation ID</th>
-              <th class="px-6 py-2 text-left border-b">Quotation Date</th>
-              <th class="px-6 py-2 text-left border-b">Remarks</th>
-              <th class="px-6 py-2 text-left border-b">Actions</th>
+              <th class="p-2 border-b">Quotation ID</th>
+              <th class="p-2 border-b">Quotation Date</th>
+              <th class="p-2 border-b">Remarks</th>
+              <th class="p-2 border-b">Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="cancelled in paginatedCancelledQuotations" :key="cancelled.id" class="hover:bg-gray-50">
-              <td class="px-6 py-4 border-b">{{ cancelled.id }}</td>
-              <td class="px-6 py-4 border-b">{{ cancelled.cancellationDate }}</td>
-              <td class="px-6 py-4 border-b">{{ cancelled.remarks }}</td>
-              <td class="px-6 py-4 border-b">
-                <button @click="restoreCancelledQuotation(cancelled)" class="text-green-500 hover:underline">Restore</button>
+            <tr v-for="item in filteredCancelledQuotationsData" :key="item.id" class="text-center">
+              <td class="p-2 border-b">{{ item.quotationID }}</td>
+              <td class="p-2 border-b">{{ item.quotationDate }}</td>
+              <td class="p-2 border-b">{{ item.remarks }}</td>
+              <td class="p-2 border-b">
+                <button class="px-2 py-1 bg-blue-500 text-white rounded">Edit</button>
               </td>
             </tr>
           </tbody>
         </table>
-
-        <!-- Pagination Controls -->
-        <div class="flex justify-center items-center space-x-2 mb-4">
-          <button
-            @click="prevPage"
-            :disabled="currentPage === 1"
-            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-          >
-            Previous
-          </button>
+        <div class="mt-4 flex justify-between">
+          <button @click="prevPage" :disabled="currentPage === 1" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Previous</button>
           <span>Page {{ currentPage }} of {{ totalPages }}</span>
-          <button
-            @click="nextPage"
-            :disabled="currentPage === totalPages"
-            class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-          >
-            Next
-          </button>
+          <button @click="nextPage" :disabled="currentPage === totalPages" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Next</button>
         </div>
       </div>
     </div>
 
-    <!-- Purchase Order Table with Search and Pagination -->
-    <div v-if="activeTab === 'purchaseOrder'">
-      <h3 class="text-xl font-semibold mb-2">Purchase Orders</h3>
-      <input type="text" v-model="searchPurchaseOrderQuery" placeholder="Search purchase orders..." class="w-1/3 p-2 border rounded-lg mb-4" />
-      <table class="min-w-full bg-white border border-gray-300 mb-4">
+    <div v-if="activeMainTab === 'purchaseOrder'" class="mt-4">
+      <input type="text" placeholder="Search Purchase Order..." class="mb-4 p-2 border rounded w-3/4" v-model="searchQuery" />
+      <table class="w-full border border-gray-200">
         <thead class="bg-gray-100">
           <tr>
-            <th class="px-6 py-2 text-left border-b">Order ID</th>
-            <th class="px-6 py-2 text-left border-b">Order Date</th>
-            <th class="px-6 py-2 text-left border-b">Total Amount</th>
-            <th class="px-6 py-2 text-left border-b">Actions</th>
+            <th class="p-2 border-b">Purchase Order ID</th>
+            <th class="p-2 border-b">Order Date</th>
+            <th class="p-2 border-b">Supplier</th>
+            <th class="p-2 border-b">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="order in paginatedPurchaseOrders" :key="order.id" class="hover:bg-gray-50">
-            <td class="px-6 py-4 border-b">{{ order.id }}</td>
-            <td class="px-6 py-4 border-b">{{ order.orderDate }}</td>
-            <td class="px-6 py-4 border-b">{{ order.totalAmount }}</td>
-            <td class="px-6 py-4 border-b">
-              <button @click="viewOrderDetails(order)" class="text-blue-500 hover:underline">View</button>
+          <tr v-for="item in purchaseOrderData" :key="item.id" class="text-center">
+            <td class="p-2 border-b">{{ item.purchaseOrderID }}</td>
+            <td class="p-2 border-b">{{ item.orderDate }}</td>
+            <td class="p-2 border-b">{{ item.supplier }}</td>
+            <td class="p-2 border-b">
+              <button class="px-2 py-1 bg-blue-500 text-white rounded">Edit</button>
             </td>
           </tr>
         </tbody>
       </table>
-
-      <!-- Pagination Controls -->
-      <div class="flex justify-center items-center space-x-2 mb-4">
-        <button
-          @click="prevPage"
-          :disabled="currentPage === 1"
-          class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-        >
-          Previous
-        </button>
+      <div class="mt-4 flex justify-between">
+        <button @click="prevPage" :disabled="currentPage === 1" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Previous</button>
         <span>Page {{ currentPage }} of {{ totalPages }}</span>
-        <button
-          @click="nextPage"
-          :disabled="currentPage === totalPages"
-          class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-        >
-          Next
-        </button>
+        <button @click="nextPage" :disabled="currentPage === totalPages" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Next</button>
+      </div>
+    </div>
+
+    <div v-if="activeMainTab === 'adminPayments'" class="mt-4">
+      <input type="text" placeholder="Search Admin Payments..." class="mb-4 p-2 border rounded w-3/4" v-model="searchQuery" />
+      <table class="w-full border border-gray-200">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="p-2 border-b">Payment ID</th>
+            <th class="p-2 border-b">Payment Date</th>
+            <th class="p-2 border-b">Amount</th>
+            <th class="p-2 border-b">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in adminPaymentsData" :key="item.id" class="text-center">
+            <td class="p-2 border-b">{{ item.paymentID }}</td>
+            <td class="p-2 border-b">{{ item.paymentDate }}</td>
+            <td class="p-2 border-b">{{ item.amount }}</td>
+            <td class="p-2 border-b">
+              <button class="px-2 py-1 bg-blue-500 text-white rounded">Edit</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="mt-4 flex justify-between">
+        <button @click="prevPage" :disabled="currentPage === 1" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Previous</button>
+        <span>Page {{ currentPage }} of {{ totalPages }}</span>
+        <button @click="nextPage" :disabled="currentPage === totalPages" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Next</button>
+      </div>
+    </div>
+
+    <div v-if="isQuoDetailModalOpen" class="modal-overlay" @click.self="closQuoDetailModal">
+      <div class="modal-content">
+        <h2 class="text-xl font-bold mb-4 text-black">{{ "Edit Quotation Detail" }}</h2>
+        <form @submit.prevent="saveQuotationDetail">
+          <label for="materialId" class="block mb-2 mt-4 text-black">Material ID:</label>
+          <select
+            :disabled="isQuoDetailEditMode"
+            v-model="quotationDetailForm.prodtnMtrlID"
+            id="materialID"
+            class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
+            @change="(e) => { getMaterialDetails(e.target.value); return e.target.value; }"
+          >
+            <option v-for="material in materials.filter((value) => !quotationDetails.map((v) => v.prodtnMtrlID).includes(value.prodtnMtrlID))" :key="material.prodtnMtrlID" :value="material.prodtnMtrlID">
+              {{ `${material.productName} -> ${material.description}` }}
+            </option>
+          </select>
+          <div v-if="materialDetail" :key="quotationDetailForm.prodtnMtrlID">
+            <label for="quantityQuoted" class="block mb-2 mt-4 text-black">Quantity Needed: {{ materialDetail.qtyNeeded }}</label>
+          </div>
+          <label for="quantityQuoted" class="block mb-2 mt-4 text-black">Quantity Quoted:</label>
+          <input
+            id="quantityQuoted"
+            v-model.number="quotationDetailForm.quantity"
+            type="number"
+            placeholder="Enter quantity quoted"
+            required
+            class="w-full p-2 border rounded"
+          />
+          <label for="totalPrice" class="block mb-2 mt-4 text-black">Total Price:</label>
+          <input
+            id="totalPrice"
+            v-model.number="quotationDetailForm.quotePrice"
+            type="number"
+            step="0.01"
+            placeholder="Enter total price"
+            required
+            class="w-full p-2 border rounded"
+          />
+          <div class="flex justify-end mt-4">
+            <button type="button" @click="closQuoDetailModal" class="bg-gray-300 px-4 py-2 mr-2 rounded hover:bg-gray-400">Cancel</button>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">{{ isQuoDetailEditMode ? "Update" : "Add" }}</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
-  <!-- Admin Payments Table with Search and Pagination -->
-<div v-if="activeTab === 'adminPayments'">
-  <h3 class="text-xl font-semibold mb-2">Admin Payments</h3>
-  <input type="text" v-model="searchAdminPaymentsQuery" placeholder="Search admin payments..." class="w-1/3 p-2 border rounded-lg mb-4" />
-  <table class="min-w-full bg-white border border-gray-300 mb-4">
-    <thead class="bg-gray-100">
-      <tr>
-        <th class="px-6 py-2 text-left border-b">Payment ID</th>
-        <th class="px-6 py-2 text-left border-b">Payment Date</th>
-        <th class="px-6 py-2 text-left border-b">Amount</th>
-        <th class="px-6 py-2 text-left border-b">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="payment in paginatedAdminPayments" :key="payment.id" class="hover:bg-gray-50">
-        <td class="px-6 py-4 border-b">{{ payment.id }}</td>
-        <td class="px-6 py-4 border-b">{{ payment.paymentDate }}</td>
-        <td class="px-6 py-4 border-b">{{ payment.amount }}</td>
-        <td class="px-6 py-4 border-b">
-          <button @click="viewPaymentDetails(payment)" class="text-blue-500 hover:underline">View</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
-  <!-- Pagination Controls -->
-  <div class="flex justify-center items-center space-x-2 mb-4">
-    <button
-      @click="prevPage"
-      :disabled="currentPage === 1"
-      class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-    >
-      Previous
-    </button>
-    <span>Page {{ currentPage }} of {{ totalPages }}</span>
-    <button
-      @click="nextPage"
-      :disabled="currentPage === totalPages"
-      class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-    >
-      Next
-    </button>
-  </div>
-</div>
 </template>
 
 
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { apiService } from "~/api/apiService";
 
 const materialDetail = ref(null);
@@ -224,12 +233,12 @@ const userInfo = ref({ userID: "" });
 const users = ref([]);
 const materials = ref([]);
 const quotations = ref([]);
-// Mock data for quotation details with new fields
-const quotationDetails = ref([
-  // Add more quotations as needed...
-]);
+const quotationDetails = ref([]);
 
 // State variables
+const activeMainTab = ref('quotations'); // Active main tab
+const activeSubTab = ref('quotationRequest'); // Active sub tab for quotations
+const isCompleteLoading = ref(false);
 const isQuotationDetailInfo = ref(false);
 const isQuoDetailModalOpen = ref(false);
 const isQuoDetailEditMode = ref(false);
@@ -253,37 +262,10 @@ const quotationDetailForm = ref({
   quoteID: "",
 });
 
-
-const activeTab = ref("quotations"); // Default active tab
-const activeSubTab = ref("requests"); // Default sub-tab to show "Quotation Requests"
-
-// Watch for changes on activeTab to reset activeSubTab
-watch(activeTab, (newTab) => {
-  if (newTab === 'quotations') {
-    activeSubTab.value = 'requests'; // Reset to default sub-tab for quotations
-  } else if (newTab === 'purchaseOrder') {
-    activeSubTab.value = ''; // Clear sub-tab for purchase orders
-  }
-  // Add similar logic for other tabs if needed
-});
-
-
-// New methods for managing sub-tabs
-const setActiveSubTab = (subTab) => {
-  activeSubTab.value = subTab; // Set the active sub-tab
-};
-// const getUserName = (userID) => {
-
-//   const user = users.value?.find((usr) => usr.userID === userID)
-//   return user ? `${user.lastName} ${user.firstName}` : 'Unknown'
-// }
-// Computed properties
+// Computed properties for filtering
 const filteredQuotationDetails = computed(() => {
   return quotations.value?.filter((quotation) => {
-    return (
-      // getUserName(quotation.userID).toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      quotation.remarks.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
+    return quotation.remarks.toLowerCase().includes(searchQuery.value.toLowerCase());
   });
 });
 
@@ -306,6 +288,14 @@ const nextPage = () => {
   }
 };
 
+// Methods for switching tabs
+const setActiveMainTab = (tab) => {
+  activeMainTab.value = tab;
+};
+
+const setActiveSubTab = (tab) => {
+  activeSubTab.value = tab;
+};
 
 // Modal functions
 const openQuotationDetailAddModal = () => {
@@ -373,7 +363,6 @@ const openQuotationDetailInfo = async (quotation) => {
     }
     return productMaterial;
   });
-  console.log("transformData---", transformData);
   quotationDetails.value = transformData.map((value, index) => {
     return {
       ...value,
@@ -381,6 +370,18 @@ const openQuotationDetailInfo = async (quotation) => {
     };
   });
 };
+
+const completeQuotation = async() => {
+  isCompleteLoading.value = true
+  const result =  await apiService.put(`/api/quotations/${selectedQuotation.value.quoteID}`, {
+            ...selectedQuotation.value,
+            isCompleted: true
+  });
+  selectedQuotation.value = result.data
+  isCompleteLoading.value = false
+  alert("Quotation successfully completed");
+};
+
 const closQuoDetailModal = () => {
   isQuoDetailModalOpen.value = false;
 };
@@ -391,6 +392,7 @@ const closeQuotationModal = () => {
 
 const closeQuotationDetailInfo = () => {
   isQuotationDetailInfo.value = false;
+  selectedQuotationDetail.value = null
 };
 
 const resetForm = () => {
@@ -528,31 +530,24 @@ onMounted(async () => {
 
 
 <style scoped>
-  .tab {
-  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
-}
-
-.tab:hover {
-  background-color: rgba(0, 0, 255, 0.1); /* Light blue background on hover */
-  color: #000; /* Change text color on hover */
-}
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   z-index: 1000;
 }
 .modal-content {
-  background-color: white;
+  background: white;
   padding: 20px;
   border-radius: 8px;
-  max-width: 500px;
-  width: 100%;
+  max-height: 80%;
+  overflow-y: auto;
+  width: 600px;
 }
 </style>
