@@ -16,7 +16,7 @@
     title="Product Category Form"
     :showSave="true"
     @update:isVisible="isFormVisible = $event"
-    @save="saveCategory"
+    @save="confirmSave"
   >
     <template v-slot:body>
       <form @submit.prevent="saveCategory">
@@ -61,6 +61,49 @@
       </form>
     </template>
   </Modal>
+
+  <!-- Confirmation Modal -->
+  <div
+    v-if="showConfirmationModal"
+    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+  >
+    <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+      <h3 class="text-xl font-bold mb-4 text-black">Are you sure you want to proceed?</h3>
+      <div class="flex justify-end mt-4">
+        <button
+          class="bg-blue-500 text-white py-1 px-3 rounded-md mr-2"
+          @click="saveCategory"
+        >
+          Yes
+        </button>
+        <button
+          class="text-red-600 py-1 px-3 rounded-md"
+          @click="showConfirmationModal = false"
+        >
+          No
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Message Modal -->
+  <div
+    v-if="showSuccessModal"
+    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+  >
+    <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+      <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
+      <p class="text-black">Product Category has been {{ formMode === 'add' ? 'created' : 'updated' }} successfully!</p>
+      <div class="flex justify-end mt-4">
+        <button
+          class="bg-blue-500 text-white py-1 px-3 rounded-md"
+          @click="handleSuccess"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- Product Categories Table -->
   <table class="min-w-full border border-gray-300 rounded-lg">
@@ -116,6 +159,8 @@ import { apiService } from "~/api/apiService";
 
 const categories = ref([]);
 const isFormVisible = ref(false);
+const showConfirmationModal = ref(false);
+const showSuccessModal = ref(false);
 const formMode = ref("add");
 const form = ref({
   id: "",
@@ -137,27 +182,35 @@ function closeForm() {
   isFormVisible.value = false;
 }
 
-async function saveCategory() {
-  try {
-    if (formMode.value === "add") {
-    const { data } = await apiService.post("/api/productCategories", form.value);
-    categories.value.push(data);
-    alert("Product Category created successfully!");
-  } else if (formMode.value === "edit") {
-    const index = categories.value.findIndex((cat) => cat.prodCatID === form.value.prodCatID);
-    if (index !== -1) {
-    const { data } = await apiService.put(`/api/productCategories/${form.value.prodCatID}`, form.value);
-    categories.value[index] = data;
-    alert("Product Category edited successfully!");
-    }
-  }
-  closeForm();
-  } catch (error) {
-    console.log('error', error)
-    closeForm();
-  }
- 
+function handleSuccess() {
+  closeForm(); // Close the form modal
+  showSuccessModal.value = false; // Close the success modal
 }
+
+// Trigger confirmation modal before saving
+const confirmSave = () => {
+  showConfirmationModal.value = true;
+};
+
+// Save category after confirmation
+const saveCategory = async () => {
+  showConfirmationModal.value = false;
+  try {
+    if (formMode.value === 'add') {
+      const { data } = await apiService.post('/api/productCategories', form.value);
+      categories.value.push(data);
+    } else if (formMode.value === 'edit') {
+      const index = categories.value.findIndex((cat) => cat.prodCatID === form.value.prodCatID);
+      if (index !== -1) {
+        const { data } = await apiService.put(`/api/productCategories/${form.value.prodCatID}`, form.value);
+        categories.value[index] = data;
+      }
+    }
+    showSuccessModal.value = true;
+  } catch (error) {
+    console.error('Error saving category:', error);
+  }
+};
 
 function viewCategory(category) {
   alert(`Viewing category: ${category.description}`);
