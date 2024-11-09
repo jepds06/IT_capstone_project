@@ -56,4 +56,11 @@ class QuotationDetailService implements QuotationDetailServiceInterface
 
         return $quotationDetail;
     }
+
+    public function deleteQuotationDetail(int $qteDetailId)
+    {
+        $quotationDetail = $this->quoteDetailRepository->deleteByQteDetailID($qteDetailId); 
+
+        return $quotationDetail;
+    }
 }

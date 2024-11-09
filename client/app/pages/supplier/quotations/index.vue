@@ -63,69 +63,19 @@
           class="cursor-pointer p-4 border-b-2"
           @click="setActiveSubTab('cancelledQuotations')"
         >
-          Cancelled Quotations
+          Completed Quotations
         </li>
       </ul>
 
       <!-- Quotation Request Content -->
       <div v-if="activeSubTab === 'quotationRequest'" class="mt-4">
         <!-- Quotation Request Table and Pagination -->
-        <input type="text" placeholder="Search..." class="mb-4 p-2 border rounded w-full" v-model="searchQuery" />
-        <table class="w-full border border-gray-200">
-          <thead class="bg-gray-100">
-            <tr>
-              <th class="p-2 border-b">Quotation ID</th>
-              <th class="p-2 border-b">Quotation Date</th>
-              <th class="p-2 border-b">Remarks</th>
-              <th class="p-2 border-b">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="item in filteredQuotationRequestData" :key="item.id" class="text-center">
-              <td class="p-2 border-b">{{ item.quotationID }}</td>
-              <td class="p-2 border-b">{{ item.quotationDate }}</td>
-              <td class="p-2 border-b">{{ item.remarks }}</td>
-              <td class="p-2 border-b">
-                <button class="px-2 py-1 bg-blue-500 text-white rounded">Edit</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="mt-4 flex justify-between">
-          <button @click="prevPage" :disabled="currentPage === 1" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Previous</button>
-          <span>Page {{ currentPage }} of {{ totalPages }}</span>
-          <button @click="nextPage" :disabled="currentPage === totalPages" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Next</button>
-        </div>
+        <SupplierQuotation />
       </div>
 
-      <!-- Cancelled Quotations Content -->
+      <!-- Completed Quotations Content -->
       <div v-if="activeSubTab === 'cancelledQuotations'" class="mt-4">
-        <input type="text" placeholder="Search..." class="mb-4 p-2 border rounded w-full" v-model="searchQuery" />
-        <table class="w-full border border-gray-200">
-          <thead class="bg-gray-100">
-            <tr>
-              <th class="p-2 border-b">Quotation ID</th>
-              <th class="p-2 border-b">Quotation Date</th>
-              <th class="p-2 border-b">Remarks</th>
-              <th class="p-2 border-b">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="item in filteredCancelledQuotationsData" :key="item.id" class="text-center">
-              <td class="p-2 border-b">{{ item.quotationID }}</td>
-              <td class="p-2 border-b">{{ item.quotationDate }}</td>
-              <td class="p-2 border-b">{{ item.remarks }}</td>
-              <td class="p-2 border-b">
-                <button class="px-2 py-1 bg-blue-500 text-white rounded">Edit</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="mt-4 flex justify-between">
-          <button @click="prevPage" :disabled="currentPage === 1" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Previous</button>
-          <span>Page {{ currentPage }} of {{ totalPages }}</span>
-          <button @click="nextPage" :disabled="currentPage === totalPages" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Next</button>
-        </div>
+        <SupplierQuotation :is-completed="true"/>
       </div>
     </div>
 
