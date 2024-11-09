@@ -15,4 +15,6 @@ interface QuotationDetailRepositoryInterface
     public function findManyByQuoteID($quoteID);
 
     public function findManyAllInfoQuotations();
+
+    public function deleteByQteDetailID($qteDetailID);
 }

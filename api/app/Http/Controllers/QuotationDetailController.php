@@ -60,4 +60,12 @@ class QuotationDetailController extends Controller
     {
         return $this->quoteDetailService->updateQuotationDetail($request, $qteDetailId);
     }
+
+       /**
+     * Delete the specified resource in storage.
+     */
+    public function delete(int $qteDetailId)
+    {
+        return $this->quoteDetailService->deleteQuotationDetail($qteDetailId);
+    }
 }

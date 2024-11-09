@@ -15,4 +15,6 @@ interface QuotationDetailServiceInterface
     public function createQuotationDetail(object $payload);
 
     public function updateQuotationDetail(object $payload, int $qteDetailId);
+
+    public function deleteQuotationDetail(int $qteDetailId);
 }
