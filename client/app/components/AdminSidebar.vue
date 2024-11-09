@@ -63,13 +63,13 @@
           <div
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-                ? route.path === '/reports'
+                ? route.path === 'admin/reports'
                   ? 'block p-4 bg-gray-800'
                   : 'block p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('reports')
                 ).length > 0
-                  ? route.path === '/reports'
+                  ? route.path === 'admin/reports'
                     ? 'block p-4 bg-gray-800'
                     : 'block p-4 hover:bg-gray-800'
                   : 'hidden'
@@ -80,7 +80,7 @@
               class="w-5 h-5 mr-5"
             />
             <router-link
-              to="/reports"
+              to="admin/reports"
               class="text-center"
             >
               Reports
@@ -118,16 +118,16 @@
             "
           >View Payments</router-link>
           <router-link
-            to="/payments/manage"
+            to="/admin/manage-payment"
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-                ? route.path === '/payments/manage'
+                ? route.path === '/admin/manage-payment'
                   ? 'block pl-10 p-4 bg-gray-800'
                   : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
-                  up.moduleName.toLowerCase().includes('manage payments')
+                  up.moduleName.toLowerCase().includes('manage payment')
                 ).length > 0
-                  ? route.path === '/payments/manage'
+                  ? route.path === '/admin/manage-payment'
                     ? 'block pl-10 p-4 bg-gray-800'
                     : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
@@ -480,16 +480,16 @@
             "
           >Bills Payment</router-link>
           <router-link
-            to="/payments/manage"
+            to="/admin/manage-payment"
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-                ? route.path === '/payments/manage'
+                ? route.path === '/admin/manage-payment'
                   ? 'block pl-10 p-4 bg-gray-800'
                   : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
-                  up.moduleName.toLowerCase().includes('manage payments')
+                  up.moduleName.toLowerCase().includes('manage payment')
                 ).length > 0
-                  ? route.path === '/payments/manage'
+                  ? route.path === '/admin/manage-payment'
                     ? 'block pl-10 p-4 bg-gray-800'
                     : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
@@ -637,16 +637,16 @@
             "
           >Stock Overview</router-link>
           <router-link
-            to="/manage-inventory"
+            to="admin/inventory"
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-                ? route.path === '/manage-inventory'
+                ? route.path === 'admin/inventory'
                   ? 'block pl-10 p-4 bg-gray-800'
                   : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
-                  up.moduleName.toLowerCase().includes('manage inventory')
+                  up.moduleName.toLowerCase().includes('inventory')
                 ).length > 0
-                  ? route.path === '/manage-inventory'
+                  ? route.path === 'admin/inventory'
                     ? 'block pl-10 p-4 bg-gray-800'
                     : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
