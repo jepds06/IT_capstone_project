@@ -23,12 +23,13 @@
     <table class="min-w-full bg-white border border-gray-300 shadow-lg">
       <thead class="bg-gray-100">
         <tr>
-          <th class="px-6 py-2 text-left border-b">Production ID</th>
+          <th class="px-6 py-2 text-left border-b">ID</th>
           <!-- <th class="px-6 py-2 text-left border-b">Created By</th> -->
           <th class="px-6 py-2 text-left border-b">Date Encoded</th>
           <th class="px-6 py-2 text-left border-b">Start Date</th>
           <th class="px-6 py-2 text-left border-b">Completion Date</th>
           <th class="px-6 py-2 text-left border-b">Remarks</th>
+          <th class="px-6 py-2 text-left border-b">Status</th>
           <th class="px-6 py-2 text-left border-b">Actions</th>
         </tr>
       </thead>
@@ -46,6 +47,14 @@
           <td class="px-6 py-4 border-b">{{ production.startDate }}</td>
           <td class="px-6 py-4 border-b">{{ production.completionDate }}</td>
           <td class="px-6 py-4 border-b">{{ production.remarks }}</td>
+          <td class="px-6 py-4 border-b">
+            <span
+            :class="statusClass(production.status)"
+            class="py-1 px-3 rounded-full text-white text-sm"
+          >
+           {{ production.status }}
+          </span>
+          </td>
           <td class="px-6 py-4 border-b">
             <button
               @click="openViewModal(production)"
@@ -132,6 +141,7 @@
           <div v-if="isEditMode">
             <label for="status" class="block mb-2 mt-4">Status:</label>
             <select
+              disabled
               v-model="productionForm.status"
               id="userID"
               class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
@@ -599,6 +609,19 @@ const productionDetailForm = ref({
   remarks: "",
 });
 
+
+const statusClass = ( status) => {
+  switch (status) {
+    case "Pending":
+      return "bg-yellow-500";
+    case "Completed":
+      return "bg-green-500";
+    case "In Progress":
+      return "bg-red-500";
+    default:
+      return "bg-gray-500";
+  }
+}
 const openProductionDetailModal = async () => {
   productionDetailMode.value = "add";
   isProductionDetailsModal.value = true;

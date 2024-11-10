@@ -126,13 +126,16 @@
     >
       <div class="bg-white p-6 rounded-md w-1/2">
         <h3 class="text-xl font-bold mb-4">Product Material Details</h3>
-        <label for="materialId" class="block mb-2 mt-4 text-black"
+        <label for="userID" class="block mb-2 mt-4 text-black"
           >Supplier:<span>{{
             `${getSupplierName(selectedSupplier?.userID)}`
           }}</span></label
         >
-        <label for="materialId" class="block mb-2 mt-4 text-black"
+        <label for="quotationId" class="block mb-2 mt-4 text-black"
           >Quotation No: <span>{{ `QN-${selectedQuotation.id}` }}</span></label
+        >
+        <label for="productionID" class="block mb-2 mt-4 text-black"
+          >Production No: <span>{{ `QN-${selectedQuotation.productionID}` }}</span></label
         >
         <table class="min-w-full bg-white border border-gray-300 mb-4">
           <thead class="bg-gray-200">
@@ -323,6 +326,7 @@ export default {
       userInfo: null,
       alreadyPurchasedMaterials: [],
       alreadyPurchasedMatOtherSupplier: [],
+      adminOrder: null
     };
   },
   computed: {
@@ -392,6 +396,7 @@ export default {
       this.showConfirmationModal = true;
     },
     async generatePurchaseOrder() {
+
       const adminOrder = {
         userID: this.userInfo.userID,
         quoteID: this.selectedSupplier?.quotation_details[0]?.quoteID
@@ -406,11 +411,25 @@ export default {
         }
       })
 
-      await apiService.post("/api/adminOrders", {...adminOrder, quotationDetails: adminOrderDetails});
+      if(this.alreadyPurchasedMaterials.length > 0){
+        await apiService.put(`/api/adminOrders/${this.adminOrder.adminOrdID}`, {...adminOrder, quotationDetails: adminOrderDetails});
+      } else {
+      
+        await apiService.post("/api/adminOrders", {...adminOrder, quotationDetails: adminOrderDetails});
+      }
+      const productionMaterialCount = this.materials.length
+      const purchasedMaterialsCount = this.alreadyPurchasedMatOtherSupplier.length + this.alreadyPurchasedMaterials.length + adminOrderDetails.length
 
+      console.log("alreadyPurchasedMaterials", this.alreadyPurchasedMaterials.length);
+      console.log("alreadyPurchasedMatOtherSupplier", this.alreadyPurchasedMatOtherSupplier.length);
+      console.log("productionMaterialCount:", productionMaterialCount)
+      console.log("purchasedMaterialsCount:", purchasedMaterialsCount)
+      if(productionMaterialCount === purchasedMaterialsCount){
+      await apiService.put(`/api/productions/${this.selectedQuotation.productionID}`, {...this.selectedQuotation, status: "In Progress"});
+    }
       this.showConfirmationModal = false;
       this.showSuccessModal = true;
-    },
+    }, 
     closeSuccessModal() {
       this.showSuccessModal = false;
       this.purchasedMaterials = [];
@@ -624,15 +643,16 @@ export default {
 
     async fetchAdminOrders() {
       const result = await apiService.get("/api/adminOrders");
-      const filterDataFromProd = result.data.filter((val) => val.quotation.production.productionID === this.selectedQuotation.productionID).map((value) =>{
+      const filterDataFromProd = result.data?.filter((val) => val.quotation.production.productionID === this.selectedQuotation.productionID).map((value) =>{
         return value.admin_order_detail
-      }).flat(1)
+      })?.flat(1)
      
       const filterData = result.data?.filter((val) => val.quoteID === this.selectedSupplier?.quotation_details[0]?.quoteID)
-
+      this.adminOrder = filterData.length > 0 ? filterData[0] : null;
       this.alreadyPurchasedMaterials = filterData[0]?.admin_order_detail?.map((val) => val.prodtnMtrlID)
-      this.alreadyPurchasedMatOtherSupplier = filterDataFromProd.filter((val) => !this.alreadyPurchasedMaterials.includes(val.prodtnMtrlID))?.map((val) => val.prodtnMtrlID)
-
+      this.alreadyPurchasedMatOtherSupplier = filterDataFromProd?.filter((val) => !this.alreadyPurchasedMaterials?.includes(val.prodtnMtrlID))?.map((val) => val.prodtnMtrlID)
+      console.log("alreadyPurchasedMaterials", this.alreadyPurchasedMaterials.length);
+      console.log("alreadyPurchasedMatOtherSupplier", this.alreadyPurchasedMatOtherSupplier.length);
     }
   },
 };

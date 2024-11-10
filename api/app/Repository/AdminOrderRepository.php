@@ -114,26 +114,29 @@ class AdminOrderRepository implements AdminOrderRepositoryInterface
             //Save initial AdminOrder record to generate an ID for it
             $adminOrder->save();
 
-            //Retrieve QuotationDetails associated with the Quotation
-            $quotationDetails = $quote->quotationDetails;
+             // Assuming the quotation details are now provided directly in the payload
+            // The structure of the quotationDetails in the payload should match the necessary fields.
+            $quotationDetails = collect($payload->quotationDetails)->map(function ($item) {
+                return (object) $item; // Cast each array item to an object
+            });
 
-            if ($quotationDetails->isEmpty()) {
-                throw new \Exception("No quotation details found for the given quotation ID.");
+            if (empty($quotationDetails)) {
+                throw new \Exception("No quotation details found in the payload.");
             }
 
             //Create AdminOrderDetails records based on QuotationDetails
-            foreach ($quotationDetails as $quoteDetail) {
+             foreach ($quotationDetails as $quoteDetail) {
                 $adminOrderDetail = new AdminOrderDetail();
-                $adminOrderDetail->AdminOrderID = $adminOrder->AdminOrderID;
-                $adminOrderDetail->ProductionMaterialId = $quoteDetail->ProductionMaterialId;
-                $adminOrderDetail->qtyOrdered = $quoteDetail->Quantity; // Quantity from QuotationDetails
-                $adminOrderDetail->amount = $quoteDetail->QuotationPrice * $quoteDetail->Quantity; // Calculated amount
+                $adminOrderDetail->adminOrdID = $adminOrder->adminOrdID;
+                $adminOrderDetail->prodtnMtrlID = $quoteDetail->prodtnMtrlID;
+                $adminOrderDetail->qtyOrdered = $quoteDetail->qtyOrdered; // Quantity from the payload
+                $adminOrderDetail->amount = $quoteDetail->amount; // Calculated amount
                 $adminOrderDetail->isDropped = $quoteDetail->isDropped;
                 $adminOrderDetail->save();
             }
 
             //Return the AdminOrder with details loaded
-            return $adminOrder->fresh('adminOrderDetails');
+            return $adminOrder->fresh('adminOrderDetail');
         });
     }
 }

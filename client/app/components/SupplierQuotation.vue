@@ -523,6 +523,8 @@ const props = defineProps({
     });
     selectedQuotation.value = result.data
     isCompleteLoading.value = false
+    closeQuotationDetailInfo()
+    fetchQuotations()
     alert("Quotation successfully completed");
   };
   
