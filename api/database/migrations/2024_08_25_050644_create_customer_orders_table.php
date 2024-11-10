@@ -17,7 +17,6 @@ return new class extends Migration
             $table->date('orderDate');
             $table->string('orderStatus');
             $table->string('orderRemarks');
-            $table->timestamps();
 
             $table->foreign('userID')->references('userID')->on('users')
             ->onUpdate('cascade')

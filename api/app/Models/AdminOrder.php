@@ -13,13 +13,13 @@ class AdminOrder extends Model
     protected $primaryKey = 'adminOrdID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'userID',
         'quoteID',
+        'orderDate'
     ];
-
-    public $timestamps = false;
 
     // Relationship with the User model
     public function user()

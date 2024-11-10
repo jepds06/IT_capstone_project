@@ -13,6 +13,7 @@ class ProductMaterial extends Model
     protected $primaryKey = 'productMatsID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'productID',

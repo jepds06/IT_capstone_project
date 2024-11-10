@@ -13,6 +13,7 @@ class Sales_Delivery extends Model
     protected $primaryKey = 'deliveryID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'salesID',

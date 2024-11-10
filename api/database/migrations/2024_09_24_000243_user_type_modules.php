@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('userTypeID');
             $table->unsignedBigInteger('moduleID');
             $table->boolean('canAccess');
-            $table->timestamps();
 
             $table->Foreign('userTypeID')->references('userTypeID')->on('userTypes')
             ->onUpdate('cascade')

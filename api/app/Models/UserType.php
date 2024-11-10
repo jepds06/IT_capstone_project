@@ -13,6 +13,8 @@ class UserType extends Model
     protected $primaryKey = 'userTypeID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
+    
     protected $fillable = [
         'userTypeName'
     ];

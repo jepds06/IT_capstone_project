@@ -13,8 +13,8 @@ class Production extends Model
     protected $primaryKey = 'productionID';
     public $incrementing = true;
     protected $keyType = 'int';
-
     public $timestamps = false;
+
     protected $fillable = [
         'userID',
         'dateEncoded',

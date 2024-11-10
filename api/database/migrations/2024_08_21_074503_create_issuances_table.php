@@ -15,7 +15,6 @@ return new class extends Migration
             $table->bigIncrements('issueID');
             $table->date('issuanceDate');
             $table->string('status');
-            $table->timestamps();
         });
     }
 

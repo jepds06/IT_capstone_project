@@ -17,7 +17,6 @@ return new class extends Migration
             $table->unsignedBigInteger('suppMatrlID');
             $table->integer('quantity');
             $table->decimal('quotationPrice', 10, 2);
-            $table->timestamps();
 
             $table->Foreign('quoteID')->references('quoteID')->on('quotations')
             ->onUpdate('cascade')

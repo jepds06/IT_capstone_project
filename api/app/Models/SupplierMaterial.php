@@ -13,6 +13,7 @@ class SupplierMaterial extends Model
     protected $primaryKey = 'suppMatrlID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable =[
         'userID',

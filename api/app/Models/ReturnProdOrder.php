@@ -13,6 +13,7 @@ class ReturnProdOrder extends Model
     protected $primaryKey = 'returnPrdOrdID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'slsPrdOrdID',

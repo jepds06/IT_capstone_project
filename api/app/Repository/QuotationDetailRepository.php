@@ -8,6 +8,7 @@ use App\Models\ProductionMaterial;
 use App\Models\Quotation;
 use App\Models\QuotationDetail;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 class QuotationDetailRepository implements QuotationDetailRepositoryInterface
 {

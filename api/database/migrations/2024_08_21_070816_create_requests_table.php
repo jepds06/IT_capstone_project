@@ -15,7 +15,6 @@ return new class extends Migration
             $table->bigIncrements('reqID');
             $table->date('requestDate');
             $table->string('status');
-            $table->timestamps();
         });
     }
 

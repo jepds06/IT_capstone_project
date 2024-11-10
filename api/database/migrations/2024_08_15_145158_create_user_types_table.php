@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('userTypes', function (Blueprint $table) {
             $table->bigIncrements('userTypeID');
             $table->string('userTypeName');
-            $table->timestamps();
         });
     }
 

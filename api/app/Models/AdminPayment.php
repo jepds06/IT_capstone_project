@@ -13,6 +13,7 @@ class AdminPayment extends Model
     protected $primaryKey = 'adminPayID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'adminOrdDetailID',
@@ -23,8 +24,6 @@ class AdminPayment extends Model
         'paymentStatus',
         'remarks'
     ];
-
-    public $timestamps = false;
 
     public function adminOrdDetail()
     {

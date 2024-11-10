@@ -13,6 +13,7 @@ class UserPrivilege extends Model
     protected $primaryKey = 'privilegeID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable =[
         'userID',
@@ -22,8 +23,6 @@ class UserPrivilege extends Model
         'view',
         'cancel',
     ];
-
-    public $timestamps = false;
 
     //eloquent/relationship for users & user privileges
     public function user()

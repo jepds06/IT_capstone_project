@@ -13,6 +13,7 @@ class Product extends Model
     protected $primaryKey = 'productID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'productName',
@@ -20,8 +21,6 @@ class Product extends Model
         'unitPrice',
         'prodCatID'
     ];
-
-    public $timestamps = false;
     
     public function prdCategory()
     {
@@ -44,5 +43,10 @@ class Product extends Model
     public function productionDetails()
     {
         return $this->hasMany(ProductionDetail::class, 'productID');
+    }
+
+    public function productOrders()
+    {
+        return $this->hasMany(ProductOrder::class, 'productID');
     }
 }
