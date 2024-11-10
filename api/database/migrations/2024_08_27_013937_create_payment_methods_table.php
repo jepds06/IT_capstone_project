@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('paymentMethods', function (Blueprint $table) {
             $table->bigIncrements('payMethodID');
             $table->string('payMethodName');
-            $table->timestamps();
         });
     }
 

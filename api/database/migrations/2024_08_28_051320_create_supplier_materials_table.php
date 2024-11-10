@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('userID');
             $table->unsignedBigInteger('materialID');
             $table->decimal('unitPrice', 10, 2);
-            $table->timestamps();
 
             $table->Foreign('userID')->references('userID')->on('users')
             ->onUpdate('cascade')

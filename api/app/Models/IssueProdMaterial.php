@@ -13,6 +13,7 @@ class IssueProdMaterial extends Model
     protected $primaryKey = 'issueProdMatsID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'issueID',

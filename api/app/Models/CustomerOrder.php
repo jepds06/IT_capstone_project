@@ -13,6 +13,7 @@ class CustomerOrder extends Model
     protected $primaryKey = 'cstrOrderID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'userID',
@@ -20,4 +21,14 @@ class CustomerOrder extends Model
         'orderStatus',
         'orderRemarks'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'userID');
+    }
+
+    public function productOrders()
+    {
+        return $this->hasMany(ProductOrder::class, 'cstrOrderID');
+    }
 }

@@ -13,6 +13,7 @@ class Sale extends Model
     protected $primaryKey = 'salesID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'salesDate',

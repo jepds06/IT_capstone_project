@@ -17,7 +17,6 @@ return new class extends Migration
             $table->unsignedBigInteger('productID');
             $table->integer('quantity');
             $table->decimal('unitPrice', 10, 2);
-            $table->timestamps();
 
             $table->foreign('cstrOrderID')->references('cstrOrderID')->on('customerOrders')
             ->onUpdate('cascade')

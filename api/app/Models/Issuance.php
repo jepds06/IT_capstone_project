@@ -13,6 +13,7 @@ class Issuance extends Model
     protected $primaryKey = 'issueID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'issuanceDate',

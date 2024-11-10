@@ -13,6 +13,7 @@ class SupplierMaterialQuotation extends Model
     protected $primaryKey = 'suppMatsQuoteID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable =[
         'quoteID',

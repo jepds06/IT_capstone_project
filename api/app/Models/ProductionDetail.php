@@ -13,6 +13,7 @@ class ProductionDetail extends Model
     protected $primaryKey = 'prodtnDetailID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'productionID',

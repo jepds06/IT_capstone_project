@@ -13,6 +13,7 @@ class ProductOrder extends Model
     protected $primaryKey = 'prodOrdID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'cstrOrderID',
@@ -20,4 +21,19 @@ class ProductOrder extends Model
         'quantity',
         'unitPrice',
     ];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'productID');
+    }
+
+    public function customerOrder()
+    {
+        return $this->belongsTo(CustomerOrder::class, 'cstrOrderID');
+    }
+
+    public function slsProdOrders()
+    {
+        return $this->hasMany(SalesProductOrder::class, 'prodOrdID');
+    }
 }

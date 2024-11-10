@@ -13,9 +13,20 @@ class SalesProductOrder extends Model
     protected $primaryKey = 'slsPrdOrdID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'salesID',
         'prodOrdID',
     ];
+
+    public function sale()
+    {
+        return $this->belongsTo(Sale::class, 'salesID');
+    }
+
+    public function productOrder()
+    {
+        return $this->belongsTo(ProductOrder::class, 'prodOrdID');
+    }
 }

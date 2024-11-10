@@ -18,7 +18,6 @@ return new class extends Migration
             $table->integer('qtyReturned');
             $table->string('reason');
             $table->decimal('refundAmount', 10, 2);
-            $table->timestamps();
 
             $table->Foreign('slsPrdOrdID')->references('slsPrdOrdID')->on('salesProductOrders')
             ->onUpdate('cascade')

@@ -13,6 +13,7 @@ class ProductionMaterial extends Model
     protected $primaryKey = 'prodtnMtrlID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'prodtnDetailID',
