@@ -157,6 +157,7 @@ Route::prefix('quotationDetails')->group(function(){
     Route::get('/{qteDetailId}', [QuotationDetailController::class, 'show']);
     Route::post('/', [QuotationDetailController::class, 'store']);
     Route::put('/{qteDetailId}', [QuotationDetailController::class, 'update']);
+    Route::delete('/{qteDetailId}', [QuotationDetailController::class, 'delete']);
 });
 //Admin Order route
 Route::prefix('adminOrders')->group(function(){

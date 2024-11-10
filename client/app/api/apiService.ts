@@ -111,6 +111,28 @@ export class ApiService {
       throw error;
     }
   }
+
+  async delete(endpoint: string) {
+    try {
+      const url = this.constructUrl(endpoint);
+      const response = await $fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        credentials: 'include',
+      });
+
+      return response; // Return response directly for successful requests
+    } catch (error) {
+      console.error('API DELETE Error:', error);
+      if (error.response) {
+        this.handleError(error.response.status, error.response['_data']);
+      }
+      throw error;
+    }
+  }
 }
 
 export const apiService = new ApiService(BASE_URL);

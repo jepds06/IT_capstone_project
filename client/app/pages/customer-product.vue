@@ -1,8 +1,5 @@
 <template>
-
-  
-  <div class="m-8 ">
-    
+  <div class="m-8 ">  
     <!-- Search Input -->
     <div class="mb-4 flex justify-end">
       <input 
