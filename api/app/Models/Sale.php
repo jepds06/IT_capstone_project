@@ -18,4 +18,9 @@ class Sale extends Model
     protected $fillable = [
         'salesDate',
     ];
+
+    public function salesOrders()
+    {
+        return $this->hasMany(SalesProductOrder::class, 'salesID');
+    }
 }

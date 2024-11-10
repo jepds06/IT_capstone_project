@@ -16,7 +16,7 @@ class AdminPayment extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'adminOrdDetailID',
+        'adminOrdID',
         'payMethodID',
         'paymentDate',
         'amountToPay',
@@ -25,14 +25,9 @@ class AdminPayment extends Model
         'remarks'
     ];
 
-    public function adminOrdDetail()
+    public function adminOrder()
     {
-        return $this->belongsTo(AdminOrderDetail::class, 'adminOrdDetailID');
-    }
-
-    public function adminOrderDetails()
-    {
-        return $this->belongsTo(AdminOrderDetail::class, 'adminOrdDetailID');
+        return $this->belongsTo(AdminOrder::class, 'adminOrdID');
     }
 
     // Relationship with the PaymentMethod model

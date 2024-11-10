@@ -18,6 +18,7 @@ use App\Http\Controllers\ProductionMaterialController;
 use App\Http\Controllers\ProductMaterialsController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\QuotationDetailController;
+use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SalesProductOrderController;
 use App\Http\Controllers\SupplierMaterialController;
 use App\Http\Controllers\UserAuthController;
@@ -218,4 +219,12 @@ Route::prefix('paymentMethods')->group(function(){
     Route::get('/{payMethodId}', [PaymentMethodController::class, 'show']);
     Route::post('/', [PaymentMethodController::class, 'store']);
     Route::put('/{payMethodId}', [PaymentMethodController::class, 'update']);
+});
+
+//sales route
+Route::prefix('sales')->group(function(){
+    Route::get('/', [SalesController::class, 'index']);
+    Route::get('/{salesId}', [SalesController::class, 'show']);
+    Route::post('/', [SalesController::class, 'store']);
+    Route::put('/{salesId}', [SalesController::class, 'update']);
 });

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('adminPayments', function (Blueprint $table) {
             $table->bigIncrements('adminPayID');
-            $table->unsignedBigInteger('adminOrdDetailID');
+            $table->unsignedBigInteger('adminOrdID');
             $table->unsignedBigInteger('payMethodID');
             $table->date('paymentDate');
             $table->decimal('amountToPay', 10, 2);
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('paymentStatus');
             $table->string('remarks');
 
-            $table->foreign('adminOrdDetailID')->references('adminOrdDetailID')->on('adminOrderDetails')
+            $table->foreign('adminOrdID')->references('adminOrdID')->on('adminOrders')
             ->onUpdate('cascade')
             ->onDelete('cascade');
 
@@ -38,7 +38,7 @@ return new class extends Migration
     {
         Schema::table('adminPayments', function(Blueprint $table){
             // Drop the foreign key before dropping the table
-            $table->dropForeign(['adminOrdDetailID']);
+            $table->dropForeign(['adminOrdID']);
             $table->dropForeign(['payMethodID']);
         });
         Schema::dropIfExists('adminPayments');
