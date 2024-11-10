@@ -43,7 +43,7 @@ class AdminOrderRepository implements AdminOrderRepositoryInterface
                 throw new \Exception("Invalid quotation ID provided.");
             }
 
-            //Save initial AdminOrder record to generate an ID for it
+            $adminOrder->orderDate = $payload->orderDate;
             $adminOrder->save();
 
             //Retrieve QuotationDetails associated with the Quotation

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->bigIncrements('adminOrdID');
             $table->unsignedBigInteger('userID');
             $table->unsignedBigInteger('quoteID');
+            $table->date('orderDate');
 
             $table->foreign('userID')->references('userID')->on('users')
             ->onUpdate('cascade')

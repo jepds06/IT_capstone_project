@@ -17,6 +17,7 @@ class AdminOrder extends Model
     protected $fillable = [
         'userID',
         'quoteID',
+        'orderDate'
     ];
 
     public $timestamps = false;

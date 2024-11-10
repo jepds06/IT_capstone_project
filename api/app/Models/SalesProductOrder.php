@@ -18,4 +18,16 @@ class SalesProductOrder extends Model
         'salesID',
         'prodOrdID',
     ];
+
+    public $timestamps = false;
+
+    public function sale()
+    {
+        return $this->belongsTo(Sale::class, 'salesID');
+    }
+
+    public function productOrder()
+    {
+        return $this->belongsTo(ProductOrder::class, 'prodOrdID');
+    }
 }

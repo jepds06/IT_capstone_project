@@ -23,4 +23,16 @@ class CustomerPayment extends Model
         'amountToPay',
         'amountPaid'
     ];
+
+    public $timestamps = false;
+
+    public function slsPrdOrder()
+    {
+        return $this->belongsTo(SalesProductOrder::class, 'slsPrdOrdID');
+    }
+
+    public function payMethod()
+    {
+        return $this->belongsTo(PaymentMethod::class, 'payMethodID');
+    }
 }

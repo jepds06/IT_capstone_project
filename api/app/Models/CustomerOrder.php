@@ -20,4 +20,16 @@ class CustomerOrder extends Model
         'orderStatus',
         'orderRemarks'
     ];
+
+    public $timestamps = false;
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'userID');
+    }
+
+    public function productOrders()
+    {
+        return $this->hasMany(ProductOrder::class, 'cstrOrderID');
+    }
 }

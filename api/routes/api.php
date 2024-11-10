@@ -4,6 +4,8 @@ use App\Http\Controllers\AdminDeliveryController;
 use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\AdminPaymentController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CustomerOrderController;
+use App\Http\Controllers\CustomerPaymentController;
 use App\Http\Controllers\FinishedProductController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ModuleController;
@@ -15,6 +17,7 @@ use App\Http\Controllers\ProductionMaterialController;
 use App\Http\Controllers\ProductMaterialsController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\QuotationDetailController;
+use App\Http\Controllers\SalesProductOrderController;
 use App\Http\Controllers\SupplierMaterialController;
 use App\Http\Controllers\UserAuthController;
 use App\Http\Controllers\UserPrivilageController;
@@ -23,24 +26,24 @@ use App\Http\Controllers\UserTypeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-//userTypes route
-Route::prefix('userTypes')->group(function(){
-    Route::get('/', [UserTypeController::class, 'index']);
-    Route::get('/{userTypeId}', [UserTypeController::class, 'show']);
-    Route::post('/', [UserTypeController::class, 'store']);
-    Route::put('/{userTypeId}',[UserTypeController::class, 'update']);
-});
-
 //users route
-Route::prefix('users')->group(function(){
+Route::middleware('auth:sanctum')->prefix('users')->group(function(){
     Route::get('/', [UserRegController::class, 'index']);
     Route::get('/{userId}', [UserRegController::class, 'show']);
     Route::post('/', [UserRegController::class, 'store']);
     Route::put('/{userId}', [UserRegController::class, 'update']);
 });
 
+//userTypes route
+Route::middleware('auth:sanctum')->prefix('userTypes')->group(function(){
+    Route::get('/', [UserTypeController::class, 'index']);
+    Route::get('/{userTypeId}', [UserTypeController::class, 'show']);
+    Route::post('/', [UserTypeController::class, 'store']);
+    Route::put('/{userTypeId}',[UserTypeController::class, 'update']);
+});
+
 //modules route
-Route::prefix('modules')->group(function(){
+Route::middleware('auth:sanctum')->prefix('modules')->group(function(){
     Route::get('/', [ModuleController::class, 'index']);
     Route::get('/{moduleId}', [ModuleController::class, 'show']);
     Route::post('/', [ModuleController::class, 'store']);
@@ -48,17 +51,17 @@ Route::prefix('modules')->group(function(){
 });
 
 //UserPrivilage route
-Route::prefix('userPrivilage')->group(function(){
+Route::middleware('auth:sanctum')->prefix('userPrivilage')->group(function(){
     Route::get('/', [UserPrivilageController::class, 'index']);
     Route::get('/{userPrivilageId}', [UserPrivilageController::class, 'show']);
     Route::post('/', [UserPrivilageController::class, 'store']);
     Route::put('/{userPrivilageId}', [UserPrivilageController::class, 'update']);
 });
 
-//register route
-Route::prefix('account')->group(function(){
-    Route::post('/register', [AuthController::class, 'register']);
-});
+// //register route
+// Route::prefix('account')->group(function(){
+//     Route::post('/register', [AuthController::class, 'register']);
+// });
 
 //login/logout routes
 Route::post('/login', [UserAuthController::class, 'login']);
@@ -158,6 +161,7 @@ Route::prefix('quotationDetails')->group(function(){
     Route::post('/', [QuotationDetailController::class, 'store']);
     Route::put('/{qteDetailId}', [QuotationDetailController::class, 'update']);
 });
+
 //Admin Order route
 Route::prefix('adminOrders')->group(function(){
     Route::get('/', [AdminOrderController::class, 'index']);
@@ -182,3 +186,26 @@ Route::prefix('adminPayments')->group(function(){
     Route::put('/{adminPaymentId}', [AdminPaymentController::class, 'update']);
 });
 
+//customer order route
+Route::prefix('customerOrders')->group(function(){
+    Route::get('/', [CustomerOrderController::class, 'index']);
+    Route::get('/{cstrOrderId}', [CustomerOrderController::class, 'show']);
+    Route::post('/', [CustomerOrderController::class, 'store']);
+    Route::put('/{cstrOrderId}', [CustomerOrderController::class, 'update']);
+});
+
+//customer payment route
+Route::prefix('customerPayments')->group(function(){
+    Route::get('/', [CustomerPaymentController::class, 'index']);
+    Route::get('/{cstrPayId}', [CustomerPaymentController::class, 'show']);
+    Route::post('/', [CustomerPaymentController::class, 'store']);
+    Route::put('/{cstrPayId}', [CustomerPaymentController::class, 'update']);
+});
+
+//sales product order route
+Route::prefix('salesProductOrders')->group(function(){
+    Route::get('/', [SalesProductOrderController::class, 'index']);
+    Route::get('/{slsPrdOrdId}', [SalesProductOrderController::class, 'show']);
+    Route::post('/', [SalesProductOrderController::class, 'store']);
+    Route::put('/{slsPrdOrdId}', [SalesProductOrderController::class, 'update']);
+});
