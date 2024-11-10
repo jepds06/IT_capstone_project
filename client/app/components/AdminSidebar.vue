@@ -80,7 +80,7 @@
               class="w-5 h-5 mr-5"
             />
             <router-link
-              to="admin/reports"
+              to="/admin/reports"
               class="text-center"
             >
               Reports
@@ -637,7 +637,7 @@
             "
           >Stock Overview</router-link>
           <router-link
-            to="admin/inventory"
+            to="/admin/inventory"
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
                 ? route.path === 'admin/inventory'

@@ -18,9 +18,10 @@
           <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow overflow-hidden">
             <thead class="bg-blue-600 text-white uppercase tracking-wide text-sm">
               <tr>
-                <th class="py-3 px-4 text-left">Production ID</th>
-                <th class="py-3 px-4 text-left">User</th>
+                <th class="py-3 px-4 text-left">Payment ID</th>
+                <th class="py-3 px-4 text-left">Customer Name</th>
                 <th class="py-3 px-4 text-left">Amount</th>
+                <th class="py-3 px-4 text-left">Payment Method</th>
                 <th class="py-3 px-4 text-left">Status</th>
                 <th class="py-3 px-4 text-left">Actions</th>
               </tr>
@@ -33,7 +34,8 @@
             >
               <td class="px-6 py-3">{{ payment.paymentID }}</td>
               <td class="px-6 py-3">{{ payment.customerName }}</td>
-              <td class="px-6 py-3">{{ payment.totalAmount }}</td>
+              <td class="px-6 py-3">{{ payment.amount }}</td>
+              <td class="px-6 py-3">{{ payment.paymentMethod }}</td>
               <td class="px-6 py-3">
                 <span
                   :class="{
@@ -56,9 +58,9 @@
                 <button @click="openModal('view', payment.paymentID)" class="text-blue-500 hover:text-blue-700">
                   <i class="fa-solid fa-eye"></i>
                 </button>
-                <!-- <button @click="openModal('edit', payment.paymentID)" class="text-yellow-500 hover:text-yellow-700">
+                <button @click="openModal('edit', payment.paymentID)" class="text-yellow-500 hover:text-yellow-700">
                   <i class="fa-solid fa-edit"></i>
-                </button> -->
+                </button>
               </td>
             </tr>
           </tbody>
@@ -100,9 +102,7 @@
           <h3 class="text-xl font-semibold mb-4">View Payment Details</h3>
           <p><strong>Payment ID:</strong> {{ currentPayment.paymentID }}</p>
           <p><strong>Customer Name:</strong> {{ currentPayment.customerName }}</p>
-          <p><strong>Total Amount:</strong> {{ currentPayment.totalAmount }}</p>
-          <p><strong>Paid Amount:</strong> {{ currentPayment.paidAmount }}</p>
-          <p><strong>Unpaid Amount:</strong> {{ currentPayment.uppaidAmount }}</p>
+          <p><strong>Amount:</strong> {{ currentPayment.amount }}</p>
           <p><strong>Payment Method:</strong> {{ currentPayment.paymentMethod }}</p>
           <p><strong>Status:</strong> <span :class="statusClass(currentPayment.status)">{{ currentPayment.status }}</span></p>
           <button @click="closeModal" class="mt-4 px-4 py-2 bg-red-500 text-white rounded">Close</button>
@@ -113,7 +113,7 @@
       <div v-if="modalType === 'edit'" class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
         <div class="bg-white p-6 rounded-lg w-1/3">
           <h3 class="text-xl font-semibold mb-4">Edit Payment</h3>
-          <input v-model="currentPayment.totalAmount" class="mb-4 p-2 w-full border border-gray-300 rounded" placeholder="Amount" />
+          <input v-model="currentPayment.amount" class="mb-4 p-2 w-full border border-gray-300 rounded" placeholder="Amount" />
           <select v-model="currentPayment.status" class="mb-4 p-2 w-full border border-gray-300 rounded">
             <option value="Completed">Completed</option>
             <option value="Pending">Pending</option>
@@ -138,9 +138,7 @@ definePageMeta({
     {
       paymentID: 1,
       customerName: "Rhea",
-      totalAmount: "₱5000",
-      uppaidAmount: "₱0",
-      paidAmount: "₱5000",
+      amount: "₱5000",
       paymentMethod: "Cash",
       status: "Completed",
     }
