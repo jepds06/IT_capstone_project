@@ -81,8 +81,6 @@ class ProductionDetailRepository implements ProductionDetailRepositoryInterface
                     'prodtnDetailID' => $prodtnDetail->prodtnDetailID,
                     'qtyNeeded' => $prodtnDetail->quantity * $productMaterial->quantity,
                     'status' => $payload->status,
-                    'created_at' => now(),
-                    'updated_at' => now(),
                 ];
             })->toArray();
 

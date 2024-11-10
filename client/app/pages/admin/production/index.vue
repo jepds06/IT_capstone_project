@@ -435,9 +435,10 @@
               v-model="productionDetailForm.productID"
               id="prodCat"
               class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
+              :disabled=" productionDetailMode === 'edit'"
             >
               <option
-                v-for="product in products"
+                v-for="product in notAddedProducts"
                 :key="product.productID"
                 :value="product.productID"
               >
@@ -559,6 +560,7 @@ const users = ref([]);
 const productionDetailMode = ref("add");
 
 const products = ref([]);
+const notAddedProducts = ref([]);
 
 function formatDate(date) {
   var d = new Date(date),
@@ -623,6 +625,13 @@ const statusClass = ( status) => {
   }
 }
 const openProductionDetailModal = async () => {
+  if(selectedProductionDetails.value.length > 0){
+    console.log("selectedProductionDetails", selectedProductionDetails)
+    const addedProducts = selectedProductionDetails.value.map((val) => val.productID)
+    notAddedProducts.value = products.value?.filter((product) => !addedProducts.includes(product.productID))
+  } else {
+    notAddedProducts.value = products.value
+  }
   productionDetailMode.value = "add";
   isProductionDetailsModal.value = true;
   productionDetailForm.value = {
@@ -697,6 +706,7 @@ const openEditModal = (production) => {
 
 
 const editProductionDetail = (prodDetail) => {
+  notAddedProducts.value = products.value
   productionDetailMode.value = "edit";
   productionDetailForm.value = { ...prodDetail };
   isProductionDetailsModal.value = true;

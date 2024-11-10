@@ -298,6 +298,7 @@
 import { jsPDF } from "jspdf";
 import auth from "../../../../middleware/auth";
 import { apiService } from "~/api/apiService";
+import { format } from "date-fns";
 import "jspdf-autotable";
 
 // This page requires authentication
@@ -399,7 +400,8 @@ export default {
 
       const adminOrder = {
         userID: this.userInfo.userID,
-        quoteID: this.selectedSupplier?.quotation_details[0]?.quoteID
+        quoteID: this.selectedSupplier?.quotation_details[0]?.quoteID,
+        orderDate: format(new Date(),'yyyy-MM-dd')
       }
       const adminOrderDetails = this.purchasedMaterials.map((prodtnMtrlID) => {
       const material = this.selectedSupplier?.quotation_details.find((value) => value.prodtnMtrlID === prodtnMtrlID)
@@ -411,19 +413,15 @@ export default {
         }
       })
 
-      if(this.alreadyPurchasedMaterials.length > 0){
+      if(this.alreadyPurchasedMaterials?.length > 0){
         await apiService.put(`/api/adminOrders/${this.adminOrder.adminOrdID}`, {...adminOrder, quotationDetails: adminOrderDetails});
       } else {
       
         await apiService.post("/api/adminOrders", {...adminOrder, quotationDetails: adminOrderDetails});
       }
       const productionMaterialCount = this.materials.length
-      const purchasedMaterialsCount = this.alreadyPurchasedMatOtherSupplier.length + this.alreadyPurchasedMaterials.length + adminOrderDetails.length
+      const purchasedMaterialsCount = (this.alreadyPurchasedMatOtherSupplier?.length ?? 0) + (this.alreadyPurchasedMaterials?.length ?? 0) + (adminOrderDetails?.length ?? 0)
 
-      console.log("alreadyPurchasedMaterials", this.alreadyPurchasedMaterials.length);
-      console.log("alreadyPurchasedMatOtherSupplier", this.alreadyPurchasedMatOtherSupplier.length);
-      console.log("productionMaterialCount:", productionMaterialCount)
-      console.log("purchasedMaterialsCount:", purchasedMaterialsCount)
       if(productionMaterialCount === purchasedMaterialsCount){
       await apiService.put(`/api/productions/${this.selectedQuotation.productionID}`, {...this.selectedQuotation, status: "In Progress"});
     }
@@ -651,8 +649,6 @@ export default {
       this.adminOrder = filterData.length > 0 ? filterData[0] : null;
       this.alreadyPurchasedMaterials = filterData[0]?.admin_order_detail?.map((val) => val.prodtnMtrlID)
       this.alreadyPurchasedMatOtherSupplier = filterDataFromProd?.filter((val) => !this.alreadyPurchasedMaterials?.includes(val.prodtnMtrlID))?.map((val) => val.prodtnMtrlID)
-      console.log("alreadyPurchasedMaterials", this.alreadyPurchasedMaterials.length);
-      console.log("alreadyPurchasedMatOtherSupplier", this.alreadyPurchasedMatOtherSupplier.length);
     }
   },
 };

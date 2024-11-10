@@ -40,7 +40,7 @@
         <!-- Payment Type Dropdown -->
         <div class="">
           <label class="block font-semibold text-lg mb-2">Payment Type</label>
-          <select
+          <!-- <select
             v-model="paymentType"
             @change="handlePaymentTypeChange"
             class="w-full p-2 border rounded text-base"
@@ -49,7 +49,8 @@
             <option>All</option>
             <option>Cash</option>
             <option>Cheque</option>
-          </select>
+          </select> -->
+          <USelectMenu v-model="selectedPaymentType" :options="paymentTypes" />
         </div>
         <!-- Cash Voucher No. (Visible when Cash is selected) -->
         <!-- <div v-if="paymentType === 'Cash'" class="flex-1">
@@ -61,16 +62,17 @@
       <!-- Date Input -->
       <div class="col-span-1">
         
-        <label class="block font-semibold text-lg mb-2">Date</label>
+        <label class="block font-semibold text-lg mb-2">Actions</label>
         <div class="flex">
         <!-- <input type="date" class="w-full p-2 border rounded text-base" /> -->
-        <UPopover :popper="{ placement: 'bottom-start' }">
+        <!-- <UPopover :popper="{ placement: 'bottom-start' }">
           <UButton icon="i-heroicons-calendar-days-20-solid" :label="formattedDate" />
       
           <template #panel="{ close }">
             <DatePicker v-model="selectedDate" is-required @close="close" />
           </template>
-        </UPopover>
+        </UPopover> -->
+        <UButton class="ml-2" title="Filter" label="Filter  " color="blue" @click="applyFilter" />
         <UButton class="ml-2" title="Clear" label="Clear" color="gray" @click="clearFilter" />
       </div>
       </div>
@@ -105,6 +107,8 @@
               <th class="p-2">Invoice No</th>
               <th class="p-2">Invoice Date</th>
               <th class="p-2">Balance</th>
+              <th class="p-2">Amount Paid</th>
+              <th class="p-2">Amount To Pay</th>
             </tr>
           </thead>
           <tbody>
@@ -118,9 +122,14 @@
               <td class="p-2">{{ bill.invoiceNo }}</td>
               <td class="p-2">{{ bill.invoiceDate }}</td>
               <td class="p-2">{{ bill.balance }}</td>
+              <td class="p-2">{{ bill.amountPaid }}</td>
+              <td class="p-2">{{ bill.amountToPay }}</td>
             </tr>
           </tbody>
         </table>
+        <p class="font-bold text-right">
+          Total Balance:
+        </p>
       </div>
 
       <!-- Selected Bills Section -->
@@ -314,6 +323,8 @@ export default {
       selectedProduction: null,
       supplier: [],
       selectedSupplier: null,
+      paymentTypes: [],
+      selectedPaymentType: null,
       paymentType: "",
       selectedBills: [],
       unpaidBills: [],
@@ -369,16 +380,35 @@ export default {
     saveSupplier() {
       // Logic for saving supplier
     },
+    async applyFilter(){
+      
+      const data = await this.fetchPaymentByProductionNo(this.selectedProduction.id)
+      if(!this.selectedSupplier){
+        // const transformData = data?.map((value)=>{
+        //   const totalAmount = value.admin_order_detail?.reduce((total, detail) => {
+        //   return total + parseFloat(detail.amount);
+        // }, 0);
+        // const amountPaid = value.admin_payments.reduce((total, detail) => {
+        //   return total + parseFloat(detail.amountPaid);
+        // }, 0);
+        // return {
+        //   totalAmount,
+        //   adminOrdID: value.adminOrdID,
 
+        // }
+        // })
+      }
+    },
     clearFilter() {
       this.selectedDate = new Date()
       this.selectedSupplier = null
       this.selectedProduction = null
+      this.selectedPaymentType = null
     },
     async fetchProductions(){
       const result = await apiService.get("/api/productions");
 
-      this.productions = result.data?.filter((prod) => prod.status === "In Progress").map((prod) => {
+      this.productions = result.data?.filter((prod) => prod.status === "In Progress")?.map((prod) => {
         return {
           id: prod.productionID,
           label: `${prod.productionID} - ${prod.remarks}`
@@ -390,14 +420,28 @@ export default {
       this.supplier = result.data?.filter((user) => user.userTypeID === 3)?.map((user) =>{
         return {
           id: user.userID,
-          label: `${user.userID} - ${user.lastName} ${user.firstName}`
+          label: `${user.lastName} ${user.firstName}`
         }
       });
     },
+   async fetchPaymentMethod(){
+    const result = await apiService.get("/api/paymentMethods");
+
+      this.paymentTypes = result.data?.map((payment) => {
+        return {
+          id: payment.payMethodID,
+          label: payment.payMethodName
+        }
+      })
+   },
+   async fetchPaymentByProductionNo(productionID){
+    return await apiService.get(`/api/adminOrders/production/${productionID}`)
+   }
   },
   async mounted() {
     await this.fetchProductions();
     await this.fetchUserData();
+    await this.fetchPaymentMethod();
   //   if (process.client) {
   //   const storage = JSON.parse(localStorage.getItem("userInfo"));
   //   this.userInfo = storage ? storage : null;
