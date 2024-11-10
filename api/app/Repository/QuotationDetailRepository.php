@@ -7,6 +7,8 @@ use App\Models\Production;
 use App\Models\ProductionMaterial;
 use App\Models\Quotation;
 use App\Models\QuotationDetail;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 class QuotationDetailRepository implements QuotationDetailRepositoryInterface
 {
@@ -101,5 +103,38 @@ class QuotationDetailRepository implements QuotationDetailRepositoryInterface
         $qteDetail->save();
 
         return $qteDetail->fresh();
+    }
+
+    public function deleteByQteDetailID($qteDetailID)
+    {
+        try {
+            // Find the quotation detail by its ID
+            $quotationDetail = QuotationDetail::find($qteDetailID);
+
+            // Check if the record exists
+            if (!$quotationDetail) {
+                return response()->json([
+                    'message' => 'Quotation detail not found.',
+                ], Response::HTTP_NOT_FOUND);
+            }
+
+            // Delete the record
+            $quotationDetail->delete();
+
+            return response()->json([
+                'message' => 'Quotation detail deleted successfully.',
+            ], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            // Log the error
+            Log::error('Error deleting quotation detail', [
+                'error' => $e->getMessage(),
+                'qteDetailID' => $qteDetailID
+            ]);
+
+            return response()->json([
+                'message' => 'Failed to delete quotation detail.',
+                'error' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }

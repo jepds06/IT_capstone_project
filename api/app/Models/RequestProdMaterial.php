@@ -13,6 +13,7 @@ class RequestProdMaterial extends Model
     protected $primaryKey = 'reqProdMatsID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'prodtnMtrlID',

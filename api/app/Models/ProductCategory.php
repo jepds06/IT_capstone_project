@@ -13,6 +13,7 @@ class ProductCategory extends Model
     protected $primaryKey = 'prodCatID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'description'

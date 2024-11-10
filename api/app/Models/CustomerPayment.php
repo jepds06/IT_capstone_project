@@ -13,6 +13,7 @@ class CustomerPayment extends Model
     protected $primaryKey = 'cstrPayID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'paymentDate',
@@ -23,8 +24,6 @@ class CustomerPayment extends Model
         'amountToPay',
         'amountPaid'
     ];
-
-    public $timestamps = false;
 
     public function slsPrdOrder()
     {

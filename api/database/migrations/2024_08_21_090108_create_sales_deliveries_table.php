@@ -17,7 +17,6 @@ return new class extends Migration
             $table->date('deliveryDate');
             $table->string('deliveryAddress');
             $table->string('deliveryStatus');
-            $table->timestamps();
 
             $table->Foreign('salesID')->references('salesID')->on('sales')
             ->onUpdate('cascade')

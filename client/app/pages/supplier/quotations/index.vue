@@ -1,68 +1,145 @@
 <template>
-  <div class="p-6">
-    <!-- Title -->
-    <h2 class="text-2xl font-bold mb-4">Quotations</h2>
+  <div>
+    <!-- Main Tabs Navigation -->
+    <ul class="flex border-b">
+      <!-- Quotations Tab -->
+      <li
+        :class="{
+          'border-blue-500 text-blue-500': activeMainTab === 'quotations',
+          'border-transparent': activeMainTab !== 'quotations',
+        }"
+        class="cursor-pointer p-4 border-b-2"
+        @click="setActiveMainTab('quotations')"
+      >
+        Quotations
+      </li>
 
-    <!-- Search and Action Buttons -->
-    <div class="flex justify-between mb-4">
-      <input
-        type="text"
-        v-model="searchQuery"
-        placeholder="Search..."
-        class="w-1/3 p-2 border rounded-lg"
-      />
-      <!-- <div class="flex space-x-2">
-        <button @click="openQuotationAddModal" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600" title="Add Quotation">
-          <i class="fas fa-plus"></i>
-          Add Quotation
-        </button>
-      </div> -->
+      <!-- Purchase Order Tab -->
+      <li
+        :class="{
+          'border-blue-500 text-blue-500': activeMainTab === 'purchaseOrder',
+          'border-transparent': activeMainTab !== 'purchaseOrder',
+        }"
+        class="cursor-pointer p-4 border-b-2"
+        @click="setActiveMainTab('purchaseOrder')"
+      >
+        Purchase Order
+      </li>
+
+      <!-- Admin Payments Tab -->
+      <li
+        :class="{
+          'border-blue-500 text-blue-500': activeMainTab === 'adminPayments',
+          'border-transparent': activeMainTab !== 'adminPayments',
+        }"
+        class="cursor-pointer p-4 border-b-2"
+        @click="setActiveMainTab('adminPayments')"
+      >
+        Admin Payments
+      </li>
+    </ul>
+
+    <!-- Quotations Tab Content -->
+    <div v-if="activeMainTab === 'quotations'">
+      <ul class="flex border-b mt-4">
+        <!-- Quotation Request Sub-Tab -->
+        <li
+          :class="{
+            'border-blue-500 text-blue-500': activeSubTab === 'quotationRequest',
+            'border-transparent': activeSubTab !== 'quotationRequest',
+          }"
+          class="cursor-pointer p-4 border-b-2"
+          @click="setActiveSubTab('quotationRequest')"
+        >
+          Quotation Request
+        </li>
+
+        <!-- Cancelled Quotations Sub-Tab -->
+        <li
+          :class="{
+            'border-blue-500 text-blue-500': activeSubTab === 'cancelledQuotations',
+            'border-transparent': activeSubTab !== 'cancelledQuotations',
+          }"
+          class="cursor-pointer p-4 border-b-2"
+          @click="setActiveSubTab('cancelledQuotations')"
+        >
+          Completed Quotations
+        </li>
+      </ul>
+
+      <!-- Quotation Request Content -->
+      <div v-if="activeSubTab === 'quotationRequest'" class="mt-4">
+        <!-- Quotation Request Table and Pagination -->
+        <SupplierQuotation />
+      </div>
+
+      <!-- Completed Quotations Content -->
+      <div v-if="activeSubTab === 'cancelledQuotations'" class="mt-4">
+        <SupplierQuotation :is-completed="true"/>
+      </div>
     </div>
 
-    <table class="min-w-full bg-white border border-gray-300">
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="px-6 py-2 text-black text-left border-b">Quotation ID</th>
-          <th class="px-6 py-2 text-black text-left border-b">
-            Quotation Date
-          </th>
-          <th class="px-6 py-2 text-black text-left border-b">Remarks</th>
-          <th class="px-6 py-2 text-black text-left border-b">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="quotation in filteredQuotationDetails"
-          :key="quotation.id"
-          class="hover:bg-gray-50"
-        >
-          <td class="px-6 py-4 text-black border-b">{{ quotation.id }}</td>
-          <td class="px-6 py-4 text-black border-b">
-            {{ quotation.quotationDate }}
-          </td>
-          <td class="px-6 py-4 text-black border-b">{{ quotation.remarks }}</td>
-          <td class="px-6 py-4 text-black border-b">
-            <!-- <button
-               @click="openQuotationEditModal(quotation)"
-              class="text-yellow-500 hover:text-yellow-700 ml-2"
-              title="Edit Production"
-            >
-              <i class="fas fa-edit"></i>
-            </button> -->
+    <!-- Purchase Order Tab Content -->
+    <div v-if="activeMainTab === 'purchaseOrder'" class="mt-4">
+      <input type="text" placeholder="Search Purchase Order..." class="mb-4 p-2 border rounded w-3/4" v-model="searchQuery" />
+      <table class="w-full border border-gray-200">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="p-2 border-b">Purchase Order ID</th>
+            <th class="p-2 border-b">Order Date</th>
+            <th class="p-2 border-b">Supplier</th>
+            <th class="p-2 border-b">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in purchaseOrderData" :key="item.id" class="text-center">
+            <td class="p-2 border-b">{{ item.purchaseOrderID }}</td>
+            <td class="p-2 border-b">{{ item.orderDate }}</td>
+            <td class="p-2 border-b">{{ item.supplier }}</td>
+            <td class="p-2 border-b">
+              <button class="px-2 py-1 bg-blue-500 text-white rounded">Edit</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="mt-4 flex justify-between">
+        <button @click="prevPage" :disabled="currentPage === 1" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Previous</button>
+        <span>Page {{ currentPage }} of {{ totalPages }}</span>
+        <button @click="nextPage" :disabled="currentPage === totalPages" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Next</button>
+      </div>
+    </div>
 
-            <button
-              @click="openQuotationDetailInfo(quotation)"
-              class="text-blue-500 hover:underline ml-2"
-            >
-              <i class="fas fa-cogs"></i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- Quotations Details Table -->
-    <div
+    <!-- Admin Payments Tab Content -->
+    <div v-if="activeMainTab === 'adminPayments'" class="mt-4">
+      <input type="text" placeholder="Search Admin Payments..." class="mb-4 p-2 border rounded w-3/4" v-model="searchQuery" />
+      <table class="w-full border border-gray-200">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="p-2 border-b">Payment ID</th>
+            <th class="p-2 border-b">Payment Date</th>
+            <th class="p-2 border-b">Amount</th>
+            <th class="p-2 border-b">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in adminPaymentsData" :key="item.id" class="text-center">
+            <td class="p-2 border-b">{{ item.paymentID }}</td>
+            <td class="p-2 border-b">{{ item.paymentDate }}</td>
+            <td class="p-2 border-b">{{ item.amount }}</td>
+            <td class="p-2 border-b">
+              <button class="px-2 py-1 bg-blue-500 text-white rounded">Edit</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="mt-4 flex justify-between">
+        <button @click="prevPage" :disabled="currentPage === 1" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Previous</button>
+        <span>Page {{ currentPage }} of {{ totalPages }}</span>
+        <button @click="nextPage" :disabled="currentPage === totalPages" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Next</button>
+      </div>
+    </div>
+        <!-- Quotations Details Table -->
+        <div
       v-if="isQuotationDetailInfo"
       class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
       @click.self="closeQuotationDetailInfo"
@@ -86,7 +163,7 @@
                 Product Material
               </th>
               <th class="px-6 py-2 text-black text-left border-b">
-                Quantity Quoted
+                Quantity
               </th>
               <th class="px-6 py-2 text-black text-left border-b">
                 Unit Price
@@ -94,7 +171,7 @@
               <th class="px-6 py-2 text-black text-left border-b">
                 Total Price
               </th>
-              <th class="px-6 py-2 text-black text-left border-b">Actions</th>
+              <th class="px-6 py-2 text-black text-left border-b" v-if="!selectedQuotation.isCompleted">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -143,7 +220,7 @@
                     : 0
                 }}
               </td>
-              <td class="px-6 py-4 text-black border-b">
+              <td class="px-6 py-4 text-black border-b" v-if="!selectedQuotation.isCompleted">
                 <div v-if="quotation.id === selectedQuotationDetail?.id">
                   <button
                     class="p-2 bg-red-500 text-white rounded hover:bg-red-600 mr-2"
@@ -174,186 +251,40 @@
           </tbody>
         </table>
 
-        <div class="flex mt-2">
+        <div class="flex  justify-between mt-2">
           <!-- <button @click="openQuotationDetailAddModal" class="p-2 mr-2 bg-blue-500 text-white rounded hover:bg-blue-600" title="Add Quotation Details">
         <i class="fas fa-plus"></i>
         Add Quotation Details
       </button> -->
-          <button
+          <UButton
             @click="closeQuotationDetailInfo"
-            class="bg-red-500 text-white px-4 py-2 rounded"
-          >
-            Close
-          </button>
+            label="Close"
+            color="red"
+            icon="material-symbols:close"
+          />
+
+          <UButton
+            icon="material-symbols-light:list-alt-check-outline-sharp"
+            @click="completeQuotation"
+            rounded="false"
+            size="sm"
+            :color="selectedQuotation.isCompleted ? 'gray' : 'blue'"
+            :disabled="selectedQuotation.isCompleted"
+            :loading="isCompleteLoading"
+            title="Complete Quotation"
+            label="Complete"
+          />
         </div>
-      </div>
-    </div>
-
-    <!-- Pagination Controls -->
-    <div class="mt-4 flex justify-between">
-      <button
-        @click="prevPage"
-        :disabled="currentPage === 1"
-        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
-        Previous
-      </button>
-      <span>Page {{ currentPage }} of {{ totalPages }}</span>
-      <button
-        @click="nextPage"
-        :disabled="currentPage === totalPages"
-        class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-      >
-        Next
-      </button>
-    </div>
-
-    <!-- Modal for Adding/Editing Quotations Details -->
-    <div
-      v-if="isQuoDetailModalOpen"
-      class="modal-overlay"
-      @click.self="closQuoDetailModal"
-    >
-      <div class="modal-content">
-        <h2 class="text-xl font-bold mb-4 text-black">
-          {{
-            isQuoDetailEditMode
-              ? "Edit Quotation Detail"
-              : "Add Quotation Detail"
-          }}
-        </h2>
-        <form @submit.prevent="saveQuotationDetail">
-          <label for="materialId" class="block mb-2 mt-4 text-black"
-            >Material ID:</label
-          >
-          <select
-            :disabled="isQuoDetailEditMode"
-            v-model="quotationDetailForm.prodtnMtrlID"
-            id="materialID"
-            class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
-            @change="
-              (e) => {
-                getMaterialDetails(e.target.value);
-                return e.target.value;
-              }
-            "
-          >
-            <option
-              v-for="material in materials.filter(
-                (value) =>
-                  !quotationDetails
-                    .map((v) => v.prodtnMtrlID)
-                    .includes(value.prodtnMtrlID)
-              )"
-              :key="material.prodtnMtrlID"
-              :value="material.prodtnMtrlID"
-            >
-              {{ `${material.productName} -> ${material.description}` }}
-            </option>
-          </select>
-          <div v-if="materialDetail" :key="quotationDetailForm.prodtnMtrlID">
-            <label for="quantityQuoted" class="block mb-2 mt-4 text-black"
-              >Quantity Needed: {{ materialDetail.qtyNeeded }}</label
-            >
-          </div>
-          <label for="quantityQuoted" class="block mb-2 mt-4 text-black"
-            >Quantity Quoted:</label
-          >
-          <input
-            id="quantityQuoted"
-            v-model.number="quotationDetailForm.quantity"
-            type="number"
-            placeholder="Enter quantity quoted"
-            required
-            class="w-full p-2 border rounded"
-          />
-
-          <label for="totalPrice" class="block mb-2 mt-4 text-black"
-            >Total Price:</label
-          >
-          <input
-            id="totalPrice"
-            v-model.number="quotationDetailForm.quotePrice"
-            type="number"
-            step="0.01"
-            placeholder="Enter total price"
-            required
-            class="w-full p-2 border rounded"
-          />
-
-          <div class="flex justify-end mt-4">
-            <button
-              type="button"
-              @click="closQuoDetailModal"
-              class="bg-gray-300 px-4 py-2 mr-2 rounded hover:bg-gray-400"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              {{ isQuoDetailEditMode ? "Update" : "Add" }}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- Modal for Adding/Editing Quotations Details -->
-    <div
-      v-if="isQuotationModalOpen"
-      class="modal-overlay"
-      @click.self="closeQuotationModal"
-    >
-      <div class="modal-content">
-        <h2 class="text-xl font-bold mb-4 text-black">
-          {{ isQuotationEditMode ? "Edit Quotation" : "Add Quotation" }}
-        </h2>
-        <form @submit.prevent="saveQuotaion">
-          <label for="quotationDate" class="block mb-2 mt-4 text-black"
-            >Quotation Date:</label
-          >
-          <input
-            id="quotationDate"
-            v-model="quotationForm.quotationDate"
-            type="date"
-            required
-            class="w-full p-2 border rounded"
-          />
-          <label for="remarks" class="block mb-2 mt-4 text-black"
-            >Remarks:</label
-          >
-          <textarea
-            id="remarks"
-            v-model="quotationForm.remarks"
-            placeholder="Enter any remarks"
-            class="w-full p-2 border rounded"
-          ></textarea>
-
-          <div class="flex justify-end mt-4">
-            <button
-              type="button"
-              @click="closeQuotationModal"
-              class="bg-gray-300 px-4 py-2 mr-2 rounded hover:bg-gray-400"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-            >
-              {{ isQuotationEditMode ? "Update" : "Add" }}
-            </button>
-          </div>
-        </form>
       </div>
     </div>
   </div>
 </template>
 
+
+
+
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { apiService } from "~/api/apiService";
 
 const materialDetail = ref(null);
@@ -361,12 +292,12 @@ const userInfo = ref({ userID: "" });
 const users = ref([]);
 const materials = ref([]);
 const quotations = ref([]);
-// Mock data for quotation details with new fields
-const quotationDetails = ref([
-  // Add more quotations as needed...
-]);
+const quotationDetails = ref([]);
 
 // State variables
+const activeMainTab = ref('quotations'); // Active main tab
+const activeSubTab = ref('quotationRequest'); // Active sub tab for quotations
+const isCompleteLoading = ref(false);
 const isQuotationDetailInfo = ref(false);
 const isQuoDetailModalOpen = ref(false);
 const isQuoDetailEditMode = ref(false);
@@ -390,18 +321,10 @@ const quotationDetailForm = ref({
   quoteID: "",
 });
 
-// const getUserName = (userID) => {
-
-//   const user = users.value?.find((usr) => usr.userID === userID)
-//   return user ? `${user.lastName} ${user.firstName}` : 'Unknown'
-// }
-// Computed properties
+// Computed properties for filtering
 const filteredQuotationDetails = computed(() => {
   return quotations.value?.filter((quotation) => {
-    return (
-      // getUserName(quotation.userID).toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      quotation.remarks.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
+    return quotation.remarks.toLowerCase().includes(searchQuery.value.toLowerCase());
   });
 });
 
@@ -422,6 +345,15 @@ const nextPage = () => {
   if (currentPage.value < totalPages.value) {
     currentPage.value++;
   }
+};
+
+// Methods for switching tabs
+const setActiveMainTab = (tab) => {
+  activeMainTab.value = tab;
+};
+
+const setActiveSubTab = (tab) => {
+  activeSubTab.value = tab;
 };
 
 // Modal functions
@@ -490,7 +422,6 @@ const openQuotationDetailInfo = async (quotation) => {
     }
     return productMaterial;
   });
-  console.log("transformData---", transformData);
   quotationDetails.value = transformData.map((value, index) => {
     return {
       ...value,
@@ -498,6 +429,18 @@ const openQuotationDetailInfo = async (quotation) => {
     };
   });
 };
+
+const completeQuotation = async() => {
+  isCompleteLoading.value = true
+  const result =  await apiService.put(`/api/quotations/${selectedQuotation.value.quoteID}`, {
+            ...selectedQuotation.value,
+            isCompleted: true
+  });
+  selectedQuotation.value = result.data
+  isCompleteLoading.value = false
+  alert("Quotation successfully completed");
+};
+
 const closQuoDetailModal = () => {
   isQuoDetailModalOpen.value = false;
 };
@@ -508,6 +451,7 @@ const closeQuotationModal = () => {
 
 const closeQuotationDetailInfo = () => {
   isQuotationDetailInfo.value = false;
+  selectedQuotationDetail.value = null
 };
 
 const resetForm = () => {
@@ -642,6 +586,7 @@ onMounted(async () => {
   await fetchQuotations();
 });
 </script>
+
 
 <style scoped>
 .modal-overlay {

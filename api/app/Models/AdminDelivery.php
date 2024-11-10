@@ -13,6 +13,7 @@ class AdminDelivery extends Model
     protected $primaryKey = 'adminDlvrID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'adminOrdID',
@@ -20,8 +21,6 @@ class AdminDelivery extends Model
         'deliveryStatus',
         'qtyReceived'
     ];
-
-    public $timestamps = false;
 
     public function adminOrder()
     {

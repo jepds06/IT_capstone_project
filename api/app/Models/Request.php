@@ -13,6 +13,7 @@ class Request extends Model
     protected $primaryKey = 'reqID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'requestDate',

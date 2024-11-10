@@ -13,6 +13,7 @@ class FinishedProduct extends Model
     protected $primaryKey = 'fnshProductID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'prodtnDetailID',
@@ -22,8 +23,6 @@ class FinishedProduct extends Model
         'status',
         'remarks'
     ];
-
-    public $timestamps = false;
 
     public function productionDetail()
     {

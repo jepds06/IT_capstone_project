@@ -13,6 +13,7 @@ class ProductOrder extends Model
     protected $primaryKey = 'prodOrdID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'cstrOrderID',

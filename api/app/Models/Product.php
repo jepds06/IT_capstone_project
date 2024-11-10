@@ -13,6 +13,7 @@ class Product extends Model
     protected $primaryKey = 'productID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'productName',
@@ -20,8 +21,6 @@ class Product extends Model
         'unitPrice',
         'prodCatID'
     ];
-
-    public $timestamps = false;
     
     public function prdCategory()
     {

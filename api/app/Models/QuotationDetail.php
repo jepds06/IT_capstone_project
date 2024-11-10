@@ -13,6 +13,7 @@ class QuotationDetail extends Model
     protected $primaryKey = 'qteDetailID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable =[
         'quoteID',
@@ -20,8 +21,6 @@ class QuotationDetail extends Model
         'quantity',
         'quotePrice'
     ];
-
-    public $timestamps = false;
 
     public function quotation()
     {
@@ -31,5 +30,10 @@ class QuotationDetail extends Model
     public function productionMaterial()
     {
         return $this->belongsTo(ProductionMaterial::class, 'prodtnMtrlID');
+    }
+
+    public function adminOrders()
+    {
+        return $this->hasMany(AdminOrder::class, 'qteDetailID');
     }
 }

@@ -18,7 +18,6 @@ return new class extends Migration
             $table->integer('quantity');
             $table->string('status');
             $table->string('remarks');
-            $table->timestamps();
 
             $table->Foreign('productionID')->references('productionID')->on('productions')
             ->onUpdate('cascade')

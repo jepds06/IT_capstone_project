@@ -13,6 +13,7 @@ class Module extends Model
     protected $primaryKey = 'moduleID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable =[
         'moduleName'

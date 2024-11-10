@@ -25,7 +25,7 @@
                 </thead>
                 <tbody v-if="generatedMaterials.length > 0">
                   <tr v-for="material in generatedMaterials" :key="material.prodtnMtrlID" class="p-2 border-b text-black text-center">
-                    <td>{{ material.prodtnMtrlID }}</td>
+                    <td>{{ material.id }}</td>
                     <td>{{ material.productMatsID }}</td>
                     <!-- <td>{{ material.prodtnDetailID }}</td> -->
                     <td class="px-6 py-4 border-b">
@@ -171,8 +171,9 @@
   const result = await apiService.get(`/api/productionDetails/production/${productionID}`)
   const material = await apiService.get(`/api/productMaterials/materials/${productID}`)
   
-  const materialData = material['product_materials']?.map((value)=>{
+  const materialData = material['product_materials']?.map((value, index)=>{
         return {
+          id: index + 1,
           materialID: value.materialID,
           description: value.material.description,
           specification: value.material.specification,
@@ -184,7 +185,8 @@
       const filterData = materialData[index]
       return {
         ...val,
-        productMatsID: filterData?.description ?? ''
+        productMatsID: filterData?.description ?? '',
+        id: index + 1
       }
     }) ?? [];
     showModal.value = true;

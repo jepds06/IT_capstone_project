@@ -53,32 +53,41 @@ export class ApiService {
 
   async post(endpoint: string, body?: Record<string, any>, authToken?: string) {
     try {
-      const url = this.constructUrl(endpoint);
-      const response = await $fetch(url, {
-        method: 'POST',
-        headers: authToken ? 
-        {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Authorization': `Bearer ${authToken}`
-        } :
-        {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        body,
-        credentials: 'include',
-      });
+        const url = this.constructUrl(endpoint);
+        const response = await $fetch(url, {
+            method: 'POST',
+            headers: authToken 
+            ? {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'Authorization': `Bearer ${authToken}`
+              }
+            : {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+            },
+            body,
+            credentials: 'include',
+        });
 
-      return response; // Return response directly for successful requests
+        return response; // Return response directly for successful requests
     } catch (error) {
-      console.error('API POST Error:', error);
-      if (error.response) {
-        this.handleError(error.response.status, error.response['_data']);
-      }
-      throw error;
+        console.error('API POST Error:', error);
+        
+        // Check if error contains response and then set it up for handling in the UI
+        if (error.response) {
+            // You can add your error handling logic here
+            return {
+                status: error.response.status,
+                data: error.response['_data'],
+            };
+        }
+        
+        // If error is not a response, throw a general error
+        throw new Error("An unexpected error occurred. Please try again.");
     }
-  }
+}
+
 
   async put(endpoint: string, body?: Record<string, any>) {
     try {
@@ -96,6 +105,28 @@ export class ApiService {
       return response; // Return response directly for successful requests
     } catch (error) {
       console.error('API PUT Error:', error);
+      if (error.response) {
+        this.handleError(error.response.status, error.response['_data']);
+      }
+      throw error;
+    }
+  }
+
+  async delete(endpoint: string) {
+    try {
+      const url = this.constructUrl(endpoint);
+      const response = await $fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        credentials: 'include',
+      });
+
+      return response; // Return response directly for successful requests
+    } catch (error) {
+      console.error('API DELETE Error:', error);
       if (error.response) {
         this.handleError(error.response.status, error.response['_data']);
       }

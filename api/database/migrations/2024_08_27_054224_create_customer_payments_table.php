@@ -20,7 +20,6 @@ return new class extends Migration
             $table->date('dueDate');
             $table->decimal('amountToPay', 10, 2);
             $table->decimal('amountPaid', 10, 2);
-            $table->timestamps();
 
             $table->Foreign('slsPrdOrdID')->references('slsPrdOrdID')->on('salesProductOrders')
             ->onUpdate('cascade')

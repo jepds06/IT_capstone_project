@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('modules', function (Blueprint $table) {
             $table->bigIncrements('moduleID');
             $table->string('moduleName');
-            $table->timestamps();
         });
     }
 

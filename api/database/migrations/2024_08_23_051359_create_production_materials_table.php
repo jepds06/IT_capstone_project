@@ -17,7 +17,6 @@ return new class extends Migration
             $table->unsignedBigInteger('prodtnDetailID');
             $table->integer('qtyNeeded');
             $table->string('status');
-            $table->timestamps();
 
             $table->Foreign('productMatsID')->references('productMatsID')->on('productMaterials')
             ->onUpdate('cascade')

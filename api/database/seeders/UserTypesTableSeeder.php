@@ -28,9 +28,7 @@ class UserTypesTableSeeder extends Seeder
 
         foreach ($userTypes as $userType) {
             DB::table('userTypes')->insert([
-                'userTypeName' => $userType['userTypeName'],
-                'created_at' => now(),
-                'updated_at' => now(),
+                'userTypeName' => $userType['userTypeName']
             ]);
         }
     }

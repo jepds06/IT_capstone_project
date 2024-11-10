@@ -16,7 +16,7 @@
       title="Material Form"
       :showSave="true"
       @update:isVisible="isFormVisible = $event"
-      @save="saveMaterial"
+      @save="confirmSave"
     >
       <template v-slot:body>
         <form @submit.prevent="saveMaterial">
@@ -82,6 +82,49 @@
         </form>
       </template>
     </Modal>
+
+    <!-- Confirmation Modal -->
+  <div
+    v-if="showConfirmationModal"
+    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+  >
+    <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+      <h3 class="text-xl font-bold mb-4 text-black">Are you sure you want to proceed?</h3>
+      <div class="flex justify-end mt-4">
+        <button
+          class="bg-blue-500 text-white py-1 px-3 rounded-md mr-2"
+          @click="saveMaterial"
+        >
+          Yes
+        </button>
+        <button
+          class="text-red-600 py-1 px-3 rounded-md"
+          @click="showConfirmationModal = false"
+        >
+          No
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Message Modal -->
+  <div
+    v-if="showSuccessModal"
+    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+  >
+    <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+      <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
+      <p class="text-black">Material has been {{ formMode === 'add' ? 'created' : 'updated' }} successfully!</p>
+      <div class="flex justify-end mt-4">
+        <button
+          class="bg-blue-500 text-white py-1 px-3 rounded-md"
+          @click="handleSuccess"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  </div>
   
     <!--  Materials Table -->
     <table class="min-w-full border border-gray-300 rounded-lg">
@@ -140,6 +183,8 @@ definePageMeta({
   
   const materials = ref([]);
   const isFormVisible = ref(false);
+  const showConfirmationModal = ref(false);
+  const showSuccessModal = ref(false);
   const formMode = ref("add");
   const form = ref({
     id: "",
@@ -158,24 +203,41 @@ definePageMeta({
   }
   
   function closeForm() {
-    isFormVisible.value = false;
-  }
+  isFormVisible.value = false;
+}
+
+function handleSuccess() {
+  closeForm(); // Close the form modal
+  showSuccessModal.value = false; // Close the success modal
+}
+
+const confirmSave = () => {
+  showConfirmationModal.value = true;
+};
+
+
   
-  async function saveMaterial() {
-    if (formMode.value === "add") {
-      const { data } = await apiService.post("/api/materials", form.value);
-      materials.value.push(data);
-      alert("Material created successfully!");
-    } else if (formMode.value === "edit") {
-      const index = materials.value.findIndex((cat) => cat.materialID === form.value.materialID);
-      if (index !== -1) {
+async function saveMaterial() {
+  showConfirmationModal.value = false;
+  
+  if (formMode.value === "add") {
+    const { data } = await apiService.post("/api/materials", form.value);
+    materials.value.push(data);
+    showSuccessModal.value = true; // Show the success modal for creation
+    formMode.value = 'add'; // Set the form mode to 'add' for the success message
+  } else if (formMode.value === "edit") {
+    const index = materials.value.findIndex((cat) => cat.materialID === form.value.materialID);
+    if (index !== -1) {
       const { data } = await apiService.put(`/api/materials/${form.value.materialID}`, form.value);
       materials.value[index] = data;
-      alert("Material edited successfully!");
-      }
+      showSuccessModal.value = true; // Show the success modal for update
+      formMode.value = 'edit'; // Set the form mode to 'edit' for the success message
     }
-    closeForm();
   }
+  
+  closeForm();
+}
+
   
   function viewMaterial(material) {
     alert(`Viewing category: ${material.description}`);

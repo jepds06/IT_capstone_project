@@ -9,6 +9,7 @@ use App\Http\Controllers\CustomerPaymentController;
 use App\Http\Controllers\FinishedProductController;
 use App\Http\Controllers\MaterialController;
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\ProductCategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductionController;
@@ -160,6 +161,7 @@ Route::prefix('quotationDetails')->group(function(){
     Route::get('/{qteDetailId}', [QuotationDetailController::class, 'show']);
     Route::post('/', [QuotationDetailController::class, 'store']);
     Route::put('/{qteDetailId}', [QuotationDetailController::class, 'update']);
+    Route::delete('/{qteDetailId}', [QuotationDetailController::class, 'delete']);
 });
 
 //Admin Order route
@@ -208,4 +210,12 @@ Route::prefix('salesProductOrders')->group(function(){
     Route::get('/{slsPrdOrdId}', [SalesProductOrderController::class, 'show']);
     Route::post('/', [SalesProductOrderController::class, 'store']);
     Route::put('/{slsPrdOrdId}', [SalesProductOrderController::class, 'update']);
+});
+
+//payment method route
+Route::prefix('paymentMethods')->group(function(){
+    Route::get('/', [PaymentMethodController::class, 'index']);
+    Route::get('/{payMethodId}', [PaymentMethodController::class, 'show']);
+    Route::post('/', [PaymentMethodController::class, 'store']);
+    Route::put('/{payMethodId}', [PaymentMethodController::class, 'update']);
 });

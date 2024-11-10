@@ -13,6 +13,7 @@ class Quotation extends Model
     protected $primaryKey = 'quoteID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable =[
         'quotationDate',
@@ -21,8 +22,6 @@ class Quotation extends Model
         'remarks',
         'isCompleted'
     ];
-
-    public $timestamps = false;
 
     public function user()
     {

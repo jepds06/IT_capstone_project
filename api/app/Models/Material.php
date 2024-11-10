@@ -13,6 +13,7 @@ class Material extends Model
     protected $primaryKey = 'materialID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'description',

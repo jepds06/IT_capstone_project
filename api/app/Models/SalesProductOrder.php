@@ -13,13 +13,12 @@ class SalesProductOrder extends Model
     protected $primaryKey = 'slsPrdOrdID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'salesID',
         'prodOrdID',
     ];
-
-    public $timestamps = false;
 
     public function sale()
     {

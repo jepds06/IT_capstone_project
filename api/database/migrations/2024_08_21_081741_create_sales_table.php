@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('sales', function (Blueprint $table) {
             $table->bigIncrements('salesID');
             $table->date('salesDate');
-            $table->timestamps();
         });
     }
 

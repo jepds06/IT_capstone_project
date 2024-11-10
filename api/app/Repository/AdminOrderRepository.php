@@ -13,7 +13,7 @@ class AdminOrderRepository implements AdminOrderRepositoryInterface
 {
     public function findMany()
     {
-        return AdminOrder::paginate(10);
+        return AdminOrder::with(['adminDeliveries', 'adminOrderDetail.adminPayments','quotation','adminOrderDetail.productionMaterial.productMaterial.material'])->paginate(10);
     }
 
     public function findOneById(int $adminOrderId)
@@ -24,50 +24,54 @@ class AdminOrderRepository implements AdminOrderRepositoryInterface
     public function create(object $payload)
     {
         return DB::transaction(function () use ($payload) {
-            //Create the AdminOrder record (header)
+            // Create the AdminOrder record (header)
             $adminOrder = new AdminOrder();
-
-            //Validate and associate the User
+    
+            // Validate and associate the User
             $user = User::find($payload->userID);
             if ($user) {
                 $adminOrder->user()->associate($user);
             } else {
                 throw new \Exception("Invalid user ID provided.");
             }
-
-            //Validate and associate the Quotation
+    
+            // Validate and associate the Quotation
             $quote = Quotation::find($payload->quoteID);
             if ($quote) {
                 $adminOrder->quotation()->associate($quote);
             } else {
                 throw new \Exception("Invalid quotation ID provided.");
             }
-
             $adminOrder->orderDate = $payload->orderDate;
+            // Save initial AdminOrder record to generate an ID for it
             $adminOrder->save();
-
-            //Retrieve QuotationDetails associated with the Quotation
-            $quotationDetails = $quote->quotationDetails;
-
-            if ($quotationDetails->isEmpty()) {
-                throw new \Exception("No quotation details found for the given quotation ID.");
+    
+            // Assuming the quotation details are now provided directly in the payload
+            // The structure of the quotationDetails in the payload should match the necessary fields.
+            $quotationDetails = collect($payload->quotationDetails)->map(function ($item) {
+                return (object) $item; // Cast each array item to an object
+            });
+    
+            if (empty($quotationDetails)) {
+                throw new \Exception("No quotation details found in the payload.");
             }
-
-            //Create AdminOrderDetails records based on QuotationDetails
+    
+            // Create AdminOrderDetails records based on the provided QuotationDetails in the payload
             foreach ($quotationDetails as $quoteDetail) {
                 $adminOrderDetail = new AdminOrderDetail();
-                $adminOrderDetail->AdminOrderID = $adminOrder->AdminOrderID;
-                $adminOrderDetail->ProductionMaterialId = $quoteDetail->ProductionMaterialId;
-                $adminOrderDetail->qtyOrdered = $quoteDetail->Quantity; // Quantity from QuotationDetails
-                $adminOrderDetail->amount = $quoteDetail->QuotationPrice * $quoteDetail->Quantity; // Calculated amount
+                $adminOrderDetail->adminOrdID = $adminOrder->adminOrdID;
+                $adminOrderDetail->prodtnMtrlID = $quoteDetail->prodtnMtrlID;
+                $adminOrderDetail->qtyOrdered = $quoteDetail->qtyOrdered; // Quantity from the payload
+                $adminOrderDetail->amount = $quoteDetail->amount; // Calculated amount
                 $adminOrderDetail->isDropped = $quoteDetail->isDropped;
                 $adminOrderDetail->save();
             }
-
-            //Return the AdminOrder with details loaded
-            return $adminOrder->fresh('adminOrderDetails');
+    
+            // Return the AdminOrder with details loaded
+            return $adminOrder->fresh('adminOrderDetail');
         });
     }
+    
 
     
     public function update(object $payload, int $adminOrderId)
@@ -91,7 +95,7 @@ class AdminOrderRepository implements AdminOrderRepositoryInterface
             } else {
                 throw new \Exception("Invalid quotation ID provided.");
             }
-
+            $adminOrder->orderDate = $payload->orderDate;
             //Save initial AdminOrder record to generate an ID for it
             $adminOrder->save();
 

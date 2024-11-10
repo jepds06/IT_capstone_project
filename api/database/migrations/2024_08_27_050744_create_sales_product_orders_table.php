@@ -15,7 +15,6 @@ return new class extends Migration
             $table->bigIncrements('slsPrdOrdID');
             $table->unsignedBigInteger('salesID');
             $table->unsignedBigInteger('prdOrdID');
-            $table->timestamps();
 
             $table->foreign('salesID')->references('salesID')->on('sales')
             ->onUpdate('cascade')

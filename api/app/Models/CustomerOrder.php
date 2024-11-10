@@ -13,6 +13,7 @@ class CustomerOrder extends Model
     protected $primaryKey = 'cstrOrderID';
     public $incrementing = true;
     protected $keyType = 'int';
+    public $timestamps = false;
 
     protected $fillable = [
         'userID',
@@ -20,8 +21,6 @@ class CustomerOrder extends Model
         'orderStatus',
         'orderRemarks'
     ];
-
-    public $timestamps = false;
 
     public function user()
     {
