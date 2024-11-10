@@ -5,7 +5,6 @@
 
     <!-- Form Section -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-
       <div class="col-span-1">
         <!-- <div class="flex justify-between items-center mb-4">
           <div>
@@ -18,11 +17,7 @@
           </div>
         </div> -->
         <label class="block font-semibold text-lg mb-2">Production No</label>
-        <select class="w-full p-2 border rounded text-base">
-          <option>Select Production No</option>
-          <option>1</option>
-          <option>2</option>
-        </select>
+        <USelectMenu v-model="selectedProduction" :options="productions" />
       </div>
       <!-- Supplier Section -->
       <div class="col-span-1">
@@ -37,11 +32,7 @@
           </div>
         </div> -->
         <label class="block font-semibold text-lg mb-2">Supplier</label>
-        <select class="w-full p-2 border rounded text-base">
-          <option>Select Supplier</option>
-          <option>Supplier A</option>
-          <option>Supplier B</option>
-        </select>
+        <USelectMenu v-model="selectedSupplier" :options="supplier" />
       </div>
 
       <!-- Payment Type and Cash Voucher No. -->
@@ -69,8 +60,19 @@
 
       <!-- Date Input -->
       <div class="col-span-1">
+        
         <label class="block font-semibold text-lg mb-2">Date</label>
-        <input type="date" class="w-full p-2 border rounded text-base" />
+        <div class="flex">
+        <!-- <input type="date" class="w-full p-2 border rounded text-base" /> -->
+        <UPopover :popper="{ placement: 'bottom-start' }">
+          <UButton icon="i-heroicons-calendar-days-20-solid" :label="formattedDate" />
+      
+          <template #panel="{ close }">
+            <DatePicker v-model="selectedDate" is-required @close="close" />
+          </template>
+        </UPopover>
+        <UButton class="ml-2" title="Clear" label="Clear" color="gray" @click="clearFilter" />
+      </div>
       </div>
     </div>
 
@@ -301,9 +303,17 @@
 </template>
 
 <script>
+import { format } from 'date-fns';
+import { apiService } from '~/api/apiService';
+
 export default {
   data() {
     return {
+      selectedDate: new Date(),
+      productions: [],
+      selectedProduction: null,
+      supplier: [],
+      selectedSupplier: null,
       paymentType: "",
       selectedBills: [],
       unpaidBills: [],
@@ -320,6 +330,9 @@ export default {
     };
   },
   computed: {
+    formattedDate() {
+      return format(this.selectedDate, 'd MMM, yyyy');
+    },
     totalBillsAmount() {
       return this.selectedBills.reduce((sum, bill) => sum + bill.balance, 0);
     },
@@ -350,13 +363,47 @@ export default {
     removeCheque(cheque) {
       // Logic for removing a cheque
     },
-  },
-  editSupplier() {
+    editSupplier() {
     // Logic for editing supplier
+    },
+    saveSupplier() {
+      // Logic for saving supplier
+    },
+
+    clearFilter() {
+      this.selectedDate = new Date()
+      this.selectedSupplier = null
+      this.selectedProduction = null
+    },
+    async fetchProductions(){
+      const result = await apiService.get("/api/productions");
+
+      this.productions = result.data?.filter((prod) => prod.status === "In Progress").map((prod) => {
+        return {
+          id: prod.productionID,
+          label: `${prod.productionID} - ${prod.remarks}`
+        }
+      })
+    },
+   async fetchUserData() {
+      const result = await apiService.get("/api/users");
+      this.supplier = result.data?.filter((user) => user.userTypeID === 3)?.map((user) =>{
+        return {
+          id: user.userID,
+          label: `${user.userID} - ${user.lastName} ${user.firstName}`
+        }
+      });
+    },
   },
-  saveSupplier() {
-    // Logic for saving supplier
+  async mounted() {
+    await this.fetchProductions();
+    await this.fetchUserData();
+  //   if (process.client) {
+  //   const storage = JSON.parse(localStorage.getItem("userInfo"));
+  //   this.userInfo = storage ? storage : null;
+  // }
   },
+ 
 };
 </script>
 
