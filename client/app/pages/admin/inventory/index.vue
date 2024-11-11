@@ -1,7 +1,7 @@
 <template>
     <div class="p-8">
       <!-- Page Title -->
-      <h1 class="text-3xl font-bold text-gray-800 mb-6">Inventory List</h1>
+      <h1 class="text-2xl font-extrabold text-gray-800 mb-6">Inventory List</h1>
   
       <!-- Success Message -->
       <div v-if="showDeleteMessage" class="mb-4 p-4 bg-green-100 text-green-800 rounded-lg">
@@ -31,7 +31,7 @@
       <!-- Inventory Table with Scrollbar and Pagination -->
       <div class="overflow-x-auto">
         <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow overflow-hidden">
-          <thead class="bg-blue-600 text-white uppercase tracking-wide text-sm">
+          <thead class="bg-gray-500 text-white uppercase tracking-wide text-sm">
             <tr>
               <th class="py-3 px-4 text-left">Item Name</th>
               <th class="py-3 px-4 text-left">SKU</th>

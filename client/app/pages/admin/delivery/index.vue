@@ -1,14 +1,25 @@
 <template>
-  <div class="container">
-    <h2 class="text-2xl font-semibold mb-4">Delivery Records</h2>
-
-    <!-- Summary Section -->
-    <div class="summary mb-4">
-      <p>Total Deliveries Today: {{ totalDeliveries }}</p>
-      <p>Pending Deliveries: {{ pendingDeliveries }}</p>
-      <p>Delivered: {{ delivered }}</p>
-      <p>Cancelled: {{ cancelled }}</p>
-    </div>
+  <div class="m-8 space-y-6">
+    <h1 class="text-2xl font-extrabold mb-4">Delivery Records</h1>
+   <!-- Overview Cards -->
+   <div class="grid grid-cols-4 gap-4">
+        <div class="bg-gray-500 text-white p-4 rounded-lg shadow">
+          <h2 class="text-base font-semibold  ">Total Deliveries Today</h2>
+          <p class="text-2xl font-bold mt-2 text-center">{{ totalDeliveries }}</p>
+        </div>
+        <div class="bg-gray-500 text-white p-4 rounded-lg shadow">
+          <h2 class="text-base font-semibold">Pending Deliveries</h2>
+          <p class="text-2xl font-bold mt-2 text-center"> {{ pendingDeliveries }}</p>
+        </div>
+        <div class="bg-gray-500 text-white p-4 rounded-lg shadow">
+          <h2 class="text-base font-semibold">Delivered</h2>
+          <p class="text-2xl font-bold mt-2 text-center">{{ delivered }}</p>
+        </div>
+        <div class="bg-gray-500 text-white p-4 rounded-lg shadow">
+          <h2 class="text-base font-semibold">Cancelled</h2>
+          <p class="text-2xl font-bold mt-2 text-center">{{ cancelled }}</p>
+        </div>
+      </div>
 
     <!-- Delivery Records Table -->
     <table class="table-auto w-full bg-white shadow-lg rounded-lg">
@@ -165,10 +176,7 @@ export default {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
-  h2 {
-    color: #333;
-    margin-bottom: 20px;
-  }
+
   
   table {
     width: 100%;
@@ -182,8 +190,8 @@ export default {
   }
   
   th {
-    background-color: #0e8bf1;
-    color: white;
+    background-color: rgb(212, 209, 209);
+    color: black;
     text-transform: uppercase;
   }
   
@@ -250,7 +258,7 @@ export default {
   }
   
   .bg-blue-500:hover {
-    background-color: #1069b5; /* Darker blue for hover */
+    background-color: #1069b5;
   }
   
   .text-blue-600 {

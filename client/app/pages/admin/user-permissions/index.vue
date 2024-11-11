@@ -1,6 +1,6 @@
 <template>
-  <div class="p-6">
-    <h1 class="text-2xl font-bold mb-6">User Permissions</h1>
+  <div class="m-8">
+    <h1 class="text-2xl font-extrabold mb-6">User Permissions</h1>
 
     <!-- Search Input and Add Button -->
     <div class="mb-4 flex justify-between items-center">

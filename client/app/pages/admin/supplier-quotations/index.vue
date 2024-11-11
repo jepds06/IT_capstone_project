@@ -1,7 +1,7 @@
 <template>
-  <div class="mx-auto py-10">
+  <div class="m-8 space-y-6">
     <!-- Quotation Table -->
-    <h2 class="text-2xl font-bold mb-6">Supplier Quotation</h2>
+    <h2 class="text-2xl font-extrabold mb-6">Supplier Quotation</h2>
 
     <!-- Search Bar -->
     <input

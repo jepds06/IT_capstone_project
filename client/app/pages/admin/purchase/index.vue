@@ -341,8 +341,8 @@ td {
 }
 
 th {
-  background-color: #0e8bf1;
-  color: white;
+  background-color: rgb(212, 209, 209);
+  color: black;
   text-transform: uppercase;
 }
 

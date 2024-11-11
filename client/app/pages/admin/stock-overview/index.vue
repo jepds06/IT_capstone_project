@@ -49,6 +49,257 @@
             30
           </td>
         </tr>
+        <tr>
+          <td class="border-b border-black py-1">
+            Product B
+          </td>
+          <td class="border-b border-black py-1">
+            2024-10-15
+          </td>
+          <td class="border-b border-black py-1">
+            200
+          </td>
+          <td class="border-b border-black py-1">
+            30
+          </td>
+        </tr>
+        <tr>
+          <td class="border-b border-black py-1">
+            Product B
+          </td>
+          <td class="border-b border-black py-1">
+            2024-10-15
+          </td>
+          <td class="border-b border-black py-1">
+            200
+          </td>
+          <td class="border-b border-black py-1">
+            30
+          </td>
+        </tr>
+        <tr>
+          <td class="border-b border-black py-1">
+            Product B
+          </td>
+          <td class="border-b border-black py-1">
+            2024-10-15
+          </td>
+          <td class="border-b border-black py-1">
+            200
+          </td>
+          <td class="border-b border-black py-1">
+            30
+          </td>
+        </tr>
+        <tr>
+          <td class="border-b border-black py-1">
+            Product B
+          </td>
+          <td class="border-b border-black py-1">
+            2024-10-15
+          </td>
+          <td class="border-b border-black py-1">
+            200
+          </td>
+          <td class="border-b border-black py-1">
+            30
+          </td>
+        </tr>
+        <tr>
+          <td class="border-b border-black py-1">
+            Product B
+          </td>
+          <td class="border-b border-black py-1">
+            2024-10-15
+          </td>
+          <td class="border-b border-black py-1">
+            200
+          </td>
+          <td class="border-b border-black py-1">
+            30
+          </td>
+        </tr>
+        <tr>
+          <td class="border-b border-black py-1">
+            Product B
+          </td>
+          <td class="border-b border-black py-1">
+            2024-10-15
+          </td>
+          <td class="border-b border-black py-1">
+            200
+          </td>
+          <td class="border-b border-black py-1">
+            30
+          </td>
+        </tr>
+        <tr>
+          <td class="border-b border-black py-1">
+            Product B
+          </td>
+          <td class="border-b border-black py-1">
+            2024-10-15
+          </td>
+          <td class="border-b border-black py-1">
+            200
+          </td>
+          <td class="border-b border-black py-1">
+            30
+          </td>
+        </tr>
+        <tr>
+          <td class="border-b border-black py-1">
+            Product B
+          </td>
+          <td class="border-b border-black py-1">
+            2024-10-15
+          </td>
+          <td class="border-b border-black py-1">
+            200
+          </td>
+          <td class="border-b border-black py-1">
+            30
+          </td>
+        </tr>
+        <tr>
+          <td class="border-b border-black py-1">
+            Product B
+          </td>
+          <td class="border-b border-black py-1">
+            2024-10-15
+          </td>
+          <td class="border-b border-black py-1">
+            200
+          </td>
+          <td class="border-b border-black py-1">
+            30
+          </td>
+        </tr>    <tr>
+          <td class="border-b border-black py-1">
+            Product B
+          </td>
+          <td class="border-b border-black py-1">
+            2024-10-15
+          </td>
+          <td class="border-b border-black py-1">
+            200
+          </td>
+          <td class="border-b border-black py-1">
+            30
+          </td>
+        </tr>
+        <tr>
+          <td class="border-b border-black py-1">
+            Product B
+          </td>
+          <td class="border-b border-black py-1">
+            2024-10-15
+          </td>
+          <td class="border-b border-black py-1">
+            200
+          </td>
+          <td class="border-b border-black py-1">
+            30
+          </td>
+        </tr>
+        <tr>
+          <td class="border-b border-black py-1">
+            Product B
+          </td>
+          <td class="border-b border-black py-1">
+            2024-10-15
+          </td>
+          <td class="border-b border-black py-1">
+            200
+          </td>
+          <td class="border-b border-black py-1">
+            30
+          </td>
+        </tr>
+        <tr>
+          <td class="border-b border-black py-1">
+            Product B
+          </td>
+          <td class="border-b border-black py-1">
+            2024-10-15
+          </td>
+          <td class="border-b border-black py-1">
+            200
+          </td>
+          <td class="border-b border-black py-1">
+            30
+          </td>
+        </tr>
+        <tr>
+          <td class="border-b border-black py-1">
+            Product B
+          </td>
+          <td class="border-b border-black py-1">
+            2024-10-15
+          </td>
+          <td class="border-b border-black py-1">
+            200
+          </td>
+          <td class="border-b border-black py-1">
+            30
+          </td>
+        </tr>
+        <tr>
+          <td class="border-b border-black py-1">
+            Product B
+          </td>
+          <td class="border-b border-black py-1">
+            2024-10-15
+          </td>
+          <td class="border-b border-black py-1">
+            200
+          </td>
+          <td class="border-b border-black py-1">
+            30
+          </td>
+        </tr>    <tr>
+          <td class="border-b border-black py-1">
+            Product B
+          </td>
+          <td class="border-b border-black py-1">
+            2024-10-15
+          </td>
+          <td class="border-b border-black py-1">
+            200
+          </td>
+          <td class="border-b border-black py-1">
+            30
+          </td>
+        </tr>
+        <tr>
+          <td class="border-b border-black py-1">
+            Product B
+          </td>
+          <td class="border-b border-black py-1">
+            2024-10-15
+          </td>
+          <td class="border-b border-black py-1">
+            200
+          </td>
+          <td class="border-b border-black py-1">
+            30
+          </td>
+        </tr>
+    
+        <tr>
+          <td class="border-b border-black py-1">
+            Product B
+          </td>
+          <td class="border-b border-black py-1">
+            2024-10-15
+          </td>
+          <td class="border-b border-black py-1">
+            200
+          </td>
+          <td class="border-b border-black py-1">
+            30
+          </td>
+        </tr>
       </tbody>
     </table>
     <p class="mt-4 text-sm">
