@@ -138,145 +138,152 @@
         <button @click="nextPage" :disabled="currentPage === totalPages" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Next</button>
       </div>
     </div>
-        <!-- Quotations Details Table -->
-        <div
+        
+    <!-- Quotations Details Table -->
+    <div
       v-if="isQuotationDetailInfo"
       class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
       @click.self="closeQuotationDetailInfo"
     >
-      <div class="bg-white p-6 rounded-lg shadow-lg">
-        <h2 class="text-xl font-bold mb-4 text-black">Quotation Details</h2>
-        <label for="materialId" class="block mb-2 mt-4 text-black"
-          >Quotation No:<span>{{ `QN-${selectedQuotation.id}` }}</span></label
-        >
+    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-3xl">
+      <h2 class="text-xl font-bold mb-4 text-black">Quotation Details</h2>
+      <label for="materialId" class="block mb-2 mt-4 text-black">
+        Quotation No:<span>{{ `QN-${selectedQuotation.id}` }}</span>
+      </label>
 
-        <label for="materialId" class="block mb-2 mt-4 text-black"
-          >Quotation Date:
-          <span>{{ selectedQuotation.quotationDate }}</span></label
-        >
+      <label for="materialId" class="block mb-2 mt-4 text-black">
+        Quotation Date:
+        <span>{{ selectedQuotation.quotationDate }}</span>
+      </label>
 
-        <table class="min-w-full bg-white border border-gray-300">
-          <thead class="bg-gray-100">
-            <tr>
-              <th class="px-6 py-2 text-black text-left border-b">ID</th>
-              <th class="px-6 py-2 text-black text-left border-b">
-                Product Material
-              </th>
-              <th class="px-6 py-2 text-black text-left border-b">
-                Quantity
-              </th>
-              <th class="px-6 py-2 text-black text-left border-b">
-                Unit Price
-              </th>
-              <th class="px-6 py-2 text-black text-left border-b">
-                Total Price
-              </th>
-              <th class="px-6 py-2 text-black text-left border-b" v-if="!selectedQuotation.isCompleted">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="quotation in quotationDetails"
-              :key="quotation.id"
-              class="hover:bg-gray-50"
+    <!-- Scrollable Table Container -->
+    <div class="overflow-y-auto max-h-60 border border-gray-300 mt-4">
+      <table class="min-w-full bg-white">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-6 py-2 text-black text-left border-b">ID</th>
+            <th class="px-6 py-2 text-black text-left border-b">
+              Product Material
+            </th>
+            <th class="px-6 py-2 text-black text-left border-b">
+              Quantity
+            </th>
+            <th class="px-6 py-2 text-black text-left border-b">
+              Unit Price
+            </th>
+            <th class="px-6 py-2 text-black text-left border-b">
+              Total Price
+            </th>
+            <th
+              class="px-6 py-2 text-black text-left border-b"
+              v-if="!selectedQuotation.isCompleted"
             >
-              <td class="px-6 py-4 text-black border-b">{{ quotation.id }}</td>
-              <td class="px-6 py-4 text-black border-b">
-                {{ getMaterialProductName(quotation.prodtnMtrlID) }}
-              </td>
-              <td class="px-6 py-4 text-black border-b">
-                {{ quotation.quantity }}
-              </td>
-              <td class="px-6 py-4 text-black border-b">
-                <div v-if="quotation.id === selectedQuotationDetail?.id">
-                  <input
-                    id="totalPrice"
-                    v-model.number="quotationDetailForm.quotePrice"
-                    type="number"
-                    step="0.01"
-                    placeholder="Enter total price"
-                    required
-                    class="w-full p-2 border rounded"
-                  />
-                </div>
-                <div v-else>
-                  {{
-                    quotation.quotePrice
-                      ? new Intl.NumberFormat("en-PH", {
-                          style: "currency",
-                          currency: "PHP",
-                        }).format(quotation.quotePrice)
-                      : 0
-                  }}
-                </div>
-              </td>
-              <td class="px-6 py-4 text-black border-b">
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="quotation in quotationDetails"
+            :key="quotation.id"
+            class="hover:bg-gray-50"
+          >
+            <td class="px-6 py-4 text-black border-b">{{ quotation.id }}</td>
+            <td class="px-6 py-4 text-black border-b">
+              {{ getMaterialProductName(quotation.prodtnMtrlID) }}
+            </td>
+            <td class="px-6 py-4 text-black border-b">{{ quotation.quantity }}</td>
+            <td class="px-6 py-4 text-black border-b">
+              <div v-if="quotation.id === selectedQuotationDetail?.id">
+                <input
+                  id="totalPrice"
+                  v-model.number="quotationDetailForm.quotePrice"
+                  type="number"
+                  step="0.01"
+                  placeholder="Enter total price"
+                  required
+                  class="w-full p-2 border rounded"
+                />
+              </div>
+              <div v-else>
                 {{
                   quotation.quotePrice
                     ? new Intl.NumberFormat("en-PH", {
                         style: "currency",
                         currency: "PHP",
-                      }).format(quotation.quantity * quotation.quotePrice)
+                      }).format(quotation.quotePrice)
                     : 0
                 }}
-              </td>
-              <td class="px-6 py-4 text-black border-b" v-if="!selectedQuotation.isCompleted">
-                <div v-if="quotation.id === selectedQuotationDetail?.id">
-                  <button
-                    class="p-2 bg-red-500 text-white rounded hover:bg-red-600 mr-2"
-                    title="Cancel"
-                    @click="selectedQuotationDetail = null"
-                  >
-                    <i class="fas fa-close"></i>
-                  </button>
-                  <button
-                    class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                    title="Save Quotation Detall"
-                    @click="saveQuotationDetail"
-                  >
-                    <i class="fas fa-save"></i>
-                  </button>
-                </div>
-                <div v-else>
-                  <button
-                    @click="openQuotationDetailEditModal(quotation)"
-                    class="p-2 bg-green-500 text-white rounded hover:bg-green-600"
-                    title="Edit Quotation"
-                  >
-                    <i class="fas fa-edit"></i>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </div>
+            </td>
+            <td class="px-6 py-4 text-black border-b">
+              {{
+                quotation.quotePrice
+                  ? new Intl.NumberFormat("en-PH", {
+                      style: "currency",
+                      currency: "PHP",
+                    }).format(quotation.quantity * quotation.quotePrice)
+                  : 0
+              }}
+            </td>
+            <td
+              class="px-6 py-4 text-black border-b"
+              v-if="!selectedQuotation.isCompleted"
+            >
+              <div v-if="quotation.id === selectedQuotationDetail?.id">
+                <button
+                  class="p-2 bg-red-500 text-white rounded hover:bg-red-600 mr-2"
+                  title="Cancel"
+                  @click="selectedQuotationDetail = null"
+                >
+                  <i class="fas fa-close"></i>
+                </button>
+                <button
+                  class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  title="Save Quotation Detall"
+                  @click="saveQuotationDetail"
+                >
+                  <i class="fas fa-save"></i>
+                </button>
+              </div>
+              <div v-else>
+                <button
+                  @click="openQuotationDetailEditModal(quotation)"
+                  class="p-2 bg-green-500 text-white rounded hover:bg-green-600"
+                  title="Edit Quotation"
+                >
+                  <i class="fas fa-edit"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-        <div class="flex  justify-between mt-2">
-          <!-- <button @click="openQuotationDetailAddModal" class="p-2 mr-2 bg-blue-500 text-white rounded hover:bg-blue-600" title="Add Quotation Details">
-        <i class="fas fa-plus"></i>
-        Add Quotation Details
-      </button> -->
-          <UButton
-            @click="closeQuotationDetailInfo"
-            label="Close"
-            color="red"
-            icon="material-symbols:close"
-          />
+    <!-- Action Buttons -->
+    <div class="flex justify-between mt-2">
+      <UButton
+        @click="closeQuotationDetailInfo"
+        label="Close"
+        color="red"
+        icon="material-symbols:close"
+      />
 
-          <UButton
-            icon="material-symbols-light:list-alt-check-outline-sharp"
-            @click="completeQuotation"
-            rounded="false"
-            size="sm"
-            :color="selectedQuotation.isCompleted ? 'gray' : 'blue'"
-            :disabled="selectedQuotation.isCompleted"
-            :loading="isCompleteLoading"
-            title="Complete Quotation"
-            label="Complete"
-          />
-        </div>
+      <UButton
+        icon="material-symbols-light:list-alt-check-outline-sharp"
+        @click="completeQuotation"
+        rounded="false"
+        size="sm"
+        :color="selectedQuotation.isCompleted ? 'gray' : 'blue'"
+        :disabled="selectedQuotation.isCompleted"
+        :loading="isCompleteLoading"
+        title="Complete Quotation"
+        label="Complete"
+      />
       </div>
     </div>
+  </div>
   </div>
 </template>
 
