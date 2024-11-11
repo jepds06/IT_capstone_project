@@ -22,7 +22,7 @@ class AdminPaymentUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'adminOrdDetailID' => 'required|integer|exists:adminOrderDetails,adminOrdDetailID', 
+            'adminOrdID' => 'required|integer|exists:adminOrders,adminOrdID', 
             'payMethodID' => 'required|integer|exists:paymentMethods,payMethodID',
             'paymentDate' => 'required|date|after_or_equal:today', 
             'amountToPay' => 'required|numeric|min:0', 

@@ -24,12 +24,12 @@ class AdminPaymentRepository implements AdminPaymentRepositoryInterface
     {
         $adminPayment = new AdminPayment();
 
-        $orderDetail = AdminOrderDetail::find($payload->adminOrdDetailID);
+        $adminOrder = AdminOrder::find($payload->adminOrdID);
 
-        if ($orderDetail) {
-            $adminPayment->adminOrdDetail()->associate($orderDetail);
+        if ($adminOrder) {
+            $adminPayment->adminOrder()->associate($adminOrder);
         } else {
-            throw new \Exception("Invalid admin order detail ID provided.");
+            throw new \Exception("Invalid admin order ID provided.");
         }
 
         $paymentMethod = PaymentMethod::find($payload->payMethodID);
@@ -41,15 +41,10 @@ class AdminPaymentRepository implements AdminPaymentRepositoryInterface
         }
 
         $adminPayment->paymentDate = $payload->paymentDate;
-        $adminPayment->amountToPay = $orderDetail->amount;
-        //retrieving admin order details
-        if (!$orderDetail) {
-            throw new \Exception("Order details not found.");
-        }
+        $adminPayment->amountToPay = $payload->amountToPay;
         $adminPayment->amountPaid = $payload->amountPaid;
         $adminPayment->paymentStatus = $payload->paymentStatus;
         $adminPayment->remarks = $payload->remarks;
-
 
         $adminPayment->save();
 
@@ -61,12 +56,12 @@ class AdminPaymentRepository implements AdminPaymentRepositoryInterface
     {
         $adminPayment = AdminPayment::findOrFail($adminPaymentId);
 
-        $orderDetail = AdminOrderDetail::find($payload->adminOrdDetailID);
+        $adminOrder = AdminOrder::find($payload->adminOrdID);
 
-        if ($orderDetail) {
-            $adminPayment->adminOrdDetail()->associate($orderDetail);
+        if ($adminOrder) {
+            $adminPayment->adminOrder()->associate($adminOrder);
         } else {
-            throw new \Exception("Invalid admin order detail ID provided.");
+            throw new \Exception("Invalid admin order ID provided.");
         }
 
         $paymentMethod = PaymentMethod::find($payload->payMethodID);
@@ -78,16 +73,11 @@ class AdminPaymentRepository implements AdminPaymentRepositoryInterface
         }
 
         $adminPayment->paymentDate = $payload->paymentDate;
-        $adminPayment->amountToPay = $orderDetail->amount;
-        //retrieving admin order details
-        if (!$orderDetail) {
-            throw new \Exception("Order details not found.");
-        } 
+        $adminPayment->amountToPay = $payload->amountToPay;
         $adminPayment->amountPaid = $payload->amountPaid;
         $adminPayment->paymentStatus = $payload->paymentStatus;
         $adminPayment->remarks = $payload->remarks;
-
-
+        
         $adminPayment->save();
 
         return $adminPayment->fresh();

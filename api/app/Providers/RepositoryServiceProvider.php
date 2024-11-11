@@ -24,6 +24,7 @@ use App\Interface\Repository\ProductRepositoryInterface;
 use App\Interface\Repository\QuotationDetailRepositoryInterface;
 use App\Interface\Repository\QuotationRepositoryInterface;
 use App\Interface\Repository\SalesProdOrderRepositoryInterface;
+use App\Interface\Repository\SalesRepositoryInterface;
 use App\Interface\Repository\SupplierMaterialRepositoryInterface;
 use App\Interface\Repository\SupplierRepositoryInterface;
 use App\Interface\Repository\UserAuthRepositoryInterface;
@@ -52,6 +53,7 @@ use App\Interface\Service\ProductServiceInterface;
 use App\Interface\Service\QuotationDetailServiceInterface;
 use App\Interface\Service\QuotationServiceInterface;
 use App\Interface\Service\SalesPrdOrdServiceInterface;
+use App\Interface\Service\SalesServiceInterface;
 use App\Interface\Service\SupplierMaterialServiceInterface;
 use App\Interface\Service\SupplierServiceInterface;
 use App\Interface\Service\UserAuthServiceInterface;
@@ -80,6 +82,7 @@ use App\Repository\ProductRepository;
 use App\Repository\QuotationDetailRepository;
 use App\Repository\QuotationRepository;
 use App\Repository\SalesProdOrderRepository;
+use App\Repository\SalesRepository;
 use App\Repository\SupplierMaterialRepository;
 use App\Repository\SupplierRepository;
 use App\Repository\UserAuthRepository;
@@ -108,6 +111,7 @@ use App\Service\ProductService;
 use App\Service\QuotationDetailService;
 use App\Service\QuotationService;
 use App\Service\SalesPrdOrderService;
+use App\Service\SalesService;
 use App\Service\SupplierMaterialService;
 use App\Service\SupplierService;
 use App\Service\UserAuthService;
@@ -152,6 +156,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(CustomerOrderRepositoryInterface::class, CustomerOrderRepository::class);
         $this->app->bind(CustomerPaymentRepositoryInterface::class, CustomerPaymentRepository::class);
         $this->app->bind(SalesProdOrderRepositoryInterface::class, SalesProdOrderRepository::class);
+        $this->app->bind(SalesRepositoryInterface::class, SalesRepository::class);
 
         //Service
         // $this->app->bind(AccountServiceInterface::class, AccountService::class);
@@ -182,6 +187,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(CustomerOrderServiceInterface::class, CustomerOrderService::class);
         $this->app->bind(CustomerPaymentServiceInterface::class, CustomerPaymentService::class);
         $this->app->bind(SalesPrdOrdServiceInterface::class, SalesPrdOrderService::class);
+        $this->app->bind(SalesServiceInterface::class, SalesService::class);
     }
 
     /**
