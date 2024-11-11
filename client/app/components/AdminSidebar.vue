@@ -527,16 +527,16 @@
             "
           >View Customers</router-link>
           <router-link
-            to="/customers/orders"
+            to="/admin/customer-orders"
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-                ? route.path === '/customers/orders'
+                ? route.path === '/admin/customer-orders'
                   ? 'block pl-10 p-4 bg-gray-800'
                   : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('customer orders')
                 ).length > 0
-                  ? route.path === '/customers/orders'
+                  ? route.path === '/admin/customer-orders'
                     ? 'block pl-10 p-4 bg-gray-800'
                     : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
