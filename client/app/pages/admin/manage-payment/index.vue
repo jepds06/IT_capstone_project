@@ -4,7 +4,7 @@
     <h2 class="text-2xl font-extrabold text-left mb-14">Manage Payment</h2>
 
     <!-- Form Section -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
       <div class="col-span-1">
         <!-- <div class="flex justify-between items-center mb-4">
           <div>
@@ -35,47 +35,33 @@
         <USelectMenu v-model="selectedSupplier" :options="supplier" />
       </div>
 
-      <!-- Payment Type and Cash Voucher No. -->
-      <div class="col-span-1">
-        <!-- Payment Type Dropdown -->
-        <div class="">
-          <label class="block font-semibold text-lg mb-2">Payment Type</label>
-          <!-- <select
-            v-model="paymentType"
-            @change="handlePaymentTypeChange"
-            class="w-full p-2 border rounded text-base"
-          >
-            <option>Select Payment Type</option>
-            <option>All</option>
-            <option>Cash</option>
-            <option>Cheque</option>
-          </select> -->
-          <USelectMenu v-model="selectedPaymentType" :options="paymentTypes" />
-        </div>
-        <!-- Cash Voucher No. (Visible when Cash is selected) -->
-        <!-- <div v-if="paymentType === 'Cash'" class="flex-1">
-            <label class="block font-semibold mb-2">Cash Voucher No.</label>
-            <input type="text" class="w-full p-2 border rounded" placeholder="Enter Cash Voucher No" />
-          </div> -->
-      </div>
-      
-
       <!-- Date Input -->
       <div class="col-span-1">
-        
         <label class="block font-semibold text-lg mb-2">Actions</label>
         <div class="flex">
-        <!-- <input type="date" class="w-full p-2 border rounded text-base" /> -->
-        <!-- <UPopover :popper="{ placement: 'bottom-start' }">
+          <!-- <input type="date" class="w-full p-2 border rounded text-base" /> -->
+          <!-- <UPopover :popper="{ placement: 'bottom-start' }">
           <UButton icon="i-heroicons-calendar-days-20-solid" :label="formattedDate" />
       
           <template #panel="{ close }">
             <DatePicker v-model="selectedDate" is-required @close="close" />
           </template>
         </UPopover> -->
-        <UButton class="ml-2" title="Filter" label="Filter  " color="blue" @click="applyFilter" />
-        <UButton class="ml-2" title="Clear" label="Clear" color="gray" @click="clearFilter" />
-      </div>
+          <UButton
+            class="ml-2"
+            title="Filter"
+            label="Filter  "
+            color="blue"
+            @click="applyFilter"
+          />
+          <UButton
+            class="ml-2"
+            title="Clear"
+            label="Clear"
+            color="gray"
+            @click="clearFilter"
+          />
+        </div>
       </div>
     </div>
 
@@ -85,7 +71,6 @@
       <div class="bg-white shadow-md rounded p-4 h-96 overflow-y-auto">
         <div class="flex justify-between items-center mb-4">
           <span class="font-semibold whitespace-nowrap">Unpaid Bills</span>
-          
         </div>
 
         <table class="w-full bg-white shadow-md rounded mb-4">
@@ -107,24 +92,70 @@
               class="cursor-pointer hover:bg-gray-100"
             >
               <td class="p-2">{{ bill.id }}</td>
-              <td class="p-2">{{ bill.invoiceNo }}</td>
-              <td class="p-2">{{ bill.invoiceDate }}</td>
-              <td class="p-2">{{ bill.balance }}</td>
-              <td class="p-2">{{ bill.amountPaid }}</td>
-              <td class="p-2">{{ bill.amountToPay }}</td>
+              <td class="p-2">{{ bill.adminOrdID }}</td>
+              <td class="p-2">{{ bill.orderDate }}</td>
+              <td class="p-2">
+                {{
+                  new Intl.NumberFormat("en-PH", {
+                    style: "currency",
+                    currency: "PHP",
+                  }).format(bill.balance)
+                }}
+              </td>
+              <td class="p-2">
+                {{
+                  new Intl.NumberFormat("en-PH", {
+                    style: "currency",
+                    currency: "PHP",
+                  }).format(bill.amountPaid)
+                }}
+              </td>
+              <td class="p-2">
+                {{
+                  new Intl.NumberFormat("en-PH", {
+                    style: "currency",
+                    currency: "PHP",
+                  }).format(bill.amountToPay)
+                }}
+              </td>
             </tr>
           </tbody>
         </table>
         <p class="font-bold text-right">
           Total Balance:
+          {{
+            new Intl.NumberFormat("en-PH", {
+              style: "currency",
+              currency: "PHP",
+            }).format(totalUnpaidBillsAmount)
+          }}
         </p>
       </div>
 
       <!-- Selected Bills Section -->
       <div class="bg-white shadow-md rounded p-4 h-96 overflow-y-auto">
-        <div class="flex justify-between items-center mb-4">
-          <span class="font-semibold whitespace-nowrap">Selected Bills</span>
-         
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div class="col-span-1 items-center">
+            <span class="font-semibold whitespace-nowrap">Selected Bills</span>
+          </div>
+
+          <!-- <select
+              v-model="paymentType"
+              @change="handlePaymentTypeChange"
+              class="w-full p-2 border rounded text-base"
+            >
+              <option>Select Payment Type</option>
+              <option>All</option>
+              <option>Cash</option>
+              <option>Cheque</option>
+            </select> -->
+          <div class="col-span-1">
+            <USelectMenu
+              v-model="selectedPaymentType"
+              :options="paymentTypes"
+              placeholder="Select payment type"
+            />
+          </div>
         </div>
         <table class="w-full bg-white shadow-md rounded mb-4">
           <thead>
@@ -133,7 +164,6 @@
               <th class="p-2">Invoice No</th>
               <th class="p-2">Invoice Date</th>
               <th class="p-2">Amount</th>
-              
             </tr>
           </thead>
           <tbody>
@@ -146,15 +176,25 @@
                 <input type="checkbox" v-model="bill.selected" class="mr-2" />
                 {{ bill.id }}
               </td>
-              <td class="p-2">{{ bill.invoiceNo }}</td>
-              <td class="p-2">{{ bill.invoiceDate }}</td>
-              <td class="p-2">{{ bill.balance }}</td>
+              <td class="p-2">{{ bill.adminOrdID }}</td>
+              <td class="p-2">{{ bill.orderDate }}</td>
+              <td class="p-2">{{  new Intl.NumberFormat("en-PH", {
+                style: "currency",
+                currency: "PHP",
+              }).format(bill.balance) }}</td>
             </tr>
           </tbody>
         </table>
         <p class="font-bold text-right">
-          Total Bills Amount: {{ totalBillsAmount }}
+          Total Bills Amount: {{ new Intl.NumberFormat("en-PH", {
+            style: "currency",
+            currency: "PHP",
+          }).format(totalBillsAmount) }}
         </p>
+        <div class="flex justify-end">
+          
+        <UButton :loading="isLoadingPay" label="Pay" icon="material-symbols:payments-outline" @click="saveSupplier" color="green" :disabled="!selectedPaymentType" />
+        </div>
       </div>
     </div>
 
@@ -211,15 +251,6 @@
       <p class="font-bold text-md text-right">
         Total Cheque Amount: {{ totalChequeAmount }}
       </p>
-    </div>
-
-    <!-- Prepared By -->
-    <div class="mt-10">
-      <label class="font-semibold mb-2 block text-bold">Prepared By:</label>
-      <span class="ml-10 p-2 font-extrabold">
-        QWERTY12345
-        <!-- Replace this with the actual name or a variable if needed -->
-      </span>
     </div>
 
     <!-- Modal for Adding Cheque -->
@@ -301,8 +332,8 @@
 </template>
 
 <script>
-import { format } from 'date-fns';
-import { apiService } from '~/api/apiService';
+import { format } from "date-fns";
+import { apiService } from "~/api/apiService";
 
 export default {
   data() {
@@ -327,14 +358,18 @@ export default {
         amount: 0,
       },
       isModalOpen: false,
+      isLoadingPay: false,
     };
   },
   computed: {
     formattedDate() {
-      return format(this.selectedDate, 'd MMM, yyyy');
+      return format(this.selectedDate, "d MMM, yyyy");
     },
     totalBillsAmount() {
       return this.selectedBills.reduce((sum, bill) => sum + bill.balance, 0);
+    },
+    totalUnpaidBillsAmount() {
+      return this.unpaidBills.reduce((sum, bill) => sum + bill.balance, 0);
     },
     totalChequeAmount() {
       return this.cheques.reduce((sum, cheque) => sum + cheque.amount, 0);
@@ -348,6 +383,9 @@ export default {
       // Logic for finding an invoice
     },
     selectBill(bill) {
+      const isExist = this.selectedBills?.map((value) => value.id).find((val) => val === bill.id)
+      if(!isExist)
+      this.selectedBills.push(bill)
       // Logic for selecting a bill
     },
     addCheque() {
@@ -364,79 +402,162 @@ export default {
       // Logic for removing a cheque
     },
     editSupplier() {
-    // Logic for editing supplier
+      // Logic for editing supplier
     },
-    saveSupplier() {
+    async saveSupplier() {
       // Logic for saving supplier
-    },
-    async applyFilter(){
-      
-      const data = await this.fetchPaymentByProductionNo(this.selectedProduction.id)
-      if(!this.selectedSupplier){
-        // const transformData = data?.map((value)=>{
-        //   const totalAmount = value.admin_order_detail?.reduce((total, detail) => {
-        //   return total + parseFloat(detail.amount);
-        // }, 0);
-        // const amountPaid = value.admin_payments.reduce((total, detail) => {
-        //   return total + parseFloat(detail.amountPaid);
-        // }, 0);
-        // return {
-        //   totalAmount,
-        //   adminOrdID: value.adminOrdID,
+      this.isLoadingPay = true;
+      const data = this.selectedBills.filter((val) => val.selected)
 
-        // }
-        // })
-      }
-    },
-    clearFilter() {
-      this.selectedDate = new Date()
-      this.selectedSupplier = null
-      this.selectedProduction = null
-      this.selectedPaymentType = null
-    },
-    async fetchProductions(){
-      const result = await apiService.get("/api/productions");
-
-      this.productions = result.data?.filter((prod) => prod.status === "In Progress")?.map((prod) => {
+      const dataToSave = data.map((value) => {
         return {
-          id: prod.productionID,
-          label: `${prod.productionID} - ${prod.remarks}`
+          adminOrdID: value.adminOrdID,
+          payMethodID: this.selectedPaymentType.id,
+          paymentDate: format(new Date(),'yyyy-MM-dd'),
+          amountToPay: value.amountToPay,
+          amountPaid: value.balance,
+          paymentStatus: "completed",
+          remarks: `Paid ${format(new Date(),'yyyy-MM-dd')}`
         }
       })
+
+      await Promise.all(dataToSave.map(async(value) => {
+        await apiService.post("/api/adminPayments", value)
+      }))
+      await this.applyFilter()
+      this.selectedBills = this.selectedBills.filter((val) => !val.selected)
+      this.isLoadingPay = false;
+      alert("Payment added successfully")
+      console.log("dataToSave", dataToSave)
     },
-   async fetchUserData() {
+    async applyFilter() {
+      let transFormData;
+      const result = await this.fetchPaymentByProductionNo(
+        this.selectedProduction.id
+      );
+      if (!this.selectedSupplier) {
+        transFormData = result.data?.map((value, index) => {
+          const amountToPay = value.admin_order_detail?.reduce(
+            (total, detail) => {
+              return total + parseFloat(detail.amount);
+            },
+            0
+          );
+          const amountPaid = value.admin_payments?.amountPaid ?? 0;
+          if (value.admin_payments) {
+            const adminPayID = value.admin_payments.adminPayID;
+            return {
+              amountToPay,
+              adminOrdID: value.adminOrdID,
+              amountPaid,
+              balance: amountToPay - amountPaid,
+              adminPayID,
+              orderDate: value.orderDate,
+              id: index + 1,
+            };
+          }
+          return {
+            amountToPay,
+            adminOrdID: value.adminOrdID,
+            amountPaid,
+            balance: amountToPay - amountPaid,
+            orderDate: value.orderDate,
+            id: index + 1,
+          };
+        })?.filter((value) => value.balance !== 0);
+      } else {
+        transFormData = result.data
+          ?.filter(
+            (value) => value.quotation.userID === this.selectedSupplier.id
+          )
+          .map((value, index) => {
+            const amountToPay = value.admin_order_detail?.reduce(
+              (total, detail) => {
+                return total + parseFloat(detail.amount);
+              },
+              0
+            );
+            const amountPaid = value.admin_payments?.amountPaid ?? 0;
+            if (value.admin_payments) {
+              const adminPayID = value.admin_payments.adminPayID;
+              return {
+                amountToPay,
+                adminOrdID: value.adminOrdID,
+                amountPaid,
+                balance: amountToPay - amountPaid,
+                adminPayID,
+                orderDate: value.orderDate,
+                id: index + 1,
+              };
+            }
+            return {
+              amountToPay,
+              adminOrdID: value.adminOrdID,
+              amountPaid,
+              balance: amountToPay - amountPaid,
+              orderDate: value.orderDate,
+              id: index + 1,
+            };
+          })?.filter((value) => value.balance !== 0);
+      }
+      this.unpaidBills = transFormData;
+      console.log("transFormData", transFormData);
+    },
+    clearFilter() {
+      this.selectedDate = new Date();
+      this.selectedSupplier = null;
+      this.selectedProduction = null;
+      this.selectedPaymentType = null;
+      this.unpaidBills = [];
+    },
+    async fetchProductions() {
+      const result = await apiService.get("/api/productions");
+
+      this.productions = result.data
+        ?.filter((prod) => prod.status === "In Progress")
+        ?.map((prod) => {
+          return {
+            id: prod.productionID,
+            label: `${prod.productionID} - ${prod.remarks}`,
+          };
+        });
+    },
+    async fetchUserData() {
       const result = await apiService.get("/api/users");
-      this.supplier = result.data?.filter((user) => user.userTypeID === 3)?.map((user) =>{
-        return {
-          id: user.userID,
-          label: `${user.lastName} ${user.firstName}`
-        }
-      });
+      this.supplier = result.data
+        ?.filter((user) => user.userTypeID === 3)
+        ?.map((user) => {
+          return {
+            id: user.userID,
+            label: `${user.lastName} ${user.firstName}`,
+          };
+        });
     },
-   async fetchPaymentMethod(){
-    const result = await apiService.get("/api/paymentMethods");
+    async fetchPaymentMethod() {
+      const result = await apiService.get("/api/paymentMethods");
 
       this.paymentTypes = result.data?.map((payment) => {
         return {
           id: payment.payMethodID,
-          label: payment.payMethodName
-        }
-      })
-   },
-   async fetchPaymentByProductionNo(productionID){
-    return await apiService.get(`/api/adminOrders/production/${productionID}`)
-   }
+          label: payment.payMethodName,
+        };
+      });
+    },
+    async fetchPaymentByProductionNo(productionID) {
+      return await apiService.get(
+        `/api/adminOrders/production/${productionID}`
+      );
+    },
   },
   async mounted() {
     await this.fetchProductions();
     await this.fetchUserData();
     await this.fetchPaymentMethod();
-  //   if (process.client) {
-  //   const storage = JSON.parse(localStorage.getItem("userInfo"));
-  //   this.userInfo = storage ? storage : null;
-  // }
+    //   if (process.client) {
+    //   const storage = JSON.parse(localStorage.getItem("userInfo"));
+    //   this.userInfo = storage ? storage : null;
+    // }
   },
- 
 };
 </script>
 

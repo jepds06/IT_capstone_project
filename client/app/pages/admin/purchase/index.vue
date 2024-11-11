@@ -294,7 +294,7 @@ export default {
         const payment = value.admin_order_detail.filter((value) => {
           return value.admin_payments.length > 0;
         });
-        if (payment.length > 0) {
+        if (value.admin_payments.length > 0) {
           value.status = "In Progress";
         }
         if (value.admin_deliveries.length > 0) {

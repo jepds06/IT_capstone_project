@@ -41,7 +41,7 @@ class AdminOrder extends Model
     // Relationship with the AdminPayment model
     public function adminPayments()
     {
-        return $this->hasMany(AdminPayment::class, 'adminOrdID');
+        return $this->belongsTo(AdminPayment::class, 'adminOrdID');
     }
 
     public function adminOrderDetail()

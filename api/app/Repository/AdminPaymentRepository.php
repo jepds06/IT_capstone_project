@@ -12,7 +12,7 @@ class AdminPaymentRepository implements AdminPaymentRepositoryInterface
 {
     public function findMany()
     {
-        return AdminPayment::paginate(10);
+        return AdminPayment::with(['adminOrder','paymentMethod', 'adminOrder.quotation'])->paginate(10);
     }
 
     public function findOneById(int $adminPaymentId)

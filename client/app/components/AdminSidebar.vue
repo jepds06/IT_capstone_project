@@ -446,7 +446,7 @@
                   : 'hidden'
             "
           >Suppliers Quotation</router-link>
-          <router-link
+          <!-- <router-link
             to="/suppliers/materials"
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
@@ -461,7 +461,7 @@
                     : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
-          >Supplier Materials</router-link>
+          >Supplier Materials</router-link> -->
 
           <router-link
             to="/admin/bills-payment"

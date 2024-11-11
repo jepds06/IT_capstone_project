@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 class AdminOrderRepository implements AdminOrderRepositoryInterface
 {   
     public function findByProductionID(int $productionID){
-        $adminOrders = AdminOrder::with(['adminDeliveries', 'adminOrderDetail.adminPayments','quotation.production','adminOrderDetail.productionMaterial.productMaterial.material'])
+        $adminOrders = AdminOrder::with(['adminDeliveries', 'adminPayments','quotation.production','adminOrderDetail.productionMaterial.productMaterial.material'])
         ->whereHas('quotation.production', function ($query) use ($productionID) {
             $query->where('productionID', $productionID); // Filter by the productionID
         })
@@ -28,7 +28,7 @@ class AdminOrderRepository implements AdminOrderRepositoryInterface
 
     public function findMany()
     {
-        return AdminOrder::with(['adminDeliveries', 'adminOrderDetail.adminPayments','quotation.production','adminOrderDetail.productionMaterial.productMaterial.material'])->paginate(10);
+        return AdminOrder::with(['adminDeliveries', 'adminPayments','quotation.production','adminOrderDetail.productionMaterial.productMaterial.material'])->paginate(10);
     }
 
     public function findOneById(int $adminOrderId)
