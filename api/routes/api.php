@@ -18,6 +18,8 @@ use App\Http\Controllers\ProductionMaterialController;
 use App\Http\Controllers\ProductMaterialsController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\QuotationDetailController;
+use App\Http\Controllers\ReturnProdOrderController;
+use App\Http\Controllers\SaleDeliveryController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SalesProductOrderController;
 use App\Http\Controllers\SupplierMaterialController;
@@ -29,7 +31,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 //users route
-Route::middleware('auth:sanctum')->prefix('users')->group(function(){
+Route::prefix('users')->group(function(){
     Route::get('/', [UserRegController::class, 'index']);
     Route::get('/{userId}', [UserRegController::class, 'show']);
     Route::post('/', [UserRegController::class, 'store']);
@@ -37,7 +39,7 @@ Route::middleware('auth:sanctum')->prefix('users')->group(function(){
 });
 
 //userTypes route
-Route::middleware('auth:sanctum')->prefix('userTypes')->group(function(){
+Route::prefix('userTypes')->group(function(){
     Route::get('/', [UserTypeController::class, 'index']);
     Route::get('/{userTypeId}', [UserTypeController::class, 'show']);
     Route::post('/', [UserTypeController::class, 'store']);
@@ -45,7 +47,7 @@ Route::middleware('auth:sanctum')->prefix('userTypes')->group(function(){
 });
 
 //modules route
-Route::middleware('auth:sanctum')->prefix('modules')->group(function(){
+Route::prefix('modules')->group(function(){
     Route::get('/', [ModuleController::class, 'index']);
     Route::get('/{moduleId}', [ModuleController::class, 'show']);
     Route::post('/', [ModuleController::class, 'store']);
@@ -53,7 +55,7 @@ Route::middleware('auth:sanctum')->prefix('modules')->group(function(){
 });
 
 //UserPrivilage route
-Route::middleware('auth:sanctum')->prefix('userPrivilage')->group(function(){
+Route::prefix('userPrivilage')->group(function(){
     Route::get('/', [UserPrivilageController::class, 'index']);
     Route::get('/{userPrivilageId}', [UserPrivilageController::class, 'show']);
     Route::post('/', [UserPrivilageController::class, 'store']);
@@ -227,4 +229,20 @@ Route::prefix('sales')->group(function(){
     Route::get('/{salesId}', [SalesController::class, 'show']);
     Route::post('/', [SalesController::class, 'store']);
     Route::put('/{salesId}', [SalesController::class, 'update']);
+});
+
+//sales delivery route
+Route::prefix('saleDeliveries')->group(function(){
+    Route::get('/', [SaleDeliveryController::class, 'index']);
+    Route::get('/{deliveryId}', [SaleDeliveryController::class, 'show']);
+    Route::post('/', [SaleDeliveryController::class, 'store']);
+    Route::put('/{deliveryId}', [SaleDeliveryController::class, 'update']);
+});
+
+//return product orders route
+Route::prefix('returnProductOrders')->group(function(){
+    Route::get('/', [ReturnProdOrderController::class, 'index']);
+    Route::get('/{rtrnProdOrdId}', [ReturnProdOrderController::class, 'show']);
+    Route::post('/', [ReturnProdOrderController::class, 'store']);
+    Route::put('/{rtrnProdOrdId}', [ReturnProdOrderController::class, 'update']);
 });

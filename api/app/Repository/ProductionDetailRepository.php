@@ -153,11 +153,11 @@ class ProductionDetailRepository implements ProductionDetailRepositoryInterface
             DB::commit();
     
             return $prodtnDetail->fresh(); // Return fresh production detail record
-    } catch (Exception $e) {
-        // Rollback transaction on error
-        DB::rollBack();
-        throw new Exception("Error updating records: " . $e->getMessage());
-    }
+        } catch (Exception $e) {
+            // Rollback transaction on error
+            DB::rollBack();
+            throw new Exception("Error updating records: " . $e->getMessage());
+        }
     }
 
     public function findListByProductionId(int $productionID)

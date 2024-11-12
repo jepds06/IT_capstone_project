@@ -23,4 +23,9 @@ class Sale extends Model
     {
         return $this->hasMany(SalesProductOrder::class, 'salesID');
     }
+
+    public function salesDelivery()
+    {
+        return $this->hasMany(Sales_Delivery::class, 'salesID');
+    }
 }

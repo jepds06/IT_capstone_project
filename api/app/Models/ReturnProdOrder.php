@@ -22,4 +22,9 @@ class ReturnProdOrder extends Model
         'reason',
         'refundAmount'
     ];
+
+    public function salesProdOrder()
+    {
+        return $this->belongsTo(SalesProductOrder::class, 'slsPrdOrdID');
+    }
 }

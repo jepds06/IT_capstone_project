@@ -29,4 +29,9 @@ class SalesProductOrder extends Model
     {
         return $this->belongsTo(ProductOrder::class, 'prodOrdID');
     }
+
+    public function returnProdOrders()
+    {
+        return $this->hasMany(ReturnProdOrder::class, 'slsPrdOrdID');
+    }
 }
