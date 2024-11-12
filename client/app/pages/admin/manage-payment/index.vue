@@ -178,10 +178,21 @@
               </td>
               <td class="p-2">{{ bill.adminOrdID }}</td>
               <td class="p-2">{{ bill.orderDate }}</td>
-              <td class="p-2">{{  new Intl.NumberFormat("en-PH", {
+              <!-- <td class="p-2">{{  new Intl.NumberFormat("en-PH", {
                 style: "currency",
                 currency: "PHP",
-              }).format(bill.balance) }}</td>
+              }).format(bill.balance) }}</td> -->
+              <td class="p-2 flex items-center">
+                <input
+                id="amountToPay"
+                v-model.number="bill.amount"
+                type="number"
+                step="0.01"
+                placeholder="Enter amount to pay"
+                required
+                class="w-full p-2 border rounded"
+              />
+              </td>
             </tr>
           </tbody>
         </table>
@@ -192,8 +203,7 @@
           }).format(totalBillsAmount) }}
         </p>
         <div class="flex justify-end">
-          
-        <UButton :loading="isLoadingPay" label="Pay" icon="material-symbols:payments-outline" @click="saveSupplier" color="green" :disabled="!selectedPaymentType" />
+        <UButton :loading="isLoadingPay" label="Pay" icon="material-symbols:payments-outline" @click="saveSupplier" color="green" :disabled="!selectedPaymentType || selectedBills?.filter((value) => value.selected).length === 0" />
         </div>
       </div>
     </div>
@@ -409,20 +419,37 @@ export default {
       this.isLoadingPay = true;
       const data = this.selectedBills.filter((val) => val.selected)
 
-      const dataToSave = data.map((value) => {
+      console.log("data---", data)
+      const dataToSave = data.filter((val) => !val.adminPayID).map((value) => {
         return {
           adminOrdID: value.adminOrdID,
           payMethodID: this.selectedPaymentType.id,
           paymentDate: format(new Date(),'yyyy-MM-dd'),
           amountToPay: value.amountToPay,
-          amountPaid: value.balance,
-          paymentStatus: "completed",
+          amountPaid: value.amount,
+          paymentStatus: parseFloat(value.amountToPay) > parseFloat(value.amount) ? "pending" : "completed",
+          remarks: `Paid ${format(new Date(),'yyyy-MM-dd')}`
+        }
+      })
+
+      const dataToUpdate = data.filter((val) => val.adminPayID).map((value) => {
+        return {
+          adminPayID: value.adminPayID,
+          adminOrdID: value.adminOrdID,
+          payMethodID: this.selectedPaymentType.id,
+          paymentDate: format(new Date(),'yyyy-MM-dd'),
+          amountToPay: value.amountToPay,
+          amountPaid: parseFloat(value.amount) + parseFloat(value.amountPaid),
+          paymentStatus: parseFloat(value.amountToPay) > parseFloat(value.amount) + parseFloat(value.amountPaid) ? "pending" : "completed",
           remarks: `Paid ${format(new Date(),'yyyy-MM-dd')}`
         }
       })
 
       await Promise.all(dataToSave.map(async(value) => {
         await apiService.post("/api/adminPayments", value)
+      }))
+      await Promise.all(dataToUpdate.map(async(value) => {
+        await apiService.put(`/api/adminPayments/${value.adminPayID}`, value)
       }))
       await this.applyFilter()
       this.selectedBills = this.selectedBills.filter((val) => !val.selected)
@@ -509,6 +536,7 @@ export default {
       this.selectedProduction = null;
       this.selectedPaymentType = null;
       this.unpaidBills = [];
+      this.selectedBills = [];
     },
     async fetchProductions() {
       const result = await apiService.get("/api/productions");

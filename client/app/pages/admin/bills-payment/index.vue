@@ -22,6 +22,7 @@
           <tr>
             <th class="py-3 px-4 text-left">Production ID</th>
             <th class="py-3 px-4 text-left">User</th>
+            <th class="py-3 px-4 text-left">Payment Date</th>
             <th class="py-3 px-4 text-left">Amount</th>
             <th class="py-3 px-4 text-left">Status</th>
             <th class="py-3 px-4 text-left">Actions</th>
@@ -38,6 +39,10 @@
             </td>
             <td class="px-6 py-3">
               {{ getUserName(payment.admin_order.userID) }}
+            </td>
+            <td class="px-6 py-3">
+              {{payment.paymentDate
+              }}
             </td>
             <td class="px-6 py-3">
               {{

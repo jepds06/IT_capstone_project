@@ -616,7 +616,11 @@ export default {
 
           // Determine quotationRemarks based on totalPrice
           if (totalPrice === 0) {
-            quotation.quotationRemarks = "No Quoted Price Yet";
+            if(quotation.isCompleted){
+              quotation.quotationRemarks = "No Quoted Price";
+            } else{
+              quotation.quotationRemarks = "No Quoted Price Yet";
+          }
           } else if (totalPrice >= highestPrice) {
             quotation.quotationRemarks = "Highest Price";
           } else if (totalPrice <= lowestPrice) {

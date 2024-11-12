@@ -35,7 +35,7 @@ class AdminOrder extends Model
 
     public function adminDeliveries()
     {
-        return $this->hasMany(AdminDelivery::class, 'adminOrdID');
+        return $this->belongsTo(AdminDelivery::class, 'adminOrdID');
     }
 
     // Relationship with the AdminPayment model

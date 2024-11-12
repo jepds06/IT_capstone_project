@@ -16,8 +16,8 @@
           <p class="text-2xl font-bold mt-2 text-center">{{ delivered }}</p>
         </div>
         <div class="bg-gray-500 text-white p-4 rounded-lg shadow">
-          <h2 class="text-base font-semibold">Cancelled</h2>
-          <p class="text-2xl font-bold mt-2 text-center">{{ cancelled }}</p>
+          <h2 class="text-base font-semibold">Rescheduled</h2>
+          <p class="text-2xl font-bold mt-2 text-center">{{ rescheduled }}</p>
         </div>
       </div>
 
@@ -35,25 +35,25 @@
       </thead>
       <tbody>
         <tr v-for="delivery in paginatedDeliveries" :key="delivery.id" class="border-t">
-          <td class="p-4 text-center">{{ delivery.id }}</td>
-          <td class="p-4 text-center">{{ delivery.poId }}</td>
-          <td class="p-4 text-center">{{ delivery.supplier }}</td>
+          <td class="p-4 text-center">{{ delivery.adminDlvrID }}</td>
+          <td class="p-4 text-center">{{ delivery.adminOrdID }}</td>
+          <td class="p-4 text-center">{{ getSupplierName(delivery.admin_order?.quotation?.userID) }}</td>
           <td class="p-4 text-center">{{ delivery.deliveryDate }}</td>
           <td class="p-4 text-center">
-            <span :class="statusClass(delivery.status)" class="py-1 px-3 rounded-full text-white text-sm">
-              {{ delivery.status }}
+            <span :class="statusClass(delivery.deliveryStatus === 'Processed delivery' ? 'Waiting for delivery' : delivery.deliveryStatus)" class="py-1 px-3 rounded-full text-white text-sm">
+              {{ delivery.deliveryStatus === "Processed delivery" ? "Waiting for delivery" : delivery.deliveryStatus }}
             </span>
           </td>
           <td class="p-4 text-center">
-            <button @click="viewDetails(delivery)" class="text-blue-600 mr-2">
-              <i class="fas fa-eye"></i> <!-- View Icon -->
-            </button>
-            <button @click="updateStatus(delivery, 'Delivered')" class="text-green-600 mr-2">
-              <i class="fas fa-check"></i> <!-- Mark as Delivered Icon -->
-            </button>
-            <button @click="cancelDelivery(delivery)" class="text-red-600">
-              <i class="fas fa-trash"></i> <!-- Cancel Icon -->
-            </button>
+            <UButton
+            :disabled="delivery.deliveryStatus === 'Delivered'"
+            icon="emojione:ballot-box-with-check"
+            @click="updateStatus(delivery, 'Delivered')"
+            rounded="false"
+            title="Delivery Complete"
+            color="white" 
+            square
+            />
           </td>
         </tr>
       </tbody>
@@ -84,14 +84,18 @@
 </template>
 
 <script>
+import { apiService } from '~/api/apiService';
+import { format } from "date-fns";
+
 export default {
   data() {
     return {
+      users:[],
       deliveries: [], // Array to hold delivery records
-      totalDeliveries: 0,
-      pendingDeliveries: 0,
-      delivered: 0,
-      cancelled: 0,
+      // totalDeliveries: 0,
+      // pendingDeliveries: 0,
+      // delivered: 0,
+      // cancelled: 0,
       showModal: false,
       selectedDelivery: null,
       currentPage: 1,
@@ -106,49 +110,66 @@ export default {
       const start = (this.currentPage - 1) * this.itemsPerPage;
       return this.deliveries.slice(start, start + this.itemsPerPage);
     },
+    totalDeliveries(){
+      return this.deliveries.filter((item) => item.deliveryDate === format(new Date(),'yyyy-MM-dd') && item.deliveryStatus === 'Processed delivery')?.length
+    },
+    pendingDeliveries(){
+      return this.deliveries.filter((item) => item.deliveryStatus === 'Processed delivery')?.length
+    },
+    delivered(){
+      return this.deliveries.filter((item) => item.deliveryStatus === 'Delivered')?.length
+    },
+    rescheduled(){
+      return this.deliveries.filter((item) => item.deliveryStatus === 'Rescheduled delivery')?.length
+    }
   },
   methods: {
     statusClass(status) {
       switch (status) {
-        case 'Pending':
+        case 'Waiting for delivery':
           return 'bg-yellow-500';
         case 'Delivered':
           return 'bg-green-500';
-        case 'Cancelled':
+        case 'Rescheduled delivery':
           return 'bg-red-500';
         default:
           return 'bg-gray-500';
       }
     },
+    getSupplierName(userID) {
+      const supplier = this.users?.find((value) => value.userID === userID);
+      return supplier
+        ? `${supplier.lastName} ${supplier.firstName}`
+        : "Unknown";
+    },
     viewDetails(delivery) {
       this.selectedDelivery = delivery;
       this.showModal = true;
     },
-    updateStatus(delivery, newStatus) {
+   async updateStatus(delivery, newStatus) {
       // Update delivery status logic
-      delivery.status = newStatus;
-      alert(`Delivery ID ${delivery.id} marked as ${newStatus}`);
+      delivery.deliveryStatus = newStatus;
+      let qtyReceived = delivery?.admin_order?.admin_order_detail?.reduce((total, detail) => {
+      return total + parseFloat(detail.qtyOrdered);
+      }, 0);
+      await apiService.put(`/api/adminDeliveries/${delivery.adminDlvrID}`, {
+        adminDlvrID: delivery.adminDlvrID,
+        adminOrdID: delivery.adminOrdID,
+        deliveryDate: delivery.deliveryDate,
+        deliveryStatus: delivery.deliveryStatus,
+        qtyReceived,
+      })
+      alert(`Delivery ID ${delivery.adminDlvrID} marked as ${newStatus}`);
     },
     cancelDelivery(delivery) {
       // Cancel the delivery
       delivery.status = 'Cancelled';
       alert(`Delivery ID ${delivery.id} has been cancelled`);
     },
-    fetchDeliveries() {
-      // Fetch deliveries from API or state management
-      // Sample data for demonstration
-      this.deliveries = [
-        { id: 1, poId: 'PO001', supplier: 'Supplier A', deliveryDate: '2024-11-01', status: 'Pending' },
-        { id: 2, poId: 'PO002', supplier: 'Supplier B', deliveryDate: '2024-11-01', status: 'Delivered' },
-        // Add more delivery records as needed for testing pagination
-      ];
-      this.totalDeliveries = this.deliveries.length;
-      this.calculateDeliveryStats();
-    },
-    calculateDeliveryStats() {
-      this.pendingDeliveries = this.deliveries.filter(d => d.status === 'Pending').length;
-      this.delivered = this.deliveries.filter(d => d.status === 'Delivered').length;
-      this.cancelled = this.deliveries.filter(d => d.status === 'Cancelled').length;
+    async fetchDeliveries() {
+      const result = await apiService.get("/api/adminDeliveries")
+
+      this.deliveries = result.data
     },
     nextPage() {
       if (this.currentPage < this.totalPages) {
@@ -160,9 +181,14 @@ export default {
         this.currentPage--;
       }
     },
+  async fetchUserData() {
+      const result = await apiService.get("/api/users");
+      this.users = result.data;
+    },
   },
-  mounted() {
-    this.fetchDeliveries(); // Call the fetch method when the component is mounted
+  async mounted() {
+    await this.fetchUserData()
+    await this.fetchDeliveries(); // Call the fetch method when the component is mounted
   },
 };
 </script>

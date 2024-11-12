@@ -56,13 +56,13 @@
           </span>
           </td>
           <td class="px-6 py-4 border-b">
-            <button
+            <!-- <button
               @click="openViewModal(production)"
               class="text-green-500 hover:text-green-700"
               title="View Production"
             >
               <i class="fas fa-eye"></i>
-            </button>
+            </button> -->
             <button
               @click="openEditModal(production)"
               class="text-yellow-500 hover:text-yellow-700 ml-2"

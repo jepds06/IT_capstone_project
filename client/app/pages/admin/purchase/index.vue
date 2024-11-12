@@ -291,13 +291,10 @@ export default {
         const totalAmount = value.admin_order_detail.reduce((total, detail) => {
           return total + parseFloat(detail.amount);
         }, 0);
-        const payment = value.admin_order_detail.filter((value) => {
-          return value.admin_payments.length > 0;
-        });
-        if (value.admin_payments.length > 0) {
+        if (value.admin_payments) {
           value.status = "In Progress";
         }
-        if (value.admin_deliveries.length > 0) {
+        if (value.admin_deliveries) {
           value.status = "Waiting for Delivery";
         }
         if (!value.status) {

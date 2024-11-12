@@ -588,7 +588,7 @@
                     : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
-          >delivery Orders</router-link>
+          >Delivery Orders</router-link>
         </CollapsibleMenu>
 
         <!-- <CollapsibleMenu

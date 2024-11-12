@@ -12,7 +12,7 @@ class AdminDeliveryRepository implements AdminDeliveryRepositoryInterface
 {
     public function findMany()
     {
-        return AdminDelivery::paginate(10);
+        return AdminDelivery::with(['adminOrder', 'adminOrder.quotation', 'adminOrder.adminOrderDetail'])->orderBy('deliveryDate', 'desc')->paginate(10);
     }
 
     public function findOneById(int $adminDlvrId)
