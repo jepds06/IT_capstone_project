@@ -1,25 +1,25 @@
 <template>
     <div class="m-8 space-y-6">
       <!-- Title -->
-      <h1 class="text-3xl font-semibold">Reports</h1>
+      <h1 class="text-2xl font-extrabold">Reports</h1>
   
       <!-- Overview Cards -->
       <div class="grid grid-cols-4 gap-4">
-        <div class="bg-blue-600 text-white p-4 rounded-lg shadow">
-          <h2 class="text-xl font-semibold">Total Sales</h2>
-          <p class="text-2xl mt-2">₱150,000</p>
+        <div class="bg-gray-500 text-white p-4 rounded-lg shadow">
+          <h2 class="text-base font-semibold">Total Sales</h2>
+          <p class="text-2xl mt-2 text-center">₱150,000</p>
         </div>
-        <div class="bg-green-600 text-white p-4 rounded-lg shadow">
-          <h2 class="text-xl font-semibold">Completed Orders</h2>
-          <p class="text-2xl mt-2">320</p>
+        <div class="bg-gray-500 text-white p-4 rounded-lg shadow">
+          <h2 class="text-base font-semibold ">Completed Orders</h2>
+          <p class="text-2xl mt-2 text-center">320</p>
         </div>
-        <div class="bg-yellow-600 text-white p-4 rounded-lg shadow">
-          <h2 class="text-xl font-semibold">Pending Payments</h2>
-          <p class="text-2xl mt-2">45</p>
+        <div class="bg-gray-500 text-white p-4 rounded-lg shadow">
+          <h2 class="text-base font-semibold">Pending Payments</h2>
+          <p class="text-2xl mt-2 text-center">45</p>
         </div>
-        <div class="bg-red-600 text-white p-4 rounded-lg shadow">
-          <h2 class="text-xl font-semibold">Failed Transactions</h2>
-          <p class="text-2xl mt-2">8</p>
+        <div class="bg-gray-500 text-white p-4 rounded-lg shadow">
+          <h2 class="text-base font-semibold">Failed Transactions</h2>
+          <p class="text-2xl mt-2 text-center">8</p>
         </div>
       </div>
   
@@ -59,7 +59,7 @@
       <!-- Report Table -->
       <div class="overflow-x-auto">
         <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow overflow-hidden">
-          <thead class="bg-blue-600 text-white uppercase tracking-wide text-sm">
+          <thead class="bg-gray-500 text-white uppercase tracking-wide text-sm">
             <tr>
               <th class="py-3 px-4 text-left">Order ID</th>
               <th class="py-3 px-4 text-left">Customer Name</th>

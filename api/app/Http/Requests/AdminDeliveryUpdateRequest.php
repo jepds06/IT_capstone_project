@@ -25,7 +25,7 @@ class AdminDeliveryUpdateRequest extends FormRequest
             'adminOrdID' => 'required|integer|exists:adminOrders,adminOrdID',
             'deliveryDate' => 'required|date',
             'deliveryStatus' => 'required|string|max:255',
-            'qtyReceived' => 'required|integer|min:1'
+            'qtyReceived' => 'required|integer'
         ];
     }
 }

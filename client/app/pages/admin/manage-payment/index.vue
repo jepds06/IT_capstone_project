@@ -1,218 +1,640 @@
 <template>
-    <div class="m-8">
-      <!-- Title -->
-      <h1 class="text-3xl font-semibold mb-4">Manage Payments</h1>
-  
-      <!-- Search Bar -->
-      <div class="mb-4 flex gap-2">
-        <input
-          type="text"
-          v-model="searchQuery"
-          placeholder="Search by Payment ID or Customer Name"
-          class="px-4 py-2 w-1/3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+  <div class="m-8">
+    <!-- Page Title -->
+    <h2 class="text-2xl font-extrabold text-left mb-14">Manage Payment</h2>
+
+    <!-- Form Section -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+      <div class="col-span-1">
+        <!-- <div class="flex justify-between items-center mb-4">
+          <div>
+            <button @click="editSupplier" class="mr-2 text-blue-600 hover:text-blue-800">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+            <button @click="saveSupplier" class="text-green-600 hover:text-green-800">
+              <i class="fas fa-save"></i> Save
+            </button>
+          </div>
+        </div> -->
+        <label class="block font-semibold text-lg mb-2">Production No</label>
+        <USelectMenu v-model="selectedProduction" :options="productions" />
       </div>
-  
-      <!-- Payment Table -->
-      <div class="overflow-x-auto">
-          <table class="min-w-full bg-white border border-gray-300 rounded-lg shadow overflow-hidden">
-            <thead class="bg-blue-600 text-white uppercase tracking-wide text-sm">
-              <tr>
-                <th class="py-3 px-4 text-left">Production ID</th>
-                <th class="py-3 px-4 text-left">User</th>
-                <th class="py-3 px-4 text-left">Amount</th>
-                <th class="py-3 px-4 text-left">Status</th>
-                <th class="py-3 px-4 text-left">Actions</th>
-              </tr>
-            </thead>
+      <!-- Supplier Section -->
+      <div class="col-span-1">
+        <!-- <div class="flex justify-between items-center mb-4">
+          <div>
+            <button @click="editSupplier" class="mr-2 text-blue-600 hover:text-blue-800">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+            <button @click="saveSupplier" class="text-green-600 hover:text-green-800">
+              <i class="fas fa-save"></i> Save
+            </button>
+          </div>
+        </div> -->
+        <label class="block font-semibold text-lg mb-2">Supplier</label>
+        <USelectMenu v-model="selectedSupplier" :options="supplier" />
+      </div>
+
+      <!-- Date Input -->
+      <div class="col-span-1">
+        <label class="block font-semibold text-lg mb-2">Actions</label>
+        <div class="flex">
+          <!-- <input type="date" class="w-full p-2 border rounded text-base" /> -->
+          <!-- <UPopover :popper="{ placement: 'bottom-start' }">
+          <UButton icon="i-heroicons-calendar-days-20-solid" :label="formattedDate" />
+      
+          <template #panel="{ close }">
+            <DatePicker v-model="selectedDate" is-required @close="close" />
+          </template>
+        </UPopover> -->
+          <UButton
+            class="ml-2"
+            title="Filter"
+            label="Filter  "
+            color="blue"
+            @click="applyFilter"
+          />
+          <UButton
+            class="ml-2"
+            title="Clear"
+            label="Clear"
+            color="gray"
+            @click="clearFilter"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Bills Section with two tables -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+      <!-- Unpaid Bills Section -->
+      <div class="bg-white shadow-md rounded p-4 h-96 overflow-y-auto">
+        <div class="flex justify-between items-center mb-4">
+          <span class="font-semibold whitespace-nowrap">Unpaid Bills</span>
+        </div>
+
+        <table class="w-full bg-white shadow-md rounded mb-4">
+          <thead>
+            <tr class="bg-gray-200 text-sm text-center">
+              <!-- <th class="p-2">ID</th> -->
+              <th class="p-2">Invoice No</th>
+              <th class="p-2">Invoice Date</th>
+              <th class="p-2">Balance</th>
+              <th class="p-2">Amount Paid</th>
+              <th class="p-2">Amount To Pay</th>
+            </tr>
+          </thead>
           <tbody>
             <tr
-              v-for="payment in filteredPayments"
-              :key="payment.paymentID"
-              class="border-b hover:bg-gray-100"
+              v-for="bill in unpaidBills"
+              :key="bill.id"
+              @click="selectBill(bill)"
+              class="cursor-pointer hover:bg-gray-100"
             >
-              <td class="px-6 py-3">{{ payment.paymentID }}</td>
-              <td class="px-6 py-3">{{ payment.customerName }}</td>
-              <td class="px-6 py-3">{{ payment.totalAmount }}</td>
-              <td class="px-6 py-3">
-                <span
-                  :class="{
-                    'text-green-500': payment.status === 'Completed',
-                    'text-yellow-500': payment.status === 'Pending',
-                    'text-red-500': payment.status === 'Failed'
-                  }"
-                >
-                  <i
-                    :class="{
-                      'fa-solid fa-check-circle': payment.status === 'Completed',
-                      'fa-solid fa-hourglass-half': payment.status === 'Pending',
-                      'fa-solid fa-times-circle': payment.status === 'Failed'
-                    }"
-                  ></i>
-                </span>
+              <!-- <td class="p-2">{{ bill.id }}</td> -->
+              <td class="p-2">{{ bill.adminOrdID }}</td>
+              <td class="p-2">{{ bill.orderDate }}</td>
+              <td class="p-2">
+                {{
+                  new Intl.NumberFormat("en-PH", {
+                    style: "currency",
+                    currency: "PHP",
+                  }).format(bill.balance)
+                }}
               </td>
-              <td class="px-6 py-3 flex gap-3">
-                <!-- View and Edit Button Icons -->
-                <button @click="openModal('view', payment.paymentID)" class="text-blue-500 hover:text-blue-700">
-                  <i class="fa-solid fa-eye"></i>
-                </button>
-                <!-- <button @click="openModal('edit', payment.paymentID)" class="text-yellow-500 hover:text-yellow-700">
-                  <i class="fa-solid fa-edit"></i>
-                </button> -->
+              <td class="p-2">
+                {{
+                  new Intl.NumberFormat("en-PH", {
+                    style: "currency",
+                    currency: "PHP",
+                  }).format(bill.amountPaid)
+                }}
+              </td>
+              <td class="p-2">
+                {{
+                  new Intl.NumberFormat("en-PH", {
+                    style: "currency",
+                    currency: "PHP",
+                  }).format(bill.amountToPay)
+                }}
               </td>
             </tr>
           </tbody>
         </table>
+        <p class="font-bold text-right">
+          Total Balance:
+          {{
+            new Intl.NumberFormat("en-PH", {
+              style: "currency",
+              currency: "PHP",
+            }).format(totalUnpaidBillsAmount)
+          }}
+        </p>
       </div>
-  
-      <!-- Pagination -->
-      <div class="flex justify-between items-center mt-4">
-        <span class="text-sm text-gray-500">Showing {{ start + 1 }} to {{ end }} of {{ payments.length }} payments</span>
-        <div class="flex gap-4">
-          <button
-            :disabled="page === 1"
-            @click="page--"
-            class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
-          >
-            Previous
-          </button>
-          <button
-            :disabled="page * itemsPerPage >= payments.length"
-            @click="page++"
-            class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
-          >
-            Next
-          </button>
+
+      <!-- Selected Bills Section -->
+      <div class="bg-white shadow-md rounded p-4 h-96 overflow-y-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div class="col-span-1 items-center">
+            <span class="font-semibold whitespace-nowrap">Selected Bills</span>
+          </div>
+
+          <!-- <select
+              v-model="paymentType"
+              @change="handlePaymentTypeChange"
+              class="w-full p-2 border rounded text-base"
+            >
+              <option>Select Payment Type</option>
+              <option>All</option>
+              <option>Cash</option>
+              <option>Cheque</option>
+            </select> -->
+          <div class="col-span-1">
+            <USelectMenu
+              v-model="selectedPaymentType"
+              :options="paymentTypes"
+              placeholder="Select payment type"
+            />
+          </div>
         </div>
-      </div>
-  
-      <!-- Success Popup after Deletion -->
-      <div
-        v-if="showDeleteNotification"
-        class="fixed bottom-10 right-10 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transition-opacity duration-300"
-      >
-        <p>{{ deleteMessage }}</p>
-      </div>
-  
-      <!-- View Modal -->
-      <div v-if="modalType === 'view'" class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
-        <div class="bg-white p-6 rounded-lg w-1/3">
-          <h3 class="text-xl font-semibold mb-4">View Payment Details</h3>
-          <p><strong>Payment ID:</strong> {{ currentPayment.paymentID }}</p>
-          <p><strong>Customer Name:</strong> {{ currentPayment.customerName }}</p>
-          <p><strong>Total Amount:</strong> {{ currentPayment.totalAmount }}</p>
-          <p><strong>Paid Amount:</strong> {{ currentPayment.paidAmount }}</p>
-          <p><strong>Unpaid Amount:</strong> {{ currentPayment.uppaidAmount }}</p>
-          <p><strong>Payment Method:</strong> {{ currentPayment.paymentMethod }}</p>
-          <p><strong>Status:</strong> <span :class="statusClass(currentPayment.status)">{{ currentPayment.status }}</span></p>
-          <button @click="closeModal" class="mt-4 px-4 py-2 bg-red-500 text-white rounded">Close</button>
-        </div>
-      </div>
-  
-      <!-- Edit Modal -->
-      <div v-if="modalType === 'edit'" class="fixed inset-0 flex justify-center items-center bg-black bg-opacity-50">
-        <div class="bg-white p-6 rounded-lg w-1/3">
-          <h3 class="text-xl font-semibold mb-4">Edit Payment</h3>
-          <input v-model="currentPayment.totalAmount" class="mb-4 p-2 w-full border border-gray-300 rounded" placeholder="Amount" />
-          <select v-model="currentPayment.status" class="mb-4 p-2 w-full border border-gray-300 rounded">
-            <option value="Completed">Completed</option>
-            <option value="Pending">Pending</option>
-            <option value="Failed">Failed</option>
-          </select>
-          <button @click="saveEdit" class="mr-2 px-4 py-2 bg-yellow-500 text-white rounded">Save</button>
-          <button @click="closeModal" class="px-4 py-2 bg-red-500 text-white rounded">Cancel</button>
+        <table class="w-full bg-white shadow-md rounded mb-4">
+          <thead>
+            <tr class="bg-gray-200 text-sm text-center">
+              <th class="p-2"></th>
+              <th class="p-2">Invoice No</th>
+              <th class="p-2">Invoice Date</th>
+              <th class="p-2">Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="bill in selectedBills"
+              :key="bill.id"
+              class="hover:bg-gray-100"
+            >
+              <td class="p-2 flex items-center">
+                <input type="checkbox" v-model="bill.selected" class="mr-2" />
+                
+              </td>
+              <td class="p-2">{{ bill.adminOrdID }}</td>
+              <td class="p-2">{{ bill.orderDate }}</td>
+              <!-- <td class="p-2">{{  new Intl.NumberFormat("en-PH", {
+                style: "currency",
+                currency: "PHP",
+              }).format(bill.balance) }}</td> -->
+              <td class="p-2 flex items-center">
+                <input
+                id="amountToPay"
+                v-model.number="bill.amount"
+                type="number"
+                step="0.01"
+                placeholder="Enter amount to pay"
+                required
+                class="w-full p-2 border rounded"
+              />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <p class="font-bold text-right">
+          Total Bills Amount: {{ new Intl.NumberFormat("en-PH", {
+            style: "currency",
+            currency: "PHP",
+          }).format(totalBillsAmount) }}
+        </p>
+        <div class="flex justify-end">
+        <UButton :loading="isLoadingPay" label="Pay" icon="material-symbols:payments-outline" @click="saveSupplier" color="green" :disabled="!selectedPaymentType || selectedBills?.filter((value) => value.selected).length === 0" />
         </div>
       </div>
     </div>
-  </template>
-  
-  <script setup>
-import auth from '../../../../middleware/auth'
-// This page requires authentication
-definePageMeta({
-  middleware: [auth],
-});
-  import { ref, computed } from "vue";
-  
-  const payments = ref([
-    {
-      paymentID: 1,
-      customerName: "Rhea",
-      totalAmount: "₱5000",
-      uppaidAmount: "₱0",
-      paidAmount: "₱5000",
-      paymentMethod: "Cash",
-      status: "Completed",
-    }
-    // Add more payment records as necessary
-  ]);
-  
-  const searchQuery = ref("");
-  const page = ref(1);
-  const itemsPerPage = 5;
-  const showDeleteNotification = ref(false);
-  const deleteMessage = ref("");
-  const modalType = ref(null);
-  const currentPayment = ref({});
-  
-  const filteredPayments = computed(() => {
-    return payments.value.filter(
-      (payment) =>
-        payment.paymentID.toString().includes(searchQuery.value) ||
-        payment.customerName.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
-  });
-  
-  const start = computed(() => (page.value - 1) * itemsPerPage);
-  const end = computed(() => Math.min(page.value * itemsPerPage, payments.value.length));
-  
-  const openModal = (type, paymentID) => {
-    const payment = payments.value.find(payment => payment.paymentID === paymentID);
-    currentPayment.value = { ...payment }; // Create a copy to avoid modifying original data
-    modalType.value = type;
-  };
-  
-  const closeModal = () => {
-    modalType.value = null;
-  };
-  
-  const statusClass = (status) => {
+
+    <!-- Cheques Section -->
+    <div class="bg-white shadow-md rounded p-4">
+      <h3 class="text-lg font-semibold">Cheques</h3>
+
+      <!-- Add Cheque Button on the Left -->
+      <div class="flex justify-between mb-4">
+        <div class="flex-1"></div>
+        <button
+          @click="addCheque"
+          class="bg-blue-500 text-white text-base px-2 py-2 rounded hover:bg-blue-600"
+        >
+          Add Cheque
+        </button>
+      </div>
+
+      <table class="w-full bg-white shadow-md rounded mb-4">
+        <thead>
+          <tr class="bg-gray-200 text-sm text-left">
+            <!-- <th class="p-2">Voucher No</th> -->
+            <th class="p-2">Payee</th>
+            <th class="p-2">Bank Name</th>
+            <th class="p-2">Check No</th>
+            <th class="p-2">Due Date</th>
+            <th class="p-2">Amount</th>
+            <th class="p-2 text-center">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="cheque in cheques"
+            :key="cheque.id"
+            class="hover:bg-gray-100"
+          >
+            <!-- <td class="p-2">{{ cheque.voucherNo }}</td> -->
+            <td class="p-2">{{ cheque.payee }}</td>
+            <td class="p-2">{{ cheque.bankName }}</td>
+            <td class="p-2">{{ cheque.checkNo }}</td>
+            <td class="p-2">{{ cheque.dueDate }}</td>
+            <td class="p-2">{{ cheque.amount }}</td>
+            <td class="p-2 text-center">
+              <button
+                @click="removeCheque(cheque)"
+                class="bg-red-500 text-white px-2 py-1 rounded"
+              >
+                Remove
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="font-bold text-md text-right">
+        Total Cheque Amount: {{ totalChequeAmount }}
+      </p>
+    </div>
+
+    <!-- Modal for Adding Cheque -->
+    <div
+      v-if="isModalOpen"
+      class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+    >
+      <div class="bg-white p-6 rounded shadow-lg w-96">
+        <h3 class="text-lg font-semibold mb-4">Add Cheque</h3>
+        <!-- <div class="mb-4">
+          <label class="block mb-1">Voucher No</label>
+          <input
+            type="text"
+            v-model="newCheque.voucherNo"
+            class="w-full p-2 border rounded"
+            readonly
+          />
+        </div> -->
+        <div class="mb-4">
+          <label class="block mb-1">Payee</label>
+          <input
+            type="text"
+            v-model="newCheque.payee"
+            class="w-full p-2 border rounded"
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block mb-1">Bank Name</label>
+          <select
+            v-model="newCheque.bankName"
+            class="w-full p-2 border rounded"
+          >
+            <option value="">Select Bank</option>
+            <option>Bank A</option>
+            <option>Bank B</option>
+          </select>
+        </div>
+        <div class="mb-4">
+          <label class="block mb-1">Check No</label>
+          <input
+            type="text"
+            v-model="newCheque.checkNo"
+            class="w-full p-2 border rounded"
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block mb-1">Due Date</label>
+          <input
+            type="date"
+            v-model="newCheque.dueDate"
+            class="w-full p-2 border rounded"
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block mb-1">Amount</label>
+          <input
+            type="number"
+            v-model="newCheque.amount"
+            class="w-full p-2 border rounded"
+          />
+        </div>
+        <div class="flex justify-end">
+          <button
+            @click="addNewCheque"
+            class="bg-green-500 text-white px-4 py-2 rounded"
+          >
+            Add
+          </button>
+          <button
+            @click="isModalOpen = false"
+            class="bg-red-500 text-white px-4 py-2 rounded ml-2"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { format } from "date-fns";
+import { apiService } from "~/api/apiService";
+
+export default {
+  data() {
     return {
-      'text-green-500': status === 'Completed',
-      'text-yellow-500': status === 'Pending',
-      'text-red-500': status === 'Failed',
+      selectedDate: new Date(),
+      productions: [],
+      selectedProduction: null,
+      supplier: [],
+      selectedSupplier: null,
+      paymentTypes: [],
+      selectedPaymentType: null,
+      paymentType: "",
+      selectedBills: [],
+      unpaidBills: [],
+      cheques: [],
+      newCheque: {
+        // voucherNo: "",
+        payee: "",
+        bankName: "",
+        checkNo: "",
+        dueDate: "",
+        amount: 0,
+      },
+      isModalOpen: false,
+      isLoadingPay: false,
     };
-  };
-  
-  const saveEdit = () => {
-    const index = payments.value.findIndex(payment => payment.paymentID === currentPayment.value.paymentID);
-    if (index !== -1) {
-      payments.value[index] = { ...currentPayment.value };
-      closeModal();
-    }
-  };
-  
-  const deletePayment = (paymentID) => {
-    const index = payments.value.findIndex((payment) => payment.paymentID === paymentID);
-    if (index !== -1) {
-      payments.value.splice(index, 1);
-      showDeleteNotification.value = true;
-      deleteMessage.value = `Payment ID ${paymentID} successfully deleted!`;
-  
-      setTimeout(() => {
-        showDeleteNotification.value = false;
-      }, 3000);
-    }
-  };
-  </script>
-  
-  <style scoped>
-  ::-webkit-scrollbar {
-    height: 8px;
-  }
-  ::-webkit-scrollbar-thumb {
-    background-color: #6b7280;
-    border-radius: 8px;
-  }
-  </style>
-  
+  },
+  computed: {
+    formattedDate() {
+      return format(this.selectedDate, "d MMM, yyyy");
+    },
+    totalBillsAmount() {
+      return this.selectedBills.reduce((sum, bill) => sum + bill.balance, 0);
+    },
+    totalUnpaidBillsAmount() {
+      return this.unpaidBills.reduce((sum, bill) => sum + bill.balance, 0);
+    },
+    totalChequeAmount() {
+      return this.cheques.reduce((sum, cheque) => sum + cheque.amount, 0);
+    },
+  },
+  methods: {
+    handlePaymentTypeChange() {
+      // Logic for handling payment type change
+    },
+    findInvoice() {
+      // Logic for finding an invoice
+    },
+    selectBill(bill) {
+      const isExist = this.selectedBills?.map((value) => value.id).find((val) => val === bill.id)
+      if(!isExist)
+      this.selectedBills.push(bill)
+      // Logic for selecting a bill
+    },
+    addCheque() {
+      this.isModalOpen = true;
+    },
+    submitCheque() {
+      // Logic for submitting cheque
+      this.isModalOpen = false;
+    },
+    closeModal() {
+      this.isModalOpen = false;
+    },
+    removeCheque(cheque) {
+      // Logic for removing a cheque
+    },
+    editSupplier() {
+      // Logic for editing supplier
+    },
+    async saveSupplier() {
+      // Logic for saving supplier
+      this.isLoadingPay = true;
+      const data = this.selectedBills.filter((val) => val.selected)
+
+      console.log("data---", data)
+      const dataToSave = data.filter((val) => !val.adminPayID).map((value) => {
+        return {
+          adminOrdID: value.adminOrdID,
+          payMethodID: this.selectedPaymentType.id,
+          paymentDate: format(new Date(),'yyyy-MM-dd'),
+          amountToPay: value.amountToPay,
+          amountPaid: value.amount,
+          paymentStatus: parseFloat(value.amountToPay) > parseFloat(value.amount) ? "pending" : "completed",
+          remarks: `Paid ${format(new Date(),'yyyy-MM-dd')}`
+        }
+      })
+
+      const dataToUpdate = data.filter((val) => val.adminPayID).map((value) => {
+        return {
+          adminPayID: value.adminPayID,
+          adminOrdID: value.adminOrdID,
+          payMethodID: this.selectedPaymentType.id,
+          paymentDate: format(new Date(),'yyyy-MM-dd'),
+          amountToPay: value.amountToPay,
+          amountPaid: parseFloat(value.amount) + parseFloat(value.amountPaid),
+          paymentStatus: parseFloat(value.amountToPay) > parseFloat(value.amount) + parseFloat(value.amountPaid) ? "pending" : "completed",
+          remarks: `Paid ${format(new Date(),'yyyy-MM-dd')}`
+        }
+      })
+
+      await Promise.all(dataToSave.map(async(value) => {
+        await apiService.post("/api/adminPayments", value)
+      }))
+      await Promise.all(dataToUpdate.map(async(value) => {
+        await apiService.put(`/api/adminPayments/${value.adminPayID}`, value)
+      }))
+      await this.applyFilter()
+      this.selectedBills = this.selectedBills.filter((val) => !val.selected)
+      this.isLoadingPay = false;
+      alert("Payment added successfully")
+      console.log("dataToSave", dataToSave)
+    },
+    async applyFilter() {
+      let transFormData;
+      const result = await this.fetchPaymentByProductionNo(
+        this.selectedProduction.id
+      );
+      if (!this.selectedSupplier) {
+        transFormData = result.data?.map((value, index) => {
+          const amountToPay = value.admin_order_detail?.reduce(
+            (total, detail) => {
+              return total + parseFloat(detail.amount);
+            },
+            0
+          );
+          const amountPaid = value.admin_payments?.amountPaid ?? 0;
+          if (value.admin_payments) {
+            const adminPayID = value.admin_payments.adminPayID;
+            return {
+              amountToPay,
+              adminOrdID: value.adminOrdID,
+              amountPaid,
+              balance: amountToPay - amountPaid,
+              adminPayID,
+              orderDate: value.orderDate,
+              id: index + 1,
+            };
+          }
+          return {
+            amountToPay,
+            adminOrdID: value.adminOrdID,
+            amountPaid,
+            balance: amountToPay - amountPaid,
+            orderDate: value.orderDate,
+            id: index + 1,
+          };
+        })?.filter((value) => value.balance !== 0);
+      } else {
+        transFormData = result.data
+          ?.filter(
+            (value) => value.quotation.userID === this.selectedSupplier.id
+          )
+          .map((value, index) => {
+            const amountToPay = value.admin_order_detail?.reduce(
+              (total, detail) => {
+                return total + parseFloat(detail.amount);
+              },
+              0
+            );
+            const amountPaid = value.admin_payments?.amountPaid ?? 0;
+            if (value.admin_payments) {
+              const adminPayID = value.admin_payments.adminPayID;
+              return {
+                amountToPay,
+                adminOrdID: value.adminOrdID,
+                amountPaid,
+                balance: amountToPay - amountPaid,
+                adminPayID,
+                orderDate: value.orderDate,
+                id: index + 1,
+              };
+            }
+            return {
+              amountToPay,
+              adminOrdID: value.adminOrdID,
+              amountPaid,
+              balance: amountToPay - amountPaid,
+              orderDate: value.orderDate,
+              id: index + 1,
+            };
+          })?.filter((value) => value.balance !== 0);
+      }
+      this.unpaidBills = transFormData;
+      console.log("transFormData", transFormData);
+    },
+    clearFilter() {
+      this.selectedDate = new Date();
+      this.selectedSupplier = null;
+      this.selectedProduction = null;
+      this.selectedPaymentType = null;
+      this.unpaidBills = [];
+      this.selectedBills = [];
+    },
+    async fetchProductions() {
+      const result = await apiService.get("/api/productions");
+
+      this.productions = result.data
+        ?.filter((prod) => prod.status === "In Progress")
+        ?.map((prod) => {
+          return {
+            id: prod.productionID,
+            label: `${prod.productionID} - ${prod.remarks}`,
+          };
+        });
+    },
+    async fetchUserData() {
+      const result = await apiService.get("/api/users");
+      this.supplier = result.data
+        ?.filter((user) => user.userTypeID === 3)
+        ?.map((user) => {
+          return {
+            id: user.userID,
+            label: `${user.lastName} ${user.firstName}`,
+          };
+        });
+    },
+    async fetchPaymentMethod() {
+      const result = await apiService.get("/api/paymentMethods");
+
+      this.paymentTypes = result.data?.map((payment) => {
+        return {
+          id: payment.payMethodID,
+          label: payment.payMethodName,
+        };
+      });
+    },
+    async fetchPaymentByProductionNo(productionID) {
+      return await apiService.get(
+        `/api/adminOrders/production/${productionID}`
+      );
+    },
+  },
+  async mounted() {
+    await this.fetchProductions();
+    await this.fetchUserData();
+    await this.fetchPaymentMethod();
+    //   if (process.client) {
+    //   const storage = JSON.parse(localStorage.getItem("userInfo"));
+    //   this.userInfo = storage ? storage : null;
+    // }
+  },
+};
+</script>
+
+<style scoped>
+.container {
+  font-family: "Arial", sans-serif;
+  background-color: #f9fafb;
+  padding: 50px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 12px 15px;
+  text-align: left;
+}
+
+th {
+  /* background-color:cadetblue; */
+  color: black;
+  text-transform: uppercase;
+}
+
+/* tr:hover {
+    background-color: #e3f2fd;
+  } */
+
+button {
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+input[type="text"],
+input[type="date"],
+select {
+  width: 100%;
+}
+</style>

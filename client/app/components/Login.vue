@@ -74,6 +74,7 @@ async function onSubmit(data: any) {
         // Login API call
         const result = await apiService.post("/api/login", data);
 
+        setToken(result.data.token);
         // Check if the result is an error response
         if (result.status && result.data) {
             errorMessage.value = result.data.message || "An unexpected error occurred.";
@@ -86,7 +87,6 @@ async function onSubmit(data: any) {
         
         const userTypeDescription = getUserTypeDescription(result.data.user.userTypeID);
         
-        setToken(result.data.token);
         localStorage.setItem('userInfo', JSON.stringify({...result.data.user, userTypeDescription}));
 
         const listModules = await apiService.get("/api/modules");
@@ -107,7 +107,7 @@ async function onSubmit(data: any) {
         } else if (userTypeDescription === 'Customer') {
             navigateTo("/customer-product");
         } else {
-            navigateTo("/supplier/quotations");
+            navigateTo("/supplier");
         }
     } catch (error) {
         console.error(error); // Log the error for debugging

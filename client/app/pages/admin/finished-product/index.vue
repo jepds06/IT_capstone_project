@@ -1,7 +1,7 @@
 <template>
     <div class="p-8">
       <div class="flex justify-between items-center mb-6">
-        <h1 class="text-3xl font-bold">Finished Products</h1>
+        <h1 class="text-2xl font-extrabold">Finished Products</h1>
       </div>
   
       <!-- Finished Products Table -->

@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AdminDeliveryStoreRequest extends FormRequest
+class SalesStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return false;
     }
 
     /**
@@ -22,10 +22,7 @@ class AdminDeliveryStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'adminOrdID' => 'required|integer|exists:adminOrders,adminOrdID',
-            'deliveryDate' => 'required|date',
-            'deliveryStatus' => 'required|string|max:255',
-            'qtyReceived' => 'required|integer'
+            //
         ];
     }
 }

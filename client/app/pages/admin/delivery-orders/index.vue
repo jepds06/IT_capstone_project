@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-      <h2 class="text-2xl font-semibold mb-4">Delivery Records</h2>
+      <h2 class="text-2xl font-extrabold mb-4">Delivery Records</h2>
       
       <!-- Summary Section -->
       <div class="summary mb-4">

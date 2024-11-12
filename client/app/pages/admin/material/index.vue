@@ -1,4 +1,5 @@
 <template>
+  <div class="m-8 space-y-6">
     <!-- Title and Add Button -->
     <div class="flex justify-between items-center mb-4">
       <h1 class="text-xl font-bold">Materials</h1>
@@ -169,6 +170,7 @@
         </tr>
       </tbody>
     </table>
+  </div>
   </template>
   
   <script setup>

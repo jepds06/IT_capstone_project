@@ -1,7 +1,7 @@
 <template>
-  <div class="mx-auto py-10">
+  <div class="m-8 space-y-6">
     <!-- Quotation Table -->
-    <h2 class="text-2xl font-bold mb-6">Supplier Quotation</h2>
+    <h2 class="text-2xl font-extrabold mb-6">Supplier Quotation</h2>
 
     <!-- Search Bar -->
     <input
@@ -126,13 +126,16 @@
     >
       <div class="bg-white p-6 rounded-md w-1/2">
         <h3 class="text-xl font-bold mb-4">Product Material Details</h3>
-        <label for="materialId" class="block mb-2 mt-4 text-black"
+        <label for="userID" class="block mb-2 mt-4 text-black"
           >Supplier:<span>{{
             `${getSupplierName(selectedSupplier?.userID)}`
           }}</span></label
         >
-        <label for="materialId" class="block mb-2 mt-4 text-black"
+        <label for="quotationId" class="block mb-2 mt-4 text-black"
           >Quotation No: <span>{{ `QN-${selectedQuotation.id}` }}</span></label
+        >
+        <label for="productionID" class="block mb-2 mt-4 text-black"
+          >Production No: <span>{{ `QN-${selectedQuotation.productionID}` }}</span></label
         >
         <table class="min-w-full bg-white border border-gray-300 mb-4">
           <thead class="bg-gray-200">
@@ -150,13 +153,18 @@
               :key="index"
             >
               <td>
-                <input
+                <div v-if="alreadyPurchasedMatOtherSupplier?.includes(material.prodtnMtrlID)">
+                  <UIcon name="solar:bag-cross-bold-duotone" class="w-5 h-5 bg-red-600" title="Material is purchased"/>
+                </div>
+                <div v-else>
+                  <input
                   type="checkbox"
                   class="form-checkbox"
                   @change="(e) => { checkedPurchaseMaterial(e.target.checked, material)}"
                   :checked="alreadyPurchasedMaterials?.includes(material.prodtnMtrlID) ? true : false"
                   :disabled="alreadyPurchasedMaterials?.includes(material.prodtnMtrlID)"
                 />
+                </div>
               </td>
               <td class="py-2 px-4">
                 {{ this.getMaterialProductName(material?.prodtnMtrlID) }}
@@ -290,6 +298,7 @@
 import { jsPDF } from "jspdf";
 import auth from "../../../../middleware/auth";
 import { apiService } from "~/api/apiService";
+import { format } from "date-fns";
 import "jspdf-autotable";
 
 // This page requires authentication
@@ -317,6 +326,8 @@ export default {
       purchasedMaterials: [],
       userInfo: null,
       alreadyPurchasedMaterials: [],
+      alreadyPurchasedMatOtherSupplier: [],
+      adminOrder: null
     };
   },
   computed: {
@@ -386,9 +397,11 @@ export default {
       this.showConfirmationModal = true;
     },
     async generatePurchaseOrder() {
+
       const adminOrder = {
         userID: this.userInfo.userID,
-        quoteID: this.selectedSupplier?.quotation_details[0]?.quoteID
+        quoteID: this.selectedSupplier?.quotation_details[0]?.quoteID,
+        orderDate: format(new Date(),'yyyy-MM-dd')
       }
       const adminOrderDetails = this.purchasedMaterials.map((prodtnMtrlID) => {
       const material = this.selectedSupplier?.quotation_details.find((value) => value.prodtnMtrlID === prodtnMtrlID)
@@ -400,11 +413,21 @@ export default {
         }
       })
 
-      await apiService.post("/api/adminOrders", {...adminOrder, quotationDetails: adminOrderDetails});
+      if(this.alreadyPurchasedMaterials?.length > 0){
+        await apiService.put(`/api/adminOrders/${this.adminOrder.adminOrdID}`, {...adminOrder, quotationDetails: adminOrderDetails});
+      } else {
+      
+        await apiService.post("/api/adminOrders", {...adminOrder, quotationDetails: adminOrderDetails});
+      }
+      const productionMaterialCount = this.materials.length
+      const purchasedMaterialsCount = (this.alreadyPurchasedMatOtherSupplier?.length ?? 0) + (this.alreadyPurchasedMaterials?.length ?? 0) + (adminOrderDetails?.length ?? 0)
 
+      if(productionMaterialCount === purchasedMaterialsCount){
+      await apiService.put(`/api/productions/${this.selectedQuotation.productionID}`, {...this.selectedQuotation, status: "In Progress"});
+    }
       this.showConfirmationModal = false;
       this.showSuccessModal = true;
-    },
+    }, 
     closeSuccessModal() {
       this.showSuccessModal = false;
       this.purchasedMaterials = [];
@@ -446,15 +469,15 @@ export default {
       await this.fetchMaterialsByProductionID(quotation.productionID);
       this.selectedQuotationDetail = quotation;
       this.showDetailsModal = true;
-      const result = await apiService.get(
-        `/api/quotationDetails/quotation/${quotation.productionID}`
-      );
-      this.quotationDetails = result?.quotation_details.map((value, index) => {
-        return {
-          ...value,
-          id: index + 1,
-        };
-      });
+      // const result = await apiService.get(
+      //   `/api/quotationDetails/quotation/${quotation.productionID}`
+      // );
+      // this.quotationDetails = result?.quotation_details.map((value, index) => {
+      //   return {
+      //     ...value,
+      //     id: index + 1,
+      //   };
+      // });
       await this.processPDFFile();
     },
     async processPDFFile() {
@@ -500,8 +523,8 @@ export default {
         { header: "Total Price", dataKey: "totalPrice" },
       ];
 
-      const rows = this.quotationDetails.map((item) => ({
-        id: item.id,
+      const rows = this.selectedQuotationDetail?.quotation_details?.map((item, index) => ({
+        id: index + 1,
         material: this.getMaterialProductName(item.prodtnMtrlID),
         quantity: item.quantity,
         quotePrice: item.quotePrice,
@@ -529,7 +552,7 @@ export default {
       });
 
       // Calculate total price
-      const totalPrice = this.quotationDetails.reduce(
+      const totalPrice = this.selectedQuotationDetail?.quotation_details?.reduce(
         (sum, item) =>
           parseInt(sum) + parseInt(item.quantity * item.quotePrice),
         0
@@ -593,7 +616,11 @@ export default {
 
           // Determine quotationRemarks based on totalPrice
           if (totalPrice === 0) {
-            quotation.quotationRemarks = "No Quoted Price Yet";
+            if(quotation.isCompleted){
+              quotation.quotationRemarks = "No Quoted Price";
+            } else{
+              quotation.quotationRemarks = "No Quoted Price Yet";
+          }
           } else if (totalPrice >= highestPrice) {
             quotation.quotationRemarks = "Highest Price";
           } else if (totalPrice <= lowestPrice) {
@@ -618,11 +645,14 @@ export default {
 
     async fetchAdminOrders() {
       const result = await apiService.get("/api/adminOrders");
-
+      const filterDataFromProd = result.data?.filter((val) => val.quotation.production.productionID === this.selectedQuotation.productionID).map((value) =>{
+        return value.admin_order_detail
+      })?.flat(1)
+     
       const filterData = result.data?.filter((val) => val.quoteID === this.selectedSupplier?.quotation_details[0]?.quoteID)
-
+      this.adminOrder = filterData.length > 0 ? filterData[0] : null;
       this.alreadyPurchasedMaterials = filterData[0]?.admin_order_detail?.map((val) => val.prodtnMtrlID)
-
+      this.alreadyPurchasedMatOtherSupplier = filterDataFromProd?.filter((val) => !this.alreadyPurchasedMaterials?.includes(val.prodtnMtrlID))?.map((val) => val.prodtnMtrlID)
     }
   },
 };

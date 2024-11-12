@@ -42,4 +42,11 @@ class AdminOrderService implements AdminOrderServiceInterface
 
         return new AdminOrderResource($adminOrder);
     }
+
+    public function findAdminOrderByProductionID(int $productionID)
+    {
+        $adminOrder = $this->adminOrderRepository->findByProductionID($productionID);
+
+        return $adminOrder;
+    }
 }

@@ -82,24 +82,24 @@ class QuotationDetailRepository implements QuotationDetailRepositoryInterface
     public function update(object $payload, int $qteDetailId)
     {
         $qteDetail = QuotationDetail::findOrFail($qteDetailId);
-        // $quotation = QuotationDetail::find($payload->quoteID);
+        $quotation = QuotationDetail::find($payload->quoteID);
 
-        // if($quotation){
-        //     $qteDetail->quotation()->associate($quotation);
-        // } else {
-        //     throw new \Exception("Invalid quotation ID provided.");
-        // }
+        if($quotation){
+            $qteDetail->quotation()->associate($quotation);
+        } else {
+            throw new \Exception("Invalid quotation ID provided.");
+        }
 
-        // $prodtnMaterial = ProductionMaterial::find($payload->prodtnMtrlID);
+        $prodtnMaterial = ProductionMaterial::find($payload->prodtnMtrlID);
 
-        // if($prodtnMaterial){
-        //     $qteDetail->productionMaterial()->associate($prodtnMaterial);
-        // } else {
-        //     throw new \Exception("Invalid production material ID provided.");
-        // }
+        if($prodtnMaterial){
+            $qteDetail->productionMaterial()->associate($prodtnMaterial);
+        } else {
+            throw new \Exception("Invalid production material ID provided.");
+        }
 
-        // $qteDetail->quantity = $payload->quantity;
-        // $qteDetail->quotePrice = $payload->quotePrice;
+        $qteDetail->quantity = $payload->quantity;
+        $qteDetail->quotePrice = $payload->quotePrice;
         $qteDetail->save();
 
         return $qteDetail->fresh();

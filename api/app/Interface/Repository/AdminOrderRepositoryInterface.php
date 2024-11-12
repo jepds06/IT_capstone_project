@@ -11,4 +11,6 @@ interface AdminOrderRepositoryInterface
     public function create(object $payload);
 
     public function update(object $payload, int $adminOrderId);
+
+    public function findByProductionID(int $productionId);
 }

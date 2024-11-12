@@ -1,8 +1,8 @@
 <template>
-  <div class="container mx-auto p-4">
+  <div class="m-8">
     <!-- Title and Add User Button -->
     <div class="flex justify-between items-center mb-4">
-        <h1 class="text-xl font-bold">Users</h1>
+        <h1 class="text-2xl font-extrabold">Users</h1>
         <button @click="openModal('add')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
           Add User
         </button>

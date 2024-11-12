@@ -1,7 +1,7 @@
 <template>
-  <div class="container mx-auto p-4">
+  <div class="m-8">
     <div class="flex justify-between items-center mb-4">
-      <h1 class="text-xl text-color font-bold">Modules</h1>
+      <h1 class="text-2xl text-color font-extrabold">Modules</h1>
       <button
         @click="openForm('add')"
         class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"

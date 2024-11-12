@@ -88,7 +88,7 @@
           </div>
         </li>
 
-        <CollapsibleMenu
+        <!-- <CollapsibleMenu
           icon="mdi:paypal"
           title="Payments"
           :class="
@@ -133,7 +133,7 @@
                   : 'hidden'
             "
           >Manage Payments</router-link>
-        </CollapsibleMenu>
+        </CollapsibleMenu> -->
 
         <CollapsibleMenu
           icon="mdi:account-group"
@@ -446,7 +446,7 @@
                   : 'hidden'
             "
           >Suppliers Quotation</router-link>
-          <router-link
+          <!-- <router-link
             to="/suppliers/materials"
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
@@ -461,19 +461,19 @@
                     : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
-          >Supplier Materials</router-link>
+          >Supplier Materials</router-link> -->
 
           <router-link
-            to="/admin/payment"
+            to="/admin/bills-payment"
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-                ? route.path === '/admin/payment'
+                ? route.path === '/admin/bills-payment'
                   ? 'block pl-10 p-4 bg-gray-800'
                   : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('bills payment')
                 ).length > 0
-                  ? route.path === '/admin/payment'
+                  ? route.path === '/admin/bills-payment'
                     ? 'block pl-10 p-4 bg-gray-800'
                     : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
@@ -588,7 +588,7 @@
                     : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
-          >delivery Orders</router-link>
+          >Delivery Orders</router-link>
         </CollapsibleMenu>
 
         <!-- <CollapsibleMenu

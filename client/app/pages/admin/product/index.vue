@@ -261,9 +261,10 @@
               id="prodCat"
               v-model="materialForm.materialID"
               class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
+              :disabled="materialMode === 'edit'"
             >
               <option
-                v-for="material in materials"
+                v-for="material in notAddedMaterials"
                 :key="material.materialID"
                 :value="material.materialID"
               >
@@ -413,6 +414,7 @@ const form = ref({
 const isProductInfoVisible = ref(false)
 const selectedProductMaterials = ref([])
 const selectedProduct = ref(null)
+const notAddedMaterials = ref(null)
 
 const isMaterialModalVisible = ref(false)
 const materialMode = ref('add') // 'add' or 'edit'
@@ -459,9 +461,10 @@ function viewProduct(product) {
 }
 
 async function showMaterials(product) {
+  console.log("product", product)
   selectedProduct.value = product
   // Simulating fetching materials for the selected product
-  fetchMaterialsData()
+  await fetchMaterialsData()
   await fetchProductMaterialsData()
   isProductInfoVisible.value = true
 }
@@ -471,7 +474,8 @@ function closeProductInfo() {
 }
 
 async function openMaterialModal() {
-  await fetchMaterialsData()
+  const selectedMaterialID = selectedProductMaterials.value?.map((val) => val.materialID)
+  notAddedMaterials.value = materials.value?.filter((val) => !selectedMaterialID?.includes(val.materialID))
   materialMode.value = 'add'
   materialForm.value = {
     materialID: '',
@@ -505,6 +509,7 @@ async function saveMaterial() {
 }
 
 function editMaterial(material) {
+  notAddedMaterials.value = materials.value
   materialMode.value = 'edit'
   materialForm.value = { ...material }
   isMaterialModalVisible.value = true
