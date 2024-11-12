@@ -76,7 +76,7 @@
         <table class="w-full bg-white shadow-md rounded mb-4">
           <thead>
             <tr class="bg-gray-200 text-sm text-center">
-              <th class="p-2">ID</th>
+              <!-- <th class="p-2">ID</th> -->
               <th class="p-2">Invoice No</th>
               <th class="p-2">Invoice Date</th>
               <th class="p-2">Balance</th>
@@ -91,7 +91,7 @@
               @click="selectBill(bill)"
               class="cursor-pointer hover:bg-gray-100"
             >
-              <td class="p-2">{{ bill.id }}</td>
+              <!-- <td class="p-2">{{ bill.id }}</td> -->
               <td class="p-2">{{ bill.adminOrdID }}</td>
               <td class="p-2">{{ bill.orderDate }}</td>
               <td class="p-2">
@@ -160,7 +160,7 @@
         <table class="w-full bg-white shadow-md rounded mb-4">
           <thead>
             <tr class="bg-gray-200 text-sm text-center">
-              <th class="p-2">ID</th>
+              <th class="p-2"></th>
               <th class="p-2">Invoice No</th>
               <th class="p-2">Invoice Date</th>
               <th class="p-2">Amount</th>
@@ -174,7 +174,7 @@
             >
               <td class="p-2 flex items-center">
                 <input type="checkbox" v-model="bill.selected" class="mr-2" />
-                {{ bill.id }}
+                
               </td>
               <td class="p-2">{{ bill.adminOrdID }}</td>
               <td class="p-2">{{ bill.orderDate }}</td>
