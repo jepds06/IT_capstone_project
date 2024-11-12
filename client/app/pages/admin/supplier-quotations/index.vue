@@ -469,15 +469,15 @@ export default {
       await this.fetchMaterialsByProductionID(quotation.productionID);
       this.selectedQuotationDetail = quotation;
       this.showDetailsModal = true;
-      const result = await apiService.get(
-        `/api/quotationDetails/quotation/${quotation.productionID}`
-      );
-      this.quotationDetails = result?.quotation_details.map((value, index) => {
-        return {
-          ...value,
-          id: index + 1,
-        };
-      });
+      // const result = await apiService.get(
+      //   `/api/quotationDetails/quotation/${quotation.productionID}`
+      // );
+      // this.quotationDetails = result?.quotation_details.map((value, index) => {
+      //   return {
+      //     ...value,
+      //     id: index + 1,
+      //   };
+      // });
       await this.processPDFFile();
     },
     async processPDFFile() {
@@ -523,8 +523,8 @@ export default {
         { header: "Total Price", dataKey: "totalPrice" },
       ];
 
-      const rows = this.quotationDetails.map((item) => ({
-        id: item.id,
+      const rows = this.selectedQuotationDetail?.quotation_details?.map((item, index) => ({
+        id: index + 1,
         material: this.getMaterialProductName(item.prodtnMtrlID),
         quantity: item.quantity,
         quotePrice: item.quotePrice,
@@ -552,7 +552,7 @@ export default {
       });
 
       // Calculate total price
-      const totalPrice = this.quotationDetails.reduce(
+      const totalPrice = this.selectedQuotationDetail?.quotation_details?.reduce(
         (sum, item) =>
           parseInt(sum) + parseInt(item.quantity * item.quotePrice),
         0

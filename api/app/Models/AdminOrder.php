@@ -35,13 +35,13 @@ class AdminOrder extends Model
 
     public function adminDeliveries()
     {
-        return $this->belongsTo(AdminDelivery::class, 'adminOrdID');
+        return $this->hasOne(AdminDelivery::class, 'adminOrdID');
     }
 
     // Relationship with the AdminPayment model
     public function adminPayments()
     {
-        return $this->belongsTo(AdminPayment::class, 'adminOrdID');
+        return $this->hasOne(AdminPayment::class, 'adminOrdID');
     }
 
     public function adminOrderDetail()
