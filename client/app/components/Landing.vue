@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup lang="ts"> 
   import { ref } from 'vue'
 
   // Declare an array for your key features, grouped by slides
@@ -13,8 +13,6 @@
       { icon: 'fas fa-expand-arrows-alt', title: 'Scalability', description: 'Easily scale your operations as your business grows.' },
       { icon: 'fas fa-lock', title: 'Security', description: 'Protect your data with state-of-the-art security measures.' }
     ]
-    
-    
   ]
 
   // Track the index of the active feature slide
@@ -37,24 +35,24 @@
 
 <template>
   <div>
-    <!-- Hero Section -->
-    <section class="container mx-auto pt-20 pb-12 px-8">
-      <BackgroundImageWrapper :image-url="heroImageUrl" class="rounded-3xl bg-cover bg-center relative">
-        <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent rounded-3xl"></div>
-        <div class="flex items-center justify-center h-full">
-          <div class="lg:px-12 md:py-36 pb-6 pt-72 px-6 relative rounded-3xl text-center text-white fade-in">
-            <h1 class="capitalize leading-tight mb-4 text-white text-3xl lg:text-5xl font-semibold tracking-wider">
-              Streamlining Your Production Processes
-            </h1>
-            <p class="text-lg text-gray-300 font-semibold mb-8">
-              Join us to optimize workflows and simplify your production journey.
-            </p>
-            <button class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-6 rounded-lg transition">
-              Get Started
-            </button>
-          </div>
+    <!-- Hero Section with Background Image -->
+    <section 
+      class="bg-cover bg-center relative" 
+      :style="{ backgroundImage: `url(${heroImageUrl})`, height: '600px' }">
+      <div class="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent"></div>
+      <div class="flex items-center justify-center h-full">
+        <div class="lg:px-12 md:py-36 pb-6 pt-72 px-6 relative text-center text-white fade-in">
+          <h1 class="capitalize leading-tight mb-4 text-white text-3xl lg:text-5xl font-semibold tracking-wider">
+            Streamlining Your Production Processes
+          </h1>
+          <p class="text-lg text-gray-300 font-semibold mb-8">
+            Join us to optimize workflows and simplify your production journey.
+          </p>
+          <button class="bg-primary-600 hover:bg-primary-700 text-white font-bold py-2 px-6 rounded-lg transition">
+            Get Started
+          </button>
         </div>
-      </BackgroundImageWrapper>
+      </div>
     </section>
 
     <!-- About Us Section -->
@@ -67,7 +65,7 @@
       </div>
     </section>
 
-    <!-- Features Section with Icons, Adapting for Light and Dark Modes -->
+    <!-- Features Section with Icons -->
     <section class="bg-gray-100 dark:bg-gray-800 py-20 px-8">
       <div class="container mx-auto text-center">
         <h2 class="text-3xl font-bold mb-6 fade-in text-gray-800 dark:text-gray-200">Our Key Features</h2>
@@ -77,7 +75,7 @@
           <button @click="moveLeft" :disabled="activeSlideIndex === 0" class="text-primary-600 dark:text-primary-400 p-4 hover:bg-gray-200 rounded-full">
             <i class="fas fa-chevron-left"></i>
           </button>
-          
+
           <div class="w-full overflow-hidden">
             <div :style="{ transform: `translateX(-${activeSlideIndex * 100}%)`, transition: 'transform 0.5s ease' }" class="flex space-x-8">
               <div v-for="(features, slideIndex) in featureSlides" :key="slideIndex" class="w-full flex-shrink-0 p-4 fade-in">
@@ -115,7 +113,7 @@
     </section>
 
     <!-- Contact Section -->
-    <section class="bg-primary-600 dark:bg-primary-700 py-20 text-white px-8">
+    <section class="bg-primary-600 dark:bg-primary-700 py-20 text-white px-8 mb-0">
       <div class="container mx-auto text-center">
         <h2 class="text-3xl font-bold mb-6 fade-in">Contact Us</h2>
         <p class="max-w-2xl mx-auto mb-8 fade-in">
