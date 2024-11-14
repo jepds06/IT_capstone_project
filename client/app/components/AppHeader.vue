@@ -26,7 +26,7 @@ const closeModal = () => {
 <template>
   <UHeader>
     <template #logo>
-      SupplyEase <UBadge label="SE" variant="subtle" class="mb-0.5" />
+      <img src="~/assets/images/logo.png" alt="SupplyEase Logo" class="h-24 w-auto mr-2"/> 
     </template>
 
     <template #right>

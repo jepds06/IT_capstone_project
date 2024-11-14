@@ -1,6 +1,7 @@
 <!-- <template>
     <header class="bg-[#003366] text-white p-4 flex justify-between items-center">
       <div class="text-xl font-semibold">Administrator Dashboard</div>
+       <img src="/assets/images/supply ease logo.png" alt="Company Logo" class="h-8 w-auto">
       <div class="flex space-x-4">
         <button class="bg-[#004080] px-4 py-2 rounded">Notifications</button>
         <button class="bg-[#004080] px-4 py-2 rounded">Profile</button>
@@ -16,48 +17,43 @@
   </style>
    -->
 
-<template>
-  <UHeader>
-    <template #left>{{userInfo.userTypeDescription}} Dashboard</template>
-
-    <template #right>
-      <!-- <UButton label="Notifications" color="gray" />
-      <UButton label="Profile" color="gray" />
-      <UButton label="Settings" color="gray" /> -->
-      <UAvatar
-        icon="ant-design:bell-outlined"
-        size="md"
-        chip-text="+1"
-        chip-position="top-right"
-        alt="Avatar"
-        chip-color="primary"
-      />
-      <UPopover mode="hover">
-        <UAvatar icon="ant-design:user-outlined" size="md" />
-        <template #panel>
-          <div class="p-4">
-            <UButton
-            :padded="false"
-            color="gray"
-            variant="link"
-            @click="logout"
-          >
-            Logout
-          </UButton>
-          </div>
-        </template>
-      </UPopover>
-      <div :v-if="userInfo?.userName">{{ `Hi, ${userInfo.userName}` }}</div>
-    </template>
-
-    <!-- <template #panel>
-      <UNavigationTree
-        :links="mapContentNavigation(navigation)"
-        default-open
-      />
-    </template> -->
-  </UHeader>
-</template>
+   <template>
+    <UHeader>
+      <!-- Moved logo to the left section, before the dashboard text -->
+      <template #left>
+        <img src="~/assets/images/logo.png" alt="SupplyEase Logo" class="h-24 w-auto mr-2" /> 
+        {{userInfo.userTypeDescription}} Dashboard
+      </template>
+  
+      <template #right>
+        <UAvatar
+          icon="ant-design:bell-outlined"
+          size="md"
+          chip-text="+1"
+          chip-position="top-right"
+          alt="Avatar"
+          chip-color="primary"
+        />
+        <UPopover mode="hover">
+          <UAvatar icon="ant-design:user-outlined" size="md" />
+          <template #panel>
+            <div class="p-4">
+              <UButton
+                :padded="false"
+                color="gray"
+                variant="link"
+                @click="logout"
+              >
+                Logout
+              </UButton>
+            </div>
+          </template>
+        </UPopover>
+        <div v-if="userInfo?.userName">{{ `Hi, ${userInfo.userName}` }}</div>
+      </template>
+    </UHeader>
+  </template>
+  
 
 <script setup>
 import { _width } from "#tailwind-config/theme";

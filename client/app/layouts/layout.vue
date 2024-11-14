@@ -3,7 +3,6 @@
       <!-- Full-width Header -->
       <header class="bg-blue-800 text-white p-4">
         <div class="container mx-auto flex justify-between items-center">
-          <img src="/public/supply ease logo.png" alt="Company Logo" class="h-8 w-auto">
           <h1 class="text-xl font-bold">Admin Dashboard</h1>
           <!-- Optional header content -->
         </div>
