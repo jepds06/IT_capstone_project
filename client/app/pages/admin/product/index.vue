@@ -156,7 +156,6 @@
         <table class="min-w-full border border-gray-300 rounded-lg mb-4">
           <thead class="bg-gray-200">
             <tr class="p-2 border-b text-black text-center">
-              <th>Product ID</th>
               <th>Name</th>
               <th>Specification</th>
               <th>Unit Price</th>
@@ -165,7 +164,6 @@
           </thead>
           <tbody>
             <tr class="p-2 border-b text-black text-center">
-              <td>{{ selectedProduct?.id }}</td>
               <td>{{ selectedProduct?.productName }}</td>
               <td>{{ selectedProduct?.specifications }}</td>
               <td>{{ new Intl.NumberFormat("en-PH", {
