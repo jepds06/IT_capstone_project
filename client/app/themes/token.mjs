@@ -225,16 +225,16 @@ const pg_colors = {
   
   const pg_backgrounds = {
     'design-image':
-      "url('https://images.unsplash.com/photo-1627309366653-2dedc084cdf1?q=80&w=1966&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
-    'design-image-large':
-      "url('https://images.unsplash.com/photo-1627309366653-2dedc084cdf1?q=80&w=1966&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
-  }
-  
-  const pg_background_urls = {
-    'design-image':
-      'https://images.unsplash.com/photo-1627309366653-2dedc084cdf1?q=80&w=1966&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-    'design-image-large':
-      'https://images.unsplash.com/photo-1627309366653-2dedc084cdf1?q=80&w=1966&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    "url('https://images.pexels.com/photos/6169036/pexels-photo-6169036.jpeg')",
+  'design-image-large':
+    "url('https://images.pexels.com/photos/6169036/pexels-photo-6169036.jpeg')",
+};
+
+const pg_background_urls = {
+  'design-image':
+    'https://images.pexels.com/photos/6169036/pexels-photo-6169036.jpeg',
+  'design-image-large':
+    'https://images.pexels.com/photos/6169036/pexels-photo-6169036.jpeg',
   }
   
   export { pg_colors, pg_fonts, pg_font_urls, pg_backgrounds, pg_background_urls }
