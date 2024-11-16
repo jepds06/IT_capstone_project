@@ -294,7 +294,7 @@
             Production Details
           </h2>
           <!-- <span>{{selectedProduction.deliveryStatus}}</span> -->
-          <UButton @click="saveProduction" class="mb-4" icon="material-symbols-light:list-alt-check-outline-sharp" label="Mark as Completed" :disabled="selectedProduction.deliveryStatus === 'In Progress' || selectedProduction.status === 'Completed'" />
+          <UButton :loading="isLoadingMarkAsCompleted" @click="markAsCompleted" class="mb-4" icon="material-symbols-light:list-alt-check-outline-sharp" label="Mark as Completed" :disabled="selectedProduction.deliveryStatus === 'In Progress' || selectedProduction.status === 'Completed'" />
         </div>
         
         <!-- Product Info View Table (Read-Only) -->
@@ -587,6 +587,7 @@ const itemsPerPage = 5;
 
 const quotations = ref([]);
 
+const isLoadingMarkAsCompleted = ref(false);
 const isLoadingQuotationRequested = ref(false);
 const isQuotationRequested = ref(false);
 const isProductionDetailsInfo = ref(false);
@@ -751,6 +752,7 @@ const requestQuotation = async () => {
   }
 };
 
+
 const saveProduction = async () => {
   if (isEditMode.value) {
     await apiService.put(
@@ -779,6 +781,29 @@ const saveProduction = async () => {
   closeModal();
 };
 
+const markAsCompleted = async () => {
+  isEditMode.value = true;
+  isLoadingMarkAsCompleted.value = true
+  await Promise.all(selectedProductionDetails.value?.map(async(value) => {
+    return await apiService.put(`/api/productionDetails/${value.prodtnDetailID}`, {...value, status: "Completed"})
+  }))
+  const finishedProducts = selectedProductionDetails.value?.map((value) => {
+    return {
+      prodtnDetailID: value.prodtnDetailID,
+      productionDate: formatDate(new Date()),
+      quantity: value.quantity,
+      unitPrice: value.product.unitPrice,
+      status: "Completed",
+      remarks: selectedProduction.value.remarks
+    }
+  })
+  console.log("finishedProducts", finishedProducts)
+  await Promise.all(finishedProducts?.map(async(value) => {
+    return await apiService.post("/api/finishedProducts", value)
+  }))
+  await saveProduction()
+  isLoadingMarkAsCompleted.value = false
+}
 const saveProductionDetail = async () => {
   if (productionDetailMode.value === "add") {
     const result = await apiService.post("/api/productionDetails", {
