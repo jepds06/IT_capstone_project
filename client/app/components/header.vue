@@ -7,21 +7,19 @@
       </div>
 
       <!-- Sign In Button -->
-      <button 
-        class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded " 
-        @click="handleSignIn"
-      >
-        Sign In
-      </button>
+      <UButton label="Sign in" color="gray" @click="isSignInOpen = true" />
+
+      <UModal v-model="isSignInOpen" :style="{width:'inherit', height:'inherit '}" class="">
+        <div class="p-4">
+          <Login />
+        </div>
+      </UModal>
     </div>
   </header>
 </template>
 
 <script setup>
-function handleSignIn() {
-  // Redirect to the Sign In page
-  window.location.href = '/sign-in';
-}
+const isSignInOpen = ref(false);
 </script>
 
 <style scoped>

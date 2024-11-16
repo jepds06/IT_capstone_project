@@ -18,20 +18,10 @@ useSeoMeta({
   title: "Login",
 });
 
-const fields = [
-  {
-    name: "email",
-    type: "email",
-    label: "Email",
-    placeholder: "Enter your email",
-  },
-  {
-    name: "password",
-    label: "Password",
-    type: "password",
-    placeholder: "Enter your password",
-  },
-];
+const state = reactive({
+  email: undefined,
+  password: undefined
+})
 
 const validate = (state: any) => {
   const errors = [];
@@ -118,22 +108,22 @@ async function onSubmit(data: any) {
 
 <template>
   <UCard class="max-w pl-7 bg-white/75 dark:bg-white/5 backdrop-blur">
-    <UAuthForm
-      :fields="fields"
-      :validate="validate"
-      title="Welcome back"
-      icon="i-heroicons-lock-closed"
-      :ui="{
-        base: 'text-center',
-        footer: 'text-center',
-        default: { submitButton: { label: 'Sign in' } },
-      }"
-      :submit-button="{ trailingIcon: 'i-heroicons-arrow-right-20-solid' }"
-      @submit="onSubmit"
-    >
-      <template #footer>
-        <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p> <!-- Display error message here -->
-      </template>
-    </UAuthForm>
+    <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
+    <UFormGroup label="Email" name="email">
+      <UInput v-model="state.email" />
+    </UFormGroup>
+
+    <UFormGroup label="Password" name="password">
+      <UInput v-model="state.password" type="password" />
+    </UFormGroup>
+
+    <UButton type="submit">
+      Submit
+    </UButton>
+    <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p> <!-- Display error message here -->
+  </UForm>
+      <!-- <template #footer> -->
+      <!-- </template> -->
+    <!-- </UAuthForm> -->
   </UCard>
 </template>
