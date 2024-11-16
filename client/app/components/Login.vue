@@ -55,17 +55,18 @@ function getModuleName(moduleID) {
   return module ? module.moduleName : "Unknown";
 }
 
-async function onSubmit(data: any) {
+async function onSubmit(form: any) {
     errorMessage.value = ""; // Reset error message before submission
 
     try {
-        console.log("Submitted", data);
+        console.log("Submitted", form.data);
         
         // Login API call
-        const result = await apiService.post("/api/login", data);
+        const result = await apiService.post("/api/login", form.data);
 
         setToken(result.data.token);
         // Check if the result is an error response
+        console.log(result.status)
         if (result.status && result.data) {
             errorMessage.value = result.data.message || "An unexpected error occurred.";
             return; // Exit the function after setting the error message
@@ -100,8 +101,9 @@ async function onSubmit(data: any) {
             navigateTo("/supplier");
         }
     } catch (error) {
+      console.log('Error:', error);
         console.error(error); // Log the error for debugging
-        errorMessage.value = "An unexpected error occurred. Please try again."; // Fallback error message
+        errorMessage.value =  error?.['_data']?.message || "An unexpected error occurred. Please try again."; // Fallback error message
     }
 }
 </script>
