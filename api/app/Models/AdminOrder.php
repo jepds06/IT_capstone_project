@@ -18,7 +18,8 @@ class AdminOrder extends Model
     protected $fillable = [
         'userID',
         'quoteID',
-        'orderDate'
+        'orderDate',
+        'isApproved'
     ];
 
     // Relationship with the User model

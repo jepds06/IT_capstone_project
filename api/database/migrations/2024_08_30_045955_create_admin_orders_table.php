@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('userID');
             $table->unsignedBigInteger('quoteID');
             $table->date('orderDate');
+            $table->boolean('isApproved');
 
             $table->foreign('userID')->references('userID')->on('users')
             ->onUpdate('cascade')
