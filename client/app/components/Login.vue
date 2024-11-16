@@ -109,23 +109,28 @@ async function onSubmit(form: any) {
 </script>
 
 <template>
-  <UCard class="max-w pl-7 bg-white/75 dark:bg-white/5 backdrop-blur">
-    <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
-    <UFormGroup label="Email" name="email">
-      <UInput v-model="state.email" />
-    </UFormGroup>
+  <UCard class="max-w  pb-8 backdrop-blur ">
 
-    <UFormGroup label="Password" name="password">
-      <UInput v-model="state.password" type="password" />
-    </UFormGroup>
-
-    <UButton type="submit">
-      Submit
-    </UButton>
-    <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p> <!-- Display error message here -->
-  </UForm>
+      <div class="text-2xl font-bold text-center">
+        <UIcon name="uim:padlock" />
+        
+      </div>
+      <UForm :validate="validate" :state="state" class="space-y-4 " @submit="onSubmit">
+        <h1 class="text-2xl font-bold text-center mb-6">Welcome back 
+        </h1>
+        <UFormGroup label="Email" name="email"  class="">
+          <UInput v-model="state.email" placeholder="you@example.com" icon="i-heroicons-envelope"/>
+        </UFormGroup>
+        
+        <UFormGroup label="Password" name="password">
+          <UInput v-model="state.password" type="password"  icon="uim:padlock" />
+        </UFormGroup>
+        
+        <UButton type="submit" label="Sign In" trailing icon="material-symbols:arrow-right-alt" block />
+        <p v-if="errorMessage" class="text-red-500 text-center">{{ errorMessage }}</p> <!-- Display error message here -->
+      </UForm>
       <!-- <template #footer> -->
-      <!-- </template> -->
-    <!-- </UAuthForm> -->
+        <!-- </template> -->
+      <!-- </UAuthForm> -->
   </UCard>
 </template>

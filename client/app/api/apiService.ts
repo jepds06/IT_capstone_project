@@ -53,7 +53,7 @@ export class ApiService {
       if (error.response) {
         this.handleError(error.response.status, error.response['_data']);
       }
-      throw error;
+       throw error.response;
     }
   }
 
@@ -103,7 +103,7 @@ export class ApiService {
       if (error.response) {
         this.handleError(error.response.status, error.response['_data']);
       }
-      throw error;
+      throw error.response;
     }
   }
 
@@ -127,7 +127,7 @@ export class ApiService {
       if (error.response) {
         this.handleError(error.response.status, error.response['_data']);
       }
-      throw error;
+      throw error.response;
     }
   }
 }
