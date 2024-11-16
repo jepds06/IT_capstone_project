@@ -225,16 +225,16 @@ const pg_colors = {
   
   const pg_backgrounds = {
     'design-image':
-    "url('https://images.pexels.com/photos/6169036/pexels-photo-6169036.jpeg')",
+    "url('https://cdn.shopify.com/s/files/1/1246/6441/articles/furniture_inventory_management_software.png?v=1727354611&originalWidth=1848&originalHeight=782&width=1800')",
   'design-image-large':
-    "url('https://images.pexels.com/photos/6169036/pexels-photo-6169036.jpeg')",
+    "url('https://cdn.shopify.com/s/files/1/1246/6441/articles/furniture_inventory_management_software.png?v=1727354611&originalWidth=1848&originalHeight=782&width=1800')",
 };
 
 const pg_background_urls = {
   'design-image':
-    'https://images.pexels.com/photos/6169036/pexels-photo-6169036.jpeg',
+    'https://cdn.shopify.com/s/files/1/1246/6441/articles/furniture_inventory_management_software.png?v=1727354611&originalWidth=1848&originalHeight=782&width=1800',
   'design-image-large':
-    'https://images.pexels.com/photos/6169036/pexels-photo-6169036.jpeg',
+    'https://cdn.shopify.com/s/files/1/1246/6441/articles/furniture_inventory_management_software.png?v=1727354611&originalWidth=1848&originalHeight=782&width=1800',
   }
   
   export { pg_colors, pg_fonts, pg_font_urls, pg_backgrounds, pg_background_urls }
