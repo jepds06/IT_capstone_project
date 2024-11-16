@@ -88,7 +88,7 @@
         >Purchase Order No: <span>{{ selectedPO.adminOrdID }}</span></label
       >
       <label for="materialId" class="block mb-2 mt-4 text-black"
-        >Status: <span>{{ selectedPO.status }}</span></label
+        >Status: <span>{{ selectedPO.paymentStatus }}</span></label
       >
       <label for="materialId" class="block mb-2 mt-4 text-black"
         >Amount Paid:
@@ -340,12 +340,23 @@ const fetchAdminOrderData = async () => {
         return total + parseFloat(detail.amount);
       }, 0);
       if (order.admin_deliveries) {
+        if( parseFloat(order.admin_payments?.amountPaid) >= (totalAmount / 2)){
+            order.paymentStatus = "Partially paid";
+          } else {
+            order.paymentStatus = "Fully paid"
+          }
         order.status = order.admin_deliveries.deliveryStatus;
       } else {
-        if (totalAmount === parseFloat(order.admin_payments?.amountPaid)) {
+        if (totalAmount === parseFloat(order.admin_payments?.amountPaid) || parseFloat(order.admin_payments?.amountPaid) >= (totalAmount / 2)  ) {
+          if(parseFloat(order.admin_payments?.amountPaid) >= (totalAmount / 2) ){
+            order.paymentStatus = "Partially paid";
+          } else {
+            order.paymentStatus = "Fully paid"
+          }
           order.status = "Waiting for delivery";
         } else {
-          order.status = "Unpaid";
+          order.status = "Pending";
+          order.paymentStatus = "Unpaid"
         }
       }
       return order;

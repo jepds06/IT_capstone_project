@@ -123,13 +123,11 @@
         </div>
 
         <!-- <button @click="confirmMaterialsSelection" class="bg-blue-500 text-white px-4 py-2 rounded-md">Confirm</button> -->
-        <button @click="closeModal" class="text-gray-600 ml-2">Close</button>
-        <div
-          v-if="modalMessage"
-          class="mt-2 p-2 bg-green-100 text-green-700 rounded-md"
-        >
-          {{ modalMessage }}
+        <div class="flex justify-between">
+          <UButton @click="closeModal" color="red" label="Close" icon="material-symbols:close"  />
+          <UButton @click="updateStatus(selectedPO, 'Approved')" color="green" label="Approved" icon="material-symbols-light:list-alt-check-outline-sharp" :disabled="selectedPO.isApproved === 1"/>
         </div>
+      
       </div>
     </div>
 
@@ -252,12 +250,16 @@ export default {
       this.setTemporaryMessage("status", "Materials selection confirmed.");
       this.closeModal();
     },
-    updateStatus(po, newStatus) {
+    async updateStatus(po, newStatus) {
       po.status = newStatus;
+      po.isApproved = true;
+      await apiService.put(`/api/adminOrders/${po.adminOrdID}`, po);
       this.setTemporaryMessage(
         "status",
         `PO ID ${po.id} marked as ${newStatus}.`
       );
+      this.fetchAdminOrders();
+      this.closeModal();
     },
     cancelPO(po) {
       po.status = "Cancelled";
@@ -291,6 +293,10 @@ export default {
         const totalAmount = value.admin_order_detail.reduce((total, detail) => {
           return total + parseFloat(detail.amount);
         }, 0);
+        
+        if (value.isApproved === 1){
+          value.status = "Approved";
+        }
         if (value.admin_payments) {
           value.status = "In Progress";
         }

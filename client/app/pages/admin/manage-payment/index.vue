@@ -16,7 +16,7 @@
             </button>
           </div>
         </div> -->
-        <label class="block font-semibold text-lg mb-2">Production No</label>
+        <label class="block font-semibold text-lg mb-2">*Production No</label>
         <USelectMenu v-model="selectedProduction" :options="productions" />
       </div>
       <!-- Supplier Section -->
@@ -174,7 +174,6 @@
             >
               <td class="p-2 flex items-center">
                 <input type="checkbox" v-model="bill.selected" class="mr-2" />
-                
               </td>
               <td class="p-2">{{ bill.adminOrdID }}</td>
               <td class="p-2">{{ bill.orderDate }}</td>
@@ -184,30 +183,49 @@
               }).format(bill.balance) }}</td> -->
               <td class="p-2 flex items-center">
                 <input
-                id="amountToPay"
-                v-model.number="bill.amount"
-                type="number"
-                step="0.01"
-                placeholder="Enter amount to pay"
-                required
-                class="w-full p-2 border rounded"
-              />
+                  id="amountToPay"
+                  v-model.number="bill.amount"
+                  type="number"
+                  step="0.01"
+                  placeholder="Enter amount to pay"
+                  required
+                  class="w-full p-2 border rounded"
+                />
               </td>
             </tr>
           </tbody>
         </table>
         <p class="font-bold text-right">
-          Total Bills Amount: {{ new Intl.NumberFormat("en-PH", {
-            style: "currency",
-            currency: "PHP",
-          }).format(totalBillsAmount) }}
+          Total Bills Amount:
+          {{
+            new Intl.NumberFormat("en-PH", {
+              style: "currency",
+              currency: "PHP",
+            }).format(totalBillsAmount)
+          }}
         </p>
         <div class="flex justify-end">
-        <UButton :loading="isLoadingPay" label="Pay" icon="material-symbols:payments-outline" @click="saveSupplier" color="green" :disabled="!selectedPaymentType || selectedBills?.filter((value) => value.selected).length === 0" />
+          <UButton
+            :loading="isLoadingPay"
+            label="Pay"
+            icon="material-symbols:payments-outline"
+            @click="saveSupplier"
+            color="green"
+            :disabled="
+              !selectedPaymentType ||
+              selectedBills?.filter((value) => value.selected).length === 0
+            "
+          />
         </div>
       </div>
     </div>
 
+    <div
+      v-if="statusMessage"
+      class="mt-4 p-2 bg-green-100 text-green-700 rounded-md"
+    >
+     <pre>{{ statusMessage }}</pre> 
+    </div>
     <!-- Cheques Section -->
     <div class="bg-white shadow-md rounded p-4">
       <h3 class="text-lg font-semibold">Cheques</h3>
@@ -348,6 +366,7 @@ import { apiService } from "~/api/apiService";
 export default {
   data() {
     return {
+      statusMessage: "",
       selectedDate: new Date(),
       productions: [],
       selectedProduction: null,
@@ -386,6 +405,20 @@ export default {
     },
   },
   methods: {
+    setTemporaryMessage(messageType, message) {
+      if (messageType === "status") {
+        this.statusMessage = message;
+      } else if (messageType === "modal") {
+        this.modalMessage = message;
+      }
+      setTimeout(() => {
+        if (messageType === "status") {
+          this.statusMessage = "";
+        } else if (messageType === "modal") {
+          this.modalMessage = "";
+        }
+      }, 5000);
+    },
     handlePaymentTypeChange() {
       // Logic for handling payment type change
     },
@@ -393,9 +426,10 @@ export default {
       // Logic for finding an invoice
     },
     selectBill(bill) {
-      const isExist = this.selectedBills?.map((value) => value.id).find((val) => val === bill.id)
-      if(!isExist)
-      this.selectedBills.push(bill)
+      const isExist = this.selectedBills
+        ?.map((value) => value.id)
+        .find((val) => val === bill.id);
+      if (!isExist) this.selectedBills.push(bill);
       // Logic for selecting a bill
     },
     addCheque() {
@@ -417,118 +451,169 @@ export default {
     async saveSupplier() {
       // Logic for saving supplier
       this.isLoadingPay = true;
-      const data = this.selectedBills.filter((val) => val.selected)
+      const data = this.selectedBills.filter((val) => val.selected);
+      console.log(this.selectedBills);
+      let message = "";
+      const dataToSave = data
+        .filter((val) => !val.adminPayID)
+        .map((value) => {
+          if (value.amount > value.balance) {
+            message =
+              message +
+              `Payment for invoice no: ${value.id} is greater than the balance amount.\n`;
+            return;
+          }
+          message =
+            message + `Payment for invoice no: ${value.id} is successful.\n`;
+          return {
+            adminOrdID: value.adminOrdID,
+            payMethodID: this.selectedPaymentType.id,
+            paymentDate: format(new Date(), "yyyy-MM-dd"),
+            amountToPay: value.amountToPay,
+            amountPaid: value.amount,
+            paymentStatus:
+              parseFloat(value.amountToPay) > parseFloat(value.amount)
+                ? "pending"
+                : "completed",
+            remarks: `Paid ${format(new Date(), "yyyy-MM-dd")}`,
+          };
+        });
 
-      console.log("data---", data)
-      const dataToSave = data.filter((val) => !val.adminPayID).map((value) => {
-        return {
-          adminOrdID: value.adminOrdID,
-          payMethodID: this.selectedPaymentType.id,
-          paymentDate: format(new Date(),'yyyy-MM-dd'),
-          amountToPay: value.amountToPay,
-          amountPaid: value.amount,
-          paymentStatus: parseFloat(value.amountToPay) > parseFloat(value.amount) ? "pending" : "completed",
-          remarks: `Paid ${format(new Date(),'yyyy-MM-dd')}`
-        }
-      })
+      const dataToUpdate = data
+        .filter((val) => val.adminPayID)
+        .map((value) => {
+          if (value.amount > value.balance) {
+            message =
+              message +
+              `Payment for invoice no: ${value.id} is greater than the balance amount.\n`;
+            return;
+          }
+          message =
+            message + `Payment for invoice no: ${value.id} is successful.\n`;
+          return {
+            adminPayID: value.adminPayID,
+            adminOrdID: value.adminOrdID,
+            payMethodID: this.selectedPaymentType.id,
+            paymentDate: format(new Date(), "yyyy-MM-dd"),
+            amountToPay: value.amountToPay,
+            amountPaid: parseFloat(value.amount) + parseFloat(value.amountPaid),
+            paymentStatus:
+              parseFloat(value.amountToPay) >
+              parseFloat(value.amount) + parseFloat(value.amountPaid)
+                ? "pending"
+                : "completed",
+            remarks: `Paid ${format(new Date(), "yyyy-MM-dd")}`,
+          };
+        });
 
-      const dataToUpdate = data.filter((val) => val.adminPayID).map((value) => {
-        return {
-          adminPayID: value.adminPayID,
-          adminOrdID: value.adminOrdID,
-          payMethodID: this.selectedPaymentType.id,
-          paymentDate: format(new Date(),'yyyy-MM-dd'),
-          amountToPay: value.amountToPay,
-          amountPaid: parseFloat(value.amount) + parseFloat(value.amountPaid),
-          paymentStatus: parseFloat(value.amountToPay) > parseFloat(value.amount) + parseFloat(value.amountPaid) ? "pending" : "completed",
-          remarks: `Paid ${format(new Date(),'yyyy-MM-dd')}`
-        }
-      })
-
-      await Promise.all(dataToSave.map(async(value) => {
-        await apiService.post("/api/adminPayments", value)
-      }))
-      await Promise.all(dataToUpdate.map(async(value) => {
-        await apiService.put(`/api/adminPayments/${value.adminPayID}`, value)
-      }))
-      await this.applyFilter()
-      this.selectedBills = this.selectedBills.filter((val) => !val.selected)
+      await Promise.all(
+        dataToSave?.map(async (value) => {
+          value ? await apiService.post("/api/adminPayments", value) : "";
+        })
+      );
+      await Promise.all(
+        dataToUpdate?.map(async (value) => {
+          value?.adminPayID
+            ? await apiService.put(
+                `/api/adminPayments/${value.adminPayID}`,
+                value
+              )
+            : "";
+        })
+      );
+      this.selectedBills = this.selectedBills.filter(
+        (val) => !val.selected || val.amount > val.balance
+      );
+      await this.applyFilter();
       this.isLoadingPay = false;
-      alert("Payment added successfully")
-      console.log("dataToSave", dataToSave)
+      console.log("message", message)
+      this.setTemporaryMessage("status",message);
     },
     async applyFilter() {
       let transFormData;
-      const result = await this.fetchPaymentByProductionNo(
-        this.selectedProduction.id
-      );
-      if (!this.selectedSupplier) {
-        transFormData = result.data?.map((value, index) => {
-          const amountToPay = value.admin_order_detail?.reduce(
-            (total, detail) => {
-              return total + parseFloat(detail.amount);
-            },
-            0
-          );
-          const amountPaid = value.admin_payments?.amountPaid ?? 0;
-          if (value.admin_payments) {
-            const adminPayID = value.admin_payments.adminPayID;
-            return {
-              amountToPay,
-              adminOrdID: value.adminOrdID,
-              amountPaid,
-              balance: amountToPay - amountPaid,
-              adminPayID,
-              orderDate: value.orderDate,
-              id: index + 1,
-            };
-          }
-          return {
-            amountToPay,
-            adminOrdID: value.adminOrdID,
-            amountPaid,
-            balance: amountToPay - amountPaid,
-            orderDate: value.orderDate,
-            id: index + 1,
-          };
-        })?.filter((value) => value.balance !== 0);
-      } else {
-        transFormData = result.data
-          ?.filter(
-            (value) => value.quotation.userID === this.selectedSupplier.id
-          )
-          .map((value, index) => {
-            const amountToPay = value.admin_order_detail?.reduce(
-              (total, detail) => {
-                return total + parseFloat(detail.amount);
-              },
-              0
-            );
-            const amountPaid = value.admin_payments?.amountPaid ?? 0;
-            if (value.admin_payments) {
-              const adminPayID = value.admin_payments.adminPayID;
+      if (this.selectedProduction) {
+        const result = await this.fetchPaymentByProductionNo(
+          this.selectedProduction.id
+        );
+
+        if (result.data?.filter((val) => val.isApproved === 1).length === 0) {
+          alert("No data available.");
+          return;
+        }
+        if (!this.selectedSupplier) {
+          transFormData = result.data
+            ?.filter((val) => val.isApproved === 1)
+            ?.map((value, index) => {
+              const amountToPay = value.admin_order_detail?.reduce(
+                (total, detail) => {
+                  return total + parseFloat(detail.amount);
+                },
+                0
+              );
+              const amountPaid = value.admin_payments?.amountPaid ?? 0;
+              if (value.admin_payments) {
+                const adminPayID = value.admin_payments.adminPayID;
+                return {
+                  amountToPay,
+                  adminOrdID: value.adminOrdID,
+                  amountPaid,
+                  balance: amountToPay - amountPaid,
+                  adminPayID,
+                  orderDate: value.orderDate,
+                  id: index + 1,
+                };
+              }
               return {
                 amountToPay,
                 adminOrdID: value.adminOrdID,
                 amountPaid,
                 balance: amountToPay - amountPaid,
-                adminPayID,
                 orderDate: value.orderDate,
                 id: index + 1,
               };
-            }
-            return {
-              amountToPay,
-              adminOrdID: value.adminOrdID,
-              amountPaid,
-              balance: amountToPay - amountPaid,
-              orderDate: value.orderDate,
-              id: index + 1,
-            };
-          })?.filter((value) => value.balance !== 0);
+            })
+            ?.filter((value) => value.balance !== 0);
+        } else {
+          transFormData = result.data
+            ?.filter((val) => val.isApproved === 1)
+            ?.filter(
+              (value) => value.quotation.userID === this.selectedSupplier.id
+            )
+            .map((value, index) => {
+              const amountToPay = value.admin_order_detail?.reduce(
+                (total, detail) => {
+                  return total + parseFloat(detail.amount);
+                },
+                0
+              );
+              const amountPaid = value.admin_payments?.amountPaid ?? 0;
+              if (value.admin_payments) {
+                const adminPayID = value.admin_payments.adminPayID;
+                return {
+                  amountToPay,
+                  adminOrdID: value.adminOrdID,
+                  amountPaid,
+                  balance: amountToPay - amountPaid,
+                  adminPayID,
+                  orderDate: value.orderDate,
+                  id: index + 1,
+                };
+              }
+              return {
+                amountToPay,
+                adminOrdID: value.adminOrdID,
+                amountPaid,
+                balance: amountToPay - amountPaid,
+                orderDate: value.orderDate,
+                id: index + 1,
+              };
+            })
+            ?.filter((value) => value.balance !== 0);
+        }
+        this.unpaidBills = transFormData;
+      } else {
+        alert("Production No is required when filtering");
       }
-      this.unpaidBills = transFormData;
-      console.log("transFormData", transFormData);
     },
     clearFilter() {
       this.selectedDate = new Date();
