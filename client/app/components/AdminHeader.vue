@@ -17,7 +17,7 @@
    -->
 
 <template>
-  <UHeader>
+  <Header>
     <template #left>{{userInfo.userTypeDescription}} Dashboard</template>
 
     <template #right>
@@ -56,7 +56,7 @@
         default-open
       />
     </template> -->
-  </UHeader>
+  </Header>
 </template>
 
 <script setup>

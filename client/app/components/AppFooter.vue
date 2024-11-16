@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <UFooter>
+  <Footer>
     <template #left>
       <p class="text-gray-500 dark:text-gray-400 text-sm">
         SE Copyright © {{ new Date().getFullYear() }}. All rights reserved.
@@ -14,5 +14,5 @@
       <UColorModeButton size="sm" />
 
     </template>
-  </UFooter>
+  </Footer>
 </template>

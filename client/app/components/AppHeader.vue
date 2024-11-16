@@ -24,7 +24,7 @@ const closeModal = () => {
 </script>
 
 <template>
-  <UHeader>
+  <Header>
     <template #logo>
       SupplyEase <UBadge label="SE" variant="subtle" class="mb-0.5" />
     </template>
@@ -59,5 +59,5 @@ const closeModal = () => {
         default-open
       />
     </template> -->
-  </UHeader>
+  </Header>
 </template>
