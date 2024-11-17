@@ -14,7 +14,6 @@
               <th class="p-4">Name</th>
               <th class="p-4">Production Date</th>
               <th class="p-4">Quantity</th>
-              <th class="p-4">Unit Price</th>
               <th class="p-4">Status</th>
               <th class="p-4">Remarks</th>
               <!-- <th class="p-4">Created At</th>
@@ -30,7 +29,6 @@
               <td class="p-4">{{ product?.production_detail?.product?.productName  }}</td>
               <td class="p-4">{{ product.productionDate }}</td>
               <td class="p-4">{{ product.quantity }}</td>
-              <td class="p-4">{{ product.unitPrice }}</td>
               <td class="p-4">
                 <span v-if="product.status === 'In Production'" class="text-blue-500" title="In Production">🔄</span>
                 <span v-if="product.status === 'Completed'" class="text-green-500" title="Completed">✔️</span>

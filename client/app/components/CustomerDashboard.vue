@@ -134,11 +134,9 @@
       <!-- Action Buttons (Outside Order Summary Card) -->
       <div class="flex justify-between mt-6">
         <button class="bg-gray-200 px-4 py-2 rounded" @click="store.isOpenCart = false">Continue Shopping</button>
-        <button
-          class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        >
-          Checkout
-        </button>
+        <UButton
+          label="Checkout"
+        />
       </div>
     </div>
 

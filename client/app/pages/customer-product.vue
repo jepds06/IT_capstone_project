@@ -1,5 +1,5 @@
 <template>
-  <div class="m-8 ">  
+  <div class="m-8">  
     <!-- Search Input -->
     <div class="mb-4 flex justify-end">
       <input 
@@ -43,14 +43,23 @@
           <div class="mt-2 flex-grow mb-4">
             <p class="text-gray-700">{{ product.specifications }}</p>
           </div>
+
+          <!-- Stocks -->
+          <div class="mt-2 flex-grow mb-4 items-center">
+            <div v-if="product.stock == 0">
+              <UIcon name="fluent:box-dismiss-24-regular" class="text-2xl" />
+              <span class="text-gray-700">Out of stock</span>
+            </div>
+            <div v-else>
+              <p class="text-gray-700">Stock: {{ product.stock }}</p>
+            </div>
+          </div>
         </div>
 
         <!-- Price and Add to Cart Section -->
         <div class="pt-4 flex justify-between items-center">
           <span class="font-bold text-lg text-green-600">₱{{ product.unitPrice }}</span>
-          <button @click="addToCart(product)" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-            Add to Cart
-          </button>
+          <UButton icon="solar:cart-4-linear" @click="addToCart(product)" label="Add to Cart" :disabled="product.stock == 0" />
         </div>
       </UCard>
 
@@ -67,6 +76,7 @@ const products = ref([]);
 const categories = ref([]);
 const selectedCategory = ref('');
 const searchTerm = ref('');
+const finishedProducts = ref([]);
 
 const addToCart = (product) => {
   const alreadyAddedProduct = store.addedToCart?.find((value) => value.productID === product.productID)
@@ -113,8 +123,27 @@ const filterProducts = () => {
   // Triggered automatically by v-model change
 };
 
-onMounted(() => {
-  fetchProductsData();
-  fetchCategoriesData();
+const fetchFinishProductsData = async() => {
+  const result = await apiService.get("/api/finishedProducts");
+  // const productIDs = result.data?.map((val) => val.production_detail.product.productID);
+
+  const data = products.value?.map((value) => {
+    const stockProducts = result.data?.filter((val) => val.production_detail.product.productID === value.productID);
+    const quantity = stockProducts?.reduce((total, detail) => {
+    return total + parseInt(detail.quantity);
+  }, 0);
+    return {
+      ...value,
+      stock: quantity
+    }
+  });
+  products.value = data
+
+}
+
+onMounted(async () => {
+  await fetchProductsData();
+  await fetchFinishProductsData();
+  await fetchCategoriesData();
 });
 </script>

@@ -28,7 +28,7 @@
     </div>
   </header>
 
-  <UModal v-model="store.isOpenCart">
+  <UModal v-model="store.isOpenCart" fullscreen>
       <CustomerDashboard />
   </UModal>
 </template>
