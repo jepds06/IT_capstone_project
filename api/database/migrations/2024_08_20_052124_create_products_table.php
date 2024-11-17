@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('productName');
             $table->string('specifications');
             $table->decimal('unitPrice', 10, 2);
+            $table->string('imagePath');
             $table->unsignedBigInteger('prodCatID');
 
             $table->foreign('prodCatID')->references('prodCatID')->on('productCategories')

@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Interface\Repository\CustomerPaymentRepositoryInterface;
 use App\Models\CustomerPayment;
 use App\Models\PaymentMethod;
-use App\Models\SalesProductOrder;
+use App\Models\Sale;
 
 class CustomerPaymentRepository implements CustomerPaymentRepositoryInterface
 {
@@ -23,11 +23,11 @@ class CustomerPaymentRepository implements CustomerPaymentRepositoryInterface
     {
         $cstrPay = new CustomerPayment();
 
-        $slsPrdOrder = SalesProductOrder::find($payload->slsPrdOrdID);
-        if($slsPrdOrder){
-            $cstrPay->slsPrdOrder()->associate($slsPrdOrder);
+        $sales = Sale::find($payload->salesID);
+        if($sales){
+            $cstrPay->sale()->associate($sales);
         } else {
-            throw new \Exception("Invalid sales product order ID provided.");
+            throw new \Exception("Invalid sales ID provided.");
         }
 
         $cstrPay->paymentDate = $payload->paymentDate;
@@ -53,11 +53,11 @@ class CustomerPaymentRepository implements CustomerPaymentRepositoryInterface
     {
         $cstrPay = CustomerPayment::findOrFail($cstrPayId);
 
-        $slsPrdOrder = SalesProductOrder::find($payload->slsPrdOrdID);
-        if($slsPrdOrder){
-            $cstrPay->slsPrdOrder()->associate($slsPrdOrder);
+        $sales = Sale::find($payload->salesID);
+        if($sales){
+            $cstrPay->sale()->associate($sales);
         } else {
-            throw new \Exception("Invalid sales product order ID provided.");
+            throw new \Exception("Invalid sales ID provided.");
         }
 
         $cstrPay->paymentDate = $payload->paymentDate;

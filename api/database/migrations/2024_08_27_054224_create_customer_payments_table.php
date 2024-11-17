@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('customerPayments', function (Blueprint $table) {
             $table->bigIncrements('cstrPayID');
-            $table->unsignedBigInteger('slsPrdOrdID');
+            $table->unsignedBigInteger('salesID');
             $table->date('paymentDate');
             $table->unsignedBigInteger('payMethodID');
             $table->string('paymentStatus');
@@ -21,7 +21,7 @@ return new class extends Migration
             $table->decimal('amountToPay', 10, 2);
             $table->decimal('amountPaid', 10, 2);
 
-            $table->Foreign('slsPrdOrdID')->references('slsPrdOrdID')->on('salesProductOrders')
+            $table->Foreign('salesID')->references('salesID')->on('sales')
             ->onUpdate('cascade')
             ->onDelete('cascade');
 
@@ -38,7 +38,7 @@ return new class extends Migration
     {
         Schema::table('customerPayments', function(Blueprint $table){
             // Drop the foreign key before dropping the table
-            $table->dropForeign(['slsPrdOrdID']);
+            $table->dropForeign(['salesID']);
             $table->dropForeign(['payMethodID']);
         });
         Schema::dropIfExists('customerPayments');

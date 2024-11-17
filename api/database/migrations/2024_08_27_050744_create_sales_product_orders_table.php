@@ -14,13 +14,15 @@ return new class extends Migration
         Schema::create('salesProductOrders', function (Blueprint $table) {
             $table->bigIncrements('slsPrdOrdID');
             $table->unsignedBigInteger('salesID');
-            $table->unsignedBigInteger('prdOrdID');
+            $table->unsignedBigInteger('productID');
+            $table->integer('qtyOrdered');
+            $table->decimal('amount', 10, 2);
 
             $table->foreign('salesID')->references('salesID')->on('sales')
             ->onUpdate('cascade')
             ->onDelete('cascade');
 
-            $table->Foreign('prdOrdID')->references('prdOrdID')->on('productOrders')
+            $table->Foreign('productID')->references('productID')->on('products')
             ->onUpdate('cascade')
             ->onDelete('cascade');
         });
@@ -34,7 +36,7 @@ return new class extends Migration
         Schema::table('salesProductOrders', function(Blueprint $table){
             // Drop the foreign key before dropping the table
             $table->dropForeign(['salesID']);
-            $table->dropForeign(['prdOrdID']);
+            $table->dropForeign(['productID']);
         });
         Schema::dropIfExists('salesProductOrders');
     }

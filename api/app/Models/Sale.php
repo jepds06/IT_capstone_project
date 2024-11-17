@@ -16,11 +16,22 @@ class Sale extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'salesDate',
+        'userID',
+        'salesDate'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'userID');
+    }
 
     public function salesOrders()
     {
         return $this->hasMany(SalesProductOrder::class, 'salesID');
+    }
+
+    public function salesDeliveries()
+    {
+        return $this->hasMany(Sales_Delivery::class, 'salesID');
     }
 }

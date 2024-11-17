@@ -23,7 +23,9 @@ class SalesProdOrderUpdateRequest extends FormRequest
     {
         return [
             'salesID' => 'required|integer|exists:sales,salesID',
-            'prdOrdID' => 'required|integer|exists:productOrders,prdOrdID'
+            'productID' => 'required|integer|exists:products,productID',
+            'qtyOrdered' => 'required|integer|min:1',
+            'amount' => 'required|numeric|min:1'
         ];
     }
 }

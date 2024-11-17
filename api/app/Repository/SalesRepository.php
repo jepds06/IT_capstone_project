@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Interface\Repository\SalesRepositoryInterface;
 use App\Models\Sale;
+use App\Models\User;
 
 class SalesRepository implements SalesRepositoryInterface
 {
@@ -21,6 +22,13 @@ class SalesRepository implements SalesRepositoryInterface
     {
         $sale = new Sale();
 
+        $user = User::find($payload->userID);
+        if($user){
+            $sale->user()->associate($user);
+        } else {
+            throw new \Exception("Invalid user ID provided.");
+        }
+
         $sale->salesDate = $payload->salesDate;
 
         $sale->save();
@@ -30,6 +38,13 @@ class SalesRepository implements SalesRepositoryInterface
     public function update(object $payload, int $salesId)
     {
         $sale = Sale::findOrFail($salesId);
+
+        $user = User::find($payload->userID);
+        if($user){
+            $sale->user()->associate($user);
+        } else {
+            throw new \Exception("Invalid user ID provided.");
+        }
 
         $sale->salesDate = $payload->salesDate;
 

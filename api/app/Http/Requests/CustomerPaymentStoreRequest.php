@@ -22,7 +22,7 @@ class CustomerPaymentStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'slsOrdPrdID' => 'required|integer|exists:salesProductOrders,slsPrdOrdID',
+            'salesID' => 'required|integer|exists:sales,salesID',
             'paymentDate' => 'required|date',
             'payMethodID' => 'required|integer|exists:paymentMethods, payMethodID',
             'paymentStatus' => 'required|string|max:255',

@@ -22,6 +22,7 @@ class SalesUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'userID' => 'required|integer|exists:users,userID',
             'salesDate' => 'required|date'
         ];
     }
