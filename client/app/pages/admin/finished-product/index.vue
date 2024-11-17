@@ -9,39 +9,41 @@
         <table class="table-auto w-full bg-white rounded shadow">
           <thead>
             <tr class="bg-gray-100 text-left text-gray-600">
-              <th class="p-4">FnshProductID</th>
-              <th class="p-4">ProdDetailID</th>
+              <th class="p-4">ID</th>
+              <th class="p-4">Prod Detail ID</th>
+              <th class="p-4">Name</th>
               <th class="p-4">Production Date</th>
               <th class="p-4">Quantity</th>
               <th class="p-4">Unit Price</th>
               <th class="p-4">Status</th>
               <th class="p-4">Remarks</th>
-              <th class="p-4">Created At</th>
+              <!-- <th class="p-4">Created At</th>
               <th class="p-4">Modified At</th>
-              <th class="p-4">Deleted At</th>
-              <th class="p-4">Actions</th>
+              <th class="p-4">Deleted At</th> -->
+              <!-- <th class="p-4">Actions</th> -->
             </tr>
           </thead>
           <tbody>
             <tr v-for="product in finishedProducts" :key="product.FnshProductID" class="border-b">
-              <td class="p-4">{{ product.FnshProductID }}</td>
-              <td class="p-4">{{ product.ProdDetailID }}</td>
-              <td class="p-4">{{ product.ProductionDate }}</td>
-              <td class="p-4">{{ product.Quantity }}</td>
-              <td class="p-4">{{ product.UnitPrice }}</td>
+              <td class="p-4">{{ product.fnshProductID  }}</td>
+              <td class="p-4">{{ product.prodtnDetailID  }}</td>
+              <td class="p-4">{{ product?.production_detail?.product?.productName  }}</td>
+              <td class="p-4">{{ product.productionDate }}</td>
+              <td class="p-4">{{ product.quantity }}</td>
+              <td class="p-4">{{ product.unitPrice }}</td>
               <td class="p-4">
-                <span v-if="product.Status === 'In Production'" class="text-blue-500" title="In Production">🔄</span>
-                <span v-if="product.Status === 'Completed'" class="text-green-500" title="Completed">✔️</span>
-                <span v-if="product.Status === 'Pending'" class="text-yellow-500" title="Pending">🕒</span>
-                <span v-if="product.Status === 'Cancelled'" class="text-red-500" title="Cancelled">❌</span>
+                <span v-if="product.status === 'In Production'" class="text-blue-500" title="In Production">🔄</span>
+                <span v-if="product.status === 'Completed'" class="text-green-500" title="Completed">✔️</span>
+                <span v-if="product.status === 'Pending'" class="text-yellow-500" title="Pending">🕒</span>
+                <span v-if="product.status === 'Cancelled'" class="text-red-500" title="Cancelled">❌</span>
               </td>
-              <td class="p-4">{{ product.Remarks }}</td>
-              <td class="p-4">{{ product.CreatedAt }}</td>
+              <td class="p-4">{{ product.remarks }}</td>
+              <!-- <td class="p-4">{{ product.CreatedAt }}</td>
               <td class="p-4">{{ product.ModifiedAt }}</td>
-              <td class="p-4">{{ product.DeletedAt }}</td>
-              <td class="p-4 flex space-x-4">
+              <td class="p-4">{{ product.DeletedAt }}</td> -->
+              <!-- <td class="p-4 flex space-x-4"> -->
                 <!-- Action Icons -->
-                <button @click="openDetailsModal(product)" class="text-blue-500 hover:underline" title="View Details">
+                <!-- <button @click="openDetailsModal(product)" class="text-blue-500 hover:underline" title="View Details">
                   <i class="fas fa-eye"></i>
                 </button>
                 <button @click="openEditModal(product)" class="text-yellow-500 hover:underline" title="Edit">
@@ -49,8 +51,8 @@
                 </button>
                 <button @click="markAsCompleted(product)" class="text-green-500 hover:underline" title="Mark as Completed">
                   <i class="fas fa-check-circle"></i>
-                </button>
-              </td>
+                </button> -->
+              <!-- </td> -->
             </tr>
           </tbody>
         </table>
@@ -133,6 +135,7 @@
   </template>
   
 <script>
+import { apiService } from '~/api/apiService';
 import auth from '../../../../middleware/auth'
 // This page requires authentication
 definePageMeta({
@@ -143,18 +146,18 @@ definePageMeta({
     data() {
       return {
         finishedProducts: [
-          {
-            FnshProductID: 1,
-            ProdDetailID: 'A123',
-            ProductionDate: '2024-09-30',
-            Quantity: 100,
-            UnitPrice: '$15.00',
-            Status: 'In Production', // Example status
-            Remarks: 'Ready for delivery',
-            CreatedAt: '2024-09-01',
-            ModifiedAt: '2024-09-30',
-            DeletedAt: null,
-          },
+          // {
+          //   FnshProductID: 1,
+          //   ProdDetailID: 'A123',
+          //   ProductionDate: '2024-09-30',
+          //   Quantity: 100,
+          //   UnitPrice: '$15.00',
+          //   Status: 'In Production', // Example status
+          //   Remarks: 'Ready for delivery',
+          //   CreatedAt: '2024-09-01',
+          //   ModifiedAt: '2024-09-30',
+          //   DeletedAt: null,
+          // },
           // ... more products
         ],
         selectedProduct: {},
@@ -197,7 +200,15 @@ definePageMeta({
   
         this.showCompleteModal = false; // Close the modal
       },
+      async fetchFinishProductsData(){
+        const result = await apiService.get("/api/finishedProducts");
+
+        this.finishedProducts = result?.data
+      }
     },
+    async mounted() {
+      await this.fetchFinishProductsData()
+    }
   };
   </script>
   

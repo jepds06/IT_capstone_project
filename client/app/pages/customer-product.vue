@@ -48,11 +48,12 @@
         <!-- Price and Add to Cart Section -->
         <div class="pt-4 flex justify-between items-center">
           <span class="font-bold text-lg text-green-600">₱{{ product.unitPrice }}</span>
-          <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+          <button @click="addToCart(product)" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
             Add to Cart
           </button>
         </div>
       </UCard>
+
     </div>
   </div>
 </template>
@@ -60,12 +61,21 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { apiService } from "~/api/apiService";
+import { store } from "~/composables/store";
 
 const products = ref([]);
 const categories = ref([]);
 const selectedCategory = ref('');
 const searchTerm = ref('');
 
+const addToCart = (product) => {
+  const alreadyAddedProduct = store.addedToCart?.find((value) => value.productID === product.productID)
+  if(alreadyAddedProduct){
+    alert('Already added on the cart!')
+  } else {
+    store.addedToCart.push({...product, quantity: 1})
+}
+}
 const fetchProductsData = async () => {
   try {
     const { data } = await apiService.get("/api/products");

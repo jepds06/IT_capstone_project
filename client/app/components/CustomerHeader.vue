@@ -7,15 +7,7 @@
       </div>
 
       <div class="flex items-center">
-        <!-- <UAvatar
-          icon="ant-design:bell-outlined"
-          size="md"
-          chip-text="+1"
-          chip-position="top-right"
-          alt="Avatar"
-          chip-color="primary"
-          class="mr-2"
-        /> -->
+        <UButton @click="store.isOpenCart = true" color="white" class="mr-2" icon="solar:cart-4-linear" size="md" :label="`Cart(${store.addedToCart.length})`" />
         <UPopover mode="hover" class="mr-2">
           <UAvatar icon="ant-design:user-outlined" size="md" />
           <template #panel>
@@ -35,9 +27,14 @@
       </div>
     </div>
   </header>
+
+  <UModal v-model="store.isOpenCart">
+      <CustomerDashboard />
+  </UModal>
 </template>
 
 <script setup>
+import { store } from "~/composables/store";
 import { _width } from "#tailwind-config/theme";
 import { apiService } from "~/api/apiService";
 const userInfo = ref({ userName: "" });

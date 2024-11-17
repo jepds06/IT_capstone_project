@@ -1,7 +1,7 @@
 <template>
-  <div class="p-6 bg-gray-50 min-h-screen">
+  <div class="p-6 bg-gray-50">
     <!-- Main Tabs -->
-    <div class="mb-8">
+    <div class="mb-2">
       <ul class="flex justify-around border-b">
         <li
           class="pb-2 cursor-pointer text-lg font-medium"
@@ -42,6 +42,7 @@
         <table class="w-full">
           <thead>
             <tr class="bg-gray-100">
+              <th class="py-2 text-left"></th>
               <th class="py-2 text-left">Product</th>
               <th class="py-2 text-left">Price</th>
               <th class="py-2 text-left">Quantity</th>
@@ -50,7 +51,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="product in filteredProducts" :key="product.productID">
+            <tr v-for="(product, index) in filteredProducts" :key="product.productID">
+              <td class="py-2">
+                <input type="checkbox" v-model="product.selected" class="mr-2" />
+              </td>
               <td class="py-2">{{ product.productName }}</td>
               <td class="py-2">
                 {{
@@ -64,9 +68,9 @@
               </td>
               <td class="py-2">
                 <div class="flex items-center gap-2 border px-2 py-1 rounded">
-                  <button class="text-gray-500 hover:text-gray-800">-</button>
-                  <span class="text-lg font-semibold">1</span>
-                  <button class="text-gray-500 hover:text-gray-800">+</button>
+                  <button class="text-gray-500 hover:text-gray-800" @click="product.quantity--">-</button>
+                  <span class="text-lg font-semibold">{{product.quantity}}</span>
+                  <button class="text-gray-500 hover:text-gray-800" @click="product.quantity++">+</button>
                 </div>
               </td>
               <td class="py-2">
@@ -74,12 +78,12 @@
                   new Intl.NumberFormat("en-PH", {
                     style: "currency",
                     currency: "PHP",
-                  }).format(product.unitPrice * 1)
+                  }).format(product.unitPrice * product.quantity)
                 }}
               </td>
               <td class="py-2">
                 <button
-                  @click="removeProduct(product.productID)"
+                  @click="removeProduct(index)"
                   class="text-red-500 hover:text-red-700"
                 >
                   🗑
@@ -94,7 +98,7 @@
       <div class="bg-white p-4 rounded-lg shadow-md">
         <h2 class="text-lg font-bold">Order Summary</h2>
         <div class="space-y-2 mt-4">
-          <div class="flex justify-between text-gray-600">
+          <!-- <div class="flex justify-between text-gray-600">
             <span>Subtotal</span>
             <span>$30</span>
           </div>
@@ -105,17 +109,31 @@
           <div class="flex justify-between text-gray-600">
             <span>Shipping Charges</span>
             <span>$0</span>
+          </div> -->
+          <div v-for="product in filteredProducts.filter((value) => value?.selected)" :key="product.productID">
+            <div class="flex justify-between text-gray-600">
+              <span>{{ product.productName }}</span>
+              <span>{{
+                new Intl.NumberFormat("en-PH", {
+                  style: "currency",
+                  currency: "PHP",
+                }).format(product.unitPrice * product.quantity)
+              }}</span>
+            </div>
           </div>
           <div class="flex justify-between text-gray-800 font-bold mt-4">
             <span>Total</span>
-            <span>$28</span>
+            <span>{{new Intl.NumberFormat("en-PH", {
+              style: "currency",
+              currency: "PHP",
+            }).format(totalAmount)}}</span>
           </div>
         </div>
       </div>
 
       <!-- Action Buttons (Outside Order Summary Card) -->
       <div class="flex justify-between mt-6">
-        <button class="bg-gray-200 px-4 py-2 rounded">Continue Shopping</button>
+        <button class="bg-gray-200 px-4 py-2 rounded" @click="store.isOpenCart = false">Continue Shopping</button>
         <button
           class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         >
@@ -536,6 +554,7 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { apiService } from "~/api/apiService";
+import { store } from "~/composables/store";
 
 const activeTab = ref("itemcart");
 const showAddAddressModal = ref(false);
@@ -601,25 +620,31 @@ const fetchCategoriesData = async () => {
 
 // Filtered products based on search and selected category
 const filteredProducts = computed(() => {
-  return products.value.filter((product) => {
-    const matchesCategory =
-      !selectedCategory.value || product.prodCatID === selectedCategory.value;
-    const matchesSearch = product.productName
-      .toLowerCase()
-      .includes(searchTerm.value.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  // return products.value.filter((product) => {
+  //   const matchesCategory =
+  //     !selectedCategory.value || product.prodCatID === selectedCategory.value;
+  //   const matchesSearch = product.productName
+  //     .toLowerCase()
+  //     .includes(searchTerm.value.toLowerCase());
+  //   return matchesCategory && matchesSearch;
+  // });
+  return store.addedToCart
+});
+
+const totalAmount = computed(() => {
+return filteredProducts.value.filter((val) => val?.selected)?.reduce((total, detail) => {
+    return total + (parseFloat(detail.unitPrice) * parseInt(detail.quantity));
+  }, 0);
 });
 
 // Remove product function
-const removeProduct = (productID) => {
-  products.value = products.value.filter(
-    (product) => product.productID !== productID
-  );
+const removeProduct = (index) => {
+ store.addedToCart.splice(index,1)
 };
 
 onMounted(() => {
-  fetchProductsData();
+  // fetchProductsData();
+  console.log(store.addedToCart)
   fetchCategoriesData();
 });
 </script>
