@@ -51,9 +51,16 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(product, index) in filteredProducts" :key="product.productID">
+            <tr
+              v-for="(product, index) in filteredProducts"
+              :key="product.productID"
+            >
               <td class="py-2">
-                <input type="checkbox" v-model="product.selected" class="mr-2" />
+                <input
+                  type="checkbox"
+                  v-model="product.selected"
+                  class="mr-2"
+                />
               </td>
               <td class="py-2">{{ product.productName }}</td>
               <td class="py-2">
@@ -68,9 +75,21 @@
               </td>
               <td class="py-2">
                 <div class="flex items-center gap-2 border px-2 py-1 rounded">
-                  <button class="text-gray-500 hover:text-gray-800" @click="product.quantity--">-</button>
-                  <span class="text-lg font-semibold">{{product.quantity}}</span>
-                  <button class="text-gray-500 hover:text-gray-800" @click="product.quantity++">+</button>
+                  <button
+                    class="text-gray-500 hover:text-gray-800"
+                    @click="product.quantity--"
+                  >
+                    -
+                  </button>
+                  <span class="text-lg font-semibold">{{
+                    product.quantity
+                  }}</span>
+                  <button
+                    class="text-gray-500 hover:text-gray-800"
+                    @click="product.quantity++"
+                  >
+                    +
+                  </button>
                 </div>
               </td>
               <td class="py-2">
@@ -110,7 +129,12 @@
             <span>Shipping Charges</span>
             <span>$0</span>
           </div> -->
-          <div v-for="product in filteredProducts.filter((value) => value?.selected)" :key="product.productID">
+          <div
+            v-for="product in filteredProducts.filter(
+              (value) => value?.selected
+            )"
+            :key="product.productID"
+          >
             <div class="flex justify-between text-gray-600">
               <span>{{ product.productName }}</span>
               <span>{{
@@ -123,20 +147,25 @@
           </div>
           <div class="flex justify-between text-gray-800 font-bold mt-4">
             <span>Total</span>
-            <span>{{new Intl.NumberFormat("en-PH", {
-              style: "currency",
-              currency: "PHP",
-            }).format(totalAmount)}}</span>
+            <span>{{
+              new Intl.NumberFormat("en-PH", {
+                style: "currency",
+                currency: "PHP",
+              }).format(totalAmount)
+            }}</span>
           </div>
         </div>
       </div>
 
       <!-- Action Buttons (Outside Order Summary Card) -->
       <div class="flex justify-between mt-6">
-        <button class="bg-gray-200 px-4 py-2 rounded" @click="store.isOpenCart = false">Continue Shopping</button>
-        <UButton
-          label="Checkout"
-        />
+        <button
+          class="bg-gray-200 px-4 py-2 rounded"
+          @click="store.isOpenCart = false"
+        >
+          Continue Shopping
+        </button>
+        <UButton label="Checkout" />
       </div>
     </div>
 
@@ -144,17 +173,17 @@
     <div v-if="activeTab === 'billing'" class="space-y-6">
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-lg font-bold">Billing Addresses</h2>
-        <button
+        <!-- <button
           @click="openAddAddressModal"
           class="bg-blue-500 text-white px-4 py-2 rounded"
         >
           + Add Address
-        </button>
+        </button> -->
       </div>
 
       <!-- Billing Address Cards -->
-      <div class="flex flex-wrap gap-4">
-        <div
+      <!-- <div class="flex flex-wrap gap-4"> -->
+      <!-- <div
           v-for="address in billingAddresses"
           :key="address.id"
           class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/3 relative"
@@ -181,13 +210,104 @@
               <button class="text-red-500">🗑</button>
             </div>
           </div>
-        </div>
-      </div>
+        </div> -->
+      <!-- </div> -->
 
       <!-- Order Summary and Shipping Address Side by Side -->
       <div class="flex gap-4 mt-6">
+        <!-- Add Address Modal -->
+        <div class="bg-white rounded-lg shadow-md w-full md:w-1/2 p-6">
+          <!-- <div class="p-6 r shadow-md w-full max-w-md"> -->
+            <!-- Name Field -->
+            <!-- <div class="mb-4">
+     <label class="block text-sm font-medium mb-1">First Name</label>
+     <input type="text" class="border px-3 py-2 rounded w-full" />
+   </div> -->
+
+            <!-- Address Type Radio Buttons -->
+            <!-- <div class="mb-4">
+     <label class="block text-sm font-medium mb-1">Address Type</label>
+     <div class="flex items-center">
+       <input
+         type="radio"
+         id="home"
+         name="addressType"
+         value="Home"
+         class="mr-2"
+       />
+       <label for="home" class="mr-4">Home</label>
+       <input
+         type="radio"
+         id="office"
+         name="addressType"
+         value="Office"
+         class="mr-2"
+       />
+       <label for="office">Office</label>
+     </div>
+   </div> -->
+
+            <!-- Building No Field -->
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-1">Building No</label>
+              <input type="text" class="border px-3 py-2 rounded w-full" />
+            </div>
+
+            <!-- Street Field -->
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-1">Street</label>
+              <input type="text" class="border px-3 py-2 rounded w-full" />
+            </div>
+
+            <!-- City and State Fields (Side-by-Side) -->
+            <div class="flex gap-4 mb-4">
+              <div class="flex-1">
+                <label class="block text-sm font-medium mb-1">City</label>
+                <input type="text" class="border px-3 py-2 rounded w-full" />
+              </div>
+              <div class="flex-1">
+                <label class="block text-sm font-medium mb-1">State</label>
+                <input type="text" class="border px-3 py-2 rounded w-full" />
+              </div>
+            </div>
+
+            <!-- Country and Area Code Fields (Side-by-Side) -->
+            <div class="flex gap-4 mb-4">
+              <div class="flex-1">
+                <label class="block text-sm font-medium mb-1">Country</label>
+                <input type="text" class="border px-3 py-2 rounded w-full" />
+              </div>
+              <div class="flex-1">
+                <label class="block text-sm font-medium mb-1">Area Code</label>
+                <input type="text" class="border px-3 py-2 rounded w-full" />
+              </div>
+            </div>
+
+            <!-- Contact Field -->
+            <div class="mb-4">
+              <label class="block text-sm font-medium mb-1">Contact</label>
+              <input type="text" class="border px-3 py-2 rounded w-full" />
+            </div>
+
+            <!-- Default Toggle -->
+            <div class="mb-6 flex items-center">
+              <label class="text-sm font-medium mr-3">Default</label>
+              <input type="checkbox" class="toggle-checkbox" />
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex justify-end">
+              <button @click="closeAddAddressModal" class="text-gray-500 mr-4">
+                Cancel
+              </button>
+              <button class="bg-blue-500 text-white px-4 py-2 rounded">
+                Add Address
+              </button>
+            </div>
+          <!-- </div> -->
+        </div>
         <!-- Order Summary -->
-        <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-2/3">
+        <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
           <h2 class="text-lg font-bold">Order Summary</h2>
           <div class="space-y-2 mt-4">
             <div class="flex justify-between text-gray-600">
@@ -210,7 +330,7 @@
         </div>
 
         <!-- Shipping Address -->
-        <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/3">
+        <!-- <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/3">
           <h2 class="text-lg font-bold">Shipping Address</h2>
           <div class="bg-white p-4 rounded-lg shadow-md mt-4">
             <span
@@ -248,7 +368,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
 
       <!-- Buttons Outside Order Summary -->
@@ -261,111 +381,13 @@
         </button>
         <button
           @click="placeOrder"
-          class="bg-blue-500 text-white w-full md:w-auto py-2 rounded-lg hover:bg-blue-600"
+          class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
         >
           Place An Order
         </button>
       </div>
     </div>
 
-    <!-- Add Address Modal -->
-    <div
-      v-if="showAddAddressModal"
-      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-    >
-      <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
-        <h3 class="text-xl font-semibold mb-4">Add Billing Address</h3>
-
-        <!-- Name Field -->
-        <div class="mb-4">
-          <label class="block text-sm font-medium mb-1">First Name</label>
-          <input type="text" class="border px-3 py-2 rounded w-full" />
-        </div>
-
-        <!-- Address Type Radio Buttons -->
-        <div class="mb-4">
-          <label class="block text-sm font-medium mb-1">Address Type</label>
-          <div class="flex items-center">
-            <input
-              type="radio"
-              id="home"
-              name="addressType"
-              value="Home"
-              class="mr-2"
-            />
-            <label for="home" class="mr-4">Home</label>
-            <input
-              type="radio"
-              id="office"
-              name="addressType"
-              value="Office"
-              class="mr-2"
-            />
-            <label for="office">Office</label>
-          </div>
-        </div>
-
-        <!-- Building No Field -->
-        <div class="mb-4">
-          <label class="block text-sm font-medium mb-1">Building No</label>
-          <input type="text" class="border px-3 py-2 rounded w-full" />
-        </div>
-
-        <!-- Street Field -->
-        <div class="mb-4">
-          <label class="block text-sm font-medium mb-1">Street</label>
-          <input type="text" class="border px-3 py-2 rounded w-full" />
-        </div>
-
-        <!-- City and State Fields (Side-by-Side) -->
-        <div class="flex gap-4 mb-4">
-          <div class="flex-1">
-            <label class="block text-sm font-medium mb-1">City</label>
-            <input type="text" class="border px-3 py-2 rounded w-full" />
-          </div>
-          <div class="flex-1">
-            <label class="block text-sm font-medium mb-1">State</label>
-            <input type="text" class="border px-3 py-2 rounded w-full" />
-          </div>
-        </div>
-
-        <!-- Country and Area Code Fields (Side-by-Side) -->
-        <div class="flex gap-4 mb-4">
-          <div class="flex-1">
-            <label class="block text-sm font-medium mb-1">Country</label>
-            <input type="text" class="border px-3 py-2 rounded w-full" />
-          </div>
-          <div class="flex-1">
-            <label class="block text-sm font-medium mb-1">Area Code</label>
-            <input type="text" class="border px-3 py-2 rounded w-full" />
-          </div>
-        </div>
-
-        <!-- Contact Field -->
-        <div class="mb-4">
-          <label class="block text-sm font-medium mb-1">Contact</label>
-          <input type="text" class="border px-3 py-2 rounded w-full" />
-        </div>
-
-        <!-- Default Toggle -->
-        <div class="mb-6 flex items-center">
-          <label class="text-sm font-medium mr-3">Default</label>
-          <input type="checkbox" class="toggle-checkbox" />
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="flex justify-end">
-          <button @click="closeAddAddressModal" class="text-gray-500 mr-4">
-            Cancel
-          </button>
-          <button class="bg-blue-500 text-white px-4 py-2 rounded">
-            Add Address
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- END Add Address Modal -->
 
     <!-- Payments Section -->
     <div v-if="activeTab === 'payment'" class="flex space-x-4">
@@ -626,23 +648,25 @@ const filteredProducts = computed(() => {
   //     .includes(searchTerm.value.toLowerCase());
   //   return matchesCategory && matchesSearch;
   // });
-  return store.addedToCart
+  return store.addedToCart;
 });
 
 const totalAmount = computed(() => {
-return filteredProducts.value.filter((val) => val?.selected)?.reduce((total, detail) => {
-    return total + (parseFloat(detail.unitPrice) * parseInt(detail.quantity));
-  }, 0);
+  return filteredProducts.value
+    .filter((val) => val?.selected)
+    ?.reduce((total, detail) => {
+      return total + parseFloat(detail.unitPrice) * parseInt(detail.quantity);
+    }, 0);
 });
 
 // Remove product function
 const removeProduct = (index) => {
- store.addedToCart.splice(index,1)
+  store.addedToCart.splice(index, 1);
 };
 
 onMounted(() => {
   // fetchProductsData();
-  console.log(store.addedToCart)
+  console.log(store.addedToCart);
   fetchCategoriesData();
 });
 </script>

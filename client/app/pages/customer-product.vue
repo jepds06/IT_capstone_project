@@ -47,7 +47,7 @@
           <!-- Stocks -->
           <div class="mt-2 flex-grow mb-4 items-center">
             <div v-if="product.stock == 0">
-              <UIcon name="fluent:box-dismiss-24-regular" class="text-2xl" />
+              <!-- <UIcon name="fluent:box-dismiss-24-regular" class="text-2xl" /> -->
               <span class="text-gray-700">Out of stock</span>
             </div>
             <div v-else>
