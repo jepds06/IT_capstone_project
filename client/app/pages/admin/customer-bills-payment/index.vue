@@ -4,7 +4,7 @@
     <h1 class="text-2xl font-extrabold">Reports</h1>
 
     <!-- Overview Cards -->
-    <div class="grid grid-cols-4 gap-4">
+    <div class="grid grid-cols-3 gap-4">
       <div class="bg-gray-500 text-white p-4 rounded-lg shadow">
         <h2 class="text-base font-semibold">Total Sales</h2>
         <p class="text-2xl mt-2 text-center">
@@ -24,10 +24,10 @@
         <h2 class="text-base font-semibold">Waiting for delivery</h2>
         <p class="text-2xl mt-2 text-center">{{waitingForDeliveries}}</p>
       </div>
-      <div class="bg-gray-500 text-white p-4 rounded-lg shadow">
+      <!-- <div class="bg-gray-500 text-white p-4 rounded-lg shadow">
         <h2 class="text-base font-semibold">Processed Delivery</h2>
         <p class="text-2xl mt-2 text-center">{{processedDeliveries}}</p>
-      </div>
+      </div> -->
     </div>
 
     <!-- Filter Options -->
@@ -298,9 +298,9 @@ const waitingForDeliveries = computed(() => {
   return reports.value.filter((value) => value?.sales_deliveries?.deliveryStatus === 'Waiting for delivery')?.length;
 });
 
-const processedDeliveries = computed(() => {
-  return reports.value.filter((value) => value?.sales_deliveries?.deliveryStatus === 'Processed delivery')?.length;
-});
+// const processedDeliveries = computed(() => {
+//   return reports.value.filter((value) => value?.sales_deliveries?.deliveryStatus === 'Processed delivery')?.length;
+// });
 
 const start = computed(() => (page.value - 1) * itemsPerPage);
 const end = computed(() =>
