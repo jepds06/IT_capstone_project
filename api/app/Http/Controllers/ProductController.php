@@ -46,12 +46,4 @@ class ProductController extends Controller
     {
         return $this->productService->updateProduct($request, $productId);
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(int $productId)
-    {
-        return $this->productService->deleteProduct($productId);
-    }
 }

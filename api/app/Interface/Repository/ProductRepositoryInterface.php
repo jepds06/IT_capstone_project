@@ -11,6 +11,4 @@ interface ProductRepositoryInterface
     public function create(object $payload);
 
     public function update(object $payload, int $productId);
-
-    public function delete(int $productId);
 }

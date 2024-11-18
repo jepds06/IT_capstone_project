@@ -6,6 +6,8 @@ use App\Interface\Repository\ProductRepositoryInterface;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use Illuminate\Http\Response;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class ProductRepository implements ProductRepositoryInterface
 {
@@ -25,8 +27,14 @@ class ProductRepository implements ProductRepositoryInterface
         $product->productName = $payload->productName;
         $product->specifications = $payload->specifications;
         $product->unitPrice = $payload->unitPrice;
-        $prodCategory = ProductCategory::find($payload->prodCatID);
 
+        //handle image upload
+        if(isset($payload->image) && $payload->image instanceof UploadedFile){
+            //store the image file from request into imagePath table column
+            $product->imagePath = $this->handleImageUpload($payload->image, $product->productID);
+        }
+
+        $prodCategory = ProductCategory::find($payload->prodCatID);
         if($prodCategory){
             $product->prdCategory()->associate($prodCategory);
         } else {
@@ -45,8 +53,18 @@ class ProductRepository implements ProductRepositoryInterface
         $product->productName = $payload->productName;
         $product->specifications = $payload->specifications;
         $product->unitPrice = $payload->unitPrice;
-        $prodCategory = ProductCategory::find($payload->prodCatID);
 
+        //handle image upload
+        if(isset($payload->image) && $payload->image instanceof UploadedFile){
+            //delete old image if exists
+            if($product->imagePath){
+                Storage::disk('public')->delete($product->imagePath);
+            }
+            //store the image file from request into imagePath table column
+            $product->imagePath = $this->handleImageUpload($payload->image, $product->productID);
+        }
+
+        $prodCategory = ProductCategory::find($payload->prodCatID);
         if($prodCategory){
             $product->prdCategory()->associate($prodCategory);
         } else {
@@ -59,13 +77,12 @@ class ProductRepository implements ProductRepositoryInterface
         return $product->fresh();
     }
 
-    public function delete(int $productId)
+    private function handleImageUpload(UploadedFile $image, int $productId)
     {
-        $product = Product::findOrFail($productId);
-        $product->delete();
+        //filename generation
+        $extension = $image->getClientOriginalExtension();
+        $fileName = "product_{$productId}.{$extension}";
 
-        return response()->json([
-            'message' => 'Successfully Deleted'
-        ], Response::HTTP_OK);
+        return $image->storeAs('products', $fileName, 'public');
     }
 }

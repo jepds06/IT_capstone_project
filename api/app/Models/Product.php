@@ -19,6 +19,7 @@ class Product extends Model
         'productName',
         'specifications',
         'unitPrice',
+        'imagePath',
         'prodCatID'
     ];
     
@@ -45,8 +46,8 @@ class Product extends Model
         return $this->hasMany(ProductionDetail::class, 'productID');
     }
 
-    public function productOrders()
+    public function salesOrder()
     {
-        return $this->hasMany(ProductOrder::class, 'productID');
+        return $this->hasMany(SalesProductOrder::class, 'productID');
     }
 }

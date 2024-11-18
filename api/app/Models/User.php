@@ -80,8 +80,8 @@ class User extends Authenticatable
         return $this->hasMany(AdminOrder::class, 'userID');
     }
 
-    public function customerOrders()
+    public function salesOrders()
     {
-        return $this->hasMany(CustomerOrder::class, 'userID');
+        return $this->hasMany(SalesProductOrder::class, 'userID');
     }
 }

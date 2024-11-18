@@ -21,4 +21,9 @@ class Sales_Delivery extends Model
         'deliveryAddress',
         'deliveryStatus'
     ];
+
+    public function sale()
+    {
+        return $this->belongsTo(Sale::class, 'salesID');
+    }
 }

@@ -17,7 +17,7 @@ class CustomerPayment extends Model
 
     protected $fillable = [
         'paymentDate',
-        'slsPrdOrdID',
+        'salesID',
         'payMethodID',
         'paymentStatus',
         'dueDate',
@@ -25,9 +25,9 @@ class CustomerPayment extends Model
         'amountPaid'
     ];
 
-    public function slsPrdOrder()
+    public function sale()
     {
-        return $this->belongsTo(SalesProductOrder::class, 'slsPrdOrdID');
+        return $this->belongsTo(Sale::class, 'salesID');
     }
 
     public function payMethod()

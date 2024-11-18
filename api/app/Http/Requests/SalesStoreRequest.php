@@ -11,7 +11,7 @@ class SalesStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,8 @@ class SalesStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'userID' => 'required|integer|exists:users,userID',
+            'salesDate' => 'required|date'
         ];
     }
 }

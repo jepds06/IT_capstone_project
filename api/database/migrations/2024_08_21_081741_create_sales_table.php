@@ -13,7 +13,12 @@ return new class extends Migration
     {
         Schema::create('sales', function (Blueprint $table) {
             $table->bigIncrements('salesID');
+            $table->unsignedBigInteger('userID');
             $table->date('salesDate');
+
+            $table->Foreign('userID')->references('userID')->on('users')
+            ->onUpdate('cascade')
+            ->onDelete('cascade');
         });
     }
 
@@ -22,6 +27,11 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('sales', function(Blueprint $table){
+            // Drop the foreign key before dropping the table
+            $table->dropForeign(['userID']);
+        });
+
         Schema::dropIfExists('sales');
     }
 };
