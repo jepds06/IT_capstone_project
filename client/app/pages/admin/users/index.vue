@@ -100,7 +100,7 @@
     <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
       <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
         <h2 class="text-xl font-bold mb-4">{{ isView ? 'View User' : (isEdit ? 'Edit User' : 'Add User') }}</h2>
-        <form @submit.prevent="isView ? closeModal() : (isEdit ? saveEdit() : addUser())">
+        <form @submit.prevent="isView ? closeModal() :  openConfirmationModal()">
           <div class="mb-4">
             <label for="prodCat" class="block text-sm font-medium text-gray-700">User Type:</label>
             <select v-model="form.userTypeID" id="prodCat" class="mt-1 block w-full border border-gray-300 rounded-lg p-2">
@@ -177,6 +177,34 @@
         </form>
       </div>
     </div>
+
+    <!-- Confirmation Modal User-->
+    <div v-if="isUserConfirmationVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+        <h3 class="text-xl font-bold mb-4 text-black">Are you sure you want to proceed?</h3>
+        <div class="flex justify-end mt-4">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-md mr-2" @click="addUser">
+            Yes
+          </button>
+          <button class="text-red-600 py-1 px-3 rounded-md" @click="closeConfirmationModal">
+            No
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Message for User Modal -->
+  <div v-if="isSuccessUserVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+      <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
+      <p class="text-black">User has been {{ formMode === 'add' ? 'created' : 'updated' }} successfully!</p>
+      <div class="flex justify-end mt-4">
+        <button class="bg-blue-500 text-white py-1 px-3 rounded-md" @click="closeSuccessModal">
+        OK
+        </button>
+      </div>
+    </div>
+  </div>
   </div>
 </template>
 
@@ -196,8 +224,11 @@ export default {
       searchQuery: '',
       currentPage: 1,
       itemsPerPage: 10,
+      isUserConfirmationVisible: false,
+      isSuccessUserVisible: false,
       showModal: false,
       isEdit: false,
+      formMode: 'add',
       form: {
         userID: '',
         lastName: '',
@@ -224,16 +255,31 @@ export default {
     },
   },
   methods: {
-    openModal() {
+    openConfirmationModal() {
+      this.isUserConfirmationVisible = true;
+    },
+    closeConfirmationModal() {
+      this.isUserConfirmationVisible = false;
+    },
+    showSuccessModal() {
+      this.isSuccessUserVisible = true;
+    },
+    closeSuccessModal() {
+      this.isSuccessUserVisible = false;
+      this.closeConfirmationModal(); // Reset confirmation modal
+    },
+    openModal(mode) {
       this.resetForm();
       this.showModal = true;
+      this.formMode = mode;
       this.isView = false;
-      this.isEdit = false;
+      this.isEdit = mode === 'edit';
     },
     openViewModal(user) {
       this.form = { ...user, password: '' };
       this.showModal = true;
       this.isView = true;
+      this.formMode = 'view';
     },
     openEditModal(user) {
       this.form = { ...user };
@@ -272,7 +318,7 @@ export default {
         ...this.form,
         userID: result.data.userID,
       });
-      alert("User added successfully!");
+      this.showSuccessModal("User added successfully!");
       this.closeModal();
     },
 
@@ -282,7 +328,7 @@ export default {
       if (index !== -1) {
         this.users.splice(index, 1, { ...this.form });
       } 
-      alert("User edited successfully!")
+      this.showSuccessModal("User edited successfully!")
       this.closeModal();
     },
     async fetchUserTypesData(){

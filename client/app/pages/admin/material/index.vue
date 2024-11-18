@@ -88,6 +88,8 @@
   <div
     v-if="showConfirmationModal"
     class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+    @keydown.enter="saveMaterial"  
+    tabindex="0"
   >
     <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
       <h3 class="text-xl font-bold mb-4 text-black">Are you sure you want to proceed?</h3>
@@ -236,7 +238,6 @@ async function saveMaterial() {
       formMode.value = 'edit'; // Set the form mode to 'edit' for the success message
     }
   }
-  
   closeForm();
 }
 
@@ -261,9 +262,20 @@ async function saveMaterial() {
   };
   
   onMounted(() => {
-    fetchData()
-    console.log('materialss', materials)
-  })
+  const handleKeydown = (event) => {
+    if (showConfirmationModal.value && event.key === "Enter") {
+      event.preventDefault(); // Prevent default form behavior
+      saveMaterial();
+    }
+  };
+
+  document.addEventListener("keydown", handleKeydown);
+
+  // Clean up listener on unmount
+  onUnmounted(() => {
+    document.removeEventListener("keydown", handleKeydown);
+  });
+});
   
   </script>
   

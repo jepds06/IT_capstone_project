@@ -116,7 +116,7 @@
         <h2 class="text-lg font-semibold mb-4">
           {{ isEditing ? "Edit Permission" : "Add New Permission" }}
         </h2>
-        <form @submit.prevent="handleSubmit">
+        <form @submit.prevent="openConfirmationModal">
           <div class="mb-4">
             <label for="prodCat" class="block text-sm font-medium text-gray-700"
               >User:
@@ -210,6 +210,34 @@
       </div>
     </div>
 
+    <!-- Confirmation Modal User-Permission-->
+    <div v-if="isUserPermissionConfirmationVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+        <h3 class="text-xl font-bold mb-4 text-black">Are you sure you want to proceed?</h3>
+        <div class="flex justify-end mt-4">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-md mr-2" @click="handleSubmit">
+            Yes
+          </button>
+          <button class="text-red-600 py-1 px-3 rounded-md" @click="closeConfirmationModal">
+            No
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Message for User-Permission Modal -->
+  <div v-if="isSuccessUserPermissionVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+    <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+      <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
+      <p class="text-black">User Permission has been {{ isEditing ? 'updated' : 'created' }} successfully!</p>
+      <div class="flex justify-end mt-4">
+        <button class="bg-blue-500 text-white py-1 px-3 rounded-md" @click="closeSuccessModal">
+        OK
+        </button>
+      </div>
+    </div>
+  </div>
+
     <div
       v-if="showViewModal"
       class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50"
@@ -273,6 +301,8 @@ export default {
       permissions: [],
       showModal: false,
       showViewModal: false,
+      isUserPermissionConfirmationVisible: false,
+      isSuccessUserPermissionVisible: false,
       isEditing: false, // State to track if we're editing
       newPermission: {
         privilegeID: "",
@@ -309,6 +339,19 @@ export default {
     },
   },
   methods: {
+    openConfirmationModal() {
+      this.isUserPermissionConfirmationVisible = true;
+    },
+    closeConfirmationModal() {
+      this.isUserPermissionConfirmationVisible = false;
+    },
+    showSuccessModal() {
+      this.isSuccessUserPermissionVisible = true;
+    },
+    closeSuccessModal() {
+      this.isSuccessUserPermissionVisible = false;
+      this.closeConfirmationModal(); // Reset confirmation modal
+    },
     viewPermission(permission) {
       this.selectedPermission = { ...permission }; // Store selected permission for viewing
       this.showViewModal = true; // Show view modal
@@ -360,7 +403,7 @@ export default {
           });
         }
 
-        alert("User permission edited successfully!");
+        this.showSuccessModal("User permission edited successfully!");
       } else {
         // Handle form submission to add new permission
         const result = await apiService.post(
@@ -376,7 +419,7 @@ export default {
           view: this.newPermission.view ? 1 : 0,
           update: this.newPermission.update ? 1 : 0,
         }); // Set isActive to true for new permission
-        alert("User permission created successfully!");
+        this.showSuccessModal("User permission created successfully!");
       }
       this.closeModal();
     },
