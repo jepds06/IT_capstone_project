@@ -68,15 +68,22 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watchEffect } from 'vue';
 import { apiService } from "~/api/apiService";
 import { store } from "~/composables/store";
+
+useSeoMeta({
+  title: 'Customer',
+  description: 'Customer Dashboard'
+})
 
 const products = ref([]);
 const categories = ref([]);
 const selectedCategory = ref('');
 const searchTerm = ref('');
 const finishedProducts = ref([]);
+
+
 
 const addToCart = (product) => {
   const alreadyAddedProduct = store.addedToCart?.find((value) => value.productID === product.productID)
@@ -89,7 +96,15 @@ const addToCart = (product) => {
 const fetchProductsData = async () => {
   try {
     const { data } = await apiService.get("/api/products");
-    products.value = data;
+    products.value = data?.map((value) => {
+      const qtyOrdered = value.sales_order?.reduce((total, detail) => {
+      return total + parseInt(detail.qtyOrdered);
+    }, 0);
+    return {
+      ...value,
+      qtyOrdered,
+    }
+    });
   } catch (error) {
     console.error("Error fetching data:", error);
   }
@@ -134,7 +149,7 @@ const fetchFinishProductsData = async() => {
   }, 0);
     return {
       ...value,
-      stock: quantity
+      stock: quantity - value.qtyOrdered
     }
   });
   products.value = data
@@ -146,4 +161,15 @@ onMounted(async () => {
   await fetchFinishProductsData();
   await fetchCategoriesData();
 });
+
+watchEffect(async() => {
+  // Automatically tracks `count` and recalculates `doubled` when `count` changes
+  if (store.isOpenCart === false) {
+    // Perform an API call or filter logic
+    await fetchProductsData();
+    await fetchFinishProductsData();
+    await fetchCategoriesData();
+  }
+});
+
 </script>

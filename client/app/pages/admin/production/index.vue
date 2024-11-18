@@ -324,7 +324,7 @@
             Production Details
           </h2>
           <!-- <span>{{selectedProduction.deliveryStatus}}</span> -->
-          <UButton :loading="isLoadingMarkAsCompleted" @click="markAsCompleted" class="mb-4" icon="material-symbols-light:list-alt-check-outline-sharp" label="Mark as Completed" :disabled="selectedProduction.deliveryStatus === 'In Progress' || selectedProduction.status === 'Completed'" />
+          <UButton :loading="isLoadingMarkAsCompleted" @click="markAsCompleted" class="mb-4" icon="material-symbols-light:list-alt-check-outline-sharp" label="Mark as Completed" :disabled="selectedProduction.deliveryStatus === 'In Progress' || (selectedProduction.status === 'Completed' || selectedProduction.status === 'Pending')" />
         </div>
         
         <!-- Product Info View Table (Read-Only) -->

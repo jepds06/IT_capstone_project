@@ -301,7 +301,11 @@ export default {
           value.status = "In Progress";
         }
         if (value.admin_deliveries) {
+          if(value.admin_deliveries.deliveryStatus === 'Delivered'){
+            value.status = value.admin_deliveries.deliveryStatus;
+          } else {
           value.status = "Waiting for Delivery";
+        }
         }
         if (!value.status) {
           value.status = "Pending";

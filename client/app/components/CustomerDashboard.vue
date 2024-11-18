@@ -165,14 +165,14 @@
         >
           Continue Shopping
         </button>
-        <UButton label="Checkout" />
+        <UButton label="Checkout" @click="activeTab = 'billing'" :disabled="filteredProducts?.length === 0"/>
       </div>
     </div>
 
     <!-- Billing Section -->
     <div v-if="activeTab === 'billing'" class="space-y-6">
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-lg font-bold">Billing Addresses</h2>
+        <h2 class="text-lg font-bold">Shipping Address</h2>
         <!-- <button
           @click="openAddAddressModal"
           class="bg-blue-500 text-white px-4 py-2 rounded"
@@ -249,83 +249,90 @@
 
             <!-- Building No Field -->
             <div class="mb-4">
-              <label class="block text-sm font-medium mb-1">Building No</label>
-              <input type="text" class="border px-3 py-2 rounded w-full" />
+              <label class="block text-sm font-medium mb-1">Building No/House No</label>
+              <input v-model="store.billingAddress.buildingNo" type="text" class="border px-3 py-2 rounded w-full" />
             </div>
 
             <!-- Street Field -->
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Street</label>
-              <input type="text" class="border px-3 py-2 rounded w-full" />
+              <input v-model="store.billingAddress.street"  type="text" class="border px-3 py-2 rounded w-full" />
             </div>
 
             <!-- City and State Fields (Side-by-Side) -->
             <div class="flex gap-4 mb-4">
               <div class="flex-1">
-                <label class="block text-sm font-medium mb-1">City</label>
-                <input type="text" class="border px-3 py-2 rounded w-full" />
+                <label class="block text-sm font-medium mb-1">Barangay and City</label>
+                <input v-model="store.billingAddress.city" type="text" class="border px-3 py-2 rounded w-full" />
               </div>
               <div class="flex-1">
-                <label class="block text-sm font-medium mb-1">State</label>
-                <input type="text" class="border px-3 py-2 rounded w-full" />
+                <label class="block text-sm font-medium mb-1">Province</label>
+                <input v-model="store.billingAddress.province" type="text" class="border px-3 py-2 rounded w-full" />
               </div>
             </div>
 
             <!-- Country and Area Code Fields (Side-by-Side) -->
             <div class="flex gap-4 mb-4">
               <div class="flex-1">
-                <label class="block text-sm font-medium mb-1">Country</label>
-                <input type="text" class="border px-3 py-2 rounded w-full" />
+                <label class="block text-sm font-medium mb-1">Region</label>
+                <input v-model="store.billingAddress.region" type="text" class="border px-3 py-2 rounded w-full" />
               </div>
               <div class="flex-1">
                 <label class="block text-sm font-medium mb-1">Area Code</label>
-                <input type="text" class="border px-3 py-2 rounded w-full" />
+                <input v-model="store.billingAddress.areaCode" type="text" class="border px-3 py-2 rounded w-full" />
               </div>
             </div>
 
             <!-- Contact Field -->
             <div class="mb-4">
               <label class="block text-sm font-medium mb-1">Contact</label>
-              <input type="text" class="border px-3 py-2 rounded w-full" />
+              <input v-model="store.billingAddress.contactNum" type="text" class="border px-3 py-2 rounded w-full" />
             </div>
 
             <!-- Default Toggle -->
-            <div class="mb-6 flex items-center">
+            <!-- <div class="mb-6 flex items-center">
               <label class="text-sm font-medium mr-3">Default</label>
               <input type="checkbox" class="toggle-checkbox" />
-            </div>
+            </div> -->
 
             <!-- Action Buttons -->
-            <div class="flex justify-end">
+            <!-- <div class="flex justify-end">
               <button @click="closeAddAddressModal" class="text-gray-500 mr-4">
                 Cancel
               </button>
               <button class="bg-blue-500 text-white px-4 py-2 rounded">
                 Add Address
               </button>
-            </div>
+            </div> -->
           <!-- </div> -->
         </div>
         <!-- Order Summary -->
         <div class="bg-white p-4 rounded-lg shadow-md w-full md:w-1/2">
           <h2 class="text-lg font-bold">Order Summary</h2>
-          <div class="space-y-2 mt-4">
+          <div
+            v-for="product in filteredProducts.filter(
+              (value) => value?.selected
+            )"
+            :key="product.productID"
+          >
             <div class="flex justify-between text-gray-600">
-              <span>Subtotal</span>
-              <span>$30</span>
+              <span>{{ product.productName }}</span>
+              <span>{{
+                new Intl.NumberFormat("en-PH", {
+                  style: "currency",
+                  currency: "PHP",
+                }).format(product.unitPrice * product.quantity)
+              }}</span>
             </div>
-            <div class="flex justify-between text-gray-600">
-              <span>Discount 5%</span>
-              <span>-$2</span>
-            </div>
-            <div class="flex justify-between text-gray-600">
-              <span>Shipping Charges</span>
-              <span>$0</span>
-            </div>
-            <div class="flex justify-between text-gray-800 font-bold mt-4">
-              <span>Total</span>
-              <span>$28</span>
-            </div>
+          </div>
+          <div class="flex justify-between text-gray-800 font-bold mt-4">
+            <span>Total</span>
+            <span>{{
+              new Intl.NumberFormat("en-PH", {
+                style: "currency",
+                currency: "PHP",
+              }).format(totalAmount)
+            }}</span>
           </div>
         </div>
 
@@ -373,25 +380,30 @@
 
       <!-- Buttons Outside Order Summary -->
       <div class="flex justify-between mt-6">
-        <button
-          @click="goBackToPreviousTab"
-          class="bg-gray-200 px-4 py-2 rounded"
-        >
-          Back
-        </button>
-        <button
+        <UButton
+          @click="activeTab = 'itemcart'"
+          label="Back"
+          color="gray"
+        />
+        <!-- <button
           @click="placeOrder"
           class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
         >
           Place An Order
-        </button>
+        </button> -->
+        <UButton label="Place An Order" 
+        @click="activeTab = 'payment'"
+        :disabled=" filteredProducts.filter(
+          (value) => value?.selected
+        )?.length === 0 || Object.keys(store.billingAddress).length !== Object.values(store.billingAddress)?.filter((val) => val).length" />
       </div>
     </div>
 
 
     <!-- Payments Section -->
-    <div v-if="activeTab === 'payment'" class="flex space-x-4">
+    <div v-if="activeTab === 'payment'" class="space-y-6">
       <!-- Left Side: Delivery and Payment Options -->
+       <div class="flex space-x-4">
       <div class="w-1/2 space-y-6">
         <!-- Delivery Options -->
         <div class="flex justify-between items-center mb-4">
@@ -401,19 +413,19 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="bg-white p-4 rounded-lg shadow-md">
             <label class="inline-flex items-center">
-              <input
+              <!-- <input
                 type="radio"
                 name="deliveryOption"
                 value="standard"
                 class="mr-2"
-              />
+              /> -->
               <div>
                 <h3 class="font-bold">Standard Delivery</h3>
                 <p class="text-gray-500">Delivery in 5-7 days.</p>
               </div>
             </label>
           </div>
-          <div class="bg-white p-4 rounded-lg shadow-md">
+          <!-- <div class="bg-white p-4 rounded-lg shadow-md">
             <label class="inline-flex items-center">
               <input
                 type="radio"
@@ -426,33 +438,34 @@
                 <p class="text-gray-500">Delivery in 2-3 days.</p>
               </div>
             </label>
-          </div>
+          </div> -->
         </div>
 
         <!-- Payment Options Section -->
         <div class="flex justify-between items-center mb-4 mt-6">
           <h2 class="text-lg font-bold">Payment Options</h2>
           <p class="text-gray-500">
-            *Select your preferred payment method to finalize your order.
+            *Select your preferred payment method.
           </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-white p-4 rounded-lg shadow-md">
+          <div class="bg-white p-4 rounded-lg shadow-md"  v-for="payment in paymentMethods">
             <label class="inline-flex items-center">
               <input
                 type="radio"
                 name="paymentOption"
-                value="creditCard"
+                value="Cash"
                 class="mr-2"
+                v-model="paymentSelected"
               />
               <div>
-                <h3 class="font-bold">Credit Card</h3>
-                <p class="text-gray-500">Pay securely with your credit card.</p>
+                <h3 class="font-bold">{{payment.payMethodName}}</h3>
+                <!-- <p class="text-gray-500">Pay securely with your credit card.</p> -->
               </div>
             </label>
           </div>
-          <div class="bg-white p-4 rounded-lg shadow-md">
+          <!-- <div class="bg-white p-4 rounded-lg shadow-md">
             <label class="inline-flex items-center">
               <input
                 type="radio"
@@ -483,135 +496,90 @@
                 </p>
               </div>
             </label>
-          </div>
+          </div> -->
         </div>
       </div>
 
       <!-- Right Side: Cart Items and Order Summary -->
       <div class="w-1/2 space-y-6">
-        <!-- Cart Item -->
-        <div class="bg-white p-4 rounded-lg shadow-md mt-6">
-          <h3 class="font-bold">Cart Item</h3>
-          <div class="space-y-2 mt-4">
-            <div class="flex justify-between text-gray-600">
-              <span></span>
-              <!-- Empty span for subtotal label -->
-              <span></span>
-              <!-- Empty span for subtotal value -->
-            </div>
-            <div class="flex justify-between text-gray-600">
-              <span></span>
-              <!-- Empty span for discount label -->
-              <span></span>
-              <!-- Empty span for discount value -->
-            </div>
-            <div class="flex justify-between text-gray-600">
-              <span></span>
-              <!-- Empty span for shipping charges label -->
-              <span></span>
-              <!-- Empty span for shipping charges value -->
-            </div>
-            <div class="flex justify-between text-gray-800 font-bold mt-4">
-              <span></span>
-              <!-- Empty span for total label -->
-              <span></span>
-              <!-- Empty span for total value -->
-            </div>
-          </div>
-        </div>
 
         <!-- Order Summary -->
         <div class="bg-white p-4 rounded-lg shadow-md mt-6">
-          <h3 class="font-bold">Order Summary</h3>
-          <div class="space-y-2 mt-4">
+          <h2 class="text-lg font-bold">Order Summary</h2>
+          <div
+            v-for="product in filteredProducts.filter(
+              (value) => value?.selected
+            )"
+            :key="product.productID"
+          >
             <div class="flex justify-between text-gray-600">
-              <span>Subtotal</span>
-              <span>$30</span>
+              <span>{{ product.productName }}</span>
+              <span>{{
+                new Intl.NumberFormat("en-PH", {
+                  style: "currency",
+                  currency: "PHP",
+                }).format(product.unitPrice * product.quantity)
+              }}</span>
             </div>
-            <div class="flex justify-between text-gray-600">
-              <span>Discount 5%</span>
-              <span>-$2</span>
-            </div>
-            <div class="flex justify-between text-gray-600">
-              <span>Shipping Charges</span>
-              <span>$0</span>
-            </div>
-            <div class="flex justify-between text-gray-800 font-bold mt-4">
-              <span>Total</span>
-              <span>$28</span>
-            </div>
+          </div>
+          <div class="flex justify-between text-gray-800 font-bold mt-4">
+            <span>Total</span>
+            <span>{{
+              new Intl.NumberFormat("en-PH", {
+                style: "currency",
+                currency: "PHP",
+              }).format(totalAmount)
+            }}</span>
           </div>
         </div>
 
         <!-- Shipping Address -->
         <div class="bg-white p-4 rounded-lg shadow-md mt-6">
           <h3 class="font-bold">Shipping Address</h3>
-          <p class="text-gray-600">John Doe</p>
-          <p class="text-gray-600">1234 Elm Street</p>
-          <p class="text-gray-600">City, State, Zip</p>
+          <p class="text-gray-600">{{`${store.billingAddress.buildingNo} ${store.billingAddress.street}`}}</p>
+          <p class="text-gray-600">{{`${store.billingAddress.city} ${store.billingAddress.province}`}}</p>
+          <p class="text-gray-600">{{`${store.billingAddress.region} ${store.billingAddress.areaCode}`}}</p>
+          <p class="text-gray-600">{{`${store.billingAddress.contactNum}`}}</p>
         </div>
 
-        <div class="flex justify-between mt-6">
-          <!-- Back Button (aligned below Delivery and Payment Options) -->
-          <button
-            class="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600"
-          >
-            Back
-          </button>
-
-          <!-- Complete an Order Button -->
-          <button
-            class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
-          >
-            Complete an Order
-          </button>
-        </div>
+        
+      </div>
+       </div>
+      <div class="flex justify-between mt-6">
+        <!-- Back Button (aligned below Delivery and Payment Options) -->
+        <UButton
+            @click="activeTab = 'billing'"
+            label="Back"
+            color="gray"
+          />
+  
+        <!-- Complete an Order Button -->
+        <UButton label="Complete an Order" 
+         :loading="isLoadingCompleteAnOrder"
+         @click="completeAnOrder"
+        :disabled=" filteredProducts.filter(
+          (value) => value?.selected
+        )?.length === 0 || Object.keys(store.billingAddress).length !== Object.values(store.billingAddress)?.filter((val) => val).length" />
       </div>
     </div>
+    
   </div>
 </template>
 
 <script setup>
+import { addDays, format } from "date-fns";
 import { ref, computed, onMounted } from "vue";
 import { apiService } from "~/api/apiService";
 import { store } from "~/composables/store";
 
+const userInfo = ref({userID: ''})
 const activeTab = ref("itemcart");
 const showAddAddressModal = ref(false);
 const products = ref([]);
 const categories = ref([]);
-const selectedCategory = ref("");
-const searchTerm = ref("");
-const billingAddresses = ref([
-  {
-    id: 1,
-    name: "John Doe",
-    buildingNo: "123",
-    street: "Main St",
-    state: "NY",
-    contact: "123-456-7890",
-    default: true,
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    buildingNo: "456",
-    street: "Second St",
-    state: "NY",
-    contact: "987-654-3210",
-    default: false,
-  },
-  {
-    id: 3,
-    name: "Alice Johnson",
-    buildingNo: "789",
-    street: "Third St",
-    state: "NY",
-    contact: "555-555-5555",
-    default: false,
-  },
-]);
-
+const paymentMethods = ref([]);
+const paymentSelected = ref('Cash');
+const isLoadingCompleteAnOrder = ref(false);
 // Functions to handle modal visibility
 const openAddAddressModal = () => {
   showAddAddressModal.value = true;
@@ -664,10 +632,77 @@ const removeProduct = (index) => {
   store.addedToCart.splice(index, 1);
 };
 
-onMounted(() => {
+const fetchPaymentMethodsData = async() => {
+  const result = await apiService.get("/api/paymentMethods")
+  paymentMethods.value = result.data?.map((value) => {
+    return {
+      ...value,
+    }
+  })
+}
+
+const completeAnOrder = async() => {
+  isLoadingCompleteAnOrder.value = true
+  const sales = {
+    userID: userInfo.value.userID,
+    salesDate: format(new Date(), "yyyy-MM-dd"),
+  }
+  const { data } = await apiService.post("/api/sales", sales);
+
+  const salesProductOrders = filteredProducts.value?.filter((val) => val.selected).map((value) =>{
+    return {
+      salesID: data?.salesID ?? 0,
+      productID: value.productID,
+      qtyOrdered: value.quantity,
+      amount: value.unitPrice * value.quantity
+    }
+  })
+  await Promise.all(salesProductOrders.map(async(salesProductOrder) => {
+    return await apiService.post("/api/salesProductOrders", salesProductOrder)
+  }))
+
+  const salesDelivery = {
+    salesID: data?.salesID ?? 0,
+    deliveryDate: format(addDays(new Date(), 7),"yyyy-MM-dd"),
+    deliveryAddress: `${store.billingAddress.buildingNo} ${store.billingAddress.street} ${store.billingAddress.city} ${store.billingAddress.province} ${store.billingAddress.region} ${store.billingAddress.areaCode}`,
+    deliveryStatus: 'Processed delivery'
+  }
+
+  await apiService.post("/api/salesDeliveries", salesDelivery);
+
+  const customerPayment = {
+    salesID: data?.salesID ?? 0,
+    paymentDate: format(new Date(), "yyyy-MM-dd"),
+    payMethodID: paymentMethods.value.find((val) => val.payMethodName === paymentSelected.value)?.payMethodID,
+    paymentStatus: 'Unpaid',
+    dueDate: format(new Date(), "yyyy-MM-dd"),
+    amountToPay: totalAmount.value,
+    amountPaid: 0,
+  }
+
+  await apiService.post("/api/customerPayments", customerPayment);
+  console.log("sales", sales);
+  console.log("salesProductOrders", salesProductOrders);
+  console.log("salesDelivery", salesDelivery);
+  console.log("customerPayment", customerPayment);
+  
+  isLoadingCompleteAnOrder.value = false
+
+  alert("Complete an order successfully!")
+
+  store.isOpenCart = false;
+  store.addedToCart = filteredProducts.value?.filter((val) => !val.selected)
+}
+
+onMounted(async() => {
   // fetchProductsData();
   console.log(store.addedToCart);
-  fetchCategoriesData();
+  await fetchCategoriesData();
+  await fetchPaymentMethodsData();
+  if (process.client) {
+    const storage = JSON.parse(localStorage.getItem("userInfo"));
+    userInfo.value = storage ? storage : null;
+  }
 });
 </script>
 

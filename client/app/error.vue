@@ -32,20 +32,13 @@ provide('navigation', navigation)
 
     <UMain>
       <UContainer>
-        <UPage>
-          <UPageError :error="error" />
-        </UPage>
+       <main>
+        Error
+       </main>
       </UContainer>
     </UMain>
 
     <AppFooter />
-
-    <ClientOnly>
-      <LazyUContentSearch
-        :files="files"
-        :navigation="navigation"
-      />
-    </ClientOnly>
 
     <UNotifications />
   </div>

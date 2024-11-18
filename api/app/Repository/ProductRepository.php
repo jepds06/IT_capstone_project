@@ -14,7 +14,7 @@ class ProductRepository implements ProductRepositoryInterface
     public function findMany()
     {
          // Fetch paginated products
-        $products = Product::paginate(10);
+        $products = Product::with(['salesOrder'])->paginate(10);
 
         // Map through the products and append a full image URL
         $products->getCollection()->transform(function ($product) {
