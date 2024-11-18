@@ -26,7 +26,7 @@
         
         <!-- Image Section -->
         <div class="flex justify-center w-full">
-          <img :src="default" alt="Sample Image" class="object-contain h-48 w-50" />
+          <img :src="product?.image_url" :alt="product.productName" class="object-contain h-48 w-50" />
         </div>
         
         <!-- Product Details Section -->

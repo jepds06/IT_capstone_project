@@ -13,7 +13,21 @@ class ProductRepository implements ProductRepositoryInterface
 {
     public function findMany()
     {
-        return Product::paginate(10);
+         // Fetch paginated products
+        $products = Product::paginate(10);
+
+        // Map through the products and append a full image URL
+        $products->getCollection()->transform(function ($product) {
+            if ($product->imagePath) {
+                // Generate the full URL for the stored image
+                $product->image_url = asset('storage/' . $product->imagePath);
+            } else {
+                $product->image_url = null; // Or set a default image URL
+            }
+            return $product;
+        });
+
+        return $products;
     }
 
     public function findOneById(int $productId)
@@ -31,7 +45,7 @@ class ProductRepository implements ProductRepositoryInterface
         //handle image upload
         if(isset($payload->image) && $payload->image instanceof UploadedFile){
             //store the image file from request into imagePath table column
-            $product->imagePath = $this->handleImageUpload($payload->image, $product->productID);
+            $product->imagePath = $this->handleImageUpload($payload->image, $product->productName);
         }
 
         $prodCategory = ProductCategory::find($payload->prodCatID);
@@ -44,7 +58,15 @@ class ProductRepository implements ProductRepositoryInterface
 
         $product->save();
 
-        return $product->fresh();
+        if ($product->imagePath) {
+            // Generate the full URL for the stored image
+            $product->image_url = asset('storage/' . $product->imagePath);
+        } else {
+            $product->image_url = null; // Or set a default image URL
+        }
+        return $product;
+
+        return $product;
     }
 
     public function update(object $payload, int $productId)
@@ -61,7 +83,7 @@ class ProductRepository implements ProductRepositoryInterface
                 Storage::disk('public')->delete($product->imagePath);
             }
             //store the image file from request into imagePath table column
-            $product->imagePath = $this->handleImageUpload($payload->image, $product->productID);
+            $product->imagePath = $this->handleImageUpload($payload->image, $product->productName);
         }
 
         $prodCategory = ProductCategory::find($payload->prodCatID);
@@ -74,14 +96,22 @@ class ProductRepository implements ProductRepositoryInterface
 
         $product->save();
 
-        return $product->fresh();
+            if ($product->imagePath) {
+                // Generate the full URL for the stored image
+                $product->image_url = asset('storage/' . $product->imagePath);
+            } else {
+                $product->image_url = null; // Or set a default image URL
+            }
+            return $product;
+
+        return $product;
     }
 
-    private function handleImageUpload(UploadedFile $image, int $productId)
+    private function handleImageUpload(UploadedFile $image, string $productName)
     {
         //filename generation
         $extension = $image->getClientOriginalExtension();
-        $fileName = "product_{$productId}.{$extension}";
+        $fileName = "product_{$productName}.{$extension}";
 
         return $image->storeAs('products', $fileName, 'public');
     }

@@ -57,6 +57,8 @@ export class ApiService {
     }
   }
 
+
+
   async post(endpoint: string, body?: Record<string, any>) {
     try {
       const url = this.constructUrl(endpoint);
@@ -64,7 +66,6 @@ export class ApiService {
       const response = await $fetch(url, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           'Accept': 'application/json',
           ...(authToken ? { 'Authorization': `Bearer ${authToken}` } : {}),
         },
@@ -89,7 +90,6 @@ export class ApiService {
       const response = await $fetch(url, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
           'Accept': 'application/json',
           ...(authToken ? { 'Authorization': `Bearer ${authToken}` } : {}),
         },
@@ -106,6 +106,8 @@ export class ApiService {
       throw error.response;
     }
   }
+
+
 
   async delete(endpoint: string) {
     try {
