@@ -33,7 +33,7 @@
         <h2 class="text-lg text-black font-semibold mb-4">
           {{ formMode === 'add' ? 'Add Product' : 'Edit Product' }}
         </h2>
-        <form @submit.prevent="saveProduct">
+        <form @submit.prevent="confirmProductSave">
           <div
             v-if="formMode === 'edit'"
             class="mb-4"
@@ -120,6 +120,62 @@
             </button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <!-- Confirmation Modal Product-->
+    <div v-if="isProductConfirmationVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+        <h3 class="text-xl font-bold mb-4 text-black">Are you sure you want to proceed?</h3>
+        <div class="flex justify-end mt-4">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-md mr-2" @click="saveProduct">
+            Yes
+          </button>
+          <button class="text-red-600 py-1 px-3 rounded-md" @click="closeProductConfirmation">
+            No
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmation Modal Material-->
+    <div v-if="isMaterialConfirmationVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+        <h3 class="text-xl font-bold mb-4 text-black">Are you sure you want to proceed?</h3>
+        <div class="flex justify-end mt-4">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-md mr-2" @click="saveMaterial">
+            Yes
+          </button>
+          <button class="text-red-600 py-1 px-3 rounded-md" @click="closeMaterialConfirmation">
+            No
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Message for Product Modal -->
+    <div v-if="isSuccessProductVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+        <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
+        <p class="text-black">Product has been {{ formMode === 'add' ? 'created' : 'updated' }} successfully!</p>
+        <div class="flex justify-end mt-4">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-md" @click="closeProductConfirmation">
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Message for Material Modal -->
+    <div v-if="isSuccessMaterialVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+        <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
+        <p class="text-black">Product Material has been {{ materialMode === 'add' ? 'created' : 'updated' }} successfully!</p>
+        <div class="flex justify-end mt-4">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-md" @click="closeMaterialConfirmation">
+            OK
+          </button>
+        </div>
       </div>
     </div>
 
@@ -235,7 +291,7 @@
         <h2 class="text-lg font-semibold mb-4">
           {{ materialMode === 'add' ? 'Add Material' : 'Edit Material' }}
         </h2>
-        <form @submit.prevent="saveMaterial">
+        <form @submit.prevent="confirmMaterialtSave">
           <div
             v-if="materialMode === 'edit'"
             class="mb-4"
@@ -397,6 +453,12 @@ definePageMeta({
   middleware: [auth]
 })
 
+const isSuccessProductVisible = ref(false);
+const isSuccessMaterialVisible = ref(false);
+const showConfirmationModal = ref(false);
+const isProductConfirmationVisible = ref(false);
+const isMaterialConfirmationVisible = ref(false);
+
 const products = ref([])
 const categories = ref([])
 const materials = ref([])
@@ -440,17 +502,42 @@ function closeModal() {
   isModalVisible.value = false
 }
 
+const showSuccessProductMessage = (message) => {
+   isSuccessProductVisible.value = true;
+  setTimeout(() => {
+  }, 3000); // Automatically close after 3 seconds
+  };
+  const showSuccessMaterialMessage = (message) => {
+    isSuccessMaterialVisible.value = true;
+  setTimeout(() => {
+  }, 3000); // Automatically close after 3 seconds
+  };
+const confirmProductSave = () => {
+  isProductConfirmationVisible.value = true;
+};
+const confirmMaterialtSave = () => {
+  isMaterialConfirmationVisible.value = true;
+};
+const closeProductConfirmation = () => {
+  isProductConfirmationVisible.value = false;
+  isSuccessProductVisible.value = false;
+};
+const closeMaterialConfirmation = () => {
+  isMaterialConfirmationVisible.value = false;
+  isSuccessMaterialVisible.value = false;
+};
+
 async function saveProduct() {
   if (formMode.value === 'add') {
     const { data } = await apiService.post('/api/products', form.value)
     products.value.push(data)
-    alert('Product created successfully!')
+    showSuccessProductMessage('Product created successfully!')
   } else if (formMode.value === 'edit') {
     const index = products.value.findIndex(prod => prod.productID === form.value.productID)
     if (index !== -1) {
       const { data } = await apiService.put(`/api/products/${form.value.productID}`, form.value)
       products.value[index] = data
-      alert('Product edited successfully!')
+      showSuccessProductMessage('Product edited successfully!')
     }
   }
   closeModal()
@@ -494,14 +581,14 @@ async function saveMaterial() {
   if (materialMode.value === 'add') {
     const { data } = await apiService.post('/api/productMaterials', { ...materialForm.value, productID: selectedProduct.value.productID })
     materials.value.push(data)
-    alert('Product Material added successfully!')
+    showSuccessMaterialMessage('Product Material added successfully!')
     selectedProductMaterials.value.push({ ...materialForm.value })
   } else if (materialMode.value === 'edit') {
     const index = selectedProductMaterials.value.findIndex(mat => mat.id === materialForm.value.id)
     if (index !== -1) {
       await apiService.put(`/api/productMaterials/${materialForm.value.productMatsID}`, { ...materialForm.value, productID: selectedProduct.value.productID })
       selectedProductMaterials.value[index] = { ...materialForm.value, productID: selectedProduct.value.productID }
-      alert('Product Material edited successfully!')
+      showSuccessMaterialMessage('Product Material edited successfully!')
     }
   }
   await fetchProductMaterialsData()

@@ -114,7 +114,7 @@
         <h2 class="text-xl font-bold mb-4">
           {{ isEditMode ? "Edit Production" : "Add Production" }}
         </h2>
-        <form @submit.prevent="saveProduction">
+        <form @submit.prevent="confirmProductiontSave">
           <label for="year" class="block mb-2 mt-4">Start Date:</label>
           <input
             id="startDate"
@@ -170,6 +170,36 @@
         </form>
       </div>
     </div>
+
+     <!-- Confirmation Modal Production-->
+     <div v-if="isProductionConfirmationVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+        <h3 class="text-xl font-bold mb-4 text-black">Are you sure you want to proceed?</h3>
+        <div class="flex justify-end mt-4">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-md mr-2" @click="saveProduction">
+            Yes
+          </button>
+          <button class="text-red-600 py-1 px-3 rounded-md" @click="closeProductionConfirmation">
+            No
+          </button>
+        </div>
+      </div>
+    </div>
+
+   <!-- Success Message for Production Modal -->
+<div v-if="isSuccessProductionVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+    <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
+    <p class="text-black">
+      Production has been {{ isEditMode ? 'updated' : 'created' }} successfully!
+    </p>
+    <div class="flex justify-end mt-4">
+      <button class="bg-blue-500 text-white py-1 px-3 rounded-md" @click="closeProductionConfirmation">
+        OK
+      </button>
+    </div>
+  </div>
+</div>
 
     <!-- Modal for Viewing Production Details -->
     <!-- Modal for Viewing Production Details -->
@@ -382,12 +412,42 @@
           <UButton
             icon="material-symbols:request-quote-outline"
             :loading="isLoadingQuotationRequested"
-            @click="requestQuotation"
+            @click="confirmQuotationSave"
             size="sm"
             :color="isQuotationRequested || selectedProductionDetails.length === 0 ? 'gray' : 'green'"
             :disabled="isQuotationRequested || selectedProductionDetails.length === 0"
             label="Request Quotation"
           />
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirmation Modal Request Quotation-->
+    <div v-if="isQuotationConfirmationVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+        <h3 class="text-xl font-bold mb-4 text-black">Are you sure you want to proceed?</h3>
+        <div class="flex justify-end mt-4">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-md mr-2" @click="requestQuotation">
+            Yes
+          </button>
+          <button class="text-red-600 py-1 px-3 rounded-md" @click="closeQuotationConfirmation">
+            No
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Message for Request Quotation -->
+    <div v-if="isSuccessQuotationVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+          <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
+          <p class="text-black">
+            Quotation has been {{ quotationMode ? 'updated' : 'requested' }} successfully!
+          </p>
+        <div class="flex justify-end mt-4">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-md" @click="closeQuotationConfirmation">
+          OK
+          </button>
         </div>
       </div>
     </div>
@@ -412,7 +472,7 @@
               : "Edit Production Detail"
           }}
         </h2>
-        <form @submit.prevent="saveProductionDetail">
+        <form @submit.prevent="confirmProductionDetailtSave">
           <div class="mb-4" v-if="formMode === 'edit'">
             <label
               for="materialId"
@@ -514,6 +574,21 @@
         </div>
       </div>
     </div>
+
+     <!-- Success Message for Product Production Details -->
+     <div v-if="isSuccessProductionDetailVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+          <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
+          <p class="text-black">
+            Production Detail has been {{ productionDetailMode === 'add' ? 'created' : 'updated' }} successfully!
+          </p>
+        <div class="flex justify-end mt-4">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-md" @click="closeProductionDetailConfirmation">
+          OK
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -582,6 +657,13 @@ const itemsPerPage = 5;
 
 const quotations = ref([]);
 
+const isSuccessProductionVisible = ref(false);
+const isProductionConfirmationVisible = ref(false);
+const isSuccessProductionDetailVisible = ref(false);
+const isProductionDetailConfirmationVisible = ref(false);
+const isSuccessQuotationVisible = ref(false);
+const isQuotationConfirmationVisible = ref(false);
+
 const isLoadingQuotationRequested = ref(false);
 const isQuotationRequested = ref(false);
 const isProductionDetailsInfo = ref(false);
@@ -644,9 +726,50 @@ const openProductionDetailModal = async () => {
   };
 };
 
-const closeProductionDetailModal = () => {
-  isProductionDetailsModal.value = false;
+const confirmProductiontSave = () => {
+  isProductionConfirmationVisible.value = true;
 };
+const closeProductionConfirmation = () => {
+  isProductionConfirmationVisible.value = false;
+  isSuccessProductionVisible.value = false;
+};
+
+const showSuccessProductionMessage = (message) => {
+  isSuccessProductionVisible.value = true;
+  setTimeout(() => {
+  }, 3000); // Automatically close after 3 seconds
+  };
+
+  const confirmProductionDetailtSave = () => {
+    isProductionDetailConfirmationVisible.value = true;
+};
+const closeProductionDetailConfirmation = () => {
+  isProductionDetailConfirmationVisible.value = false;
+  isSuccessProductionDetailVisible.value = false;
+};
+
+const showSuccessProductionDetailMessage = (message) => {
+  isSuccessProductionDetailVisible.value = true;
+  setTimeout(() => {
+  }, 3000); // Automatically close after 3 seconds
+  };
+  const closeProductionDetailModal = () => {
+    isProductionDetailsModal.value = false;
+  }
+
+const confirmQuotationSave = () => {
+  isQuotationConfirmationVisible.value = true;
+};
+const closeQuotationConfirmation = () => {
+  isQuotationConfirmationVisible.value = false;
+  isSuccessQuotationVisible.value = false;
+};
+
+const showSuccessQuotationMessage = (message) => {
+  isSuccessQuotationVisible.value = true;
+  setTimeout(() => {
+  }, 3000); // Automatically close after 3 seconds
+  };
 
 const filterQuotation = (productionID) => {
   const data = quotations.value?.filter(
@@ -730,10 +853,10 @@ const requestQuotation = async () => {
     );
     await fetchQuotationData();
     isLoadingQuotationRequested.value = false
-    alert("Quotation requested successfully");
+    showSuccessQuotationMessage("Quotation requested successfully");
     isProductionDetailsInfo.value = false;
   } else {
-    alert("Supplier list is empty!");
+    showSuccessQuotationMessage("Supplier list is empty!");
   }
 };
 
@@ -749,7 +872,7 @@ const saveProduction = async () => {
     if (index !== -1) {
       productions.value[index] = { ...productionForm.value };
     }
-    alert("Production edited successfully!");
+    showSuccessProductionMessage("Production edited successfully!");
   } else {
     const result = await apiService.post(
       "/api/productions",
@@ -759,7 +882,7 @@ const saveProduction = async () => {
       ...productionForm.value,
       productionID: result.data.productionID,
     });
-    alert("Production created successfully!");
+    showSuccessProductionMessage("Production created successfully!");
   }
   closeModal();
 };
@@ -775,7 +898,7 @@ const saveProductionDetail = async () => {
       productionID: selectedProduction.value.productionID,
       prodtnDetailID: result.data.prodtnDetailID,
     });
-    alert(
+    showSuccessProductionDetailMessage(
       `Production detail added successfully for Production No. ${selectedProduction.value.productionID}`
     );
   } else {
@@ -794,7 +917,7 @@ const saveProductionDetail = async () => {
         ...productionDetailForm.value,
       };
     }
-    alert(
+    showSuccessProductionDetailMessage(
       `Production detail edited successfully for Production No. ${selectedProduction.value.productionID}`
     );
   }
