@@ -32,6 +32,6 @@ class Sale extends Model
 
     public function salesDeliveries()
     {
-        return $this->hasMany(Sales_Delivery::class, 'salesID');
+        return $this->hasOne(Sales_Delivery::class, 'salesID');
     }
 }

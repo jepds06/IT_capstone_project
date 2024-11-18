@@ -2,7 +2,7 @@
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
     <div class="bg-white p-4 rounded shadow">
       <h2 class="text-base text-black font-semibold">
-        Monthly Order Statistics
+        Last 5 Days Order Statistics
       </h2>
       <div class="chart-container mt-3">
         <canvas id="monthlyOrderChart" />
@@ -91,67 +91,23 @@
         Top 5 In-Demand Products
       </h2>
       <ul class="mt-3">
-        <li class="flex flex-col py-2 border-b">
+        <li class="flex flex-col py-2 border-b" v-for="product in topProducts">
           <div class="flex justify-between items-center">
-            <span>Product A</span>
-            <span>200 units</span>
+            <span>{{product.productName}}</span>
+            <span>{{product.qtyOrdered}}</span>
           </div>
           <span class="text-sm text-gray-500">Category: Electronics</span>
-          <UProgress :value="200" :max="200" color="blue" />
-        </li>
-        <li class="flex flex-col py-2 border-b">
-          <div class="flex justify-between items-center">
-            <span>Product B</span>
-            <span>180 units</span>
-          </div>
-          <span class="text-sm text-gray-500">Category: Clothing</span>
-          <UProgress :value="180" :max="200" color="blue" />
-        </li>
-        <li class="flex flex-col py-2 border-b">
-          <div class="flex justify-between items-center">
-            <span>Product C</span>
-            <span>150 units</span>
-          </div>
-          <span class="text-sm text-gray-500">Category: Home & Kitchen</span>
-          <UProgress :value="150" :max="200" color="blue" />
-        </li>
-        <li class="flex flex-col py-2 border-b">
-          <div class="flex justify-between items-center">
-            <span>Product D</span>
-            <span>130 units</span>
-          </div>
-          <span class="text-sm text-gray-500">Category: Sports</span>
-          <UProgress :value="130" :max="200" color="blue" />
-        </li>
-        <li class="flex flex-col py-2 border-b">
-          <div class="flex justify-between items-center">
-            <span>Product E</span>
-            <span>120 units</span>
-          </div>
-          <span class="text-sm text-gray-500">Category: Books</span>
-          <UProgress :value="120" :max="300" color="blue" />
+          <UProgress :value="product.qtyOrdered" :max="highestOrderQty" color="blue" />
         </li>
       </ul>
     </div>
     <div class="bg-white p-4 rounded shadow">
       <h2 class="text-base text-black font-semibold">Out of Stock Products</h2>
       <ul class="mt-3">
-        <li class="flex flex-col py-2 border-b">
-          <span class="font-medium">Category: Electronics</span>
-          <span>Product: Product X</span>
-          <UProgress :value="2" :max="5" color="red" />
-        </li>
-        <li class="flex flex-col py-2 border-b">
-          <span class="font-medium">Category: Home Appliances</span>
-          <span>Product: Product Y</span>
-          <span>5 units</span>
-          <UProgress :value="5" :max="10" color="red" />
-        </li>
-        <li class="flex flex-col py-2 border-b">
-          <span class="font-medium">Category: Furniture</span>
-          <span>Product: Product Z</span>
-          <span>6 units</span>
-          <UProgress :value="6" :max="10" color="red" />
+        <li class="flex flex-col py-2 border-b" v-for="product in products.filter((value) => value.stock < 10)">
+          <span class="font-medium">Category: {{getCategoryDescription(product.prodCatID)}}</span>
+          <span>Product: {{product.productName}}</span>
+          <UProgress :value="product.stock" :max="10" color="red" />
         </li>
       </ul>
     </div>
@@ -159,12 +115,30 @@
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
 import Chart from "chart.js/auto";
+import { apiService } from "~/api/apiService";
 
 export default {
-  setup() {
-    onMounted(() => {
+  data() {
+    return {
+      products: [],
+      categories: [],
+    };
+  },
+  computed:{
+    highestOrderQty(){
+      return Math.max(...this.products?.filter((v) => v?.stock !== 0 && v?.qtyOrdered)?.map((v) => parseInt(v?.qtyOrdered)))  
+    },
+    topProducts() {
+      console.log(this.products)
+      return this.products
+          ?.filter((v) => v.stock !== 0)
+          ?.sort((a, b) => b.qtyOrdered - a.qtyOrdered) // Sort by totalQtyOrdered (desc)
+          ?.slice(0, 5);
+          }
+  },
+  methods: {
+    graphPresentation() {
       const ctxOrder = document
         .getElementById("monthlyOrderChart")
         .getContext("2d");
@@ -175,11 +149,17 @@ export default {
       new Chart(ctxOrder, {
         type: "bar",
         data: {
-          labels: ["January", "February", "March", "April"], // Update with actual months
+          labels: [
+            "November 14",
+            "November 15",
+            "November 16",
+            "November 17",
+            "November 18",
+          ], // Update with actual months
           datasets: [
             {
               label: "Orders",
-              data: [20, 40, 60, 80], // Update with actual order data
+              data: [20, 40, 60, 80, 10], // Update with actual order data
               backgroundColor: "rgba(75, 192, 192, 0.2)",
               borderColor: "rgba(75, 192, 192, 1)",
               borderWidth: 1,
@@ -224,9 +204,61 @@ export default {
           },
         },
       });
-    });
+    },
+    getCategoryDescription(categoryId) {
+      const category = this.categories.find(
+        (cat) => cat.prodCatID === categoryId
+      );
+      return category ? category.description : "Unknown";
+    },
+    async fetchProductsData() {
+      try {
+        const { data } = await apiService.get("/api/products");
+        this.products = data?.map((value) => {
+          const qtyOrdered = value.sales_order?.reduce((total, detail) => {
+            return total + parseInt(detail.qtyOrdered);
+          }, 0);
+          return {
+            ...value,
+            qtyOrdered,
+          };
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    },
+    async fetchCategoriesData() {
+      try {
+        const { data } = await apiService.get("/api/productCategories");
+        this.categories = data;
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    },
+    async fetchFinishProductsData() {
+      const result = await apiService.get("/api/finishedProducts");
+      // const productIDs = result.data?.map((val) => val.production_detail.product.productID);
 
-    return {};
+      const data = this.products?.map((value) => {
+        const stockProducts = result.data?.filter(
+          (val) => val.production_detail.product.productID === value.productID
+        );
+        const quantity = stockProducts?.reduce((total, detail) => {
+          return total + parseInt(detail.quantity);
+        }, 0);
+        return {
+          ...value,
+          stock: quantity - value.qtyOrdered,
+        };
+      });
+      this.products = data;
+    },
+  },
+  async mounted() {
+    this.graphPresentation();
+    await this.fetchProductsData();
+    await this.fetchFinishProductsData();
+    await this.fetchCategoriesData();
   },
 };
 </script>

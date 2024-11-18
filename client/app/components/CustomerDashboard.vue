@@ -665,7 +665,7 @@ const completeAnOrder = async() => {
     salesID: data?.salesID ?? 0,
     deliveryDate: format(addDays(new Date(), 7),"yyyy-MM-dd"),
     deliveryAddress: `${store.billingAddress.buildingNo} ${store.billingAddress.street} ${store.billingAddress.city} ${store.billingAddress.province} ${store.billingAddress.region} ${store.billingAddress.areaCode}`,
-    deliveryStatus: 'Processed delivery'
+    deliveryStatus: 'Waiting for delivery'
   }
 
   await apiService.post("/api/salesDeliveries", salesDelivery);

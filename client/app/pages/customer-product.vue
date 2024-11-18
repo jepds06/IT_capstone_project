@@ -81,9 +81,6 @@ const products = ref([]);
 const categories = ref([]);
 const selectedCategory = ref('');
 const searchTerm = ref('');
-const finishedProducts = ref([]);
-
-
 
 const addToCart = (product) => {
   const alreadyAddedProduct = store.addedToCart?.find((value) => value.productID === product.productID)
