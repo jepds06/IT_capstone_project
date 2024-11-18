@@ -17,7 +17,9 @@ class SalesProductOrder extends Model
 
     protected $fillable = [
         'salesID',
-        'prodOrdID',
+        'productID',
+        'qtyOrdered',
+        'amount'
     ];
 
     public function sale()
@@ -25,8 +27,8 @@ class SalesProductOrder extends Model
         return $this->belongsTo(Sale::class, 'salesID');
     }
 
-    public function productOrder()
+    public function product()
     {
-        return $this->belongsTo(ProductOrder::class, 'prodOrdID');
+        return $this->belongsTo(Product::class, 'productID');
     }
 }

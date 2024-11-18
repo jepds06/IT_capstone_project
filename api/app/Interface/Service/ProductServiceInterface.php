@@ -11,6 +11,4 @@ interface ProductServiceInterface
     public function createProduct(object $payload);
 
     public function updateProduct(object $payload, int $productId);
-
-    public function deleteProduct(int $productId);
 }

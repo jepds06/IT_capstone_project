@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Interface\Repository\SalesProdOrderRepositoryInterface;
-use App\Models\ProductOrder;
+use App\Models\Product;
 use App\Models\Sale;
 use App\Models\SalesProductOrder;
 
@@ -30,12 +30,15 @@ class SalesProdOrderRepository implements SalesProdOrderRepositoryInterface
             throw new \Exception("Invalid sales ID provided.");
         }
 
-        $prodOrder = ProductOrder::find($payload->prdOrdID);
-        if($prodOrder){
-            $slsPrdOrder->productOrder()->associate($prodOrder);
+        $product = Product::find($payload->productID);
+        if($product){
+            $slsPrdOrder->product()->associate($product);
         } else {
-            throw new \Exception("Invalid product order ID provided.");
+            throw new \Exception("Invalid product ID provided.");
         }
+
+        $slsPrdOrder->qtyOrdered = $payload->qtyOrdered;
+        $slsPrdOrder->amount = $payload->amount;
 
         $slsPrdOrder->save();
         return $slsPrdOrder->fresh();
@@ -52,12 +55,15 @@ class SalesProdOrderRepository implements SalesProdOrderRepositoryInterface
             throw new \Exception("Invalid sales ID provided.");
         }
 
-        $prodOrder = ProductOrder::find($payload->prdOrdID);
-        if($prodOrder){
-            $slsPrdOrder->productOrder()->associate($prodOrder);
+        $product = Product::find($payload->productID);
+        if($product){
+            $slsPrdOrder->product()->associate($product);
         } else {
-            throw new \Exception("Invalid product order ID provided.");
+            throw new \Exception("Invalid product ID provided.");
         }
+
+        $slsPrdOrder->qtyOrdered = $payload->qtyOrdered;
+        $slsPrdOrder->amount = $payload->amount;
 
         $slsPrdOrder->save();
         return $slsPrdOrder->fresh();

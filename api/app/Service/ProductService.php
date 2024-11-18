@@ -42,9 +42,4 @@ class ProductService implements ProductServiceInterface
 
         return new ProductResource($product);
     }
-
-    public function deleteProduct(int $productId)
-    {
-        return $this->productRepository->delete($productId);
-    }
 }
