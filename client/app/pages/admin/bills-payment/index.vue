@@ -8,7 +8,7 @@
       <input
         type="text"
         v-model="searchQuery"
-        placeholder="Search by Payment ID or Customer Name"
+        placeholder="Search by Payment ID or Supplier Name"
         class="px-4 py-2 w-1/3 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
       />
     </div>
@@ -21,7 +21,7 @@
         <thead class="bg-gray-500 text-white uppercase tracking-wide text-sm">
           <tr>
             <th class="py-3 px-4 text-left">Production ID</th>
-            <th class="py-3 px-4 text-left">User</th>
+            <th class="py-3 px-4 text-left">Supplier</th>
             <th class="py-3 px-4 text-left">Payment Date</th>
             <th class="py-3 px-4 text-left">Amount</th>
             <th class="py-3 px-4 text-left">Status</th>
@@ -38,7 +38,7 @@
               {{ payment?.admin_order?.quotation?.productionID }}
             </td>
             <td class="px-6 py-3">
-              {{ getUserName(payment.admin_order.userID) }}
+              {{ getSupplierName(payment?.admin_order?.quotation?.userID) }}
             </td>
             <td class="px-6 py-3">
               {{payment.paymentDate
@@ -243,7 +243,7 @@ const filteredPayments = computed(() => {
   return payments.value?.filter(
     (payment) =>
       payment?.id?.toString().includes(searchQuery.value) ||
-      getUserName(payment.admin_order.userID)
+      getSupplierName(payment?.admin_order?.quotation?.userID)
         .toLowerCase()
         .includes(searchQuery.value.toLowerCase())
   );
@@ -302,6 +302,11 @@ const deletePayment = (adminPayID) => {
 const getUserName = (userID) => {
   const user = users.value?.find((us) => us.userID === userID);
   return user ? `${user.lastName}, ${user.firstName}` : "Unknown";
+};
+
+const getSupplierName = (userID) => {
+  const user = users.value?.find((us) => us.userID === userID);
+  return user ? `${user.lastName} ${user.firstName}` : "Unknown";
 };
 
 const getPaymentMethod = (payMethodID) => {

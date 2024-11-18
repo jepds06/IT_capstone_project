@@ -53,31 +53,13 @@
       <div class="bg-white text-black p-4 rounded shadow">
         <h2 class="text-base font-semibold">Pending Payments - Suppliers</h2>
         <ul class="mt-3">
-          <li class="flex justify-between py-2 border-b">
-            <span>Supplier 1</span>
+          <li class="flex justify-between py-2 border-b" v-for="payment in pendingAdminPayment">
+            <span>{{getSupplierName(payment?.admin_order?.quotation?.userID)}}</span>
             <span>{{
               new Intl.NumberFormat("en-PH", {
                 style: "currency",
                 currency: "PHP",
-              }).format(2500)
-            }}</span>
-          </li>
-          <li class="flex justify-between py-2 border-b">
-            <span>Supplier 2</span>
-            <span>{{
-              new Intl.NumberFormat("en-PH", {
-                style: "currency",
-                currency: "PHP",
-              }).format(2000)
-            }}</span>
-          </li>
-          <li class="flex justify-between py-2 border-b">
-            <span>Supplier 3</span>
-            <span>{{
-              new Intl.NumberFormat("en-PH", {
-                style: "currency",
-                currency: "PHP",
-              }).format(1000)
+              }).format(payment.amountToPay)
             }}</span>
           </li>
         </ul>
@@ -123,9 +105,17 @@ export default {
     return {
       products: [],
       categories: [],
+      adminPayments: [],
+      users: [],
     };
   },
   computed:{
+    pendingAdminPayment(){
+      return this.adminPayments
+      ?.filter((value) => value.amountToPay !== value.amountPaid)
+      ?.sort((a, b) => b.amountToPay - a.amountToPay)
+      ?.slice(0,3)
+    },
     highestOrderQty(){
       return Math.max(...this.products?.filter((v) => v?.stock !== 0 && v?.qtyOrdered)?.map((v) => parseInt(v?.qtyOrdered)))  
     },
@@ -211,6 +201,16 @@ export default {
       );
       return category ? category.description : "Unknown";
     },
+    getSupplierName(userID) {
+      const supplier = this.users?.find((value) => value.userID === userID);
+      return supplier
+        ? `${supplier.lastName} ${supplier.firstName}`
+        : "Unknown";
+    },
+    async fetchUserData() {
+      const result = await apiService.get("/api/users");
+      this.users = result.data;
+    },
     async fetchProductsData() {
       try {
         const { data } = await apiService.get("/api/products");
@@ -253,12 +253,18 @@ export default {
       });
       this.products = data;
     },
+    async fetchPaymentsData (){
+      const result = await apiService.get("/api/adminPayments");
+      this.adminPayments = result.data;
+    }
   },
   async mounted() {
     this.graphPresentation();
+    await this.fetchCategoriesData();
+    await this.fetchUserData();
     await this.fetchProductsData();
     await this.fetchFinishProductsData();
-    await this.fetchCategoriesData();
+    await this.fetchPaymentsData();
   },
 };
 </script>

@@ -11,10 +11,10 @@ provide("navigation", navigation);
 </script>
 
 <template>
-  <div v-if="route.path === '/'">
+  <div v-if="route.path === '/'" class="layout">
     <AppHeader />
 
-    <main>
+    <main class="flex-grow">
       <slot />
     </main>
 
@@ -22,38 +22,38 @@ provide("navigation", navigation);
 
   </div>
 
-  <div v-else-if="route.path.includes('/admin')">
+  <div v-else-if="route.path.includes('/admin')" class="layout">
+    <AdminHeader />
+    
+    <div class="flex flex-grow">
+      <!-- Sidebar -->
+      <AdminSidebar class="w-64" />
+      
+      <!-- Main Content -->
+      <div class="flex-1 flex flex-col">
+        <main class="flex-grow p-6">
+          <slot />
+        </main>
+        
+        <!-- Footer -->
+        <AppFooter />
+      </div>
+    </div>
+  </div>
+
+  <div v-else-if="route.path.includes('/supplier')" class="layout">
     <AdminHeader />
     <div class="flex">
-      <AdminSidebar />
-      <div class="flex-1 p-6">
-        <main>
           <main>
             <slot />
           </main>
-        </main>
-      </div>
     </div>
     <AppFooter />
   </div>
 
-  <div v-else-if="route.path.includes('/supplier')">
-    <AdminHeader />
-    <div class="flex">
-      <div class="flex-1 p-6">
-        <main>
-          <main>
-            <slot />
-          </main>
-        </main>
-      </div>
-    </div>
-    <AppFooter />
-  </div>
-
-  <div v-else>
+  <div v-else class="layout">
     <CustomerHeader />
-    <main>
+    <main class="flex-grow">
       <slot />
     </main>
     <!-- <ClientOnly>
@@ -65,3 +65,19 @@ provide("navigation", navigation);
     <AppFooter />
   </div>
 </template>
+
+<style>
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensures the layout stretches to the full viewport height */
+}
+
+main {
+  flex-grow: 1; /* Allows main content to take up remaining space */
+}
+
+.flex-grow {
+  flex-grow: 1; /* Makes the content area expand */
+}
+</style>

@@ -675,7 +675,7 @@ const completeAnOrder = async() => {
     paymentDate: format(new Date(), "yyyy-MM-dd"),
     payMethodID: paymentMethods.value.find((val) => val.payMethodName === paymentSelected.value)?.payMethodID,
     paymentStatus: 'Unpaid',
-    dueDate: format(new Date(), "yyyy-MM-dd"),
+    dueDate: format(addDays(new Date(), 7),"yyyy-MM-dd"),
     amountToPay: totalAmount.value,
     amountPaid: 0,
   }

@@ -11,7 +11,7 @@ class CustomerPaymentRepository implements CustomerPaymentRepositoryInterface
 {
     public function findMany()
     {
-        return CustomerPayment::paginate(10);
+        return CustomerPayment::with(['sale'])->paginate(10);
     }
 
     public function findOneById(int $cstrPayId)
