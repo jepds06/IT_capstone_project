@@ -1,5 +1,5 @@
 <template>
-  <div class="m-8 ">  
+  <div class="m-8">  
     <!-- Search Input -->
     <div class="mb-4 flex justify-end">
       <input 
@@ -26,7 +26,7 @@
         
         <!-- Image Section -->
         <div class="flex justify-center w-full">
-          <img :src="default" alt="Sample Image" class="object-contain h-48 w-50" />
+          <img :src="product?.image_url" :alt="product.productName" class="object-contain h-48 w-50" />
         </div>
         
         <!-- Product Details Section -->
@@ -43,33 +43,65 @@
           <div class="mt-2 flex-grow mb-4">
             <p class="text-gray-700">{{ product.specifications }}</p>
           </div>
+
+          <!-- Stocks -->
+          <div class="mt-2 flex-grow mb-4 items-center">
+            <div v-if="product.stock == 0">
+              <!-- <UIcon name="fluent:box-dismiss-24-regular" class="text-2xl" /> -->
+              <span class="text-gray-700">Out of stock</span>
+            </div>
+            <div v-else>
+              <p class="text-gray-700">Stock: {{ product.stock }}</p>
+            </div>
+          </div>
         </div>
 
         <!-- Price and Add to Cart Section -->
         <div class="pt-4 flex justify-between items-center">
           <span class="font-bold text-lg text-green-600">₱{{ product.unitPrice }}</span>
-          <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-            Add to Cart
-          </button>
+          <UButton icon="solar:cart-4-linear" @click="addToCart(product)" label="Add to Cart" :disabled="product.stock == 0" />
         </div>
       </UCard>
+
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watchEffect } from 'vue';
 import { apiService } from "~/api/apiService";
+import { store } from "~/composables/store";
+
+useSeoMeta({
+  title: 'Customer',
+  description: 'Customer Dashboard'
+})
 
 const products = ref([]);
 const categories = ref([]);
 const selectedCategory = ref('');
 const searchTerm = ref('');
 
+const addToCart = (product) => {
+  const alreadyAddedProduct = store.addedToCart?.find((value) => value.productID === product.productID)
+  if(alreadyAddedProduct){
+    alert('Already added on the cart!')
+  } else {
+    store.addedToCart.push({...product, quantity: 1})
+}
+}
 const fetchProductsData = async () => {
   try {
     const { data } = await apiService.get("/api/products");
-    products.value = data;
+    products.value = data?.map((value) => {
+      const qtyOrdered = value.sales_order?.reduce((total, detail) => {
+      return total + parseInt(detail.qtyOrdered);
+    }, 0);
+    return {
+      ...value,
+      qtyOrdered,
+    }
+    });
   } catch (error) {
     console.error("Error fetching data:", error);
   }
@@ -103,8 +135,38 @@ const filterProducts = () => {
   // Triggered automatically by v-model change
 };
 
-onMounted(() => {
-  fetchProductsData();
-  fetchCategoriesData();
+const fetchFinishProductsData = async() => {
+  const result = await apiService.get("/api/finishedProducts");
+  // const productIDs = result.data?.map((val) => val.production_detail.product.productID);
+
+  const data = products.value?.map((value) => {
+    const stockProducts = result.data?.filter((val) => val.production_detail.product.productID === value.productID);
+    const quantity = stockProducts?.reduce((total, detail) => {
+    return total + parseInt(detail.quantity);
+  }, 0);
+    return {
+      ...value,
+      stock: quantity - value.qtyOrdered
+    }
+  });
+  products.value = data
+
+}
+
+onMounted(async () => {
+  await fetchProductsData();
+  await fetchFinishProductsData();
+  await fetchCategoriesData();
 });
+
+watchEffect(async() => {
+  // Automatically tracks `count` and recalculates `doubled` when `count` changes
+  if (store.isOpenCart === false) {
+    // Perform an API call or filter logic
+    await fetchProductsData();
+    await fetchFinishProductsData();
+    await fetchCategoriesData();
+  }
+});
+
 </script>

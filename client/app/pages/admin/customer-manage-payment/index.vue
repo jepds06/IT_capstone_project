@@ -5,20 +5,6 @@
 
     <!-- Form Section -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-      <div class="col-span-1">
-        <!-- <div class="flex justify-between items-center mb-4">
-          <div>
-            <button @click="editSupplier" class="mr-2 text-blue-600 hover:text-blue-800">
-              <i class="fas fa-edit"></i> Edit
-            </button>
-            <button @click="saveSupplier" class="text-green-600 hover:text-green-800">
-              <i class="fas fa-save"></i> Save
-            </button>
-          </div>
-        </div> -->
-        <label class="block font-semibold text-lg mb-2">*Production No</label>
-        <USelectMenu v-model="selectedProduction" :options="productions" />
-      </div>
       <!-- Supplier Section -->
       <div class="col-span-1">
         <!-- <div class="flex justify-between items-center mb-4">
@@ -31,14 +17,15 @@
             </button>
           </div>
         </div> -->
-        <label class="block font-semibold text-lg mb-2">Supplier</label>
-        <USelectMenu v-model="selectedSupplier" :options="supplier" />
+        <label class="block font-semibold text-lg mb-2">Customer</label>
+        <USelectMenu v-model="selectedCustomer" :options="customer" searchable
+        searchable-placeholder="Search a customer..."/>
       </div>
 
       <!-- Date Input -->
       <div class="col-span-1">
-        <label class="block font-semibold text-lg mb-2">Actions</label>
-        <div class="flex">
+        <!-- <label class="block font-semibold text-lg mb-2">Actions</label>
+        <div class="flex"> -->
           <!-- <input type="date" class="w-full p-2 border rounded text-base" /> -->
           <!-- <UPopover :popper="{ placement: 'bottom-start' }">
           <UButton icon="i-heroicons-calendar-days-20-solid" :label="formattedDate" />
@@ -47,7 +34,7 @@
             <DatePicker v-model="selectedDate" is-required @close="close" />
           </template>
         </UPopover> -->
-          <UButton
+          <!-- <UButton
             class="ml-2"
             title="Filter"
             label="Filter  "
@@ -60,8 +47,8 @@
             label="Clear"
             color="gray"
             @click="clearFilter"
-          />
-        </div>
+          /> -->
+        <!-- </div> -->
       </div>
     </div>
 
@@ -92,8 +79,8 @@
               class="cursor-pointer hover:bg-gray-100"
             >
               <!-- <td class="p-2">{{ bill.id }}</td> -->
-              <td class="p-2">{{ bill.adminOrdID }}</td>
-              <td class="p-2">{{ bill.orderDate }}</td>
+              <td class="p-2">{{ bill.cstrPayID }}</td>
+              <td class="p-2">{{ bill.salesDate }}</td>
               <td class="p-2">
                 {{
                   new Intl.NumberFormat("en-PH", {
@@ -175,8 +162,8 @@
               <td class="p-2 flex items-center">
                 <input type="checkbox" v-model="bill.selected" class="mr-2" />
               </td>
-              <td class="p-2">{{ bill.adminOrdID }}</td>
-              <td class="p-2">{{ bill.orderDate }}</td>
+              <td class="p-2">{{ bill.cstrPayID }}</td>
+              <td class="p-2">{{ bill.salesDate }}</td>
               <!-- <td class="p-2">{{  new Intl.NumberFormat("en-PH", {
                 style: "currency",
                 currency: "PHP",
@@ -209,7 +196,7 @@
             :loading="isLoadingPay"
             label="Pay"
             icon="material-symbols:payments-outline"
-            @click="saveSupplier"
+            @click="saveCustomer"
             color="green"
             :disabled="
               !selectedPaymentType ||
@@ -370,8 +357,8 @@ export default {
       selectedDate: new Date(),
       productions: [],
       selectedProduction: null,
-      supplier: [],
-      selectedSupplier: null,
+      customer: [],
+      selectedCustomer: null,
       paymentTypes: [],
       selectedPaymentType: null,
       paymentType: "",
@@ -389,6 +376,14 @@ export default {
       isModalOpen: false,
       isLoadingPay: false,
     };
+  },
+  watch:{
+    async selectedCustomer(oldVal, newVal){
+      console.log(oldVal, newVal)
+      if(oldVal?.id !== newVal?.id){
+        await this.fetchCustomerPaymentsData()
+      }
+    }
   },
   computed: {
     formattedDate() {
@@ -448,197 +443,70 @@ export default {
     editSupplier() {
       // Logic for editing supplier
     },
-    async saveSupplier() {
+    async saveCustomer() {
       // Logic for saving supplier
       this.isLoadingPay = true;
       const data = this.selectedBills.filter((val) => val.selected);
-      console.log(this.selectedBills);
+      // console.log(this.selectedBills);
       let message = "";
-      const dataToSave = data
-        .filter((val) => !val.adminPayID)
-        .map((value) => {
-          if (value.amount > value.balance) {
+
+      const dataToSave = this.selectedBills.map((value) => {
+              if (value.amount > value.balance) {
             message =
               message +
-              `Payment for invoice no: ${value.id} is greater than the balance amount.\n`;
+              `Payment for invoice no: ${value.cstrPayID} is greater than the balance amount.\n`;
             return;
           }
           message =
-            message + `Payment for invoice no: ${value.id} is successful.\n`;
-          return {
-            adminOrdID: value.adminOrdID,
-            payMethodID: this.selectedPaymentType.id,
-            paymentDate: format(new Date(), "yyyy-MM-dd"),
-            amountToPay: value.amountToPay,
-            amountPaid: value.amount,
-            paymentStatus:
-              parseFloat(value.amountToPay) > parseFloat(value.amount)
+            message + `Payment for invoice no: ${value.cstrPayID} is successful.\n`;
+        return {
+          ...value,
+          paymentStatus: parseFloat(value.amountToPay) > parseFloat(value.amount)
                 ? "pending"
                 : "completed",
-            remarks: `Paid ${format(new Date(), "yyyy-MM-dd")}`,
-          };
-        });
-
-      const dataToUpdate = data
-        .filter((val) => val.adminPayID)
-        .map((value) => {
-          if (value.amount > value.balance) {
-            message =
-              message +
-              `Payment for invoice no: ${value.id} is greater than the balance amount.\n`;
-            return;
-          }
-          message =
-            message + `Payment for invoice no: ${value.id} is successful.\n`;
-          return {
-            adminPayID: value.adminPayID,
-            adminOrdID: value.adminOrdID,
-            payMethodID: this.selectedPaymentType.id,
-            paymentDate: format(new Date(), "yyyy-MM-dd"),
-            amountToPay: value.amountToPay,
-            amountPaid: parseFloat(value.amount) + parseFloat(value.amountPaid),
-            paymentStatus:
-              parseFloat(value.amountToPay) >
-              parseFloat(value.amount) + parseFloat(value.amountPaid)
-                ? "pending"
-                : "completed",
-            remarks: `Paid ${format(new Date(), "yyyy-MM-dd")}`,
-          };
-        });
-
-      await Promise.all(
-        dataToSave?.map(async (value) => {
-          value ? await apiService.post("/api/adminPayments", value) : "";
-        })
-      );
-      await Promise.all(
-        dataToUpdate?.map(async (value) => {
-          value?.adminPayID
-            ? await apiService.put(
-                `/api/adminPayments/${value.adminPayID}`,
-                value
-              )
-            : "";
-        })
-      );
-      this.selectedBills = this.selectedBills.filter(
-        (val) => !val.selected || val.amount > val.balance
-      );
-      await this.applyFilter();
+          paymentDate: format(new Date(), "yyyy-MM-dd"),
+          payMethodID: this.selectedPaymentType.id,
+          amountPaid: value.amount
+        }
+      });
+      await Promise.all(dataToSave?.map(async (value) => {
+          value ? await apiService.post("/api/customerPayments", value) : "";
+        }))
+      await this.fetchCustomerPaymentsData();
       this.isLoadingPay = false;
-      console.log("message", message)
       this.setTemporaryMessage("status",message);
     },
-    async applyFilter() {
-      let transFormData;
-      if (this.selectedProduction) {
-        const result = await this.fetchPaymentByProductionNo(
-          this.selectedProduction.id
-        );
-
-        if (result.data?.filter((val) => val.isApproved === 1).length === 0) {
-          alert("No data available.");
-          return;
-        }
-        if (!this.selectedSupplier) {
-          transFormData = result.data
-            ?.filter((val) => val.isApproved === 1)
-            ?.map((value, index) => {
-              const amountToPay = value.admin_order_detail?.reduce(
-                (total, detail) => {
-                  return total + parseFloat(detail.amount);
-                },
-                0
-              );
-              const amountPaid = value.admin_payments?.amountPaid ?? 0;
-              if (value.admin_payments) {
-                const adminPayID = value.admin_payments.adminPayID;
-                return {
-                  amountToPay,
-                  adminOrdID: value.adminOrdID,
-                  amountPaid,
-                  balance: amountToPay - amountPaid,
-                  adminPayID,
-                  orderDate: value.orderDate,
-                  id: index + 1,
-                };
-              }
-              return {
-                amountToPay,
-                adminOrdID: value.adminOrdID,
-                amountPaid,
-                balance: amountToPay - amountPaid,
-                orderDate: value.orderDate,
-                id: index + 1,
-              };
-            })
-            ?.filter((value) => value.balance !== 0);
-        } else {
-          transFormData = result.data
-            ?.filter((val) => val.isApproved === 1)
-            ?.filter(
-              (value) => value.quotation.userID === this.selectedSupplier.id
+   async fetchCustomerPaymentsData(){
+    const result = await apiService.get("/api/sales");
+          this.unpaidBills = result.data?.filter(
+              (value) => value.userID === this.selectedCustomer.id
             )
             .map((value, index) => {
-              const amountToPay = value.admin_order_detail?.reduce(
-                (total, detail) => {
-                  return total + parseFloat(detail.amount);
-                },
+             const totalAmountPaid = value.customer_payment?.reduce(
+                (sum, item) => parseFloat(sum) + parseFloat(item.amountPaid),
                 0
-              );
-              const amountPaid = value.admin_payments?.amountPaid ?? 0;
-              if (value.admin_payments) {
-                const adminPayID = value.admin_payments.adminPayID;
-                return {
-                  amountToPay,
-                  adminOrdID: value.adminOrdID,
-                  amountPaid,
-                  balance: amountToPay - amountPaid,
-                  adminPayID,
-                  orderDate: value.orderDate,
-                  id: index + 1,
-                };
-              }
+              )
+              console.log('totalAmountPaid', totalAmountPaid)
               return {
-                amountToPay,
-                adminOrdID: value.adminOrdID,
-                amountPaid,
-                balance: amountToPay - amountPaid,
-                orderDate: value.orderDate,
+                amountToPay: value.customer_payment[0]?.amountToPay,
+                cstrPayID: value.customer_payment[0]?.cstrPayID,
+                amountPaid: totalAmountPaid,
+                balance: parseFloat(value.customer_payment[0]?.amountToPay) - parseFloat(totalAmountPaid),
+                salesDate: value.salesDate,
+                salesID: value.salesID,
+                paymentStatus: value.customer_payment[0]?.paymentStatus,
+                dueDate: value.customer_payment[0]?.dueDate,
                 id: index + 1,
               };
             })
             ?.filter((value) => value.balance !== 0);
-        }
-        this.unpaidBills = transFormData;
-      } else {
-        alert("Production No is required when filtering");
-      }
-    },
-    clearFilter() {
-      this.selectedDate = new Date();
-      this.selectedSupplier = null;
-      this.selectedProduction = null;
-      this.selectedPaymentType = null;
-      this.unpaidBills = [];
-      this.selectedBills = [];
-    },
-    async fetchProductions() {
-      const result = await apiService.get("/api/productions");
 
-      this.productions = result.data
-        ?.filter((prod) => prod.status === "In Progress")
-        ?.map((prod) => {
-          return {
-            id: prod.productionID,
-            label: `${prod.productionID} - ${prod.remarks}`,
-          };
-        });
-    },
+            console.log("unpaidBills", this.unpaidBills)
+   },
     async fetchUserData() {
       const result = await apiService.get("/api/users");
-      this.supplier = result.data
-        ?.filter((user) => user.userTypeID === 3)
+      this.customer = result.data
+        ?.filter((user) => user.userTypeID === 2)
         ?.map((user) => {
           return {
             id: user.userID,
@@ -663,7 +531,7 @@ export default {
     },
   },
   async mounted() {
-    await this.fetchProductions();
+    // await this.fetchProductions();
     await this.fetchUserData();
     await this.fetchPaymentMethod();
     //   if (process.client) {

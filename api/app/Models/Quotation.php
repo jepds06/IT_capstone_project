@@ -40,6 +40,6 @@ class Quotation extends Model
 
     public function adminOrders()
     {
-        return $this->hasMany(AdminOrder::class, 'quoteID');
+        return $this->hasOne(AdminOrder::class, 'quoteID');
     }
 }

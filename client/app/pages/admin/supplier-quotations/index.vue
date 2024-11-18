@@ -79,7 +79,7 @@
               <td class="py-2 px-4 relative">
                 <span
                   class="text-blue-600 underline cursor-pointer"
-                  @click="openSupplierDetailsModal(supplier)"
+                  @click=" supplier.isCompleted && openSupplierDetailsModal(supplier)"
                 >
                   {{ getSupplierName(supplier.userID) }}
                 </span>
@@ -99,18 +99,19 @@
                 >
                   Generate PO
                 </button> -->
-                <button
+                <!-- <button
                   :class="
-                    supplier.quotation_details.length > 0
+                  supplier.isCompleted !== 0
                       ? 'bg-red-800 text-white py-1 px-3 rounded-md'
                       : 'bg-gray-300 py-1 px-3 rounded-md cursor-not-allowed'
                   "
-                  :disabled="!supplier.quotation_details.length > 0"
+                  :disabled="supplier.isCompleted === 0"
                   @click="downloadQuotation(supplier)"
                 >
                   <UIcon name="vscode-icons:file-type-pdf2" class="w-5" />
                   Download
-                </button>
+                </button> -->
+                <UButton  color="red" title="Download Quotation" icon="vscode-icons:file-type-pdf2" :disabled="supplier.isCompleted === 0" label="Download" @click="downloadQuotation(supplier)"/>
               </td>
             </tr>
           </tbody>
@@ -137,6 +138,7 @@
         <label for="productionID" class="block mb-2 mt-4 text-black"
           >Production No: <span>{{ `QN-${selectedQuotation.productionID}` }}</span></label
         >
+        <div class="overflow-y-auto max-h-80 border border-gray-300 mt-4">
         <table class="min-w-full bg-white border border-gray-300 mb-4">
           <thead class="bg-gray-200">
             <tr>
@@ -167,6 +169,7 @@
                 </div>
               </td>
               <td class="py-2 px-4">
+                  <UIcon name="emojione:bookmark" v-if="material.quotePriceRemarks" title="Lowest Price"/>
                 {{ this.getMaterialProductName(material?.prodtnMtrlID) }}
               </td>
               <td class="py-2 px-4">{{ material?.quantity }}</td>
@@ -200,6 +203,7 @@
             </tr>
           </tbody>
         </table>
+        </div>
 
         <!-- Total Price Calculation -->
         <div class="flex justify-end mt-2">
@@ -378,6 +382,24 @@ export default {
         this.selectedQuotation.productionID
       );
       this.selectedSupplier = supplier;
+      const otherSupplier = this.selectedQuotation.quotations.filter((value) => value.userID !== supplier.userID);
+      const quotationDetail = this.selectedSupplier?.quotation_details?.map((value) =>{
+        const material = otherSupplier.map((val) => {
+          const findMaterial = val.quotation_details.find((v) => v.prodtnMtrlID === value.prodtnMtrlID)
+          return findMaterial ? findMaterial.quotePrice : 0;
+        }).filter((val) => val !== 0);
+
+        material.push(value.quotePrice);
+        // const highestPrice = Math.max(...material);
+        const lowestPrice = Math.min(...material);
+        if(parseFloat(lowestPrice) === parseFloat(value.quotePrice)){
+          value.quotePriceRemarks = 'Lowest price';
+        } else {
+          value.quotePriceRemarks = '';
+        }
+        return value;
+      })
+      this.selectedSupplier = {...this.selectedSupplier, quotation_details: quotationDetail}
       this.showSupplierDetailsModal = true;
       await this.fetchAdminOrders()
     },
@@ -401,7 +423,8 @@ export default {
       const adminOrder = {
         userID: this.userInfo.userID,
         quoteID: this.selectedSupplier?.quotation_details[0]?.quoteID,
-        orderDate: format(new Date(),'yyyy-MM-dd')
+        orderDate: format(new Date(),'yyyy-MM-dd'),
+        isApproved: false
       }
       const adminOrderDetails = this.purchasedMaterials.map((prodtnMtrlID) => {
       const material = this.selectedSupplier?.quotation_details.find((value) => value.prodtnMtrlID === prodtnMtrlID)
@@ -585,9 +608,11 @@ export default {
 
       // Gather all prices from the quotation details
       const prices = [];
-
+      
+      const quotationDetailPrice = []
       result.data.forEach((production) => {
         production.quotations.forEach((quotation) => {
+          quotationDetailPrice.push(quotation.quotation_details)
           const computedPrice = quotation.quotation_details.reduce(
             (total, detail) => {
               return total + parseFloat(detail.quotePrice);
@@ -598,6 +623,7 @@ export default {
         });
       });
 
+      
       // Calculate the highest, lowest, and mid-range prices
       const highestPrice = Math.max(...prices);
       const lowestPrice = Math.min(...prices);
@@ -613,14 +639,11 @@ export default {
             },
             0
           );
-
           // Determine quotationRemarks based on totalPrice
-          if (totalPrice === 0) {
-            if(quotation.isCompleted){
+          if (totalPrice === 0 && quotation.isCompleted) {
               quotation.quotationRemarks = "No Quoted Price";
-            } else{
-              quotation.quotationRemarks = "No Quoted Price Yet";
-          }
+          } else if (quotation.isCompleted === 0){
+            quotation.quotationRemarks = "No Quoted Price Yet";
           } else if (totalPrice >= highestPrice) {
             quotation.quotationRemarks = "Highest Price";
           } else if (totalPrice <= lowestPrice) {

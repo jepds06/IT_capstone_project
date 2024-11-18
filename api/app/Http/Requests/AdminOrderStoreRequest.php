@@ -24,7 +24,8 @@ class AdminOrderStoreRequest extends FormRequest
         return [
             'userID' => 'required|integer|exists:users,userID', 
             'quoteID' => 'required|integer|exists:quotations,quoteID',
-            'orderDate' => 'required|date'
+            'orderDate' => 'required|date',
+            'isApproved' => 'required|boolean',
         ];
     }
 }

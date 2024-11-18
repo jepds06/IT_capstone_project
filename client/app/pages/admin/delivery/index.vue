@@ -111,7 +111,7 @@ export default {
       return this.deliveries.slice(start, start + this.itemsPerPage);
     },
     totalDeliveries(){
-      return this.deliveries.filter((item) => item.deliveryDate === format(new Date(),'yyyy-MM-dd') && item.deliveryStatus === 'Processed delivery')?.length
+      return this.deliveries.filter((item) => item.deliveryDate === format(new Date(),'yyyy-MM-dd') && item.deliveryStatus !== 'Delivered')?.length
     },
     pendingDeliveries(){
       return this.deliveries.filter((item) => item.deliveryStatus === 'Processed delivery')?.length

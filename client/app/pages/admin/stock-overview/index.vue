@@ -10,9 +10,6 @@
             Product Name
           </th>
           <th class="border-b border-black pb-2">
-            Date
-          </th>
-          <th class="border-b border-black pb-2">
             Units Available
           </th>
           <th class="border-b border-black pb-2">
@@ -21,289 +18,76 @@
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr v-for="product in products" :key="product.productID" >
           <td class="border-b border-black py-1">
-            Product A
+            {{product.productName }}
           </td>
           <td class="border-b border-black py-1">
-            2024-10-01
+            {{product.stock}}
           </td>
           <td class="border-b border-black py-1">
-            100
-          </td>
-          <td class="border-b border-black py-1">
-            50
-          </td>
-        </tr>
-        <tr>
-          <td class="border-b border-black py-1">
-            Product B
-          </td>
-          <td class="border-b border-black py-1">
-            2024-10-15
-          </td>
-          <td class="border-b border-black py-1">
-            200
-          </td>
-          <td class="border-b border-black py-1">
-            30
-          </td>
-        </tr>
-        <tr>
-          <td class="border-b border-black py-1">
-            Product B
-          </td>
-          <td class="border-b border-black py-1">
-            2024-10-15
-          </td>
-          <td class="border-b border-black py-1">
-            200
-          </td>
-          <td class="border-b border-black py-1">
-            30
-          </td>
-        </tr>
-        <tr>
-          <td class="border-b border-black py-1">
-            Product B
-          </td>
-          <td class="border-b border-black py-1">
-            2024-10-15
-          </td>
-          <td class="border-b border-black py-1">
-            200
-          </td>
-          <td class="border-b border-black py-1">
-            30
-          </td>
-        </tr>
-        <tr>
-          <td class="border-b border-black py-1">
-            Product B
-          </td>
-          <td class="border-b border-black py-1">
-            2024-10-15
-          </td>
-          <td class="border-b border-black py-1">
-            200
-          </td>
-          <td class="border-b border-black py-1">
-            30
-          </td>
-        </tr>
-        <tr>
-          <td class="border-b border-black py-1">
-            Product B
-          </td>
-          <td class="border-b border-black py-1">
-            2024-10-15
-          </td>
-          <td class="border-b border-black py-1">
-            200
-          </td>
-          <td class="border-b border-black py-1">
-            30
-          </td>
-        </tr>
-        <tr>
-          <td class="border-b border-black py-1">
-            Product B
-          </td>
-          <td class="border-b border-black py-1">
-            2024-10-15
-          </td>
-          <td class="border-b border-black py-1">
-            200
-          </td>
-          <td class="border-b border-black py-1">
-            30
-          </td>
-        </tr>
-        <tr>
-          <td class="border-b border-black py-1">
-            Product B
-          </td>
-          <td class="border-b border-black py-1">
-            2024-10-15
-          </td>
-          <td class="border-b border-black py-1">
-            200
-          </td>
-          <td class="border-b border-black py-1">
-            30
-          </td>
-        </tr>
-        <tr>
-          <td class="border-b border-black py-1">
-            Product B
-          </td>
-          <td class="border-b border-black py-1">
-            2024-10-15
-          </td>
-          <td class="border-b border-black py-1">
-            200
-          </td>
-          <td class="border-b border-black py-1">
-            30
-          </td>
-        </tr>
-        <tr>
-          <td class="border-b border-black py-1">
-            Product B
-          </td>
-          <td class="border-b border-black py-1">
-            2024-10-15
-          </td>
-          <td class="border-b border-black py-1">
-            200
-          </td>
-          <td class="border-b border-black py-1">
-            30
-          </td>
-        </tr>
-        <tr>
-          <td class="border-b border-black py-1">
-            Product B
-          </td>
-          <td class="border-b border-black py-1">
-            2024-10-15
-          </td>
-          <td class="border-b border-black py-1">
-            200
-          </td>
-          <td class="border-b border-black py-1">
-            30
-          </td>
-        </tr>    <tr>
-          <td class="border-b border-black py-1">
-            Product B
-          </td>
-          <td class="border-b border-black py-1">
-            2024-10-15
-          </td>
-          <td class="border-b border-black py-1">
-            200
-          </td>
-          <td class="border-b border-black py-1">
-            30
-          </td>
-        </tr>
-        <tr>
-          <td class="border-b border-black py-1">
-            Product B
-          </td>
-          <td class="border-b border-black py-1">
-            2024-10-15
-          </td>
-          <td class="border-b border-black py-1">
-            200
-          </td>
-          <td class="border-b border-black py-1">
-            30
-          </td>
-        </tr>
-        <tr>
-          <td class="border-b border-black py-1">
-            Product B
-          </td>
-          <td class="border-b border-black py-1">
-            2024-10-15
-          </td>
-          <td class="border-b border-black py-1">
-            200
-          </td>
-          <td class="border-b border-black py-1">
-            30
-          </td>
-        </tr>
-        <tr>
-          <td class="border-b border-black py-1">
-            Product B
-          </td>
-          <td class="border-b border-black py-1">
-            2024-10-15
-          </td>
-          <td class="border-b border-black py-1">
-            200
-          </td>
-          <td class="border-b border-black py-1">
-            30
-          </td>
-        </tr>
-        <tr>
-          <td class="border-b border-black py-1">
-            Product B
-          </td>
-          <td class="border-b border-black py-1">
-            2024-10-15
-          </td>
-          <td class="border-b border-black py-1">
-            200
-          </td>
-          <td class="border-b border-black py-1">
-            30
-          </td>
-        </tr>
-        <tr>
-          <td class="border-b border-black py-1">
-            Product B
-          </td>
-          <td class="border-b border-black py-1">
-            2024-10-15
-          </td>
-          <td class="border-b border-black py-1">
-            200
-          </td>
-          <td class="border-b border-black py-1">
-            30
-          </td>
-        </tr>    <tr>
-          <td class="border-b border-black py-1">
-            Product B
-          </td>
-          <td class="border-b border-black py-1">
-            2024-10-15
-          </td>
-          <td class="border-b border-black py-1">
-            200
-          </td>
-          <td class="border-b border-black py-1">
-            30
-          </td>
-        </tr>
-        <tr>
-          <td class="border-b border-black py-1">
-            Product B
-          </td>
-          <td class="border-b border-black py-1">
-            2024-10-15
-          </td>
-          <td class="border-b border-black py-1">
-            200
-          </td>
-          <td class="border-b border-black py-1">
-            30
-          </td>
-        </tr>
-    
-        <tr>
-          <td class="border-b border-black py-1">
-            Product B
-          </td>
-          <td class="border-b border-black py-1">
-            2024-10-15
-          </td>
-          <td class="border-b border-black py-1">
-            200
-          </td>
-          <td class="border-b border-black py-1">
-            30
+            {{product.qtyOrdered}}
           </td>
         </tr>
       </tbody>
     </table>
-    <p class="mt-4 text-sm">
-      Last Updated: <span class="font-semibold">2024-10-29 10:30 AM</span>
-    </p>
   </div>
 </template>
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import { apiService } from '~/api/apiService';
+const products = ref([]);
+const categories = ref([]);
+
+const fetchProductsData = async () => {
+  try {
+    const { data } = await apiService.get("/api/products");
+    products.value = data?.map((value) => {
+      const qtyOrdered = value.sales_order?.reduce((total, detail) => {
+      return total + parseInt(detail.qtyOrdered);
+    }, 0);
+    return {
+      ...value,
+      qtyOrdered,
+    }
+    });
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
+const fetchCategoriesData = async () => {
+  try {
+    const { data } = await apiService.get("/api/productCategories");
+    categories.value = data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+};
+
+const fetchFinishProductsData = async() => {
+  const result = await apiService.get("/api/finishedProducts");
+  // const productIDs = result.data?.map((val) => val.production_detail.product.productID);
+
+  const data = products.value?.map((value) => {
+    const stockProducts = result.data?.filter((val) => val.production_detail.product.productID === value.productID);
+    const quantity = stockProducts?.reduce((total, detail) => {
+    return total + parseInt(detail.quantity);
+  }, 0);
+    return {
+      ...value,
+      stock: quantity - value.qtyOrdered
+    }
+  });
+  products.value = data
+
+}
+
+onMounted(async () => { 
+  await fetchProductsData();
+  await fetchFinishProductsData();
+  await fetchCategoriesData();
+});
+
+</script>

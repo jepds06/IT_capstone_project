@@ -58,6 +58,7 @@ class AdminOrderRepository implements AdminOrderRepositoryInterface
                 throw new \Exception("Invalid quotation ID provided.");
             }
             $adminOrder->orderDate = $payload->orderDate;
+            $adminOrder->isApproved = $payload->isApproved;
             // Save initial AdminOrder record to generate an ID for it
             $adminOrder->save();
     
@@ -111,6 +112,7 @@ class AdminOrderRepository implements AdminOrderRepositoryInterface
                 throw new \Exception("Invalid quotation ID provided.");
             }
             $adminOrder->orderDate = $payload->orderDate;
+            $adminOrder->isApproved = $payload->isApproved;
             //Save initial AdminOrder record to generate an ID for it
             $adminOrder->save();
 

@@ -10,7 +10,7 @@ class FinishedProductRepository implements FinishedProductRepositoryInterface
 {
     public function findMany()
     {
-        return FinishedProduct::paginate(10);
+        return FinishedProduct::with(['productionDetail', 'productionDetail.product'])->paginate(10);
     }
 
     public function findOneById(int $fnshProductId)

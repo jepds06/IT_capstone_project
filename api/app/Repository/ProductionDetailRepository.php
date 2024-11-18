@@ -162,7 +162,7 @@ class ProductionDetailRepository implements ProductionDetailRepositoryInterface
 
     public function findListByProductionId(int $productionID)
     {
-        $production = Production::with('productionDetails.productionMaterials')->find($productionID);
+        $production = Production::with('productionDetails.productionMaterials', 'productionDetails.product')->find($productionID);
 
         if (!$production) {
             return response()->json(['message' => 'Production not found'], 404);

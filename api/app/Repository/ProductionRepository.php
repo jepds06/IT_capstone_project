@@ -15,7 +15,7 @@ class ProductionRepository implements ProductionRepositoryInterface
 
     public function findOneById(int $productionId)
     {
-        return Production::findOrFail($productionId);
+        return Production::with(['quotations', 'quotations.adminOrders', 'quotations.adminOrders.adminDeliveries'])->findOrFail($productionId);
     }
 
     public function create(object $payload)

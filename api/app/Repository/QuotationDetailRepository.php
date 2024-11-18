@@ -82,7 +82,7 @@ class QuotationDetailRepository implements QuotationDetailRepositoryInterface
     public function update(object $payload, int $qteDetailId)
     {
         $qteDetail = QuotationDetail::findOrFail($qteDetailId);
-        $quotation = QuotationDetail::find($payload->quoteID);
+        $quotation = Quotation::find($payload->quoteID);
 
         if($quotation){
             $qteDetail->quotation()->associate($quotation);

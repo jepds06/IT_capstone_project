@@ -8,12 +8,6 @@
           placeholder="Search..."
           class="w-1/3 p-2 border rounded-lg"
         />
-        <!-- <div class="flex space-x-2">
-          <button @click="openQuotationAddModal" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600" title="Add Quotation">
-            <i class="fas fa-plus"></i>
-            Add Quotation
-          </button>
-        </div> -->
       </div>
   
       <table class="min-w-full bg-white border border-gray-300">
@@ -39,14 +33,6 @@
             </td>
             <td class="px-6 py-4 text-black border-b">{{ quotation.remarks }}</td>
             <td class="px-6 py-4 text-black border-b">
-              <!-- <button
-                 @click="openQuotationEditModal(quotation)"
-                class="text-yellow-500 hover:text-yellow-700 ml-2"
-                title="Edit Production"
-              >
-                <i class="fas fa-edit"></i>
-              </button> -->
-  
               <button
                 @click="openQuotationDetailInfo(quotation)"
                 class="text-blue-500 hover:underline ml-2"
@@ -96,16 +82,16 @@
               </thead>
               <tbody>
                 <tr
-                  v-for="quotation in quotationDetails"
+                  v-for="quotation in materialQuotation"
                   :key="quotation.id"
                   class="hover:bg-gray-50"
                 >
                   <td class="px-6 py-4 text-black border-b">{{ quotation.id }}</td>
                   <td class="px-6 py-4 text-black border-b">
-                    {{ getMaterialProductName(quotation.prodtnMtrlID) }}
+                    {{ quotation.description }}
                   </td>
                   <td class="px-6 py-4 text-black border-b">
-                    {{ quotation.quantity }}
+                    {{ quotation.qtyNeeded }}
                   </td>
                   <td class="px-6 py-4 text-black border-b">
                     <div v-if="quotation.id === selectedQuotationDetail?.id">
@@ -136,7 +122,7 @@
                         ? new Intl.NumberFormat("en-PH", {
                             style: "currency",
                             currency: "PHP",
-                          }).format(quotation.quantity * quotation.quotePrice)
+                          }).format(quotation.qtyNeeded * quotation.quotePrice)
                         : 0
                     }}
                   </td>
@@ -172,10 +158,6 @@
             </table>
           </div>
           <div class="flex  justify-between mt-2">
-            <!-- <button @click="openQuotationDetailAddModal" class="p-2 mr-2 bg-blue-500 text-white rounded hover:bg-blue-600" title="Add Quotation Details">
-          <i class="fas fa-plus"></i>
-          Add Quotation Details
-        </button> -->
             <UButton
               @click="closeQuotationDetailInfo"
               label="Close"
@@ -237,7 +219,7 @@
             >
             <select
               :disabled="isQuoDetailEditMode"
-              v-model="quotationDetailForm.prodtnMtrlID"
+              v-model="quotationDetailForm.materialID"
               id="materialID"
               class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
               @change="
@@ -309,55 +291,6 @@
         </div>
       </div>
   
-      <!-- Modal for Adding/Editing Quotations Details -->
-      <div
-        v-if="isQuotationModalOpen"
-        class="modal-overlay"
-        @click.self="closeQuotationModal"
-      >
-        <div class="modal-content">
-          <h2 class="text-xl font-bold mb-4 text-black">
-            {{ isQuotationEditMode ? "Edit Quotation" : "Add Quotation" }}
-          </h2>
-          <form @submit.prevent="saveQuotaion">
-            <label for="quotationDate" class="block mb-2 mt-4 text-black"
-              >Quotation Date:</label
-            >
-            <input
-              id="quotationDate"
-              v-model="quotationForm.quotationDate"
-              type="date"
-              required
-              class="w-full p-2 border rounded"
-            />
-            <label for="remarks" class="block mb-2 mt-4 text-black"
-              >Remarks:</label
-            >
-            <textarea
-              id="remarks"
-              v-model="quotationForm.remarks"
-              placeholder="Enter any remarks"
-              class="w-full p-2 border rounded"
-            ></textarea>
-  
-            <div class="flex justify-end mt-4">
-              <button
-                type="button"
-                @click="closeQuotationModal"
-                class="bg-gray-300 px-4 py-2 mr-2 rounded hover:bg-gray-400"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-              >
-                {{ isQuotationEditMode ? "Update" : "Add" }}
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
     </div>
   </template>
   
@@ -376,6 +309,8 @@ const props = defineProps({
   const userInfo = ref({ userID: "" });
   const users = ref([]);
   const materials = ref([]);
+  const materialsList = ref([]);
+  const materialQuotation = ref([]);
   const quotations = ref([]);
   // Mock data for quotation details with new fields
   const quotationDetails = ref([
@@ -407,11 +342,6 @@ const props = defineProps({
     quoteID: "",
   });
   
-  // const getUserName = (userID) => {
-  
-  //   const user = users.value?.find((usr) => usr.userID === userID)
-  //   return user ? `${user.lastName} ${user.firstName}` : 'Unknown'
-  // }
   // Computed properties
   const filteredQuotationDetails = computed(() => {
     return quotations.value?.filter((quotation) => {
@@ -441,48 +371,22 @@ const props = defineProps({
     }
   };
   
-  // Modal functions
-  const openQuotationDetailAddModal = () => {
-    isQuoDetailEditMode.value = false;
-    resetForm();
-    isQuoDetailModalOpen.value = true;
-  };
   
   const openQuotationDetailEditModal = (quotation) => {
     selectedQuotationDetail.value = quotation;
     if (selectedQuotationDetail.value) {
-      if (selectedQuotationDetail.value?.quotePrice !== null) {
+      if (selectedQuotationDetail.value?.quotePrice !== 0) {
         isQuoDetailEditMode.value = true;
       }
       Object.assign(quotationDetailForm.value, selectedQuotationDetail.value);
       //isQuoDetailModalOpen.value = true;
-      getMaterialDetails(quotation.prodtnMtrlID);
+      getMaterialDetails(quotation.materialID);
     }
-  };
-  
-  const openQuotationEditModal = (quotation) => {
-    selectedQuotation.value = quotation;
-    if (selectedQuotation.value) {
-      isQuotationEditMode.value = true;
-      Object.assign(quotationForm.value, selectedQuotation.value);
-      isQuotationModalOpen.value = true;
-    }
-  };
-  
-  const openQuotationAddModal = () => {
-    isQuotationModalOpen.value = true;
-    isQuotationEditMode.value = false;
-    quotationForm.value = {
-      id: "",
-      quoteID: "",
-      quotationDate: "",
-      userID: userInfo.value.userID,
-      remarks: "",
-    };
   };
   
   const openQuotationDetailInfo = async (quotation) => {
     quotationDetails.value = [];
+    await fetchMaterials();
     await fetchMaterialsByProductionID(quotation.productionID);
     selectedQuotation.value = quotation;
     isQuotationDetailInfo.value = true;
@@ -501,11 +405,12 @@ const props = defineProps({
       if (!productMaterial) {
         productMaterial = {
           prodtnMtrlID: material.prodtnMtrlID,
+          materialID: material.materialID,
           quantity: material.qtyNeeded,
           quotePrice: null,
         };
       }
-      return productMaterial;
+      return {...productMaterial, materialID: material.materialID };
     });
     quotationDetails.value = transformData.map((value, index) => {
       return {
@@ -513,7 +418,37 @@ const props = defineProps({
         id: index + 1,
       };
     });
-  };
+    const materialTransform = materialsList.value?.map((material, index) => {
+      let productMaterial = result?.quotation_details.find(
+        (detail) =>
+          detail.production_material.product_material.material.materialID ===
+            material.materialID
+      );
+
+      const qtyNeeded = materials.value?.filter((value) => value.materialID === material.materialID)?.reduce( (sum, item) =>
+          parseInt(sum) + parseInt(item.qtyNeeded),
+        0
+      );
+      if(productMaterial){
+        return {
+        materialID: material.materialID,
+        description: material.description,
+        quotePrice: parseFloat(productMaterial.quotePrice),
+        qtyNeeded,
+        id: index + 1
+      };
+      }
+    
+      return {
+        materialID: material.materialID,
+        description: material.description,
+        quotePrice: 0,
+        qtyNeeded,
+        id: index + 1
+      };
+    });
+    materialQuotation.value = materialTransform
+  }
   
   const completeQuotation = async() => {
     isCompleteLoading.value = true
@@ -551,105 +486,58 @@ const props = defineProps({
     };
   };
   
-  const saveQuotaion = async () => {
-    try {
-      if (isQuotationEditMode.value) {
-        await apiService.put(
-          `/api/quotations/${quotationForm.value.quoteID}`,
-          quotationForm.value
-        );
-        const index = quotations.value.findIndex(
-          (quo) => quo.quoteID === quotationForm.value.quoteID
-        );
-        if (index !== -1) {
-          quotations.value[index] = { ...quotationForm.value };
-        }
-        alert("Quotation edited successfully");
-      } else {
-        const result = await apiService.post(
-          "/api/quotations",
-          quotationForm.value
-        );
-        const id = quotations.value.length + 1;
-        quotations.value.push({ ...result.data, id });
-        alert("Quotation added successfully");
-      }
-      isQuotationModalOpen.value = false;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  
   const saveQuotationDetail = async () => {
     if (!quotationDetailForm.value?.quotePrice) {
-      await apiService.delete(
-        `/api/quotationDetails/${quotationDetailForm.value.qteDetailID}`
-      ); 
-      const index = quotationDetails.value?.findIndex(
-        (value) => value.id === quotationDetailForm.value.id
-      );
-      if (index !== -1) {
-        quotationDetails.value[index] = { ...quotationDetailForm.value, id: index + 1 };
-      }
-      alert("Quotation detail added successfully!");
-      selectedQuotationDetail.value = null;
-      isQuoDetailEditMode.value = false;
-      return;
-    }
+       await Promise.all(materialDetail.value?.map(async (value) =>{
+        if(value.qteDetailID){
+        return await apiService.delete(`/api/quotationDetails/${value.qteDetailID}`)
+        }
+        return value;
+      }))
+      alert("Quotation detail edited successfully!");
+   
+    } else {
     if (isQuoDetailEditMode.value) {
       // Update existing quotation detaiil
-      const result = await apiService.put(
-        `/api/quotationDetails/${quotationDetailForm.value.qteDetailID}`,
-        { ...quotationDetailForm.value, quoteID: selectedQuotation.value.quoteID }
-      );
-      const index = quotationDetails.value?.findIndex(
-        (value) => value.id === quotationDetailForm.value.id
-      );
-      // Object.assign(selectedQuotationDetail.value, quotationDetailForm.value);
-      if (index !== -1) {
-        quotationDetails.value[index] = { ...result.data, id: index + 1 };
-      }
+
+      await Promise.all(materialDetail.value?.map(async (value) =>{
+        return await apiService.put(`/api/quotationDetails/${value.qteDetailID}`, {
+        ...value,
+        quotePrice: quotationDetailForm.value.quotePrice
+      })
+      }))
       alert("Quotation detail edited successfully!");
     } else {
       // Add new quotation detail
-      const result = await apiService.post("/api/quotationDetails", {
-        ...quotationDetailForm.value,
+      await Promise.all(materialDetail.value?.map(async (value) =>{
+        return await apiService.post("/api/quotationDetails", {
+        ...value,
+        quotePrice: quotationDetailForm.value.quotePrice,
         quoteID: selectedQuotation.value.quoteID,
-      });
-      const index = quotationDetails.value?.findIndex(
-        (value) => value.id === quotationDetailForm.value.id
-      );
-      if (index !== -1) {
-        quotationDetails.value[index] = { ...result.data, id: index + 1 };
-      }
+      })
+      })
+       );
+      
       alert("Quotation detail added successfully!");
     }
+    }
+    const index = materialQuotation.value?.findIndex(
+        (value) => value.materialID === quotationDetailForm.value.materialID
+      );
+      if (index !== -1) {
+        materialQuotation.value[index] = { ...materialQuotation.value[index], quotePrice: quotationDetailForm.value.quotePrice, id: index + 1 };
+      }
     selectedQuotationDetail.value = null;
     isQuoDetailEditMode.value = false;
   };
   
-  // Selecting a quotation
-  const selectQuotation = (quotation) => {
-    selectedQuotationDetail.value = quotation;
-  };
   
-  const getMaterialDetails = (prodtnMtrlID) => {
-    console.log(
-      "prodtnMtrlID",
-      prodtnMtrlID,
-      materials.value?.find((val) => val.prodtnMtrlID == prodtnMtrlID)
-    );
-    materialDetail.value = materials.value?.find(
-      (val) => val.prodtnMtrlID == prodtnMtrlID
+  const getMaterialDetails = (materialID) => {
+    materialDetail.value = quotationDetails.value?.filter(
+      (val) => val.materialID == materialID
     );
   };
   
-  const getMaterialProductName = (prodtnMtrlID) => {
-    const material = materials.value?.find(
-      (val) => val.prodtnMtrlID == prodtnMtrlID
-    );
-    return `${material?.productName} -> ${material?.description}`;
-  };
   // Fetching of APIs
   const fetchUsers = async () => {
     const result = await apiService.get("/api/users");
@@ -673,6 +561,13 @@ const props = defineProps({
       `/api/materials/production/${productionID}`
     );
     materials.value = result;
+  };
+
+  const fetchMaterials = async () => {
+    const result = await apiService.get(
+      "/api/materials"
+    );
+    materialsList.value = result.data
   };
   
   onMounted(async () => {

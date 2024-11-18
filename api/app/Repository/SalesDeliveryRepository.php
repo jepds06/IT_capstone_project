@@ -30,7 +30,7 @@ class SalesDeliveryRepository implements SalesDeliveryRepositoryInterface
         }
 
         $slsDelivery->deliveryDate = $payload->deliveryDate;
-        $slsDelivery->deliverAddress = $payload->deliveryAddress;
+        $slsDelivery->deliveryAddress = $payload->deliveryAddress;
         $slsDelivery->deliveryStatus = $payload->deliveryStatus;
 
         $slsDelivery->save();
@@ -49,7 +49,7 @@ class SalesDeliveryRepository implements SalesDeliveryRepositoryInterface
         }
 
         $slsDelivery->deliveryDate = $payload->deliveryDate;
-        $slsDelivery->deliverAddress = $payload->deliveryAddress;
+        $slsDelivery->deliveryAddress = $payload->deliveryAddress;
         $slsDelivery->deliveryStatus = $payload->deliveryStatus;
 
         $slsDelivery->save();

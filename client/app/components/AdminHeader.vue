@@ -17,46 +17,43 @@
    -->
 
 <template>
-  <UHeader>
-    <template #left>{{userInfo.userTypeDescription}} Dashboard</template>
-
-    <template #right>
-      <!-- <UButton label="Notifications" color="gray" />
-      <UButton label="Profile" color="gray" />
-      <UButton label="Settings" color="gray" /> -->
-      <UAvatar
-        icon="ant-design:bell-outlined"
-        size="md"
-        chip-text="+1"
-        chip-position="top-right"
-        alt="Avatar"
-        chip-color="primary"
-      />
-      <UPopover mode="hover">
-        <UAvatar icon="ant-design:user-outlined" size="md" />
-        <template #panel>
-          <div class="p-4">
-            <UButton
-            :padded="false"
-            color="gray"
-            variant="link"
-            @click="logout"
-          >
-            Logout
-          </UButton>
-          </div>
-        </template>
-      </UPopover>
-      <div :v-if="userInfo?.userName">{{ `Hi, ${userInfo.userName}` }}</div>
-    </template>
-
-    <!-- <template #panel>
-      <UNavigationTree
-        :links="mapContentNavigation(navigation)"
-        default-open
-      />
-    </template> -->
-  </UHeader>
+    <header class="bg-gray-900 text-white p-3 shadow-lg">
+      <div class="container mx-auto flex justify-between items-center">
+        <!-- Logo Section -->
+        <div class="text-xl font-bold">
+          {{userInfo.userTypeDescription}} Dashboard
+        </div>
+  
+  
+        <div class="flex items-center">
+          <!-- <UAvatar
+          icon="ant-design:bell-outlined"
+          size="md"
+          chip-text="+1"
+          chip-position="top-right"
+          alt="Avatar"
+          chip-color="primary"
+          class="mr-2"
+        /> -->
+          <UPopover mode="hover" class="mr-2">
+            <UAvatar icon="ant-design:user-outlined" size="md" />
+            <template #panel>
+              <div class="p-4">
+                <UButton
+                :padded="false"
+                color="gray"
+                variant="link"
+                @click="logout"
+              >
+                Logout
+              </UButton>
+              </div>
+            </template>
+          </UPopover>
+          <div :v-if="userInfo?.userName">{{ `Hi, ${userInfo.userName}` }}</div>
+        </div>
+      </div>
+    </header>
 </template>
 
 <script setup>

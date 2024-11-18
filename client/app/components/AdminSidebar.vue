@@ -10,7 +10,7 @@
                   ? 'block p-4 bg-gray-800'
                   : 'block p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
-                  up.moduleName.toLowerCase().includes('reports')
+                  up.moduleName.toLowerCase().includes('admin')
                 ).length > 0
                   ? route.path === '/admin'
                     ? 'block p-4 bg-gray-800'
@@ -30,7 +30,7 @@
             </router-link>
           </div>
         </li>
-        <li>
+        <!-- <li>
           <div
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
@@ -57,9 +57,9 @@
               Calendar
             </router-link>
           </div>
-        </li>
+        </li> -->
 
-        <li>
+        <!-- <li>
           <div
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
@@ -86,7 +86,7 @@
               Reports
             </router-link>
           </div>
-        </li>
+        </li> -->
 
         <!-- <CollapsibleMenu
           icon="mdi:paypal"
@@ -511,37 +511,37 @@
           "
         >
           <router-link
-            to="/admin/view-customer"
+            to="/admin/customer-bills-payment"
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-                ? route.path === '/admin/view-customer'
+                ? route.path === '/admin/customer-bills-payment'
                   ? 'block pl-10 p-4 bg-gray-800'
                   : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
-                  up.moduleName.toLowerCase().includes('view customers')
+                  up.moduleName.toLowerCase().includes('customer bill payment')
                 ).length > 0
-                  ? route.path === '/admin/view-customer'
+                  ? route.path === '/admin/customer-bills-payment'
                     ? 'block pl-10 p-4 bg-gray-800'
                     : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
-          >View Customers</router-link>
+          >Bills Payment</router-link>
           <router-link
-            to="/customers/orders"
+            to="/admin/customer-manage-payment"
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
-                ? route.path === '/customers/orders'
+                ? route.path === '/admin/customer-manage-payment'
                   ? 'block pl-10 p-4 bg-gray-800'
                   : 'block pl-10 p-4 hover:bg-gray-800'
                 : userPermission?.filter((up) =>
                   up.moduleName.toLowerCase().includes('customer orders')
                 ).length > 0
-                  ? route.path === '/customers/orders'
+                  ? route.path === '/admin/customer-manage-payment'
                     ? 'block pl-10 p-4 bg-gray-800'
                     : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
-          >Customer Orders</router-link>
+          >Manage Payment</router-link>
         </CollapsibleMenu>
 
         <CollapsibleMenu

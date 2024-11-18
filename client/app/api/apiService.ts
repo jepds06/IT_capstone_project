@@ -27,9 +27,8 @@ export class ApiService {
   }
 
   private handleError(status: number, data?: any) {
-    if (status !== 200 && status !== 500) {
+    if (status !== 200 && status !== 500 && status !== 401) {
       const message = data?.message || data?.error || 'An error occurred';
-      console.log('Error:', message);
       alert(message); // Show alert for errors only
     }
   }
@@ -54,9 +53,11 @@ export class ApiService {
       if (error.response) {
         this.handleError(error.response.status, error.response['_data']);
       }
-      throw error;
+       throw error.response;
     }
   }
+
+
 
   async post(endpoint: string, body?: Record<string, any>) {
     try {
@@ -65,7 +66,6 @@ export class ApiService {
       const response = await $fetch(url, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           'Accept': 'application/json',
           ...(authToken ? { 'Authorization': `Bearer ${authToken}` } : {}),
         },
@@ -79,7 +79,7 @@ export class ApiService {
       if (error.response) {
         this.handleError(error.response.status, error.response['_data']);
       }
-      throw error;
+      throw error.response;
     }
   }
 
@@ -90,7 +90,6 @@ export class ApiService {
       const response = await $fetch(url, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
           'Accept': 'application/json',
           ...(authToken ? { 'Authorization': `Bearer ${authToken}` } : {}),
         },
@@ -104,9 +103,11 @@ export class ApiService {
       if (error.response) {
         this.handleError(error.response.status, error.response['_data']);
       }
-      throw error;
+      throw error.response;
     }
   }
+
+
 
   async delete(endpoint: string) {
     try {
@@ -128,7 +129,7 @@ export class ApiService {
       if (error.response) {
         this.handleError(error.response.status, error.response['_data']);
       }
-      throw error;
+      throw error.response;
     }
   }
 }

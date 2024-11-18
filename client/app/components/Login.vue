@@ -18,20 +18,10 @@ useSeoMeta({
   title: "Login",
 });
 
-const fields = [
-  {
-    name: "email",
-    type: "email",
-    label: "Email",
-    placeholder: "Enter your email",
-  },
-  {
-    name: "password",
-    label: "Password",
-    type: "password",
-    placeholder: "Enter your password",
-  },
-];
+const state = reactive({
+  email: undefined,
+  password: undefined
+})
 
 const validate = (state: any) => {
   const errors = [];
@@ -65,17 +55,18 @@ function getModuleName(moduleID) {
   return module ? module.moduleName : "Unknown";
 }
 
-async function onSubmit(data: any) {
+async function onSubmit(form: any) {
     errorMessage.value = ""; // Reset error message before submission
 
     try {
-        console.log("Submitted", data);
+        console.log("Submitted", form.data);
         
         // Login API call
-        const result = await apiService.post("/api/login", data);
+        const result = await apiService.post("/api/login", form.data);
 
         setToken(result.data.token);
         // Check if the result is an error response
+        console.log(result.status)
         if (result.status && result.data) {
             errorMessage.value = result.data.message || "An unexpected error occurred.";
             return; // Exit the function after setting the error message
@@ -110,30 +101,36 @@ async function onSubmit(data: any) {
             navigateTo("/supplier");
         }
     } catch (error) {
+      console.log('Error:', error);
         console.error(error); // Log the error for debugging
-        errorMessage.value = "An unexpected error occurred. Please try again."; // Fallback error message
+        errorMessage.value =  error?.['_data']?.message || "An unexpected error occurred. Please try again."; // Fallback error message
     }
 }
 </script>
 
 <template>
-  <UCard class="max-w pl-7 bg-white/75 dark:bg-white/5 backdrop-blur">
-    <UAuthForm
-      :fields="fields"
-      :validate="validate"
-      title="Welcome back"
-      icon="i-heroicons-lock-closed"
-      :ui="{
-        base: 'text-center',
-        footer: 'text-center',
-        default: { submitButton: { label: 'Sign in' } },
-      }"
-      :submit-button="{ trailingIcon: 'i-heroicons-arrow-right-20-solid' }"
-      @submit="onSubmit"
-    >
-      <template #footer>
-        <p v-if="errorMessage" class="text-red-500">{{ errorMessage }}</p> <!-- Display error message here -->
-      </template>
-    </UAuthForm>
+  <UCard class="max-w  pb-8 backdrop-blur ">
+
+      <div class="text-2xl font-bold text-center">
+        <UIcon name="uim:padlock" />
+        
+      </div>
+      <UForm :validate="validate" :state="state" class="space-y-4 " @submit="onSubmit">
+        <h1 class="text-2xl font-bold text-center mb-6">Welcome back 
+        </h1>
+        <UFormGroup label="Email" name="email"  class="">
+          <UInput v-model="state.email" placeholder="you@example.com" icon="i-heroicons-envelope"/>
+        </UFormGroup>
+        
+        <UFormGroup label="Password" name="password">
+          <UInput v-model="state.password" type="password"  icon="uim:padlock" />
+        </UFormGroup>
+        
+        <UButton type="submit" label="Sign In" trailing icon="material-symbols:arrow-right-alt" block />
+        <p v-if="errorMessage" class="text-red-500 text-center">{{ errorMessage }}</p> <!-- Display error message here -->
+      </UForm>
+      <!-- <template #footer> -->
+        <!-- </template> -->
+      <!-- </UAuthForm> -->
   </UCard>
 </template>

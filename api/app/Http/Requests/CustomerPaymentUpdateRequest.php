@@ -24,11 +24,11 @@ class CustomerPaymentUpdateRequest extends FormRequest
         return [
             'salesID' => 'required|integer|exists:sales,salesID',
             'paymentDate' => 'required|date',
-            'payMethodID' => 'required|integer|exists:paymentMethods, payMethodID',
+            'payMethodID' => 'required|integer|exists:paymentMethods,payMethodID',
             'paymentStatus' => 'required|string|max:255',
             'dueDate' => 'required|date',
             'amountToPay' => 'required|numeric|min:1',
-            'amountPaid' => 'required|numeric|min:1'
+            'amountPaid' => 'required|numeric|min:0'
         ];
     }
 }

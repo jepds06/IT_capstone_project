@@ -30,8 +30,13 @@ class Sale extends Model
         return $this->hasMany(SalesProductOrder::class, 'salesID');
     }
 
+    public function customerPayment()
+    {
+        return $this->hasMany(CustomerPayment::class, 'salesID');
+    }
+
     public function salesDeliveries()
     {
-        return $this->hasMany(Sales_Delivery::class, 'salesID');
+        return $this->hasOne(Sales_Delivery::class, 'salesID');
     }
 }

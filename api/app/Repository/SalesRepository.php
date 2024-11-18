@@ -10,7 +10,7 @@ class SalesRepository implements SalesRepositoryInterface
 {
     public function findMany()
     {
-        return Sale::paginate(10);
+        return Sale::with(['salesOrders', 'salesDeliveries', 'customerPayment'])->paginate(10);
     }
 
     public function findOneById(int $salesId)

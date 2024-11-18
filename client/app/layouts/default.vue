@@ -1,119 +1,83 @@
-<!-- <script setup lang="ts">
-import type { ParsedContent } from '@nuxt/content'
-const route = useRoute()
-
-const { data: navigation } = await useAsyncData('navigation', () => fetchContentNavigation(), { default: () => [] })
-const { data: files } = useLazyFetch<ParsedContent[]>('/api/search.json', { default: () => [], server: false })
-
-provide('navigation', navigation)
-console.log(route.path)
-</script>
-
-<template>
-  <div v-if="route.path === '/'">
-    <AppHeader /> 
-
-    <main>
-      <NuxtPage />
-    </main>
-
-    <AppFooter />
-  </div>
-
-  <div v-else-if="route.path === '/admin'">
-    <AdminHeader/>
-    <AdminSidebar/>
-    <main>
-      <NuxtPage />
-    </main>
-  </div>
-
-   <ClientOnly>
-      <LazyUContentSearch
-        :files="files"
-        :navigation="navigation"
-      />
-    </ClientOnly>
-</template> -->
 
 <script setup lang="ts">
-import type { ParsedContent } from "@nuxt/content";
 const route = useRoute();
 const { data: navigation } = await useAsyncData(
   "navigation",
   () => fetchContentNavigation(),
   { default: () => [] }
 );
-const { data: files } = useLazyFetch<ParsedContent[]>("/api/search.json", {
-  default: () => [],
-  server: false,
-});
 
 provide("navigation", navigation);
 </script>
 
 <template>
-  <div v-if="route.path === '/'">
+  <div v-if="route.path === '/'" class="layout">
     <AppHeader />
 
-    <UMain>
+    <main class="flex-grow">
       <slot />
-    </UMain>
+    </main>
 
     <AppFooter />
 
-    <ClientOnly>
-      <LazyUContentSearch :files="files" :navigation="navigation" />
-    </ClientOnly>
   </div>
 
-  <div v-else-if="route.path.includes('/admin')">
+  <div v-else-if="route.path.includes('/admin')" class="layout">
     <AdminHeader />
-    <div class="flex">
-      <AdminSidebar />
-      <div class="flex-1 p-6">
-        <main>
-          <UMain>
-            <slot />
-          </UMain>
+    
+    <div class="flex flex-grow">
+      <!-- Sidebar -->
+      <AdminSidebar class="w-64" />
+      
+      <!-- Main Content -->
+      <div class="flex-1 flex flex-col">
+        <main class="flex-grow p-6">
+          <slot />
         </main>
+        
+        <!-- Footer -->
+        <AppFooter />
       </div>
     </div>
-    <AppFooter />
-
-    <ClientOnly>
-      <LazyUContentSearch :files="files" :navigation="navigation" />
-    </ClientOnly>
   </div>
 
-  <div v-else-if="route.path.includes('/supplier')">
+  <div v-else-if="route.path.includes('/supplier')" class="layout">
     <AdminHeader />
     <div class="flex">
-      <div class="flex-1 p-6">
-        <main>
-          <UMain>
+          <main>
             <slot />
-          </UMain>
-        </main>
-      </div>
+          </main>
     </div>
     <AppFooter />
-
-    <ClientOnly>
-      <LazyUContentSearch :files="files" :navigation="navigation" />
-    </ClientOnly>
   </div>
 
-  <div v-else>
+  <div v-else class="layout">
     <CustomerHeader />
-    <UMain>
+    <main class="flex-grow">
       <slot />
-    </UMain>
+    </main>
     <!-- <ClientOnly>
       <LazyUContentSearch
         :files="files"
         :navigation="navigation"
       />
     </ClientOnly> -->
+    <AppFooter />
   </div>
 </template>
+
+<style>
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensures the layout stretches to the full viewport height */
+}
+
+main {
+  flex-grow: 1; /* Allows main content to take up remaining space */
+}
+
+.flex-grow {
+  flex-grow: 1; /* Makes the content area expand */
+}
+</style>
