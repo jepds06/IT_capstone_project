@@ -26,7 +26,7 @@
       <tbody>
         <tr v-for="(quotation, index) in paginatedQuotations" :key="index">
           <td class="py-2 px-4">
-            {{ `QN-${quotation.id}` }}
+            {{ `QN-${quotation.productionID}` }}
           </td>
           <td class="py-2 px-4">
             {{ quotation.dateEncoded }}
@@ -61,7 +61,7 @@
     >
       <div class="bg-white p-6 rounded-md w-1/2">
         <h3 class="text-xl font-bold mb-4">
-          Quotation Details (Quotation No: {{ `QN-${selectedQuotation.id}` }})
+          Quotation Details (Quotation No: {{ `QN-${selectedQuotation.productionID}` }})
         </h3>
         <table class="min-w-full bg-white border border-gray-300 mb-4">
           <thead class="bg-gray-200">
@@ -304,6 +304,11 @@ import auth from "../../../../middleware/auth";
 import { apiService } from "~/api/apiService";
 import { format } from "date-fns";
 import "jspdf-autotable";
+
+useSeoMeta({
+  title: 'Supplier Quotation',
+  description: 'Admin Dashboard'
+})
 
 // This page requires authentication
 definePageMeta({

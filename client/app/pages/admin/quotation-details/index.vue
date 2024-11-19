@@ -75,6 +75,11 @@
 // The script for managing the quotations remains unchanged
 import { ref, computed, watch } from 'vue';
 
+useSeoMeta({
+  title: 'Quotation Details',
+  description: 'Admin Dashboard'
+})
+
 // Mock data for quotations
 const quotations = ref([
   { materialId: 'M001', quantity: 10, price: 100, totalPrice: 1000 },

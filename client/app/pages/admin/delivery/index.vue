@@ -87,6 +87,11 @@
 import { apiService } from '~/api/apiService';
 import { format } from "date-fns";
 
+useSeoMeta({
+  title: 'Delivery',
+  description: 'Admin Dashboard'
+})
+
 export default {
   data() {
     return {

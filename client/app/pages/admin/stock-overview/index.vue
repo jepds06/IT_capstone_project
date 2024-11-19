@@ -37,6 +37,12 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { apiService } from '~/api/apiService';
+
+useSeoMeta({
+  title: 'Stock Overview',
+  description: 'Admin Dashboard'
+})
+
 const products = ref([]);
 const categories = ref([]);
 

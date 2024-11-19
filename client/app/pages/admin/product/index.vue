@@ -465,12 +465,12 @@
             {{ getCategoryDescription(product.prodCatID) }}
           </td>
           <td class="p-2 border-b text-center flex justify-center space-x-2">
-            <button
+            <!-- <button
               class="text-blue-500 hover:underline"
               @click="viewProduct(product)"
             >
               <i class="fas fa-eye" />
-            </button>
+            </button> -->
             <button
               class="text-yellow-500 hover:underline"
               @click="openModal('edit', product)"
@@ -496,6 +496,12 @@ import auth from "../../../../middleware/auth";
 
 import { apiService } from "~/api/apiService";
 // This page requires authentication
+
+useSeoMeta({
+  title: 'Products',
+  description: 'Admin Dashboard'
+})
+
 definePageMeta({
   middleware: [auth],
 });

@@ -44,8 +44,9 @@
             color="white"
             square
           />
+         
           <UButton
-            :disabled="item.status === 'Unpaid' || item.status === 'Delivered'"
+            :disabled="item.status === 'Unpaid' || item.status === 'Delivered' || item.status === 'Pending'"
             icon="emojione:delivery-truck"
             @click="openDeliveryModal(item)"
             rounded="false"
@@ -334,7 +335,7 @@ const fetchMaterialsByProductionID = async (productionID) => {
 const fetchAdminOrderData = async () => {
   const result = await apiService.get("/api/adminOrders");
   purchaseOrderData.value = result.data
-    .filter((value) => value?.quotation?.userID === userInfo.value.userID)
+    .filter((value) => value?.quotation?.userID === userInfo.value.userID && value.isApproved === 1)   
     .map((order) => {
       const totalAmount = order.admin_order_detail.reduce((total, detail) => {
         return total + parseFloat(detail.amount);
@@ -354,7 +355,10 @@ const fetchAdminOrderData = async () => {
             order.paymentStatus = "Fully paid"
           }
           order.status = "Waiting for delivery";
-        } else {
+        } else if(parseFloat(order.admin_payments?.amountPaid) <= (totalAmount / 2)){
+          order.paymentStatus = "Partially paid";
+          order.status = "Pending";
+         } else {
           order.status = "Pending";
           order.paymentStatus = "Unpaid"
         }

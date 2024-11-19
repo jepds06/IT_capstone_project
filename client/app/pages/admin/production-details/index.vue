@@ -125,6 +125,12 @@
   import { apiService } from '~/api/apiService';
   import auth from '../../../../middleware/auth'
   // This page requires authentication
+
+  useSeoMeta({
+  title: 'Production Details',
+  description: 'Admin Dashboard'
+})
+
   definePageMeta({
     middleware: [auth],
   });

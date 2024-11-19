@@ -28,13 +28,12 @@ provide('navigation', navigation)
   <div>
     <AppHeader />
 
-    <UMain>
+ 
       <UContainer>
        <main>
         Error
        </main>
       </UContainer>
-    </UMain>
 
     <AppFooter />
 

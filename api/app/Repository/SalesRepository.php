@@ -18,6 +18,30 @@ class SalesRepository implements SalesRepositoryInterface
         return Sale::findOrFail($salesId);
     }
 
+    public function findManyByUserId(int $userID)
+    {
+        $sales = Sale::with(['salesOrders', 'salesDeliveries', 'customerPayment', 'salesOrders.product'])->where('userID', $userID)->get();
+
+        // Iterate over the sales collection
+        $sales->transform(function ($sale) {
+            if ($sale->salesOrders) {
+                // Iterate through salesOrders to add the image_url to products
+                $sale->salesOrders->transform(function ($order) {
+                    if ($order->product && $order->product->imagePath) {
+                        // Generate the full URL for the stored image
+                        $order->product->image_url = asset('storage/' . $order->product->imagePath);
+                    } else {
+                        $order->product->image_url = null; // Or set a default image URL
+                    }
+                    return $order;
+                });
+            }
+            return $sale;
+        });
+
+        return $sales;
+    }
+
     public function create(object $payload)
     {
         $sale = new Sale();

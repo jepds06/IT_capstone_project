@@ -151,6 +151,12 @@
 
 import auth from '../../../../middleware/auth'
 // This page requires authentication
+
+useSeoMeta({
+  title: 'Product Categories',
+  description: 'Admin Dashboard'
+})
+
 definePageMeta({
   middleware: [auth],
 });

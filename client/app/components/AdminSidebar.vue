@@ -636,7 +636,7 @@
                   : 'hidden'
             "
           >Stock Overview</router-link>
-          <router-link
+          <!-- <router-link
             to="/admin/inventory"
             :class="
               userInfo?.userTypeDescription.toLowerCase() === 'administrator'
@@ -651,7 +651,7 @@
                     : 'block pl-10 p-4 hover:bg-gray-800'
                   : 'hidden'
             "
-          >Manage Inventory</router-link>
+          >Manage Inventory</router-link> -->
         </CollapsibleMenu>
       </ul>
     </nav>

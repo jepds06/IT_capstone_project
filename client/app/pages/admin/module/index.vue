@@ -155,6 +155,12 @@
 <script setup>
 import auth from '../../../../middleware/auth'
 // This page requires authentication
+
+useSeoMeta({
+  title: 'Module',
+  description: 'Admin Dashboard'
+})
+
 definePageMeta({
   middleware: [auth],
 });
