@@ -355,7 +355,10 @@ const fetchAdminOrderData = async () => {
             order.paymentStatus = "Fully paid"
           }
           order.status = "Waiting for delivery";
-        } else {
+        } else if(parseFloat(order.admin_payments?.amountPaid) <= (totalAmount / 2)){
+          order.paymentStatus = "Partially paid";
+          order.status = "Pending";
+         } else {
           order.status = "Pending";
           order.paymentStatus = "Unpaid"
         }

@@ -6,6 +6,8 @@ interface SalesRepositoryInterface
 {
     public function findMany();
 
+    public function findManyByUserId(int $userID);
+
     public function findOneById(int $salesId);
 
     public function create(object $payload);

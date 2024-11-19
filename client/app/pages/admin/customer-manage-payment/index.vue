@@ -467,8 +467,8 @@ export default {
         return {
           ...value,
           paymentStatus: parseFloat(value.amountToPay) > parseFloat(value.amount)
-                ? "pending"
-                : "completed",
+                ? "Partially Paid"
+                : "Completed",
           paymentDate: format(new Date(), "yyyy-MM-dd"),
           payMethodID: this.selectedPaymentType.id,
           amountPaid: value.amount
@@ -477,6 +477,17 @@ export default {
       await Promise.all(dataToSave?.map(async (value) => {
           value ? await apiService.post("/api/customerPayments", value) : "";
         }))
+
+      const deliveryToUpdate = this.selectedBills?.filter((value) => (parseFloat(value.amount) + parseFloat(value.amountPaid)) >= (parseFloat(value.amountToPay) / 2))
+        ?.map((value) => {
+          return {
+            ...value.salesDelivery,
+            deliveryStatus: 'Out for delivery'
+          }
+        });
+      await Promise.all(deliveryToUpdate?.map(async(value) => {
+        return await apiService.put(`/api/salesDeliveries/${value.deliveryID}`, value)
+      }));
       await this.fetchCustomerPaymentsData();
       this.isLoadingPay = false;
       this.setTemporaryMessage("status",message);
@@ -502,6 +513,7 @@ export default {
                 paymentStatus: value.customer_payment[0]?.paymentStatus,
                 dueDate: value.customer_payment[0]?.dueDate,
                 id: index + 1,
+                salesDelivery: value.sales_deliveries
               };
             })
             ?.filter((value) => value.balance !== 0);

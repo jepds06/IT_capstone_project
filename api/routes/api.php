@@ -212,6 +212,7 @@ Route::middleware(['auth:sanctum'])->group(function(){
     //sales route
     Route::prefix('sales')->group(function(){
         Route::get('/', [SalesController::class, 'index']);
+        Route::get('/user/{userID}', [SalesController::class, 'showByUserID']);
         Route::get('/{salesId}', [SalesController::class, 'show']);
         Route::post('/', [SalesController::class, 'store']);
         Route::put('/{salesId}', [SalesController::class, 'update']);

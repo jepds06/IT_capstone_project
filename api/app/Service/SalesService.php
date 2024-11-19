@@ -42,4 +42,11 @@ class SalesService implements SalesServiceInterface
 
         return new SalesResource($sale);
     }
+
+    public function findSalesByUserId(int $userID)
+    
+    {   $sales = $this->salesRepository->findManyByUserId($userID);
+
+        return SalesResource::collection($sales);
+    }
 }

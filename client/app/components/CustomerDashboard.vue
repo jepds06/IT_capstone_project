@@ -77,7 +77,7 @@
                 <div class="flex items-center gap-2 border px-2 py-1 rounded">
                   <button
                     class="text-gray-500 hover:text-gray-800"
-                    @click="product.quantity--"
+                    @click="product.quantity > 1 && product.quantity--"
                   >
                     -
                   </button>
@@ -86,7 +86,7 @@
                   }}</span>
                   <button
                     class="text-gray-500 hover:text-gray-800"
-                    @click="product.quantity++"
+                    @click=" product.quantity >= 1 && product.stock > product.quantity && product.quantity++"
                   >
                     +
                   </button>
@@ -665,7 +665,7 @@ const completeAnOrder = async() => {
     salesID: data?.salesID ?? 0,
     deliveryDate: format(addDays(new Date(), 7),"yyyy-MM-dd"),
     deliveryAddress: `${store.billingAddress.buildingNo} ${store.billingAddress.street} ${store.billingAddress.city} ${store.billingAddress.province} ${store.billingAddress.region} ${store.billingAddress.areaCode}`,
-    deliveryStatus: 'Waiting for delivery'
+    deliveryStatus: 'Pending'
   }
 
   await apiService.post("/api/salesDeliveries", salesDelivery);

@@ -1,33 +1,35 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { apiService } from '~/api/apiService';
 // Modal states
 const showModal = ref(false); // Modal visibility
 const selectedOrder = ref(null); // Selected order for modal details
+const userInfo = ref({userID: ''});
 // Sample data
 const orders = ref([
-  {
-    id: 'ORD001',
-    date: '2024-11-10',
-    status: 'To Be Received',
-    paymentHistory: [
-      { date: '2024-11-01', amount: '500.00' },
-      { date: '2024-11-05', amount: '200.00' },
-    ],
-    currentPayment: '200.00',
-    balance: '300.00',
-    totalAmount: '1000.00',
-  },
-  {
-    id: 'ORD002',
-    date: '2024-11-11',
-    status: 'Completed',
-    paymentHistory: [
-      { date: '2024-11-06', amount: '1000.00' },
-    ],
-    currentPayment: '0.00',
-    balance: '0.00',
-    totalAmount: '1000.00',
-  },
+  // {
+  //   id: 'ORD001',
+  //   date: '2024-11-10',
+  //   status: 'To Be Received',
+  //   paymentHistory: [
+  //     { date: '2024-11-01', amount: '500.00' },
+  //     { date: '2024-11-05', amount: '200.00' },
+  //   ],
+  //   currentPayment: '200.00',
+  //   balance: '300.00',
+  //   totalAmount: '1000.00',
+  // },
+  // {
+  //   id: 'ORD002',
+  //   date: '2024-11-11',
+  //   status: 'Completed',
+  //   paymentHistory: [
+  //     { date: '2024-11-06', amount: '1000.00' },
+  //   ],
+  //   currentPayment: '0.00',
+  //   balance: '0.00',
+  //   totalAmount: '1000.00',
+  // },
 ]);
 // Open modal for selected order
 const openModal = (order) => {
@@ -39,6 +41,41 @@ const closeModal = () => {
   showModal.value = false;
   selectedOrder.value = null;
 };
+
+const fetchOrdersData = async() => {
+    const result = await apiService.get(`/api/sales/user/${userInfo.value.userID}`)
+    const transformData = result.data?.map((value) => {
+      const paymentHistory = value?.customer_payment?.filter((v) => v.amountPaid != 0)?.map((v) => {
+        return {
+          date: v.paymentDate,
+          amount: v.amountPaid
+        }
+      })
+      const totalAmountPaid = value.customer_payment?.reduce(
+                (sum, item) => parseFloat(sum) + parseFloat(item.amountPaid),
+                0
+              )
+      return {
+        id: value.salesID,
+        date: value.salesDate,
+        status: value.sales_deliveries.deliveryStatus,
+        paymentHistory,
+        currentPayment: parseFloat(value?.customer_payment?.[value?.customer_payment?.length - 1].amountPaid),
+        balance: parseFloat(value?.customer_payment?.[value?.customer_payment?.length - 1].amountToPay) - parseFloat(totalAmountPaid),
+        totalAmount: parseFloat(value?.customer_payment?.[value?.customer_payment?.length - 1].amountToPay) 
+      }
+    })
+    orders.value = transformData
+  }
+
+  onMounted(async() => {
+  if (process.client) {
+    const storage = JSON.parse(localStorage.getItem("userInfo"));
+    userInfo.value = storage ? storage : null;
+  }
+
+  await fetchOrdersData();
+});
 </script>
 <template>
   <div class="p-6 bg-gray-100 min-h-screen">

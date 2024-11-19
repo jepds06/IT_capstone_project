@@ -3,11 +3,37 @@
     <div class="container mx-auto flex justify-between items-center">
       <!-- Logo Section -->
       <div class="text-xl font-bold">
-        {{ userInfo.userTypeDescription }} Dashboard
+        S U P P L Y E A S E
+          <span class="se-raised">
+              <UBadge label="SE" variant="subtle" class="mb-0.5" />
+          </span>
       </div>
 
       <div class="flex items-center">
-        <UButton @click="store.isOpenCart = true" color="white" class="mr-2" icon="solar:cart-4-linear" size="md" :label="`Cart(${store.addedToCart.length})`" />
+        <UButton
+          @click="store.isOpenCart = true"
+          color="white"
+          class="mr-2"
+          icon="solar:cart-4-linear"
+          size="md"
+          :label="`Cart(${store.addedToCart.length})`"
+        />
+        <UButton
+          @click="store.isOpenOrderStatus = true"
+          color="white"
+          class="mr-2"
+          icon="material-symbols-light:order-approve-outline-sharp"
+          size="md"
+          title="Order Status"
+        />
+        <UButton
+          @click="store.isOpenPaymentStatus = true"
+          color="white"
+          class="mr-2"
+          icon="hugeicons:wallet-done-02"
+          size="md"
+          title="Payment Status"
+        />
         <UPopover mode="hover" class="mr-2">
           <UAvatar icon="ant-design:user-outlined" size="md" />
           <template #panel>
@@ -29,7 +55,15 @@
   </header>
 
   <UModal v-model="store.isOpenCart" fullscreen>
-      <CustomerDashboard />
+    <CustomerDashboard />
+  </UModal>
+
+  <UModal v-model="store.isOpenOrderStatus">
+    <CustOrderStatus />
+  </UModal>
+
+  <UModal v-model="store.isOpenPaymentStatus" fullscreen>
+    <CustPaymentStatus />
   </UModal>
 </template>
 

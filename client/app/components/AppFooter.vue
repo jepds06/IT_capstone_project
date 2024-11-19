@@ -1,32 +1,32 @@
 <template>
      <footer class="bg-black text-white py-10">
     <!-- Footer Container -->
-    <!-- <div class="container mx-auto px-6">
+    <div class="container mx-auto px-6">
       
       Footer Top Section (Company Information)
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8"> -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <!-- Column 1: Company Information -->
-        <!-- <div>
+        <div>
           <h2 class="text-lg font-semibold mb-4 text-gray-400">MAY WE HELP YOU?</h2>
           <ul class="space-y-2 text-sm">
             <li><a href="#" class="underline-link">Contact Us</a></li>
             <li><a href="#" class="underline-link">FAQs</a></li>
             <li><a href="#" class="underline-link">Email Unsubscribe</a></li>
           </ul>
-        </div> -->
+        </div>
         
         <!-- Column 2: The Company -->
-        <!-- <div>
+        <div>
           <h2 class="text-lg font-semibold mb-4 text-gray-400">THE COMPANY</h2>
           <ul class="space-y-2 text-sm">
             <li><a href="#" class="underline-link">About SupplyEase</a></li>
             <li><a href="#" class="underline-link">Privacy & Cookie Policy</a></li>
             <li><a href="#" class="underline-link">Corporate Information</a></li>
           </ul>
-        </div> -->
+        </div>
 
         <!-- Column 3: Subscribe & Store Locator -->
-        <!-- <div>
+        <div>
           <h2 class="text-lg font-semibold mb-4 text-gray-400">SIGN UP FOR SUPPLYEASE UPDATES</h2>
           <p class="text-xs mb-4">Join us for updates on the latest collections, events, and news related to SupplyEase. By entering your email, you consent to receiving our newsletter as per our 
             Privacy Policy.</p>
@@ -40,15 +40,15 @@
             <p class="text-xs">Davao City, Philippines</p>
           </div>
         </div>
-      </div> -->
+      </div>
 
-      <!-- <div class="flex justify-between items-center mt-8">
+      <div class="flex justify-between items-center mt-8">
         <p class="text-gray-500 dark:text-gray-400 text-sm">
           SE Copyright © {{ new Date().getFullYear() }}. All rights reserved.
         </p>
-      </div> -->
-      <!-- </div>
-    </div> -->
+      </div>
+      </div>
+    <!-- </div> -->
     </footer>
   </template>
   

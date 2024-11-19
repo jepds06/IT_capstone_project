@@ -6,6 +6,8 @@ interface SalesServiceInterface
 {
     public function findSales();
 
+    public function findSalesByUserId(int $userID);
+
     public function findSaleById(int $salesId);
 
     public function createSales(object $payload);

@@ -1,10 +1,10 @@
 <template>
   <div class="m-8 space-y-6">
     <!-- Title -->
-    <h1 class="text-2xl font-extrabold">Reports</h1>
+    <h1 class="text-2xl font-extrabold">Bills Payment</h1>
 
     <!-- Overview Cards -->
-    <div class="grid grid-cols-3 gap-4">
+    <div class="grid grid-cols-4 gap-4">
       <div class="bg-gray-500 text-white p-4 rounded-lg shadow">
         <h2 class="text-base font-semibold">Total Sales</h2>
         <p class="text-2xl mt-2 text-center">
@@ -21,13 +21,13 @@
         <p class="text-2xl mt-2 text-center">{{completedOrders}}</p>
       </div>
       <div class="bg-gray-500 text-white p-4 rounded-lg shadow">
-        <h2 class="text-base font-semibold">Waiting for delivery</h2>
-        <p class="text-2xl mt-2 text-center">{{waitingForDeliveries}}</p>
+        <h2 class="text-base font-semibold">Out for delivery</h2>
+        <p class="text-2xl mt-2 text-center">{{outForDeliveries}}</p>
       </div>
-      <!-- <div class="bg-gray-500 text-white p-4 rounded-lg shadow">
-        <h2 class="text-base font-semibold">Processed Delivery</h2>
-        <p class="text-2xl mt-2 text-center">{{processedDeliveries}}</p>
-      </div> -->
+      <div class="bg-gray-500 text-white p-4 rounded-lg shadow">
+        <h2 class="text-base font-semibold">Pending</h2>
+        <p class="text-2xl mt-2 text-center">{{pendingDeliveries}}</p>
+      </div>
     </div>
 
     <!-- Filter Options -->
@@ -59,13 +59,13 @@
     <!-- Export Options -->
     <div class="flex justify-end mb-4">
       <button
-        @click="exportPDF"
+        @click="exportPDF(filteredReports)"
         class="px-4 py-2 bg-red-600 text-white rounded shadow hover:bg-red-700 mr-2"
       >
         Export to PDF
       </button>
       <button
-        @click="exportCSV"
+        @click="exportCSV(filteredReports)"
         class="px-4 py-2 bg-green-600 text-white rounded shadow hover:bg-green-700"
       >
         Export to CSV
@@ -81,6 +81,8 @@
           <tr>
             <th class="py-3 px-4 text-left">Order ID</th>
             <th class="py-3 px-4 text-left">Customer Name</th>
+            <th class="py-3 px-4 text-left">Balance</th>
+            <th class="py-3 px-4 text-left">Amount Paid</th>
             <th class="py-3 px-4 text-left">Total Amount</th>
             <th class="py-3 px-4 text-left">Order Date</th>
             <th class="py-3 px-4 text-left">Status</th>
@@ -100,6 +102,22 @@
                 new Intl.NumberFormat("en-PH", {
                   style: "currency",
                   currency: "PHP",
+                }).format(report.balance)
+              }}
+            </td>
+            <td class="px-6 py-3">
+              {{
+                new Intl.NumberFormat("en-PH", {
+                  style: "currency",
+                  currency: "PHP",
+                }).format(report.amountPaid)
+              }}
+            </td>
+            <td class="px-6 py-3">
+              {{
+                new Intl.NumberFormat("en-PH", {
+                  style: "currency",
+                  currency: "PHP",
                 }).format(report.totalAmount)
               }}
             </td>
@@ -114,9 +132,9 @@
                 <button @click="viewReport(report.salesID)" class="text-blue-500 hover:text-blue-700">
                   <i class="fa-solid fa-eye"></i>
                 </button>
-                <button @click="editReport(report.salesID)" class="text-yellow-500 hover:text-yellow-700">
+                <!-- <button @click="editReport(report.salesID)" class="text-yellow-500 hover:text-yellow-700">
                   <i class="fa-solid fa-edit"></i>
-                </button>
+                </button> -->
               </td>
           </tr>
         </tbody>
@@ -149,9 +167,39 @@
     <!-- View Modal -->
     <div v-if="isViewModalOpen" class="modal-overlay">
       <div class="modal-content">
-        <h2 class="text-lg font-semibold">Report Details</h2>
+        <h2 class="text-lg font-semibold">Payment Details</h2>
         <p>Order ID: {{ modalData.salesID }}</p>
         <p>Customer Name: {{ getUserName(modalData.userID) }}</p>
+
+        <div class="p-4 max-h-96 overflow-y-auto">
+          <!-- Payment History -->
+          <h3 class="text-md font-semibold mb-2">Payment History</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full table-auto modal-table">
+              <thead>
+                <tr>
+                  <th class="py-2 px-4 text-left">Date</th>
+                  <th class="py-2 px-4 text-left">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="payment in modalData?.customer_payment" :key="payment.cstrPayID">
+                  <td class="py-2 px-4">{{ payment.paymentDate }}</td>
+                  <td class="py-2 px-4">₱{{ payment.amountPaid }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- Current Payment -->
+          <h3 class="text-md font-semibold mt-4 mb-2">Current Payment</h3>
+          <p class="mb-4">₱{{ modalData?.customer_payment[modalData?.customer_payment?.length - 1].amountPaid ?? 0 }}</p>
+          <!-- Balance -->
+          <h3 class="text-md font-semibold mt-4 mb-2">Balance</h3>
+          <p class="mb-4">₱{{ modalData?.balance }}</p>
+          <!-- Total Amount -->
+          <h3 class="text-md font-semibold mt-4 mb-2">Total Amount</h3>
+          <p>₱{{ modalData?.totalAmount }}</p>
+        </div>
         <button
           @click="closeModal"
           class="mt-4 bg-blue-600 text-white px-4 py-2 rounded"
@@ -214,42 +262,78 @@ const reports = ref([
 
 const users = ref([]);
 
-const exportPDF = () => {
-  const doc = new jsPDF();
-  doc.text("Reports", 10, 10);
+const exportPDF = (data) => {
 
-  let yOffset = 20; // Starting y-axis position
-  reports.value.forEach((report, index) => {
-    doc.text(`${index + 1}. Order ID: ${report.orderID}`, 10, yOffset);
-    doc.text(`Customer Name: ${report.customerName}`, 10, yOffset + 10);
-    doc.text(`Total Amount: ${report.totalAmount}`, 10, yOffset + 20);
-    doc.text(`Order Date: ${report.orderDate}`, 10, yOffset + 30);
-    doc.text(`Status: ${report.status}`, 10, yOffset + 40);
-    yOffset += 50; // Move down for the next report
-  });
+  const pdf = new jsPDF();
 
-  doc.save("Report.pdf");
+// Title and Date
+const today = new Date().toLocaleDateString("en-CA");
+pdf.setFontSize(18);
+pdf.text("Sales Report", 105, 20, { align: "center" });
+pdf.setFontSize(12);
+pdf.text(`Date: ${today}`, 105, 28, { align: "center" });
+
+// Define columns and map data
+const columns = [
+  { header: "Sales ID", dataKey: "salesID" },
+  { header: "CustomerName", dataKey: "userID" },
+  { header: "Sales Date", dataKey: "salesDate" },
+  { header: "Total Amount", dataKey: "totalAmount" },
+  { header: "Balance", dataKey: "balance" },
+  { header: "Amount Paid", dataKey: "amountPaid" },
+];
+
+const body = data.map((sale) => ({
+  salesID: sale.salesID,
+  userID: getUserName(sale.userID),
+  salesDate: sale.salesDate,
+  totalAmount: sale.totalAmount,
+  balance: sale.balance,
+  amountPaid: sale.amountPaid,
+}));
+
+// Add AutoTable
+pdf.autoTable({
+  columns,
+  body,
+  startY: 35,
+  theme: "grid",
+  styles: {
+    fontSize: 10,
+    cellPadding: 4,
+  },
+  headStyles: {
+    fillColor: [37, 150, 190],
+    textColor: [255, 255, 255],
+  },
+  alternateRowStyles: {
+    fillColor: [240, 240, 240],
+  },
+});
+
+// Save the PDF
+pdf.save(`Sales_Report_${today}.pdf`);
 };
 
-const exportCSV = () => {
+const exportCSV = (data) => {
   const headers = [
     "Order ID",
     "Customer Name",
     "Total Amount",
-    "Order Date",
-    "Status",
+    "Balance",
+    "Amount Paid",
   ];
   const csvContent = [
     headers.join(","), // CSV headers
     ...reports.value
-      .slice(0, 5)
-      .map((report) =>
+      .map((sale) =>
         [
-          report.orderID,
-          report.customerName,
-          report.totalAmount,
-          report.orderDate,
-          report.status,
+             sale.salesID,
+            getUserName(sale.userID),
+            sale.salesDate,
+           sale.totalAmount,
+            sale.balance,
+             sale.amountPaid,
         ].join(",")
       ),
   ].join("\n");
@@ -300,13 +384,13 @@ const completedOrders = computed(() => {
   return reports.value.filter((value) => value?.sales_deliveries?.deliveryStatus === 'Completed')?.length;
 });
 
-const waitingForDeliveries = computed(() => {
-  return reports.value.filter((value) => value?.sales_deliveries?.deliveryStatus === 'Waiting for delivery')?.length;
+const outForDeliveries = computed(() => {
+  return reports.value.filter((value) => value?.sales_deliveries?.deliveryStatus === 'Out for delivery')?.length;
 });
 
-// const processedDeliveries = computed(() => {
-//   return reports.value.filter((value) => value?.sales_deliveries?.deliveryStatus === 'Processed delivery')?.length;
-// });
+const pendingDeliveries = computed(() => {
+  return reports.value.filter((value) => value?.sales_deliveries?.deliveryStatus === 'Pending')?.length;
+});
 
 const start = computed(() => (page.value - 1) * itemsPerPage);
 const end = computed(() =>
@@ -316,8 +400,8 @@ const end = computed(() =>
 const getStatusIcon = (status) => {
   return {
     ["Completed"]: "fa-solid fa-check-circle text-green-500",
-    ["Waiting for delivery"]: "fa-solid fa-hourglass-half text-yellow-500",
-    ["Processed delivery"]: "fa-solid fa-times-circle text-red-500",
+    ["Out for delivery"]: "fa-solid fa-hourglass-half text-yellow-500",
+    ["Pending"]: "fa-solid fa-times-circle text-red-500",
   }[status];
 };
 
@@ -360,11 +444,19 @@ const fetchSalesData = async () => {
       (sum, item) => parseFloat(sum) + parseFloat(item.amount),
       0
     );
+    const totalAmountPaid = value.customer_payment?.reduce(
+                (sum, item) => parseFloat(sum) + parseFloat(item.amountPaid),
+                0
+              )
     return {
       ...value,
       totalAmount,
+      balance: totalAmount - totalAmountPaid,
+      amountPaid: totalAmountPaid
     };
   });
+
+  console.log(reports.value)
 };
 
 onMounted(async () => {
@@ -391,5 +483,17 @@ onMounted(async () => {
   padding: 2rem;
   border-radius: 0.5rem;
   width: 400px;
+}
+
+.modal-table th,
+.modal-table td {
+  border: 1px solid #ddd;
+}
+.modal-table th {
+  background-color: #6b7280;
+  color: white;
+}
+.modal-table tr:nth-child(even) {
+  background-color: #f9fafb;
 }
 </style>

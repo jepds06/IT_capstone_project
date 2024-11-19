@@ -48,6 +48,7 @@
           </template>
         </UPopover> -->
           <UButton
+            :disabled="!selectedProduction"
             class="ml-2"
             title="Filter"
             label="Filter  "
@@ -212,8 +213,9 @@
             @click="saveSupplier"
             color="green"
             :disabled="
-              !selectedPaymentType ||
-              selectedBills?.filter((value) => value.selected).length === 0
+              (!selectedPaymentType ||
+              selectedBills?.filter((value) => value.selected).length === 0) ||
+              selectedBills?.filter((value) => value.selected)?.filter((value) => !value.amount || value.amount === 0).length > 0
             "
           />
         </div>

@@ -1,83 +1,73 @@
-
-<script setup lang="ts">
-const route = useRoute();
-const { data: navigation } = await useAsyncData(
-  "navigation",
-  () => fetchContentNavigation(),
-  { default: () => [] }
-);
-
-provide("navigation", navigation);
-</script>
-
 <template>
-  <div v-if="route.path === '/'" class="layout">
-    <AppHeader />
+  <div class="layout">
+    <!-- Dynamic Header -->
+    <component :is="getHeader()" />
 
-    <main class="flex-grow">
-      <slot />
-    </main>
-
-    <AppFooter />
-
-  </div>
-
-  <div v-else-if="route.path.includes('/admin')" class="layout">
-    <AdminHeader />
-    
-    <div class="flex flex-grow">
-      <!-- Sidebar -->
-      <AdminSidebar class="w-64" />
-      
+    <!-- Conditional Admin Layout -->
+    <div v-if="route.path.includes('/admin')" class="flex flex-grow">
+      <!-- Sidebar (Visible Only for Admin) -->
+      <AdminSidebar class="w-64 bg-gray-800" />
       <!-- Main Content -->
-      <div class="flex-1 flex flex-col">
-        <main class="flex-grow p-6">
-          <slot />
-        </main>
-        
-        <!-- Footer -->
-        <AppFooter />
-      </div>
+      <main class="flex-grow p-6">
+        <slot />
+      </main>
     </div>
-  </div>
 
-  <div v-else-if="route.path.includes('/supplier')" class="layout">
-    <AdminHeader />
-    <div class="flex">
-          <main>
-            <slot />
-          </main>
-    </div>
-    <AppFooter />
-  </div>
-
-  <div v-else class="layout">
-    <CustomerHeader />
-    <main class="flex-grow">
+    <!-- Non-Admin Layout -->
+    <main v-else class="flex-grow">
       <slot />
     </main>
-    <!-- <ClientOnly>
-      <LazyUContentSearch
-        :files="files"
-        :navigation="navigation"
-      />
-    </ClientOnly> -->
-    <AppFooter />
+
+    <!-- Footer -->
+    <component :is="getFooter()" />
+    <!-- <AppFooter /> -->
   </div>
 </template>
+
+<script setup lang="ts">
+import { useRoute } from 'vue-router';
+import AdminHeader from '~/components/AdminHeader.vue';
+import AppHeader from '~/components/AppHeader.vue';
+import CustomerHeader from '~/components/CustomerHeader.vue';
+import AppFooter from '~/components/AppFooter.vue';
+
+const route = useRoute();
+
+// Determine which header to use based on the route
+const getHeader = () => {
+  if (route.path.includes('/admin') || route.path.includes('/supplier')) return AdminHeader;
+  else if (route.path.includes('/customer-product')) return CustomerHeader
+  return AppHeader  ; // Default for non-admin routes
+};
+
+const getFooter = () => {
+  if (route.path.includes('/admin') || route.path.includes('/supplier')) return;
+  else if (route.path.includes('/customer-product')) return
+  return AppFooter  ; // Default for non-admin routes
+};
+</script>
 
 <style>
 .layout {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Ensures the layout stretches to the full viewport height */
+  min-height: 100vh; /* Full viewport height */
+}
+
+.flex {
+  display: flex; /* Layout for admin routes */
 }
 
 main {
-  flex-grow: 1; /* Allows main content to take up remaining space */
+  flex-grow: 1; /* Ensure main content stretches */
+  padding: 1rem; /* Optional padding for content */
 }
 
-.flex-grow {
-  flex-grow: 1; /* Makes the content area expand */
+.w-64 {
+  width: 16rem; /* Sidebar width */
+}
+
+.bg-gray-800 {
+  background-color: #2d3748; /* Sidebar background color */
 }
 </style>

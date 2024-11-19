@@ -39,6 +39,14 @@ class SalesController extends Controller
         return $this->salesService->findSaleById($salesId);
     }
 
+     /**
+     * Display the specified resource.
+     */
+    public function showByUserID(int $userID)
+    {
+        return $this->salesService->findSalesByUserId($userID);
+    }
+
     /**
      * Update the specified resource in storage.
      */
