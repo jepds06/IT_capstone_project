@@ -350,6 +350,11 @@
 import { format } from "date-fns";
 import { apiService } from "~/api/apiService";
 
+useSeoMeta({
+  title: 'Customer Manage Payment',
+  description: 'Admin Dashboard'
+})
+
 export default {
   data() {
     return {

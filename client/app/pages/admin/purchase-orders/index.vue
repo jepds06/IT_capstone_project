@@ -56,6 +56,11 @@
   <script>
 import { apiService } from "~/api/apiService";
 import auth from "../../../../middleware/auth";
+
+useSeoMeta({
+  title: 'Purchase Orders',
+  description: 'Admin Dashboard'
+})
 // This page requires authentication
 definePageMeta({
   middleware: [auth],

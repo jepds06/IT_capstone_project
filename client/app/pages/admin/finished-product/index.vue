@@ -140,6 +140,11 @@ definePageMeta({
   middleware: [auth],
 });
 
+useSeoMeta({
+  title: 'Finished Product',
+  description: 'Admin Dashboard'
+})
+
   export default {
     data() {
       return {

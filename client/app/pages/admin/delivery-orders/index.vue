@@ -69,6 +69,11 @@ definePageMeta({
   middleware: [auth],
 });
 
+useSeoMeta({
+  title: 'Delivery Orders',
+  description: 'Admin Dashboard'
+})
+
 import { ref, computed } from "vue";
   export default {
     data() {

@@ -155,6 +155,11 @@
 <script>
 import { apiService } from "~/api/apiService";
 
+useSeoMeta({
+  title: 'Purchase',
+  description: 'Admin Dashboard'
+})
+
 export default {
   data() {
     return {

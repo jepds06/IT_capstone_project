@@ -193,6 +193,12 @@
 <script setup>
 import auth from "../../../../middleware/auth";
 // This page requires authentication
+
+useSeoMeta({
+  title: 'Customer Bills Payment',
+  description: 'Admin Dashboard'
+})
+
 definePageMeta({
   middleware: [auth],
 });

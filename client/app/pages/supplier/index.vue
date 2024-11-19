@@ -80,6 +80,11 @@
 <script setup>
 import { ref } from "vue";
 
+useSeoMeta({
+  title: 'Supplier',
+  description: 'Admin Dashboard'
+})
+
 // State variables
 const activeMainTab = ref("quotations"); // Active main tab
 const activeSubTab = ref("quotationRequest"); // Active sub tab for quotations

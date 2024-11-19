@@ -305,6 +305,11 @@ import { apiService } from "~/api/apiService";
 import { format } from "date-fns";
 import "jspdf-autotable";
 
+useSeoMeta({
+  title: 'Supplier Quotation',
+  description: 'Admin Dashboard'
+})
+
 // This page requires authentication
 definePageMeta({
   middleware: [auth],

@@ -73,7 +73,7 @@ import { apiService } from "~/api/apiService";
 import { store } from "~/composables/store";
 
 useSeoMeta({
-  title: 'Customer',
+  title: 'Customers',
   description: 'Customer Dashboard'
 })
 
