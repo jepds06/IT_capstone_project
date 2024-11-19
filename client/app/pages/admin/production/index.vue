@@ -191,7 +191,7 @@
   <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
     <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
     <p class="text-black">
-      Production has been {{ isEditMode ? 'updated' : 'created' }} successfully!
+      {{ successMessageType }}
     </p>
     <div class="flex justify-end mt-4">
       <button class="bg-blue-500 text-white py-1 px-3 rounded-md" @click="closeProductionConfirmation">
@@ -445,9 +445,11 @@
     <!-- Success Message for Request Quotation -->
     <div v-if="isSuccessQuotationVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
         <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
-          <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
+          <h3 class="text-xl font-bold mb-4" :class="suppliersAvailable ? 'text-green-600' : 'text-red-600'">
+              {{ suppliersAvailable ? 'Success!' : 'Error' }}
+          </h3>
           <p class="text-black">
-            Quotation has been {{ quotationMode ? 'updated' : 'requested' }} successfully!
+            {{ successQuotationMessage }}
           </p>
         <div class="flex justify-end mt-4">
           <button class="bg-blue-500 text-white py-1 px-3 rounded-md" @click="closeQuotationConfirmation">
@@ -663,11 +665,14 @@ const itemsPerPage = 5;
 const quotations = ref([]);
 const isLoadingMarkAsCompleted = ref(false);
 const isSuccessProductionVisible = ref(false);
+const successMessageType = ref(""); 
 const isProductionConfirmationVisible = ref(false);
 const isSuccessProductionDetailVisible = ref(false);
 const isProductionDetailConfirmationVisible = ref(false);
 const isSuccessQuotationVisible = ref(false);
 const isQuotationConfirmationVisible = ref(false);
+const successQuotationMessage = ref('');
+const suppliersAvailable = ref(false);
 
 const isLoadingQuotationRequested = ref(false);
 const isQuotationRequested = ref(false);
@@ -741,9 +746,8 @@ const closeProductionConfirmation = () => {
 };
 
 const showSuccessProductionMessage = (message) => {
-  isSuccessProductionVisible.value = true;
-  setTimeout(() => {
-  }, 3000); // Automatically close after 3 seconds
+  successMessageType.value = message; // Set the specific success message
+  isSuccessProductionVisible.value = true; 
   };
 
   const confirmProductionDetailtSave = () => {
@@ -771,7 +775,9 @@ const closeQuotationConfirmation = () => {
   isSuccessQuotationVisible.value = false;
 };
 
-const showSuccessQuotationMessage = (message) => {
+const showSuccessQuotationMessage = (message, hasSuppliers) => {
+  successQuotationMessage.value = message;
+  suppliersAvailable.value = hasSuppliers;
   isSuccessQuotationVisible.value = true;
   setTimeout(() => {
   }, 3000); // Automatically close after 3 seconds
@@ -850,31 +856,34 @@ const editProductionDetail = (prodDetail) => {
 };
 
 const requestQuotation = async () => {
-  isLoadingQuotationRequested.value = true
-  if (users.value.filter((user) => user.userTypeID === 3).length > 0) {
+  isLoadingQuotationRequested.value = true;
+
+  // Check if there are any suppliers (users with userTypeID === 3)
+  const suppliers = users.value.filter((user) => user.userTypeID === 3);
+
+  if (suppliers.length > 0) {
+    // Proceed with sending quotations for each supplier
     await Promise.all(
-      users.value
-        .filter((user) => user.userTypeID === 3)
-        .map(async (user) => {
-          await apiService.post("/api/quotations", {
-            quotationDate: formatDate(new Date()),
-            userID: user.userID,
-            remarks: selectedProduction.value.remarks ?? "NA",
-            productionID: selectedProduction.value.productionID,
-            isCompleted: false
-          });
-        })
+      suppliers.map(async (user) => {
+        await apiService.post("/api/quotations", {
+          quotationDate: formatDate(new Date()),
+          userID: user.userID,
+          remarks: selectedProduction.value.remarks ?? "NA",
+          productionID: selectedProduction.value.productionID,
+          isCompleted: false,
+        });
+      })
     );
     await fetchQuotationData();
-    isLoadingQuotationRequested.value = false
-    showSuccessQuotationMessage("Quotation requested successfully");
+    isLoadingQuotationRequested.value = false;
+    showSuccessQuotationMessage("Quotation requested successfully",true);
     isProductionDetailsInfo.value = false;
   } else {
-    showSuccessQuotationMessage("Supplier list is empty!");
+    // If no suppliers found, show the "Supplier list is empty!" message
+    isLoadingQuotationRequested.value = false;
+    showSuccessQuotationMessage("Supplier list is empty!",false);
   }
 };
-
-
 const saveProduction = async () => {
   if (isEditMode.value) {
     await apiService.put(
@@ -887,7 +896,11 @@ const saveProduction = async () => {
     if (index !== -1) {
       productions.value[index] = { ...productionForm.value };
     }
-    showSuccessProductionMessage(productionForm.value.status === "Completed" ? "Production completed successfully!" : "Production edited successfully!");
+    showSuccessProductionMessage(
+      productionForm.value.status === "Completed"
+        ? "Production completed successfully!"
+        : "Production edited successfully!"
+    );
   } else {
     const result = await apiService.post(
       "/api/productions",
@@ -924,6 +937,7 @@ const markAsCompleted = async () => {
     return await apiService.post("/api/finishedProducts", value)
   }))
   await saveProduction()
+  showSuccessProductionMessage("Production completed successfully!");
   isLoadingMarkAsCompleted.value = false
 }
 const saveProductionDetail = async () => {
