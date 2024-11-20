@@ -18,6 +18,16 @@
         </div> -->
         <label class="block font-semibold text-lg mb-2">*Production No</label>
         <USelectMenu v-model="selectedProduction" :options="productions" />
+
+        <!-- Conditional message below the Production No label -->
+      <div
+      v-if="notification.visible"
+      :class="`notification ${notification.type}`"
+      class="text-center mt-2"
+    >
+      {{ notification.message }}
+      </div>
+
       </div>
       <!-- Supplier Section -->
       <div class="col-span-1">
@@ -388,6 +398,11 @@ export default {
       },
       isModalOpen: false,
       isLoadingPay: false,
+      notification: {
+      message: "",
+      type: "info", // info, success, warning, error
+      visible: false,
+      },
     };
   },
   computed: {
@@ -457,6 +472,10 @@ export default {
       const dataToSave = data
         .filter((val) => !val.adminPayID)
         .map((value) => {
+          if (!value.amount || value.amount <= 0) {
+             message += `The amount paid is required for invoice no: ${value.id}.\n`;
+            return;
+          }
           if (value.amount > value.balance) {
             message =
               message +
@@ -537,7 +556,7 @@ export default {
         );
 
         if (result.data?.filter((val) => val.isApproved === 1).length === 0) {
-          alert("No data available.");
+          this.showMessage("No data available.", "warning");
           return;
         }
         if (!this.selectedSupplier) {
@@ -612,8 +631,14 @@ export default {
         }
         this.unpaidBills = transFormData;
       } else {
-        alert("Production No is required when filtering");
+        this.showMessage("Production No is required when filtering.", "error");
       }
+    },
+    showMessage(message, type) {
+      this.notification = { message, type, visible: true };
+      setTimeout(() => {
+      this.notification.visible = false;
+      }, 3000);
     },
     clearFilter() {
       this.selectedDate = new Date();
@@ -721,5 +746,26 @@ input[type="text"],
 input[type="date"],
 select {
   width: 100%;
+}
+
+.notification {
+  background-color: #f44336;
+  color: white;
+  padding: 10px;
+  border-radius: 4px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.notification.success {
+  background-color: #4caf50;
+}
+
+.notification.warning {
+  background-color: #ff9800;
+}
+
+.notification.error {
+  background-color: #f44336;
 }
 </style>

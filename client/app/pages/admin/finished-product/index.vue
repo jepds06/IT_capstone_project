@@ -129,6 +129,25 @@
           </div>
         </div>
       </div>
+
+      <!-- Pagination Component -->
+    <div class="mt-4 flex justify-between">
+        <button
+          @click="prevPage"
+          :disabled="currentPage === 1"
+          class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+        >
+          Previous
+        </button>
+        <span>Page {{ currentPage }} of {{ totalPages }}</span>
+        <button
+          @click="nextPage"
+          :disabled="currentPage === totalPages"
+          class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+        >
+          Next
+        </button>
+      </div>
     </div>
   </template>
   
@@ -162,9 +181,38 @@ definePageMeta({
         showDetailsModal: false,
         showEditModal: false,
         showCompleteModal: false,
+        currentPage: 1,
+        itemsPerPage: 10,
+        totalPages: 1,
+        paginatedProducts: [],
       };
     },
+    computed: {
+    displayedProducts() {
+      const start = (this.currentPage - 1) * this.itemsPerPage;
+      const end = start + this.itemsPerPage;
+      return this.finishedProducts.slice(start, end);
+    },
+   },
     methods: {
+      nextPage() {
+        if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+      }
+      },
+      prevPage() {
+        if (this.currentPage > 1) {
+        this.currentPage--;
+        }
+      },
+      calculateTotalPages() {
+        this.totalPages = Math.ceil(this.finishedProducts.length / this.itemsPerPage);
+      },
+      displayedProducts() {
+        const start = (this.currentPage - 1) * this.itemsPerPage;
+        const end = start + this.itemsPerPage;
+        return this.finishedProducts.slice(start, end);
+      },
       openDetailsModal(product) {
         this.selectedProduct = product;
         this.showDetailsModal = true;
@@ -200,12 +248,13 @@ definePageMeta({
       },
       async fetchFinishProductsData(){
         const result = await apiService.get("/api/finishedProducts");
-
-        this.finishedProducts = result?.data
+        this.finishedProducts = result?.data || [];
+        this.calculateTotalPages();
       }
     },
     async mounted() {
       await this.fetchFinishProductsData()
+      this.calculateTotalPages();
     }
   };
   </script>

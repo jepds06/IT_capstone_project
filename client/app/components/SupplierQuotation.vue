@@ -157,6 +157,24 @@
               </tbody>
             </table>
           </div>
+          <!-- Success Message For Save Quoatation Detail -->
+          <div
+            v-if="isSuccessQuotationVisible"
+            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+>
+            <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+              <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
+              <p class="text-black">{{ successQuotationMessage }}</p>
+              <div class="flex justify-end mt-4">
+                <button
+                  class="bg-blue-500 text-white py-1 px-3 rounded-md"
+                  @click="closeSuccessQuotation"
+                >
+                  OK
+                </button>
+              </div>
+            </div>
+          </div>
           <div class="flex  justify-between mt-2">
             <UButton
               @click="closeQuotationDetailInfo"
@@ -176,6 +194,25 @@
               title="Complete Quotation"
               label="Complete"
             />
+          </div>
+        </div>
+      </div>
+
+        <!-- Success Message For Complete Quoation -->
+      <div
+        v-if="isSuccessQuotationCompleteVisible"
+        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+>
+        <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+          <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
+          <p class="text-black">{{ successQuotationCompleteMessage }}</p>
+          <div class="flex justify-end mt-4">
+            <button
+              class="bg-blue-500 text-white py-1 px-3 rounded-md"
+              @click="closeSuccessQuotationComplete"
+            >
+              OK
+            </button>
           </div>
         </div>
       </div>
@@ -305,6 +342,10 @@ const props = defineProps({
     default: false, // Default value is `false` if not provided
   },
 });
+  const isSuccessQuotationVisible = ref(false);
+  const successQuotationMessage = ref("");
+  const isSuccessQuotationCompleteVisible = ref(false);
+  const successQuotationCompleteMessage = ref("");
   const materialDetail = ref(null);
   const userInfo = ref({ userID: "" });
   const users = ref([]);
@@ -371,7 +412,22 @@ const props = defineProps({
     }
   };
   
-  
+  const showSuccessQuotationMessage = (message) => {
+  successQuotationMessage.value = message;
+  isSuccessQuotationVisible.value = true;
+  };
+
+const closeSuccessQuotation = () => {
+  isSuccessQuotationVisible.value = false;
+  };
+const showSuccessQuotationCompleteMessage = (message) => {
+  successQuotationCompleteMessage.value = message;
+  isSuccessQuotationCompleteVisible.value = true;
+  };
+
+const closeSuccessQuotationComplete = () => {
+  isSuccessQuotationCompleteVisible.value = false;
+  };
   const openQuotationDetailEditModal = (quotation) => {
     selectedQuotationDetail.value = quotation;
     if (selectedQuotationDetail.value) {
@@ -460,7 +516,7 @@ const props = defineProps({
     isCompleteLoading.value = false
     closeQuotationDetailInfo()
     fetchQuotations()
-    alert("Quotation successfully completed");
+    showSuccessQuotationCompleteMessage("Quotation completed successfully!");
   };
   
   const closQuoDetailModal = () => {
@@ -494,7 +550,7 @@ const props = defineProps({
         }
         return value;
       }))
-      alert("Quotation detail edited successfully!");
+      showSuccessQuotationMessage("Quotation detail edited successfully!");
    
     } else {
     if (isQuoDetailEditMode.value) {
@@ -506,7 +562,7 @@ const props = defineProps({
         quotePrice: quotationDetailForm.value.quotePrice
       })
       }))
-      alert("Quotation detail edited successfully!");
+      showSuccessQuotationMessage("Quotation detail edited successfully!");
     } else {
       // Add new quotation detail
       await Promise.all(materialDetail.value?.map(async (value) =>{
@@ -518,7 +574,7 @@ const props = defineProps({
       })
        );
       
-      alert("Quotation detail added successfully!");
+       showSuccessQuotationMessage("Quotation detail added successfully!");
     }
     }
     const index = materialQuotation.value?.findIndex(
