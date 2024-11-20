@@ -2,14 +2,8 @@
   "name": "supplyease",
   "private": true,
   "type": "module",
-  "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare",
-    "lint": "eslint .",
-    "typecheck": "nuxt typecheck"
+"scripts": {
+    "build": "set NODE_OPTIONS=--disable-warning=DEP0155 --disable-warning=DEP0166 && nitro build"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.6.0",
