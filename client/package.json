@@ -3,7 +3,13 @@
   "private": true,
   "type": "module",
 "scripts": {
-    "build": "set NODE_OPTIONS=--disable-warning=DEP0155 --disable-warning=DEP0166 && nitro build"
+    "build": "set NODE_OPTIONS=--disable-warning=DEP0155 --disable-warning=DEP0166 && nitro build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "lint": "eslint .",
+    "typecheck": "nuxt typecheck"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^6.6.0",
