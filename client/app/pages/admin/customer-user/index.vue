@@ -2,9 +2,9 @@
   <div class="m-8">
     <!-- Title and Add User Button -->
     <div class="flex justify-between items-center mb-4">
-        <h1 class="text-2xl font-extrabold">Users</h1>
+        <h1 class="text-2xl font-extrabold">Customers</h1>
         <button @click="openModal('add')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-          Add User
+          Add Customer
         </button>
       </div>
   
@@ -53,13 +53,13 @@
             👁️
           </button>
           <!-- Edit Button -->
-          <button
+          <!-- <button
             class="text-yellow-500 hover:text-yellow-700 mx-2"
             @click="openEditModal(user)"
             title="Edit User"
           >
             ✏️
-          </button>
+          </button> -->
           <!-- Delete Button -->
           <!-- <button
             class="text-red-500 hover:text-red-700"
@@ -103,7 +103,7 @@
         <form @submit.prevent="isView ? closeModal() :  openConfirmationModal()">
           <div class="mb-4">
             <label for="prodCat" class="block text-sm font-medium text-gray-700">User Type:</label>
-            <select v-model="form.userTypeID" id="prodCat" class="mt-1 block w-full border border-gray-300 rounded-lg p-2">
+            <select v-model="form.userTypeID" id="prodCat" class="mt-1 block w-full border border-gray-300 rounded-lg p-2" disabled>
               <option v-for="userType in userTypes" :key="userType.userTypeID" :value="userType.userTypeID">
                 {{ userType.userTypeName }}
               </option>
@@ -147,16 +147,6 @@
               id="username"
               class="border rounded px-2 py-1 w-full"
               :readonly="isView"
-            />
-          </div>
-          <div class="mb-4" v-if="!isView">
-            <label for="password" class="block text-gray-700">Password:</label>
-            <input
-              type="password"
-              v-model="form.password"
-              id="password"
-              class="border rounded px-2 py-1 w-full"
-              :readonly="isEdit"
             />
           </div>
           <div class="flex justify-end">
@@ -241,7 +231,7 @@ export default {
         firstName: '',
         userName: '',
         password: '',
-        userTypeID: ''
+        userTypeID: 2
       },
       isView: false,
     };
@@ -306,12 +296,13 @@ export default {
     },
     resetForm() {
       this.form = {
-        id: '',
-        lname: '',
-        fname: '',
-        username: '',
+        userID: '',
+        lastName: '',
+        firstName: '',
+        userName: '',
         password: '',
-      };
+        userTypeID: 2
+      }
     },
     getUserTypeName(userTypeID){
       const userType = this.userTypes.find((userType) => userType.userTypeID === userTypeID);
@@ -319,20 +310,21 @@ export default {
     },
     async addUser() {
       // Logic to add user
-      const result = await apiService.post('/api/users', this.form)
+      const result = await apiService.post('/api/users', {...this.form, password:`${this.form.userName}12345678`})
       this.users.push({
         ...this.form,
         userID: result.data.userID,
+        password:`${this.form.userName}12345678`
       });
       this.showSuccessModal("User added successfully!");
       this.closeModal();
     },
 
     async saveEdit() {
-      await apiService.put(`/api/users/${this.form.userID}`, this.form)
+      await apiService.put(`/api/users/${this.form.userID}`, {...this.form, password:`${this.form.userName}12345678`})
       const index = this.users.findIndex((u) => u.userID === this.form.userID);
       if (index !== -1) {
-        this.users.splice(index, 1, { ...this.form });
+        this.users.splice(index, 1, { ...this.form,  password:`${this.form.userName}12345678`});
       } 
       this.showSuccessModal("User edited successfully!")
       this.closeModal();
@@ -343,7 +335,7 @@ export default {
     },
     async fetchUserData(){
       const result = await apiService.get('/api/users')
-      this.users = result.data.filter((value) => value.userTypeID !== 2)
+      this.users = result.data?.filter((value) => value.userTypeID === 2)
     }
   },
   async mounted() {

@@ -245,6 +245,7 @@ const fetchUserData = async () => {
 
 onUnmounted (() => {
   store.selectedCustomer = null
+  store.addedToCart = [];
 })
 
 onMounted(async () => {
