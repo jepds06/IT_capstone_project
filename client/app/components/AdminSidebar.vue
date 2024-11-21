@@ -584,7 +584,7 @@
             userInfo?.userTypeDescription.toLowerCase() === 'administrator'
               ? ''
               : userPermission?.filter((up) =>
-                up.moduleName.toLowerCase().includes('purchase order management')
+                up.moduleName.toLowerCase().includes('order management')
               ).length > 0
                 ? ''
                 : 'hidden'
