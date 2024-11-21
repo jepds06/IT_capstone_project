@@ -4,7 +4,7 @@
     <h1 class="text-2xl font-extrabold">Bills Payment</h1>
 
     <!-- Overview Cards -->
-    <div class="grid grid-cols-4 gap-4">
+    <div class="grid grid-cols-5 gap-4">
       <div class="bg-gray-500 text-white p-4 rounded-lg shadow">
         <h2 class="text-base font-semibold">Total Sales</h2>
         <p class="text-2xl mt-2 text-center">
@@ -19,6 +19,10 @@
       <div class="bg-gray-500 text-white p-4 rounded-lg shadow">
         <h2 class="text-base font-semibold">Completed Orders</h2>
         <p class="text-2xl mt-2 text-center">{{completedOrders}}</p>
+      </div>
+      <div class="bg-gray-500 text-white p-4 rounded-lg shadow">
+        <h2 class="text-base font-semibold">Pick up</h2>
+        <p class="text-2xl mt-2 text-center">{{pickupOrders}}</p>
       </div>
       <div class="bg-gray-500 text-white p-4 rounded-lg shadow">
         <h2 class="text-base font-semibold">Out for delivery</h2>
@@ -128,9 +132,13 @@
                 :title="report.sales_deliveries.deliveryStatus"
               ></i>
             </td>
-            <td class="px-6 py-3 flex gap-3">
+            <td class="px-6 py-3 flex gap-2">
                 <button @click="viewReport(report.salesID)" class="text-blue-500 hover:text-blue-700">
                   <i class="fa-solid fa-eye"></i>
+                </button>
+              
+                <button @click="exportInvoicePDF(report)" class="text-red-500 hover:text-red-700">
+                  <i class="fas fa-file-pdf"></i>
                 </button>
                 <!-- <button @click="editReport(report.salesID)" class="text-yellow-500 hover:text-yellow-700">
                   <i class="fa-solid fa-edit"></i>
@@ -254,6 +262,7 @@ import { ref, computed } from "vue";
 import { jsPDF } from "jspdf"; // Import jsPDF for PDF generationpnpm install jspdf
 import { apiService } from "~/api/apiService";
 import { format } from 'date-fns';
+import "jspdf-autotable";
 
 const reports = ref([
   // { orderID: 101, customerName: "Maria Santos", totalAmount: "₱15,000", orderDate: "2024-11-01", status: "Completed" },
@@ -264,7 +273,7 @@ const users = ref([]);
 
 const exportPDF = (data) => {
 
-  const pdf = new jsPDF();
+const pdf = new jsPDF();
 
 // Title and Date
 const today = new Date().toLocaleDateString("en-CA");
@@ -313,6 +322,99 @@ pdf.autoTable({
 
 // Save the PDF
 pdf.save(`Sales_Report_${today}.pdf`);
+};
+
+const exportInvoicePDF = (data) => {
+
+const pdf = new jsPDF();
+
+// Title and Date
+const today = new Date().toLocaleDateString("en-CA");
+pdf.setFontSize(18);
+pdf.text("Sales Report", 105, 20, { align: "center" });
+pdf.setFontSize(12);
+pdf.text(`Date: ${today}`, 105, 28, { align: "center" });
+
+
+  // Header Background
+  pdf.setFillColor(37, 150, 190); // Header background color
+      pdf.rect(0, 0, pdf.internal.pageSize.getWidth(), 45, "F"); // Fill rectangle for header
+
+      // Header Title
+      pdf.setFontSize(22);
+      pdf.setTextColor(255, 255, 255); // White text
+      pdf.text(`Sales: IN-00${data.salesID} `, 10, 20);
+
+      // Supplier Information
+      pdf.setFontSize(12);
+      pdf.setTextColor(255, 255, 255); // White text
+      pdf.text(`Customer Name: ${getUserName(data.userID)}`, 10, 30);
+      pdf.text(
+        `Address: ${data.sales_deliveries.deliveryAddress}`,
+        10,
+        35
+      );
+      // pdf.text(
+      //   `Supplier ID: SUP-${this.selectedQuotationDetail.userID}`,
+      //   10,
+      //   40
+      // );
+
+// Define columns and map data
+const columns = [
+  { header: "Sales Product ID", dataKey: "slsPrdOrdID" },
+  { header: "Product", dataKey: "productName" },
+  { header: "Amount", dataKey: "amount" },
+  { header: "Qty Ordered", dataKey: "qtyOrdered" },
+  { header: "Total Amount", dataKey: "totalAmount" },
+];
+
+const body = data.sales_orders.map((sale) => ({
+  slsPrdOrdID: sale.slsPrdOrdID,
+  productName: sale.product.productName,
+  amount: sale.product.unitPrice,
+  qtyOrdered: sale.qtyOrdered,
+  totalAmount: sale.amount,
+}));
+
+// Add AutoTable
+pdf.autoTable({
+  columns,
+  body,
+  startY: 65,
+  theme: "grid",
+  styles: {
+    fontSize: 10,
+    cellPadding: 4,
+  },
+  headStyles: {
+    fillColor: [37, 150, 190],
+    textColor: [255, 255, 255],
+  },
+  alternateRowStyles: {
+    fillColor: [240, 240, 240],
+  },
+});
+
+const totalPrice = data.sales_orders.reduce(
+        (sum, item) =>
+          parseFloat(sum) + parseFloat(item.amount),
+        0
+      );
+
+      // Positioning for total price on the right side
+      const totalY = pdf.lastAutoTable.finalY + 10; // 10 units below the table
+      const totalText = `Total: ${parseInt(totalPrice.toFixed(2))}`;
+      const totalX =
+        pdf.internal.pageSize.getWidth() - pdf.getTextWidth(totalText) - 10; // 10 units from the right edge
+
+      // Display total price
+      pdf.setFontSize(12);
+      pdf.setTextColor(0, 0, 0); // Black text
+      pdf.text(totalText, totalX, totalY);
+
+// Save the PDF
+pdf.save(`SaleIN-00${data.salesID}_Report_${today}.pdf`);
 };
 
 const exportCSV = (data) => {
@@ -380,6 +482,9 @@ const totalSales = computed(() => {
   );
 });
 
+const pickupOrders = computed(() => {
+  return reports.value.filter((value) => value?.sales_deliveries?.deliveryStatus === 'To be pickup')?.length;
+});
 const completedOrders = computed(() => {
   return reports.value.filter((value) => value?.sales_deliveries?.deliveryStatus === 'Completed')?.length;
 });
@@ -400,6 +505,7 @@ const end = computed(() =>
 const getStatusIcon = (status) => {
   return {
     ["Completed"]: "fa-solid fa-check-circle text-green-500",
+    ["To be pickup"]: "fa-solid fa-hourglass-half text-blue-500",
     ["Out for delivery"]: "fa-solid fa-hourglass-half text-yellow-500",
     ["Pending"]: "fa-solid fa-times-circle text-red-500",
   }[status];

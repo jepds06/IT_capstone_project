@@ -27,6 +27,7 @@
           icon="material-symbols-light:order-approve-outline-sharp"
           size="md"
           title="Order Status"
+          :disabled="!store.selectedCustomer"
         />
       </div>
     </div>

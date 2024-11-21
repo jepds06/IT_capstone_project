@@ -13,7 +13,7 @@
         >
           Item Cart
         </li>
-        <!-- <li
+        <li
           class="pb-2 cursor-pointer text-lg font-medium"
           :class="{
             'border-b-2 border-blue-500 text-blue-600': activeTab === 'billing',
@@ -21,7 +21,7 @@
           @click="activeTab = 'billing'"
         >
           Billing
-        </li> -->
+        </li>
         <li
           class="pb-2 cursor-pointer text-lg font-medium"
           :class="{
@@ -165,7 +165,9 @@
         >
           Continue Shopping
         </button>
-        <UButton label="Checkout" @click="activeTab = 'payment'" :disabled="filteredProducts?.length === 0"/>
+        <UButton label="Checkout" @click="activeTab = 'billing'" :disabled="filteredProducts.filter(
+          (value) => value?.selected
+        )?.length === 0"/>
       </div>
     </div>
 
@@ -404,8 +406,70 @@
     <div v-if="activeTab === 'payment'" class="space-y-6">
       <!-- Left Side: Delivery and Payment Options -->
        <div class="flex space-x-4">
+        
       <div class="w-1/2 space-y-6">
-       
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-lg font-bold">Delivery Options</h2>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-white p-4 rounded-lg shadow-md">
+            <label class="inline-flex items-center">
+              <input
+                type="radio"
+                name="deliveryOption"
+                value="Pickup"
+                class="mr-2"
+                v-model="deliverySelected"
+              />
+              <div>
+                <h3 class="font-bold">Pick Up</h3>
+                <p class="text-gray-500">Anytime pickup.</p>
+              </div>
+            </label>
+            
+          </div>
+          <div class="bg-white p-4 rounded-lg shadow-md">
+            <label class="inline-flex items-center">
+              <!-- <input
+                type="radio"
+                name="deliveryOption"
+                value="standard"
+                class="mr-2"
+              /> -->
+              <div>
+                <label class="inline-flex items-center">
+                  <input
+                    type="radio"
+                    name="deliveryOption"
+                    value="Delivery"
+                    class="mr-2"
+                    v-model="deliverySelected"
+                  />
+                  <div>
+                    <h3 class="font-bold">Standard Delivery</h3>
+                    <p class="text-gray-500">Delivery in 5-7 days.</p>
+                  </div>
+                </label>
+                
+              </div>
+            </label>
+          </div>
+          <!-- <div class="bg-white p-4 rounded-lg shadow-md">
+            <label class="inline-flex items-center">
+              <input
+                type="radio"
+                name="deliveryOption"
+                value="express"
+                class="mr-2"
+              />
+              <div>
+                <h3 class="font-bold">Express Delivery</h3>
+                <p class="text-gray-500">Delivery in 2-3 days.</p>
+              </div>
+            </label>
+          </div> -->
+        </div>
 
         <!-- Payment Options Section -->
         <div class="flex justify-between items-center mb-4 mt-6">
@@ -421,7 +485,7 @@
               <input
                 type="radio"
                 name="paymentOption"
-                value="Cash"
+                :value="payment.payMethodName"
                 class="mr-2"
                 v-model="paymentSelected"
               />
@@ -431,38 +495,6 @@
               </div>
             </label>
           </div>
-          <!-- <div class="bg-white p-4 rounded-lg shadow-md">
-            <label class="inline-flex items-center">
-              <input
-                type="radio"
-                name="paymentOption"
-                value="paypal"
-                class="mr-2"
-              />
-              <div>
-                <h3 class="font-bold">PayPal</h3>
-                <p class="text-gray-500">
-                  Pay easily through your PayPal account.
-                </p>
-              </div>
-            </label>
-          </div>
-          <div class="bg-white p-4 rounded-lg shadow-md">
-            <label class="inline-flex items-center">
-              <input
-                type="radio"
-                name="paymentOption"
-                value="bankTransfer"
-                class="mr-2"
-              />
-              <div>
-                <h3 class="font-bold">Bank Transfer</h3>
-                <p class="text-gray-500">
-                  Transfer directly from your bank account.
-                </p>
-              </div>
-            </label>
-          </div> -->
         </div>
       </div>
 
@@ -514,7 +546,7 @@
       <div class="flex justify-between mt-6">
         <!-- Back Button (aligned below Delivery and Payment Options) -->
         <UButton
-            @click="activeTab = 'itemcart'"
+            @click="activeTab = 'billing'"
             label="Back"
             color="gray"
           />
@@ -545,6 +577,7 @@ const products = ref([]);
 const categories = ref([]);
 const paymentMethods = ref([]);
 const paymentSelected = ref('Cash');
+const deliverySelected = ref('Pickup');
 const isLoadingCompleteAnOrder = ref(false);
 // Functions to handle modal visibility
 const openAddAddressModal = () => {
@@ -627,14 +660,14 @@ const completeAnOrder = async() => {
     return await apiService.post("/api/salesProductOrders", salesProductOrder)
   }))
 
-  // const salesDelivery = {
-  //   salesID: data?.salesID ?? 0,
-  //   deliveryDate: format(addDays(new Date(), 7),"yyyy-MM-dd"),
-  //   deliveryAddress: `${store.billingAddress.buildingNo} ${store.billingAddress.street} ${store.billingAddress.city} ${store.billingAddress.province} ${store.billingAddress.region} ${store.billingAddress.areaCode}`,
-  //   deliveryStatus: 'Pending'
-  // }
+  const salesDelivery = {
+    salesID: data?.salesID ?? 0,
+    deliveryDate: format(addDays(new Date(), 7),"yyyy-MM-dd"),
+    deliveryAddress: `${store.billingAddress.buildingNo} ${store.billingAddress.street} ${store.billingAddress.city} ${store.billingAddress.province} ${store.billingAddress.region} ${store.billingAddress.areaCode}`,
+    deliveryStatus: deliverySelected.value === 'Pickup' ? 'To be pickup' : 'Pending'
+  }
 
-  // await apiService.post("/api/salesDeliveries", salesDelivery);
+  await apiService.post("/api/salesDeliveries", salesDelivery);
 
   const customerPayment = {
     salesID: data?.salesID ?? 0,

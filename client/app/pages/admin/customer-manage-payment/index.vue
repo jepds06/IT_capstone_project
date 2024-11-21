@@ -479,7 +479,8 @@ export default {
         }))
 
       const deliveryToUpdate = this.selectedBills?.filter((value) => (parseFloat(value.amount) + parseFloat(value.amountPaid)) >= (parseFloat(value.amountToPay) / 2))
-        ?.map((value) => {
+      ?.filter((value) => value.deliveryStatus === 'Pending')  
+      ?.map((value) => {
           return {
             ...value.salesDelivery,
             deliveryStatus: 'Out for delivery'

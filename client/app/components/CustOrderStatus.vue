@@ -3,6 +3,16 @@
     <!-- Tab Navigation -->
     <div class="flex justify-center mb-8">
       <button
+      class="px-6 py-3 text-xl font-semibold rounded-lg transition-all duration-300"
+      :class="{
+        'bg-blue-500 text-white shadow-md': activeTab === 'To Pickup',
+        'bg-white text-gray-600 border-gray-300': activeTab !== 'To Pickup',
+      }"
+      @click="activeTab = 'To Pickup'"
+    >
+      To Pickup
+    </button>
+      <button
         class="px-6 py-3 text-xl font-semibold rounded-lg transition-all duration-300"
         :class="{
           'bg-blue-500 text-white shadow-md': activeTab === 'To Receive',
@@ -26,6 +36,79 @@
 
     <!-- Scrollable Section -->
     <div class="overflow-y-auto max-h-[calc(100vh-100px)] px-4"></div>
+
+
+    <!-- To Receive Section -->
+    <div v-if="activeTab === 'To Pickup'">
+      <div
+        v-for="order in pickupOrders"
+        :key="order.salesID"
+        class="bg-gradient-to-r from-white to-gray-50 rounded-xl shadow-lg p-6 mb-6"
+      >
+        <div class="flex justify-between items-center border-b pb-3">
+          <h2 class="text-2xl font-bold text-gray-800">
+            Order ID: {{ order.salesID }}
+          </h2>
+          <span class="text-lg font-semibold uppercase text-blue-500">
+            To Pickup
+          </span>
+        </div>
+        <div class="">
+          <div
+            class="border-b pb-3 flex items-start gap-6 mt-4"
+            v-for="item in order?.sales_orders"
+          >
+            <img
+              :src="item.product.image_url"
+              alt="Product Image"
+              class="w-32 h-32 object-cover rounded-lg shadow-lg hover:opacity-95"
+            />
+            <div>
+              <h3 class="text-xl font-semibold text-gray-700">
+                {{ item.productName }}
+              </h3>
+              <p class="text-lg text-gray-500">
+                {{ item.specifications }}
+              </p>
+              <p class="mt-2 text-lg text-gray-500">
+                Quantity:
+                <span class="font-medium text-gray-700">{{
+                  item.qtyOrdered
+                }}</span>
+              </p>
+              <p class="mt-1 text-lg text-gray-500">
+                Price:
+                <span class="font-medium text-gray-700"
+                  >₱{{ parseFloat(item.product.unitPrice).toFixed(2) }}</span
+                >
+              </p>
+              <p class="mt-4 text-lg font-medium text-gray-800">
+                Total: ₱{{ parseFloat(item.amount).toFixed(2) }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <p class="text-lg text-gray-500">
+            Expected Delivery:
+            <span class="font-medium text-gray-700">{{
+              order?.sales_deliveries?.deliveryDate
+            }}</span>
+          </p>
+          <p class="mt-1 text-lg text-gray-500">
+            Status:
+            <span class="font-medium text-gray-700">{{
+              order?.sales_deliveries?.deliveryStatus
+            }}</span>
+          </p>
+        </div>
+
+        <div class="mt-6 text-right">
+          <UButton :loading="isLoadingReceived" @click="pickedUpOrder(order)" label="PICKED UP"/>
+        </div>
+      </div>
+    </div>
 
     <!-- To Receive Section -->
     <div v-if="activeTab === 'To Receive'">
@@ -178,7 +261,7 @@
 import { ref } from "vue";
 import { apiService } from "~/api/apiService";
 
-const activeTab = ref("To Receive"); // Track active tab
+const activeTab = ref("To Pickup"); // Track active tab
 
 const userInfo = ref({ userID: "" });
 
@@ -218,6 +301,17 @@ const completedOrders = ref([
   // },
 ]);
 
+const pickupOrders = ref([]);
+
+const pickedUpOrder = async (order) => {
+  isLoadingReceived.value = true
+  const delivery = { ...order.sales_deliveries, deliveryStatus: "Completed" };
+  await apiService.put(`/api/salesDeliveries/${delivery.deliveryID}`, delivery);
+  await fetchOrdersData();
+  isLoadingReceived.value = false
+  alert("Order(s) picked up successfully!");
+};
+
 const orderReceived = async (order) => {
   isLoadingReceived.value = true
   const delivery = { ...order.sales_deliveries, deliveryStatus: "Completed" };
@@ -229,7 +323,10 @@ const orderReceived = async (order) => {
 
 const fetchOrdersData = async () => {
   const result = await apiService.get(
-    `/api/sales/user/${userInfo.value.userID}`
+    `/api/sales/user/${store.selectedCustomer.id}`
+  );
+  pickupOrders.value = result.data?.filter(
+    (value) => value.sales_deliveries.deliveryStatus === "To be pickup"
   );
   orders.value = result.data?.filter(
     (value) => value.sales_deliveries.deliveryStatus === "Out for delivery"
