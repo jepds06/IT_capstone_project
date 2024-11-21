@@ -561,6 +561,24 @@
       </div>
     </div>
     
+    <!-- Success Message Modal for Complete Order-->
+    <div
+      v-if="isOrderSuccessMessageVisible"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+    >
+      <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+        <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
+        <p class="text-black">Order has been completed successfully!</p>
+        <div class="flex justify-end mt-4">
+          <button
+            class="bg-blue-500 text-white py-1 px-3 rounded-md"
+            @click="closeOrderSuccessMessage"
+          >
+           OK
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -579,6 +597,15 @@ const paymentMethods = ref([]);
 const paymentSelected = ref('Cash');
 const deliverySelected = ref('Pickup');
 const isLoadingCompleteAnOrder = ref(false);
+const isOrderSuccessMessageVisible = ref(false);
+
+const showOrderSuccessMessage = () => {
+  isOrderSuccessMessageVisible.value = true;
+};
+
+const closeOrderSuccessMessage = () => {
+  isOrderSuccessMessageVisible.value = false;
+};
 // Functions to handle modal visibility
 const openAddAddressModal = () => {
   showAddAddressModal.value = true;
@@ -681,7 +708,7 @@ const completeAnOrder = async() => {
   await apiService.post("/api/customerPayments", customerPayment);  
   isLoadingCompleteAnOrder.value = false
 
-  alert("Complete an order successfully!")
+  showOrderSuccessMessage();
 
   store.isOpenCart = false;
   store.addedToCart = filteredProducts.value?.filter((val) => !val.selected)

@@ -59,6 +59,22 @@
       </tbody>
     </table>
 
+    <!-- Success Message Modal -->
+<div v-if="isDeliverySuccessVisible" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+  <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+    <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
+    <p class="text-black">
+      Delivery ID {{ successfulDeliveryID }} has been marked as Delivered.
+    </p>
+    <div class="flex justify-end mt-4">
+      <button class="bg-blue-500 text-white py-1 px-3 rounded-md" @click="closeDeliverySuccess">
+        OK
+      </button>
+    </div>
+  </div>
+</div>
+
+
     <!-- Pagination Controls -->
     <div class="pagination mt-4">
       <button @click="prevPage" :disabled="currentPage === 1" class="bg-blue-500 text-white p-2 rounded mr-2">
@@ -105,6 +121,8 @@ export default {
       selectedDelivery: null,
       currentPage: 1,
       itemsPerPage: 5, // Number of deliveries per page
+      isDeliverySuccessVisible: false, // Controls visibility of the success modal
+      successfulDeliveryID: null,
     };
   },
   computed: {
@@ -164,7 +182,12 @@ export default {
         deliveryStatus: delivery.deliveryStatus,
         qtyReceived,
       })
-      alert(`Delivery ID ${delivery.adminDlvrID} marked as ${newStatus}`);
+      this.successfulDeliveryID = delivery.adminDlvrID;
+      this.isDeliverySuccessVisible = true;
+    },
+    closeDeliverySuccess() {
+      // Close the success modal
+      this.isDeliverySuccessVisible = false;
     },
     cancelDelivery(delivery) {
       // Cancel the delivery
