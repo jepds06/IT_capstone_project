@@ -5,5 +5,6 @@ export const store = reactive({
   isOpenCart: false,
   isOpenOrderStatus: false,
   isOpenPaymentStatus: false,
-  billingAddress: { buildingNo: '', street: '', city: '', province: '', region: '', areaCode: '', contactNum: ''}
+  billingAddress: { buildingNo: '', street: '', city: '', province: '', region: '', areaCode: '', contactNum: ''},
+  selectedCustomer: null,
 })

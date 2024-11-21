@@ -510,6 +510,22 @@
                 : 'hidden'
           "
         >
+        <router-link
+        to="/admin/customer-user"
+        :class="
+          userInfo?.userTypeDescription.toLowerCase() === 'administrator'
+            ? route.path === '/admin/customer-user'
+              ? 'block pl-10 p-4 bg-gray-800'
+              : 'block pl-10 p-4 hover:bg-gray-800'
+            : userPermission?.filter((up) =>
+              up.moduleName.toLowerCase().includes('customer user')
+            ).length > 0
+              ? route.path === '/admin/customer-user'
+                ? 'block pl-10 p-4 bg-gray-800'
+                : 'block pl-10 p-4 hover:bg-gray-800'
+              : 'hidden'
+        "
+      >View Customers</router-link>
           <router-link
             to="/admin/customer-bills-payment"
             :class="
@@ -542,6 +558,23 @@
                   : 'hidden'
             "
           >Manage Payment</router-link>
+
+          <router-link
+            to="/admin/customer-order"
+            :class="
+              userInfo?.userTypeDescription.toLowerCase() === 'administrator'
+                ? route.path === '/admin/customer-order'
+                  ? 'block pl-10 p-4 bg-gray-800'
+                  : 'block pl-10 p-4 hover:bg-gray-800'
+                : userPermission?.filter((up) =>
+                  up.moduleName.toLowerCase().includes('customer orders')
+                ).length > 0
+                  ? route.path === '/admin/customer-order'
+                    ? 'block pl-10 p-4 bg-gray-800'
+                    : 'block pl-10 p-4 hover:bg-gray-800'
+                  : 'hidden'
+            "
+          >Orders</router-link>
         </CollapsibleMenu>
 
         <CollapsibleMenu
@@ -551,7 +584,7 @@
             userInfo?.userTypeDescription.toLowerCase() === 'administrator'
               ? ''
               : userPermission?.filter((up) =>
-                up.moduleName.toLowerCase().includes('purchase order management')
+                up.moduleName.toLowerCase().includes('order management')
               ).length > 0
                 ? ''
                 : 'hidden'

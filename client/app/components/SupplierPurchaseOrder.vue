@@ -46,7 +46,7 @@
           />
          
           <UButton
-            :disabled="item.status === 'Unpaid' || item.status === 'Delivered' || item.status === 'Pending'"
+            :disabled="item.status === 'Unpaid' || item.status === 'Delivered' || item.paymentStatus === 'Unpaid'"
             icon="emojione:delivery-truck"
             @click="openDeliveryModal(item)"
             rounded="false"
@@ -58,6 +58,25 @@
       </tr>
     </tbody>
   </table>
+
+  
+  <!--Success Message for Process Delivery-->
+  <div
+  v-if="isSuccessMessageVisible"
+  class="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50"
+>
+  <div class="bg-white p-6 rounded-md w-1/3 text-center">
+    <h3 class="text-lg font-bold mb-4">{{ successMessage }}</h3>
+    <button
+      @click="isSuccessMessageVisible = false"
+      class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+    >
+      OK
+    </button>
+  </div>
+</div>
+
+
   <div class="mt-4 flex justify-between">
     <button
       @click="prevPage"
@@ -205,6 +224,8 @@ const searchQuery = ref("");
 const purchaseOrderData = ref([]);
 const materials = ref([]);
 const totalAmount = ref(0);
+const isSuccessMessageVisible = ref(false);
+const successMessage = ref("");
 
 const selectedPO = ref(null);
 
@@ -281,7 +302,8 @@ const saveDelivery = async () => {
     });
   }
     await fetchAdminOrderData();
-    alert("Processed delivery successfully");
+    successMessage.value = "Delivery processed successfully!";
+    isSuccessMessageVisible.value = true;
     isDeliveryModal.value = false;
 };
 

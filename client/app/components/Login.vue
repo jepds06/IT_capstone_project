@@ -97,8 +97,11 @@ async function onSubmit(form: any) {
             navigateTo("/admin");
         } else if (userTypeDescription === 'Customer') {
             navigateTo("/customer-product");
-        } else {
+
+        } else if (userTypeDescription === 'Supplier') {
             navigateTo("/supplier");
+        } else {
+            navigateTo("/admin");
         }
     } catch (error) {
       console.log('Error:', error);

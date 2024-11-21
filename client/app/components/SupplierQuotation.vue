@@ -406,12 +406,7 @@ const openQuotationDetailEditModal = (quotation) => {
   }
 };
 
-const openQuotationDetailInfo = async (quotation) => {
-  quotationDetails.value = [];
-  await fetchMaterials();
-  await fetchMaterialsByProductionID(quotation.productionID);
-  selectedQuotation.value = quotation;
-  isQuotationDetailInfo.value = true;
+const transformationDataForQuotation = async (quotation) =>{
   const result = await apiService.get(
     `/api/quotationDetails/quotation/${quotation.quoteID}`
   );
@@ -471,6 +466,16 @@ const openQuotationDetailInfo = async (quotation) => {
     })
     .filter((value) => value.qtyNeeded !== 0);
   materialQuotation.value = materialTransform;
+}
+const openQuotationDetailInfo = async (quotation) => {
+  quotationDetails.value = [];
+  await fetchMaterials();
+  await fetchMaterialsByProductionID(quotation.productionID);
+  selectedQuotation.value = quotation;
+
+  await transformationDataForQuotation(quotation)
+  isQuotationDetailInfo.value = true;
+ 
 };
 
 const completeQuotation = async () => {
@@ -566,6 +571,8 @@ const saveQuotationDetail = async () => {
       id: index + 1,
     };
   }
+
+  await transformationDataForQuotation(selectedQuotation.value)
   selectedQuotationDetail.value = null;
   isQuoDetailEditMode.value = false;
 };

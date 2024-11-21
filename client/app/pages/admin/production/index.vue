@@ -5,9 +5,10 @@
     <div class="flex justify-between mb-4">
       <input type="text" v-model="searchQuery" placeholder="Search..." class="w-1/3 p-2 border rounded-lg" />
       <div class="flex space-x-2">
-        <button @click="openAddModal" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        <button @click="openAddModal" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 font-light"
           title="Add Production">
-          <i class="fas fa-plus"></i>
+          Add Production
+          <!-- <i class="fas fa-plus">Add Production</i> -->
         </button>
       </div>
     </div>
@@ -236,7 +237,6 @@
             Production Details
           </h2>
           <!-- <span>{{selectedProduction.deliveryStatus}}</span> -->
-          {{selectedProduction.deliveryStatus}}
           <UButton :loading="isLoadingMarkAsCompleted" @click="markAsCompleted" class="mb-4"
             icon="material-symbols-light:list-alt-check-outline-sharp" label="Mark as Completed"
             :disabled="selectedProduction.deliveryStatus === 'In Progress' || (selectedProduction.status === 'Completed' || selectedProduction.status === 'Pending')" />
@@ -523,11 +523,14 @@ const itemsPerPage = 5;
 const quotations = ref([]);
 const isLoadingMarkAsCompleted = ref(false);
 const isSuccessProductionVisible = ref(false);
+const successMessageType = ref(""); 
 const isProductionConfirmationVisible = ref(false);
 const isSuccessProductionDetailVisible = ref(false);
 const isProductionDetailConfirmationVisible = ref(false);
 const isSuccessQuotationVisible = ref(false);
 const isQuotationConfirmationVisible = ref(false);
+const successQuotationMessage = ref('');
+const suppliersAvailable = ref(false);
 
 const isLoadingQuotationRequested = ref(false);
 const isQuotationRequested = ref(false);
@@ -631,7 +634,9 @@ const closeQuotationConfirmation = () => {
   isSuccessQuotationVisible.value = false;
 };
 
-const showSuccessQuotationMessage = (message) => {
+const showSuccessQuotationMessage = (message, hasSuppliers) => {
+  successQuotationMessage.value = message;
+  suppliersAvailable.value = hasSuppliers;
   isSuccessQuotationVisible.value = true;
   setTimeout(() => {
   }, 3000); // Automatically close after 3 seconds
@@ -710,31 +715,34 @@ const editProductionDetail = (prodDetail) => {
 };
 
 const requestQuotation = async () => {
-  isLoadingQuotationRequested.value = true
-  if (users.value.filter((user) => user.userTypeID === 3).length > 0) {
+  isLoadingQuotationRequested.value = true;
+
+  // Check if there are any suppliers (users with userTypeID === 3)
+  const suppliers = users.value.filter((user) => user.userTypeID === 3);
+
+  if (suppliers.length > 0) {
+    // Proceed with sending quotations for each supplier
     await Promise.all(
-      users.value
-        .filter((user) => user.userTypeID === 3)
-        .map(async (user) => {
-          await apiService.post("/api/quotations", {
-            quotationDate: formatDate(new Date()),
-            userID: user.userID,
-            remarks: selectedProduction.value.remarks ?? "NA",
-            productionID: selectedProduction.value.productionID,
-            isCompleted: false
-          });
-        })
+      suppliers.map(async (user) => {
+        await apiService.post("/api/quotations", {
+          quotationDate: formatDate(new Date()),
+          userID: user.userID,
+          remarks: selectedProduction.value.remarks ?? "NA",
+          productionID: selectedProduction.value.productionID,
+          isCompleted: false,
+        });
+      })
     );
     await fetchQuotationData();
-    isLoadingQuotationRequested.value = false
-    showSuccessQuotationMessage("Quotation requested successfully");
+    isLoadingQuotationRequested.value = false;
+    showSuccessQuotationMessage("Quotation requested successfully",true);
     isProductionDetailsInfo.value = false;
   } else {
-    showSuccessQuotationMessage("Supplier list is empty!");
+    // If no suppliers found, show the "Supplier list is empty!" message
+    isLoadingQuotationRequested.value = false;
+    showSuccessQuotationMessage("Supplier list is empty!",false);
   }
 };
-
-
 const saveProduction = async () => {
   if (isEditMode.value) {
     await apiService.put(
@@ -747,7 +755,11 @@ const saveProduction = async () => {
     if (index !== -1) {
       productions.value[index] = { ...productionForm.value };
     }
-    showSuccessProductionMessage(productionForm.value.status === "Completed" ? "Production completed successfully!" : "Production edited successfully!");
+    showSuccessProductionMessage(
+      productionForm.value.status === "Completed"
+        ? "Production completed successfully!"
+        : "Production edited successfully!"
+    );
   } else {
     const result = await apiService.post(
       "/api/productions",
@@ -784,6 +796,7 @@ const markAsCompleted = async () => {
     return await apiService.post("/api/finishedProducts", value)
   }))
   await saveProduction()
+  showSuccessProductionMessage("Production completed successfully!");
   isLoadingMarkAsCompleted.value = false
 }
 const saveProductionDetail = async () => {

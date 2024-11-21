@@ -5,9 +5,9 @@
     <h1 class="text-xl text-color font-bold">Product Categories</h1>
     <button
       @click="openForm('add')"
-      class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+      class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 font-light"
     >
-      Add
+      Add Categories
     </button>
   </div>
 

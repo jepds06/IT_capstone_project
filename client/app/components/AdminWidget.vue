@@ -1,6 +1,6 @@
 <template>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
-    <div class="bg-white p-4 rounded shadow">
+    <!-- <div class="bg-white p-4 rounded shadow">
       <h2 class="text-base text-black font-semibold">
         Last 5 Days Order Statistics
       </h2>
@@ -14,7 +14,7 @@
       <div class="chart-container mt-3">
         <canvas id="monthlyQuotationChart" />
       </div>
-    </div>
+    </div> -->
 
     <div class="grid grid-cols-1 gap-6">
       <div class="bg-white text-black p-4 rounded shadow">

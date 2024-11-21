@@ -165,7 +165,9 @@
         >
           Continue Shopping
         </button>
-        <UButton label="Checkout" @click="activeTab = 'billing'" :disabled="filteredProducts?.length === 0"/>
+        <UButton label="Checkout" @click="activeTab = 'billing'" :disabled="filteredProducts.filter(
+          (value) => value?.selected
+        )?.length === 0"/>
       </div>
     </div>
 
@@ -404,13 +406,29 @@
     <div v-if="activeTab === 'payment'" class="space-y-6">
       <!-- Left Side: Delivery and Payment Options -->
        <div class="flex space-x-4">
+        
       <div class="w-1/2 space-y-6">
-        <!-- Delivery Options -->
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-lg font-bold">Delivery Options</h2>
         </div>
-
+        
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-white p-4 rounded-lg shadow-md">
+            <label class="inline-flex items-center">
+              <input
+                type="radio"
+                name="deliveryOption"
+                value="Pickup"
+                class="mr-2"
+                v-model="deliverySelected"
+              />
+              <div>
+                <h3 class="font-bold">Pick Up</h3>
+                <p class="text-gray-500">Anytime pickup.</p>
+              </div>
+            </label>
+            
+          </div>
           <div class="bg-white p-4 rounded-lg shadow-md">
             <label class="inline-flex items-center">
               <!-- <input
@@ -420,8 +438,20 @@
                 class="mr-2"
               /> -->
               <div>
-                <h3 class="font-bold">Standard Delivery</h3>
-                <p class="text-gray-500">Delivery in 5-7 days.</p>
+                <label class="inline-flex items-center">
+                  <input
+                    type="radio"
+                    name="deliveryOption"
+                    value="Delivery"
+                    class="mr-2"
+                    v-model="deliverySelected"
+                  />
+                  <div>
+                    <h3 class="font-bold">Standard Delivery</h3>
+                    <p class="text-gray-500">Delivery in 5-7 days.</p>
+                  </div>
+                </label>
+                
               </div>
             </label>
           </div>
@@ -455,7 +485,7 @@
               <input
                 type="radio"
                 name="paymentOption"
-                value="Cash"
+                :value="payment.payMethodName"
                 class="mr-2"
                 v-model="paymentSelected"
               />
@@ -465,38 +495,6 @@
               </div>
             </label>
           </div>
-          <!-- <div class="bg-white p-4 rounded-lg shadow-md">
-            <label class="inline-flex items-center">
-              <input
-                type="radio"
-                name="paymentOption"
-                value="paypal"
-                class="mr-2"
-              />
-              <div>
-                <h3 class="font-bold">PayPal</h3>
-                <p class="text-gray-500">
-                  Pay easily through your PayPal account.
-                </p>
-              </div>
-            </label>
-          </div>
-          <div class="bg-white p-4 rounded-lg shadow-md">
-            <label class="inline-flex items-center">
-              <input
-                type="radio"
-                name="paymentOption"
-                value="bankTransfer"
-                class="mr-2"
-              />
-              <div>
-                <h3 class="font-bold">Bank Transfer</h3>
-                <p class="text-gray-500">
-                  Transfer directly from your bank account.
-                </p>
-              </div>
-            </label>
-          </div> -->
         </div>
       </div>
 
@@ -534,13 +532,13 @@
         </div>
 
         <!-- Shipping Address -->
-        <div class="bg-white p-4 rounded-lg shadow-md mt-6">
+        <!-- <div class="bg-white p-4 rounded-lg shadow-md mt-6">
           <h3 class="font-bold">Shipping Address</h3>
           <p class="text-gray-600">{{`${store.billingAddress.buildingNo} ${store.billingAddress.street}`}}</p>
           <p class="text-gray-600">{{`${store.billingAddress.city} ${store.billingAddress.province}`}}</p>
           <p class="text-gray-600">{{`${store.billingAddress.region} ${store.billingAddress.areaCode}`}}</p>
           <p class="text-gray-600">{{`${store.billingAddress.contactNum}`}}</p>
-        </div>
+        </div> -->
 
         
       </div>
@@ -563,6 +561,24 @@
       </div>
     </div>
     
+    <!-- Success Message Modal for Complete Order-->
+    <div
+      v-if="isOrderSuccessMessageVisible"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+    >
+      <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+        <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
+        <p class="text-black">Order has been completed successfully!</p>
+        <div class="flex justify-end mt-4">
+          <button
+            class="bg-blue-500 text-white py-1 px-3 rounded-md"
+            @click="closeOrderSuccessMessage"
+          >
+           OK
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -579,7 +595,17 @@ const products = ref([]);
 const categories = ref([]);
 const paymentMethods = ref([]);
 const paymentSelected = ref('Cash');
+const deliverySelected = ref('Pickup');
 const isLoadingCompleteAnOrder = ref(false);
+const isOrderSuccessMessageVisible = ref(false);
+
+const showOrderSuccessMessage = () => {
+  isOrderSuccessMessageVisible.value = true;
+};
+
+const closeOrderSuccessMessage = () => {
+  isOrderSuccessMessageVisible.value = false;
+};
 // Functions to handle modal visibility
 const openAddAddressModal = () => {
   showAddAddressModal.value = true;
@@ -644,7 +670,7 @@ const fetchPaymentMethodsData = async() => {
 const completeAnOrder = async() => {
   isLoadingCompleteAnOrder.value = true
   const sales = {
-    userID: userInfo.value.userID,
+    userID: store.selectedCustomer.id,
     salesDate: format(new Date(), "yyyy-MM-dd"),
   }
   const { data } = await apiService.post("/api/sales", sales);
@@ -665,7 +691,7 @@ const completeAnOrder = async() => {
     salesID: data?.salesID ?? 0,
     deliveryDate: format(addDays(new Date(), 7),"yyyy-MM-dd"),
     deliveryAddress: `${store.billingAddress.buildingNo} ${store.billingAddress.street} ${store.billingAddress.city} ${store.billingAddress.province} ${store.billingAddress.region} ${store.billingAddress.areaCode}`,
-    deliveryStatus: 'Pending'
+    deliveryStatus: deliverySelected.value === 'Pickup' ? 'To be pickup' : 'Pending'
   }
 
   await apiService.post("/api/salesDeliveries", salesDelivery);
@@ -679,16 +705,10 @@ const completeAnOrder = async() => {
     amountToPay: totalAmount.value,
     amountPaid: 0,
   }
-
-  await apiService.post("/api/customerPayments", customerPayment);
-  console.log("sales", sales);
-  console.log("salesProductOrders", salesProductOrders);
-  console.log("salesDelivery", salesDelivery);
-  console.log("customerPayment", customerPayment);
-  
+  await apiService.post("/api/customerPayments", customerPayment);  
   isLoadingCompleteAnOrder.value = false
 
-  alert("Complete an order successfully!")
+  showOrderSuccessMessage();
 
   store.isOpenCart = false;
   store.addedToCart = filteredProducts.value?.filter((val) => !val.selected)

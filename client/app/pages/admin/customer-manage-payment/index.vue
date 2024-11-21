@@ -478,8 +478,9 @@ export default {
           value ? await apiService.post("/api/customerPayments", value) : "";
         }))
 
-      const deliveryToUpdate = this.selectedBills?.filter((value) => (parseFloat(value.amount) + parseFloat(value.amountPaid)) >= (parseFloat(value.amountToPay) / 2))
-        ?.map((value) => {
+      const deliveryToUpdate = this.selectedBills
+      ?.filter((value) => value.salesDelivery.deliveryStatus === 'Pending')  
+      ?.map((value) => {
           return {
             ...value.salesDelivery,
             deliveryStatus: 'Out for delivery'

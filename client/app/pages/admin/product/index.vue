@@ -83,6 +83,9 @@
               ref="imageInput"
               accept="image/*"
             />
+            <p v-if="imageError" class="text-red-500 text-sm mt-1">
+                    {{ imageError }}
+            </p>
             <div class="flex justify-center w-full">
               <div v-if="imagePreview">
                 <img
@@ -126,6 +129,9 @@
                 (e) => (e.target.value ? parseFloat(e.target.value) : null)
               "
             />
+            <p v-if="unitPriceError" class="text-red-500 text-sm mt-1">
+                    {{ unitPriceError }}
+            </p>
           </div>
           <div class="flex justify-end">
             <button
@@ -508,9 +514,10 @@ definePageMeta({
 
 const isSuccessProductVisible = ref(false);
 const isSuccessMaterialVisible = ref(false);
-const showConfirmationModal = ref(false);
 const isProductConfirmationVisible = ref(false);
 const isMaterialConfirmationVisible = ref(false);
+const imageError = ref(null);
+const unitPriceError = ref(null);
 
 const products = ref([]);
 const categories = ref([]);
@@ -613,6 +620,22 @@ const closeMaterialConfirmation = () => {
 };
 
 async function saveProduct() {
+  isProductConfirmationVisible.value = false;
+  imageError.value = null;
+  unitPriceError.value = null;
+  let hasError = false;
+  if (!form.value.unitPrice || isNaN(form.value.unitPrice)) {
+    unitPriceError.value = "Unit Price is required.";
+    hasError = true;
+  }
+  if (formMode.value === "add" && !form.value.image) {
+    imageError.value = "Image is required.";
+    hasError = true;
+  }
+  if (hasError) {
+    return; // Stop further execution if there are errors
+  }
+  
   const formData = new FormData();
     Object.keys(form.value)?.forEach((property) => {
       formData.append(property, form.value[property]);
