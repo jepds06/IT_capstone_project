@@ -1,19 +1,19 @@
 <template>
-  <div class="m-8 space-y-6">
+  <div class="m-8">
     <!-- Quotation Table -->
-    <h2 class="text-2xl font-extrabold mb-6">Supplier Quotation</h2>
+    <h2 class="text-2xl font-extrabold mb-4">Supplier Quotation</h2>
 
     <!-- Search Bar -->
     <input
       v-model="searchQuery"
       type="text"
       placeholder="Search..."
-      class="p-2 border border-gray-300 rounded w-48 mb-4"
+      class="w-1/3 p-2 border rounded-lg mb-4"
     />
 
     <!-- Quotation Table with Remarks Column -->
-    <table class="min-w-full border border-gray-300 rounded-lg mb-4">
-      <thead class="bg-gray-200">
+    <table class="min-w-full border border-gray-300 rounded-lg shadow-lg">
+      <thead class="bg-gray-100">
         <tr>
           <th class="py-2 px-4 text-left">Quotation No.</th>
           <th class="py-2 px-4 text-left">Date</th>

@@ -1,23 +1,33 @@
 <template>
   <div class="m-8">
-    <h1 class="text-2xl font-extrabold mb-6">User Permissions</h1>
+    <h1 class="text-2xl font-extrabold mb-4">User Permissions</h1>
 
     <!-- Search Input and Add Button -->
-    <div class="mb-4 flex justify-between items-center">
-      <div class="relative">
+    <div class="flex justify-between mb-4">
+ 
         <input
           v-model="searchQuery"
           type="text"
           placeholder="Search by Module or Privilege..."
-          class="border p-2 w-full rounded-lg"
+          class="w-1/3 p-2 border rounded-lg"
         />
-      </div>
-      <button
+
+      <!-- <button
         @click="showAddModal"
         class="bg-blue-500 text-white px-4 py-2 rounded"
       >
         Add Permission
-      </button>
+      </button> -->
+      <UButton
+        icon="material-symbols:add-2-rounded"
+        size="sm"
+        color="primary"
+        variant="solid"
+        label="Permission"
+        title="Add Permission"
+        @click="showAddModal"
+        :trailing="false"
+      />
     </div>
 
     <!-- Table -->

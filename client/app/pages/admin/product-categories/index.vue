@@ -1,52 +1,34 @@
 <template>
-  <div class="m-8 space-y-6">
-  <!-- Title and Add Button -->
-  <div class="flex justify-between items-center mb-4">
-    <h1 class="text-xl text-color font-bold">Product Categories</h1>
-    <button
+  <div class="m-8">
+    <!-- Title and Add Button -->
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl text-color font-extrabold">Product Categories</h1>
+      <!-- <button
       @click="openForm('add')"
       class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 font-light"
     >
       Add Categories
-    </button>
-  </div>
+    </button> -->
+      <UButton icon="material-symbols:add-2-rounded" size="md" color="primary" variant="solid" label="Categories"
+        title="Add Categories" @click="openForm('add')" :trailing="false" />
+    </div>
 
-  <!-- Modal for Add/Edit Form -->
-  <Modal
-    :isVisible="isFormVisible"
-    title="Product Category Form"
-    :showSave="true"
-    @update:isVisible="isFormVisible = $event"
-    @save="confirmSave"
-  >
-    <template v-slot:body>
-      <form @submit.prevent="saveCategory">
-        <div class="mb-4" v-if="formMode === 'edit'">
-          <label for="id" class="block text-sm font-medium text-gray-700"
-            >Id</label
-          >
-          <input
-            v-model="form.prodCatID"
-            type="text"
-            id="id"
-            class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
-            :readonly="formMode === 'edit'"
-          />
-        </div>
-        <div class="mb-4">
-          <label
-            for="description"
-            class="block text-sm font-medium text-gray-700"
-            >Description</label
-          >
-          <input
-            v-model="form.description"
-            type="text"
-            id="description"
-            class="mt-1 block w-full border border-gray-300 rounded-lg p-2"
-          />
-        </div>
-        <!-- <div class="mb-4">
+    <!-- Modal for Add/Edit Form -->
+    <Modal :isVisible="isFormVisible" title="Product Category Form" :showSave="true"
+      @update:isVisible="isFormVisible = $event" @save="confirmSave">
+      <template v-slot:body>
+        <form @submit.prevent="saveCategory">
+          <div class="mb-4" v-if="formMode === 'edit'">
+            <label for="id" class="block text-sm font-medium text-gray-700">Id</label>
+            <input v-model="form.prodCatID" type="text" id="id"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-2" :readonly="formMode === 'edit'" />
+          </div>
+          <div class="mb-4">
+            <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+            <input v-model="form.description" type="text" id="description"
+              class="mt-1 block w-full border border-gray-300 rounded-lg p-2" />
+          </div>
+          <!-- <div class="mb-4">
           <label for="status" class="block text-sm font-medium text-gray-700"
             >Status</label
           >
@@ -59,92 +41,73 @@
             <option value="inactive">Inactive</option>
           </select>
         </div> -->
-      </form>
-    </template>
-  </Modal>
+        </form>
+      </template>
+    </Modal>
 
-  <!-- Confirmation Modal -->
-  <div
-    v-if="showConfirmationModal"
-    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-  >
-    <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
-      <h3 class="text-xl font-bold mb-4 text-black">Are you sure you want to proceed?</h3>
-      <div class="flex justify-end mt-4">
-        <button
-          class="bg-blue-500 text-white py-1 px-3 rounded-md mr-2"
-          @click="saveCategory"
-        >
-          Yes
-        </button>
-        <button
-          class="text-red-600 py-1 px-3 rounded-md"
-          @click="showConfirmationModal = false"
-        >
-          No
-        </button>
+    <!-- Confirmation Modal -->
+    <div v-if="showConfirmationModal"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+        <h3 class="text-xl font-bold mb-4 text-black">Are you sure you want to proceed?</h3>
+        <div class="flex justify-end mt-4">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-md mr-2" @click="saveCategory">
+            Yes
+          </button>
+          <button class="text-red-600 py-1 px-3 rounded-md" @click="showConfirmationModal = false">
+            No
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Success Message Modal -->
-  <div
-    v-if="showSuccessModal"
-    class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-  >
-    <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
-      <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
-      <p class="text-black">Product Category has been {{ formMode === 'add' ? 'created' : 'updated' }} successfully!</p>
-      <div class="flex justify-end mt-4">
-        <button
-          class="bg-blue-500 text-white py-1 px-3 rounded-md"
-          @click="handleSuccess"
-        >
-          OK
-        </button>
+    <!-- Success Message Modal -->
+    <div v-if="showSuccessModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+      <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+        <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
+        <p class="text-black">Product Category has been {{ formMode === 'add' ? 'created' : 'updated' }} successfully!
+        </p>
+        <div class="flex justify-end mt-4">
+          <button class="bg-blue-500 text-white py-1 px-3 rounded-md" @click="handleSuccess">
+            OK
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Product Categories Table -->
-  <table class="min-w-full border border-gray-300 rounded-lg">
-    <thead class="bg-gray-100">
-      <tr>
-        <th class="p-2 border-b text-black text-center">Id</th>
-        <th class="p-2 border-b text-black text-center">Description</th>
-        <!-- <th class="p-2 border-b text-center">Status</th> -->
-        <th class="p-2 border-b text-black text-center">Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="category in categories" :key="category.prodCatID">
-        <td class="p-2 border-b text-center">{{ category.prodCatID }}</td>
-        <td class="p-2 border-b text-center">{{ category.description }}</td>
-        <!-- <td class="p-2 border-b text-center">
+    <!-- Product Categories Table -->
+    <table class="min-w-full border border-gray-300 rounded-lg">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="p-2 border-b text-black text-center">Id</th>
+          <th class="p-2 border-b text-black text-center">Description</th>
+          <!-- <th class="p-2 border-b text-center">Status</th> -->
+          <th class="p-2 border-b text-black text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="category in categories" :key="category.prodCatID">
+          <td class="p-2 border-b text-center">{{ category.prodCatID }}</td>
+          <td class="p-2 border-b text-center">{{ category.description }}</td>
+          <!-- <td class="p-2 border-b text-center">
           <i
             v-if="category.status === 'active'"
             class="fas fa-check text-green-500"
           ></i>
           <i v-else class="fas fa-times text-red-500"></i>
         </td> -->
-        <td class="p-2 border-b flex justify-center space-x-2">
-          <button
-            @click="viewCategory(category)"
-            class="text-blue-500 hover:underline"
-          > 
-            <i class="fas fa-eye"></i>
-          </button>
-          <button
-            @click="editCategory(category)"
-            class="text-yellow-500 hover:underline"
-          >
-            <i class="fas fa-edit"></i>
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+          <td class="p-2 border-b flex justify-center space-x-2">
+            <button @click="viewCategory(category)" class="text-blue-500 hover:underline">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button @click="editCategory(category)" class="text-yellow-500 hover:underline">
+              <i class="fas fa-edit"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script setup>
@@ -181,7 +144,7 @@ function openForm(mode = "add", category = null) {
   if (mode === "edit" && category) {
     form.value = { ...category };
   } else {
-    form.value = { description: "",};
+    form.value = { description: "", };
   }
   isFormVisible.value = true;
 }

@@ -1,16 +1,17 @@
 <template>
-  <div class="p-6">
+  <div class="m-8">
     <h2 class="text-2xl font-bold mb-4">Productions</h2>
 
     <div class="flex justify-between mb-4">
       <input type="text" v-model="searchQuery" placeholder="Search..." class="w-1/3 p-2 border rounded-lg" />
-      <div class="flex space-x-2">
-        <button @click="openAddModal" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 font-light"
+      
+        <!-- <button @click="openAddModal" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 font-light"
           title="Add Production">
-          Add Production
-          <!-- <i class="fas fa-plus">Add Production</i> -->
-        </button>
-      </div>
+          <i class="fas fa-plus"></i>
+        </button> -->
+        <UButton icon="material-symbols:add-2-rounded" size="sm" color="primary" variant="solid" label="Categories"
+          title="Add Categories" @click="openAddModal" :trailing="false" />
+      
     </div>
 
     <table class="min-w-full bg-white border border-gray-300 shadow-lg">
@@ -523,7 +524,7 @@ const itemsPerPage = 5;
 const quotations = ref([]);
 const isLoadingMarkAsCompleted = ref(false);
 const isSuccessProductionVisible = ref(false);
-const successMessageType = ref(""); 
+const successMessageType = ref("");
 const isProductionConfirmationVisible = ref(false);
 const isSuccessProductionDetailVisible = ref(false);
 const isProductionDetailConfirmationVisible = ref(false);
@@ -735,12 +736,12 @@ const requestQuotation = async () => {
     );
     await fetchQuotationData();
     isLoadingQuotationRequested.value = false;
-    showSuccessQuotationMessage("Quotation requested successfully",true);
+    showSuccessQuotationMessage("Quotation requested successfully", true);
     isProductionDetailsInfo.value = false;
   } else {
     // If no suppliers found, show the "Supplier list is empty!" message
     isLoadingQuotationRequested.value = false;
-    showSuccessQuotationMessage("Supplier list is empty!",false);
+    showSuccessQuotationMessage("Supplier list is empty!", false);
   }
 };
 const saveProduction = async () => {

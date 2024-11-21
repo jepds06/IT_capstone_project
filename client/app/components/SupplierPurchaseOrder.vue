@@ -1,4 +1,5 @@
 <template>
+  <div class="m-8">
   <input
     type="text"
     placeholder="Search Purchase Order..."
@@ -214,6 +215,7 @@
       </form>
     </div>
   </div>
+</div>
 </template>
 <script setup>
 import { ref, computed, onMounted } from "vue";

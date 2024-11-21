@@ -1,30 +1,45 @@
 <template>
   <div class="m-8">
+    <h1 class="text-2xl font-extrabold mb-4">Users</h1>
     <!-- Title and Add User Button -->
-    <div class="flex justify-between items-center mb-4">
-        <h1 class="text-2xl font-extrabold">Users</h1>
-        <button @click="openModal('add')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-          Add User
-        </button>
-      </div>
-  
+    <div class="flex justify-between mb-4">
 
-    <!-- Search Bar -->
-    <div class="mb-4">
+        <!-- Search Bar -->
+    <div class="relative">
       <input
         type="text"
         placeholder="Search Users"
         v-model="searchQuery"
-        class="border rounded px-2 py-1"
+        class="w-1/3 p-2 border rounded-lg"
       />
     </div>
+
+    <UButton
+        icon="material-symbols:add-2-rounded"
+        size="sm"
+        color="primary"
+        variant="solid"
+        label="Users"
+        title="Add Users"
+        @click="openModal('add')"
+        :trailing="false"
+      />
+        
+
+        <!-- <button @click="openModal('add')" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+          Add User
+        </button> -->
+      </div>
+  
+
+  
     <!-- User Table -->
 <!-- <div v-for="userType in userTypes">
   <h3 class="font-bold">
     {{userType.userTypeName}}
   </h3> -->
   <table class="min-w-full bg-white border border-gray-300 mb-8">
-    <thead>
+    <thead class="bg-gray-200">
       <tr>
         <th class="border px-4 py-2 text-black text-center">ID</th>
         <th class="border px-4 py-2 text-black text-center">Last Name</th>

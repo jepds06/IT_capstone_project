@@ -1,14 +1,14 @@
 <template>
-    <div class="p-8">
-      <div class="flex justify-between items-center mb-6">
+    <div class="m-8">
+      <div class="flex justify-between mb-4">
         <h1 class="text-2xl font-extrabold">Finished Products</h1>
       </div>
   
       <!-- Finished Products Table -->
-      <div class="overflow-x-auto">
-        <table class="table-auto w-full bg-white rounded shadow">
+      
+        <table class="table-auto w-full bg-white rounded border border-gray-300  shadow">
           <thead>
-            <tr class="bg-gray-100 text-left text-gray-600">
+            <tr class="bg-gray-100 text-black">
               <th class="p-4">ID</th>
               <th class="p-4">Prod Detail ID</th>
               <th class="p-4">Name</th>
@@ -54,7 +54,7 @@
             </tr>
           </tbody>
         </table>
-      </div>
+      
   
       <!-- Finished Product Details Modal -->
       <div v-if="showDetailsModal" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">

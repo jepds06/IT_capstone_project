@@ -1,24 +1,34 @@
 <template>
   <div class="m-8">
-    <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl text-color font-extrabold">Modules</h1>
-      <button
+    <h1 class="text-2xl text-color font-extrabold mb-4">Modules</h1>
+    <div class="flex justify-between mb-4">
+   
+      <input
+      type="text"
+      v-model="searchQuery"
+      placeholder="Search Modules"
+      class="w-1/3 p-2 border rounded-lg"
+    />
+      <!-- <button
         @click="openForm('add')"
         class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
       >
         Add Module
-      </button>
+      </button> -->
+      <UButton
+        icon="material-symbols:add-2-rounded"
+        size="sm"
+        color="primary"
+        variant="solid"
+        label="Module"
+        title="Add Module"
+        @click="openForm('add')"
+        :trailing="false"
+      />
     </div>
-    
-    <input
-      type="text"
-      v-model="searchQuery"
-      placeholder="Search Modules"
-      class="border p-2 mb-4 w-full"
-    />
-    
+  
     <table class="min-w-full bg-white border">
-      <thead>
+      <thead class="bg-gray-200">
         <tr>
           <th class="border px-4 py-2 text-black">Module No.</th>
           <th class="border px-4 py-2 text-black">Module Name</th>

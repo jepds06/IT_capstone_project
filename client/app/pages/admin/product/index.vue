@@ -1,11 +1,11 @@
 <template>
-  <div class="p-6">
+  <div class="m-8">
     <!-- Title and Add Button -->
     <div class="flex justify-between items-center mb-4">
-      <h1 class="text-xl font-bold">Products</h1>
+      <h1 class="text-2xl font-extrabold">Products</h1>
       <UButton
         icon="material-symbols:add-2-rounded"
-        size="sm"
+        size="md"
         color="primary"
         variant="solid"
         label="Product"
@@ -301,7 +301,7 @@
           </tbody>
         </table>
         <div class="mb-4">
-          <table class="min-w-full border border-gray-300 rounded-lg">
+          <table class="min-w-full border border-gray-300 rounded-lg  ">
             <thead class="bg-gray-100">
               <tr class="p-2 border-b text-black text-center">
                 <th>Material Id</th>
