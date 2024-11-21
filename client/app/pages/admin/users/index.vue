@@ -339,11 +339,11 @@ export default {
     },
     async fetchUserTypesData(){
       const result = await apiService.get('/api/userTypes')
-      this.userTypes = result.data
+      this.userTypes = result.data?.filter((value) => value.userTypeID !== 2)
     },
     async fetchUserData(){
       const result = await apiService.get('/api/users')
-      this.users = result.data.filter((value) => value.userTypeID !== 2)
+      this.users = result.data?.filter((value) => value.userTypeID !== 2)
     }
   },
   async mounted() {

@@ -5,9 +5,10 @@
     <div class="flex justify-between mb-4">
       <input type="text" v-model="searchQuery" placeholder="Search..." class="w-1/3 p-2 border rounded-lg" />
       <div class="flex space-x-2">
-        <button @click="openAddModal" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        <button @click="openAddModal" class="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 font-light"
           title="Add Production">
-          <i class="fas fa-plus"></i>
+          Add Production
+          <!-- <i class="fas fa-plus">Add Production</i> -->
         </button>
       </div>
     </div>

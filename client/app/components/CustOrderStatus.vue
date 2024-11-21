@@ -90,12 +90,12 @@
         </div>
 
         <div class="mt-6">
-          <p class="text-lg text-gray-500">
+          <!-- <p class="text-lg text-gray-500">
             Expected Delivery:
             <span class="font-medium text-gray-700">{{
               order?.sales_deliveries?.deliveryDate
             }}</span>
-          </p>
+          </p> -->
           <p class="mt-1 text-lg text-gray-500">
             Status:
             <span class="font-medium text-gray-700">{{
@@ -177,7 +177,7 @@
         </div>
 
         <div class="mt-6 text-right">
-          <UButton :loading="isLoadingReceived" @click="orderReceived(order)" label="RECEIVED"/>
+          <UButton :loading="isLoadingReceived" @click="orderReceived(order)" label="DELIVERED"/>
         </div>
       </div>
     </div>
@@ -318,7 +318,7 @@ const orderReceived = async (order) => {
   await apiService.put(`/api/salesDeliveries/${delivery.deliveryID}`, delivery);
   await fetchOrdersData();
   isLoadingReceived.value = false
-  alert("Order(s) received successfully!");
+  alert("Order(s) delivered successfully!");
 };
 
 const fetchOrdersData = async () => {

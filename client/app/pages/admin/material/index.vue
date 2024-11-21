@@ -5,9 +5,9 @@
       <h1 class="text-xl font-bold">Materials</h1>
       <button
         @click="openForm('add')"
-        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+        class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 font-light"
       >
-        Add
+        Add Material
       </button>
     </div>
   
@@ -267,7 +267,8 @@ async function saveMaterial() {
     }
   };
   
-  onMounted(() => {
+  onMounted(async() => {
+ await fetchData()
   const handleKeydown = (event) => {
     if (showConfirmationModal.value && event.key === "Enter") {
       event.preventDefault(); // Prevent default form behavior

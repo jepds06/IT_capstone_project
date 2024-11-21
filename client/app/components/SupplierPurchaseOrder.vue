@@ -46,7 +46,7 @@
           />
          
           <UButton
-            :disabled="item.status === 'Unpaid' || item.status === 'Delivered' || item.status === 'Pending'"
+            :disabled="item.status === 'Unpaid' || item.status === 'Delivered' || item.paymentStatus === 'Unpaid'"
             icon="emojione:delivery-truck"
             @click="openDeliveryModal(item)"
             rounded="false"
