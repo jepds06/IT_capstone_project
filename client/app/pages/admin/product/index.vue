@@ -449,7 +449,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="product in products" :key="product.productID">
+        <tr v-for="product in paginatedProducts" :key="product.productID">
           <td class="p-2 border-b text-center">
             {{ product.productID }}
           </td>
@@ -493,6 +493,19 @@
         </tr>
       </tbody>
     </table>
+
+    <!-- Pagination Controls -->
+    <div class="mt-4 flex justify-between">
+      <button @click="prevPage" :disabled="currentPage === 1" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+        Previous
+      </button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button @click="nextPage" :disabled="currentPage === totalPages"
+        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+        Next
+      </button>
+    </div>
+
   </div>
 </template>
 
@@ -518,6 +531,8 @@ const isProductConfirmationVisible = ref(false);
 const isMaterialConfirmationVisible = ref(false);
 const imageError = ref(null);
 const unitPriceError = ref(null);
+const currentPage = ref(1);
+const itemsPerPage = ref(10);
 
 const products = ref([]);
 const categories = ref([]);
@@ -550,6 +565,19 @@ const materialForm = ref({
   quantity: "",
   productMatsID: "",
 });
+const totalPages = computed(() => Math.ceil(products.value.length / itemsPerPage.value));
+const paginatedProducts = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return products.value.slice(start, end);
+});
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) currentPage.value++;
+};
+
+const prevPage = () => {
+  if (currentPage.value > 1) currentPage.value--;
+};
 
 function onFileChange(event) {
   form.value.image = event.target.files[0];
@@ -570,6 +598,7 @@ function previewImage() {
     imagePreview.value = null; // Reset if no file is selected
   }
 }
+
 
 async function openModal(mode = "add", product = null) {
   setTimeout(async() => {

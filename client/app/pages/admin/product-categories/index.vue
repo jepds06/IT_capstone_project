@@ -86,7 +86,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="category in categories" :key="category.prodCatID">
+        <tr v-for="category in paginatedCategories" :key="category.prodCatID">
           <td class="p-2 border-b text-center">{{ category.prodCatID }}</td>
           <td class="p-2 border-b text-center">{{ category.description }}</td>
           <!-- <td class="p-2 border-b text-center">
@@ -107,6 +107,18 @@
         </tr>
       </tbody>
     </table>
+
+     <!-- Pagination Controls -->
+     <div class="mt-4 flex justify-between">
+      <button @click="prevPage" :disabled="currentPage === 1" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+        Previous
+      </button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button @click="nextPage" :disabled="currentPage === totalPages"
+        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+        Next
+      </button>
+    </div>
   </div>
 </template>
 
@@ -132,6 +144,8 @@ const categories = ref([]);
 const isFormVisible = ref(false);
 const showConfirmationModal = ref(false);
 const showSuccessModal = ref(false);
+const currentPage = ref(1);
+const itemsPerPage = ref(10); // Number of items per page
 const formMode = ref("add");
 const form = ref({
   id: "",
@@ -161,6 +175,20 @@ function handleSuccess() {
 // Trigger confirmation modal before saving
 const confirmSave = () => {
   showConfirmationModal.value = true;
+};
+// Pagination Computed Properties
+const totalPages = computed(() => Math.ceil(categories.value.length / itemsPerPage.value));
+const paginatedCategories = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return categories.value.slice(start, end);
+});
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) currentPage.value++;
+};
+
+const prevPage = () => {
+  if (currentPage.value > 1) currentPage.value--;
 };
 
 // Save category after confirmation

@@ -385,6 +385,10 @@
               </option>
             </select>
           </div>
+
+          <div v-if="errorMessage" class="text-red-500 text-sm mt-2">
+  {{ errorMessage }}
+</div>
           <div class="mb-4" v-if="productionDetailMode !== 'add'">
             <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
             <select v-model="productionDetailForm.status" id="userID"
@@ -532,6 +536,7 @@ const isSuccessQuotationVisible = ref(false);
 const isQuotationConfirmationVisible = ref(false);
 const successQuotationMessage = ref('');
 const suppliersAvailable = ref(false);
+const errorMessage = ref("");
 
 const isLoadingQuotationRequested = ref(false);
 const isQuotationRequested = ref(false);
@@ -801,40 +806,60 @@ const markAsCompleted = async () => {
   isLoadingMarkAsCompleted.value = false
 }
 const saveProductionDetail = async () => {
-  if (productionDetailMode.value === "add") {
-    const result = await apiService.post("/api/productionDetails", {
-      ...productionDetailForm.value,
-      productionID: selectedProduction.value.productionID,
-    });
-    selectedProductionDetails.value.push({
-      ...productionDetailForm.value,
-      productionID: selectedProduction.value.productionID,
-      prodtnDetailID: result.data.prodtnDetailID,
-    });
-    showSuccessProductionDetailMessage(
-      `Production detail added successfully for Production No. ${selectedProduction.value.productionID}`
-    );
-  } else {
-    await apiService.put(
-      `/api/productionDetails/${productionDetailForm.value.prodtnDetailID}`,
-      {
+  isProductionDetailConfirmationVisible.value = false;
+  try {
+    if (productionDetailMode.value === "add") {
+      // Send POST request to add production detail
+      const result = await apiService.post("/api/productionDetails", {
         ...productionDetailForm.value,
         productionID: selectedProduction.value.productionID,
-      }
-    );
-    const index = selectedProductionDetails.value.findIndex(
-      (p) => p.prodtnDetailID === productionDetailForm.value.prodtnDetailID
-    );
-    if (index !== -1) {
-      selectedProductionDetails.value[index] = {
+      });
+
+      selectedProductionDetails.value.push({
         ...productionDetailForm.value,
-      };
+        productionID: selectedProduction.value.productionID,
+        prodtnDetailID: result.data.prodtnDetailID,
+      });
+
+      showSuccessProductionDetailMessage(
+        `Production detail added successfully for Production No. ${selectedProduction.value.productionID}`
+      );
+    } else {
+      // Send PUT request to update production detail
+      await apiService.put(
+        `/api/productionDetails/${productionDetailForm.value.prodtnDetailID}`,
+        {
+          ...productionDetailForm.value,
+          productionID: selectedProduction.value.productionID,
+        }
+      );
+
+      const index = selectedProductionDetails.value.findIndex(
+        (p) => p.prodtnDetailID === productionDetailForm.value.prodtnDetailID
+      );
+      if (index !== -1) {
+        selectedProductionDetails.value[index] = {
+          ...productionDetailForm.value,
+        };
+      }
+
+      showSuccessProductionDetailMessage(
+        `Production detail edited successfully for Production No. ${selectedProduction.value.productionID}`
+      );
     }
-    showSuccessProductionDetailMessage(
-      `Production detail edited successfully for Production No. ${selectedProduction.value.productionID}`
-    );
+
+    // Close the modal after the save operation
+    closeProductionDetailModal();
+  } catch (error) {
+    // Check if the error has a response (i.e., it's an API error)
+    if (error.response) {
+      // Display the error message from the backend
+      errorMessage.value = error.response.data.message || 'An error occurred while saving the production detail.';
+    } else {
+      // Display a generic error message if no response from the backend
+      errorMessage.value = 'No Material added in the Product';
+    }
   }
-  closeProductionDetailModal();
 };
 
 const closeModal = () => {
