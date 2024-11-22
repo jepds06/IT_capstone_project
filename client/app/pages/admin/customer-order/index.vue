@@ -2,7 +2,7 @@
   <div class="m-8">
     <div class="flex justify-between mb-4">
       <div class="w-2/5">
-        <label class="block font-semibold text-lg mb-2">Customer</label>
+        <label class="block font-extrabold text-2xl mb-2">Customer</label>
         <USelectMenu
           v-model="store.selectedCustomer"
           :options="customer"
@@ -38,7 +38,7 @@
         @input="filterProducts"
         type="text"
         placeholder="What are you looking for?"
-        class="p-2 rounded w-full max-w-md"
+        class="p-2 rounded w-full max-w-md bg-gray-100"
       />
     </div>
     <!-- Category Filter -->
