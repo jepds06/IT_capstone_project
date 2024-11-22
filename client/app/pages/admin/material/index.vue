@@ -102,7 +102,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="material in materials" :key="material.materialID">
+        <tr v-for="material in paginatedMaterials" :key="material.materialID">
 
           <td class="p-2 border-b text-center">{{ material.materialID }}</td>
           <td class="p-2 border-b text-center">{{ material.description }}</td>
@@ -126,6 +126,19 @@
         </tr>
       </tbody>
     </table>
+
+    <!-- Pagination Controls -->
+    <div class="mt-4 flex justify-between">
+      <button @click="prevPage" :disabled="currentPage === 1" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+        Previous
+      </button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button @click="nextPage" :disabled="currentPage === totalPages"
+        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+        Next
+      </button>
+    </div>
+
   </div>
 </template>
 
@@ -149,6 +162,8 @@ const materials = ref([]);
 const isFormVisible = ref(false);
 const showConfirmationModal = ref(false);
 const showSuccessModal = ref(false);
+const currentPage = ref(1);
+const itemsPerPage = ref(10);
 const formMode = ref("add");
 const form = ref({
   id: "",
@@ -178,7 +193,19 @@ function handleSuccess() {
 const confirmSave = () => {
   showConfirmationModal.value = true;
 };
+const totalPages = computed(() => Math.ceil(materials.value.length / itemsPerPage.value));
+const paginatedMaterials = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return materials.value.slice(start, end);
+});
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) currentPage.value++;
+};
 
+const prevPage = () => {
+  if (currentPage.value > 1) currentPage.value--;
+};
 
 
 async function saveMaterial() {
