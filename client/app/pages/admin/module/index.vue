@@ -40,12 +40,12 @@
           <td class="border px-4 py-2 text-black text-center">{{ module.moduleID }}</td>
           <td class="border px-4 py-2 text-black text-center">{{ module.moduleName }}</td>
           <td class="p-2 border-b flex justify-center space-x-2">
-            <button
+            <!-- <button
               @click="viewModule(module)"
               class="text-blue-500 hover:underline"
             > 
               <i class="fas fa-eye"></i>
-            </button>
+            </button> -->
             <button
               @click="editModule(module)"
               class="text-yellow-500 hover:underline"

@@ -9,8 +9,8 @@
           title="Add Production">
           <i class="fas fa-plus"></i>
         </button> -->
-        <UButton icon="material-symbols:add-2-rounded" size="sm" color="primary" variant="solid" label="Categories"
-          title="Add Categories" @click="openAddModal" :trailing="false" />
+        <UButton icon="material-symbols:add-2-rounded" size="sm" color="primary" variant="solid" label="Production"
+          title="Add Production" @click="openAddModal" :trailing="false" />
       
     </div>
 

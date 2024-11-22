@@ -265,7 +265,7 @@
     >
       <div class="bg-white p-6 rounded-md w-1/3">
         <h3 class="text-xl font-bold mb-4">
-          Purchase Order Successfully Generated!
+          Purchase Order Successfully!
         </h3>
         <button
           class="bg-blue-500 text-white py-1 px-3 rounded-md"

@@ -15,8 +15,9 @@
 
     <!-- Modal for Add/Edit Form -->
     <Modal :isVisible="isFormVisible" title="Product Category Form" :showSave="true"
-      @update:isVisible="isFormVisible = $event" @save="confirmSave">
+      @update:isVisible="isFormVisible = $event" @save="confirmSave" >
       <template v-slot:body>
+        
         <form @submit.prevent="saveCategory">
           <div class="mb-4" v-if="formMode === 'edit'">
             <label for="id" class="block text-sm font-medium text-gray-700">Id</label>
