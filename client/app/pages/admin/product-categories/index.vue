@@ -14,9 +14,12 @@
     </div>
 
     <!-- Modal for Add/Edit Form -->
+     
     <Modal :isVisible="isFormVisible" title="Product Category Form" :showSave="true"
       @update:isVisible="isFormVisible = $event" @save="confirmSave" >
+      
       <template v-slot:body>
+        
         
         <form @submit.prevent="saveCategory">
           <div class="mb-4" v-if="formMode === 'edit'">
@@ -250,6 +253,7 @@ onMounted(() => {
 /* Center the modal */
 .fixed {
   position: fixed;
+  background-color: rgba(0, 0, 0, 0.5);
   top: 0;
   left: 0;
   right: 0;
