@@ -45,10 +45,16 @@
             </span>
           </td>
           <td class="p-4 text-center">
-            <button @click="viewDetails(po)" class="text-blue-600 mr-2">
-              <i class="fas fa-eye"></i>
-              <!-- View Icon -->
-            </button>
+        
+            <UButton
+            class="mr-2"
+            icon="lets-icons:view-alt-duotone"
+            @click="viewDetails(po)"
+            rounded="false"
+            title="View details PO"
+            color="white"
+            square
+          />
             <!-- Mark as Delivered Icon -->
             <!-- <button @click="updateStatus(po, 'Waiting for Delivery')" class="text-yellow-600 mr-2">
               <i class="fas fa-truck"></i> 

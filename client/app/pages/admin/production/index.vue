@@ -50,15 +50,25 @@
             >
               <i class="fas fa-eye"></i>
             </button> -->
-            <button @click="openEditModal(production)" class="text-yellow-500 hover:text-yellow-700 ml-2"
-              title="Edit Production">
-              <i class="fas fa-edit"></i>
-            </button>
 
-            <button @click="showProductionDetails(production)" class="text-blue-500 hover:underline ml-2"
-              title="Production Details View">
-              <i class="fas fa-cogs"></i>
-            </button>
+            <UButton
+            class="mr-2"
+            icon="heroicons:pencil-square"
+            @click="openEditModal(production)"
+            rounded="false"
+            title="edit production"
+            color="white"
+            square
+          />
+            <UButton
+            class="mr-2"
+            icon="heroicons:adjustments-horizontal"
+            @click="showProductionDetails(production)"
+            rounded="false"
+            title="Production Details View"
+            color="white"
+            square
+          />
             <!-- <button
               @click="openDeleteModal(production)"
               class="text-red-500 hover:text-red-700 ml-2"

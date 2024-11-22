@@ -46,12 +46,21 @@
             > 
               <i class="fas fa-eye"></i>
             </button> -->
-            <button
+            <!-- <button
               @click="editModule(module)"
               class="text-yellow-500 hover:underline"
             >
               <i class="fas fa-edit"></i>
-            </button>
+            </button> -->
+            <UButton
+            class="mr-2"
+            icon="heroicons:pencil-square"
+            @click="editModule(module)"
+            rounded="false"
+            title="edit module"
+            color="white"
+            square
+          />
           </td>
         </tr>
       </tbody>

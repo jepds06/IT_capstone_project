@@ -89,8 +89,25 @@
               />
             </td>
             <td class="border-t border-b border-gray-300 px-4 py-2">
-              <span class="cursor-pointer" @click="viewPermission(permission)">👁️</span>
-              <span class="cursor-pointer ml-2" @click="editPermission(permission)">✏️</span>
+              <UButton
+            class="mr-2"
+            icon="lets-icons:view-alt-duotone"
+            @click="viewPermission(permission)"
+            rounded="false"
+            title="View permission"
+            color="white"
+            square
+          />
+        
+          <UButton
+            class="mr-2"
+            icon="heroicons:pencil-square"
+            @click="editPermission(permission)"
+            rounded="false"
+            title="edit permission"
+            color="white"
+            square
+          />
             </td>
           </tr>
         </tbody>

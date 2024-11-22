@@ -59,22 +59,27 @@
         <td class="border px-4 py-2 text-black text-center">{{ user.email }}</td>
         <td class="border px-4 py-2 text-black text-center">{{ getUserTypeName(user.userTypeID) }}</td>
         <td class="border px-4 py-2 text-center">
-          <!-- View Button -->
-          <button
-            class="text-blue-500 hover:text-blue-700"
+     
+          <UButton
+            class="mr-2"
+            icon="lets-icons:view-alt-duotone"
             @click="openViewModal(user)"
-            title="View User"
-          >
-            👁️
-          </button>
-          <!-- Edit Button -->
-          <button
-            class="text-yellow-500 hover:text-yellow-700 mx-2"
+            rounded="false"
+            title="View user"
+            color="white"
+            square
+          />
+        
+ <!-- Edit Button -->
+          <UButton
+            class="mr-2"
+            icon="heroicons:pencil-square"
             @click="openEditModal(user)"
-            title="Edit User"
-          >
-            ✏️
-          </button>
+            rounded="false"
+            title="edit user"
+            color="white"
+            square
+          />
           <!-- Delete Button -->
           <!-- <button
             class="text-red-500 hover:text-red-700"

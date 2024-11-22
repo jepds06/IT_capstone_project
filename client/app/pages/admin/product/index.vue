@@ -325,18 +325,39 @@
                   class="p-2 border-b text-center flex justify-center space-x-2"
                 >
                   <!-- Placeholder for actions, e.g., edit or delete material -->
-                  <button
+                  <!-- <button
                     class="text-yellow-500 hover:underline"
                     @click="editMaterial(material)"
                   >
                     <i class="fas fa-edit" />
-                  </button>
-                  <button
+                  </button> -->
+
+                  <UButton
+            class="mr-2"
+            icon="heroicons:pencil-square"
+            @click="editMaterial(material)"
+            rounded="false"
+            title="edit material"
+            color="white"
+            square
+          />
+                  <!-- <button
                     class="text-red-500 hover:underline"
                     @click="removeMaterial(material)"
                   >
                     <i class="fas fa-trash" />
-                  </button>
+                  </button> -->
+                  <UButton
+            class="mr-2"
+            icon="heroicons:trash"
+            @click="removeMaterial(material)"
+            rounded="false"
+            title="remove material"
+            color="white"
+            square
+          />
+
+                  
                 </td>
               </tr>
             </tbody>
@@ -471,24 +492,25 @@
             {{ getCategoryDescription(product.prodCatID) }}
           </td>
           <td class="p-2 border-b text-center flex justify-center space-x-2">
-            <!-- <button
-              class="text-blue-500 hover:underline"
-              @click="viewProduct(product)"
-            >
-              <i class="fas fa-eye" />
-            </button> -->
-            <button
-              class="text-yellow-500 hover:underline"
-              @click="openModal('edit', product)"
-            >
-              <i class="fas fa-edit" />
-            </button>
-            <button
-              class="text-green-500 hover:underline"
-              @click="showMaterials(product)"
-            >
-              <i class="fas fa-cogs" />
-            </button>
+
+            <UButton
+            class="mr-2"
+            icon="heroicons:pencil-square"
+            @click="openModal('edit', product)"
+            rounded="false"
+            title="edit product"
+            color="white"
+            square
+          />
+            <UButton
+            class="mr-2"
+            icon="heroicons:adjustments-horizontal"
+            @click="showMaterials(product)"
+            rounded="false"
+            title="show material"
+            color="white"
+            square
+          />
           </td>
         </tr>
       </tbody>

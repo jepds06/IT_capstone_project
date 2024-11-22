@@ -108,20 +108,18 @@
           <td class="p-2 border-b text-center">{{ material.description }}</td>
           <td class="p-2 border-b text-center">{{ material.brand }}</td>
           <td class="p-2 border-b text-center">{{ material.unitOfMeasure }}</td>
-          <!-- <td class="p-2 border-b text-center">
-            <i
-              v-if="category.status === 'active'"
-              class="fas fa-check text-green-500"
-            ></i>
-            <i v-else class="fas fa-times text-red-500"></i>
-          </td> -->
+   
           <td class="p-2 border-b flex justify-center space-x-2">
-            <button @click="viewMaterial(material)" class="text-blue-500 hover:underline">
-              <i class="fas fa-eye"></i>
-            </button>
-            <button @click="editMaterial(material)" class="text-yellow-500 hover:underline">
-              <i class="fas fa-edit"></i>
-            </button>
+    
+            <UButton
+            class="mr-2"
+            icon="heroicons:pencil-square"
+            @click="editMaterial(material)"
+            rounded="false"
+            title="edit material"
+            color="white"
+            square
+          />
           </td>
         </tr>
       </tbody>

@@ -43,12 +43,16 @@
             {{ quotation.remarks }}
           </td>
           <td class="py-2 px-4">
-            <button
-              class="text-blue-600"
-              @click="openQuotationModal(quotation)"
-            >
-              <i class="fas fa-eye" />
-            </button>
+
+            <UButton
+            class="mr-2"
+            icon="lets-icons:view-alt-duotone"
+            @click="openQuotationModal(quotation)"
+            rounded="false"
+            title="View user"
+            color="white"
+            square
+          />
           </td>
         </tr>
       </tbody>
@@ -225,6 +229,7 @@
             :disabled="purchasedMaterials.length === 0"
             @click="confirmPurchaseOrder(material)"
           >
+          
             <UIcon
               name="material-symbols:shopping-cart-checkout"
               title="Purchase"

@@ -98,12 +98,21 @@
           <i v-else class="fas fa-times text-red-500"></i>
         </td> -->
           <td class="p-2 border-b flex justify-center space-x-2">
-            <button @click="viewCategory(category)" class="text-blue-500 hover:underline">
+            <!-- <button @click="viewCategory(category)" class="text-blue-500 hover:underline">
               <i class="fas fa-eye"></i>
-            </button>
-            <button @click="editCategory(category)" class="text-yellow-500 hover:underline">
+            </button> -->
+            <!-- <button @click="editCategory(category)" class="text-yellow-500 hover:underline">
               <i class="fas fa-edit"></i>
-            </button>
+            </button> -->
+            <UButton
+            class="mr-2"
+            icon="heroicons:pencil-square"
+            @click="editCategory(category)"
+            rounded="false"
+            title="edit category"
+            color="white"
+            square
+          />
           </td>
         </tr>
       </tbody>

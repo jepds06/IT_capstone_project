@@ -47,9 +47,15 @@
           <td class="border px-4 py-2 text-black text-center">{{ getUserTypeName(user.userTypeID) }}</td>
           <td class="border px-4 py-2 text-center">
             <!-- View Button -->
-            <button class="text-blue-500 hover:text-blue-700" @click="openViewModal(user)" title="View User">
-              👁️
-            </button>
+            <UButton
+            class="mr-2"
+            icon="lets-icons:view-alt-duotone"
+            @click="openViewModal(user)"
+            rounded="false"
+            title="View user"
+            color="white"
+            square
+          />
             <!-- Edit Button -->
             <!-- <button
             class="text-yellow-500 hover:text-yellow-700 mx-2"
