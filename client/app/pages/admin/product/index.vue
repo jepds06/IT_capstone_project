@@ -22,12 +22,14 @@
     >
       <div class="bg-white p-6 rounded-lg shadow-lg w-1/3 relative">
         <!-- Close Button -->
-        <button
+        <!-- <button
           class="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
           @click="closeModal"
         >
           <i class="fas fa-times" />
-        </button>
+        </button> -->
+        <UButton class="absolute top-2 right-2" icon="material-symbols:close-small-rounded" @click="closeModal" :padded="false" color="gray"
+        variant="link"/>
         <h2 class="text-lg text-black font-semibold mb-4">
           {{ formMode === "add" ? "Add Product" : "Edit Product" }}
         </h2>
@@ -254,12 +256,15 @@
     >
       <div class="bg-white p-6 rounded-lg shadow-lg w-1/2 relative">
         <!-- Close Button -->
-        <button
+        <!-- <button
           class="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
           @click="closeProductInfo"
         >
           <i class="fas fa-times" />
-        </button>
+        </button> -->
+
+        <UButton class="absolute top-2 right-2" icon="material-symbols:close-small-rounded" @click="closeProductInfo" :padded="false" color="gray"
+        variant="link"/>
 
         <div class="flex justify-between items-center mb-4">
           <h2 class="text-lg text-black font-semibold">Product Materials</h2>

@@ -66,36 +66,6 @@
     </div>
 
     <!-- Subscription Plans Section -->
-    <section class="subscription-plans bg-gray-100 py-12">
-      <div class="max-w-7xl mx-auto px-6 text-center">
-        <h2 class="text-3xl font-semibold mb-6 text-gray-800">Choose Your Plan</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <!-- Plan 1 -->
-          <div class="plan bg-white p-8 rounded-xl shadow-lg">
-            <h3 class="text-2xl font-bold mb-4 text-blue-600">Basic Plan</h3>
-            <p class="text-gray-700 mb-4">Perfect for small businesses starting their supply chain management journey.</p>
-            <p class="text-xl font-semibold text-blue-600">$19.99 / month</p>
-            <button class="mt-4 bg-blue-600 text-white py-2 px-6 rounded-full shadow-md hover:bg-blue-700">Sign Up</button>
-          </div>
-
-          <!-- Plan 2 -->
-          <div class="plan bg-white p-8 rounded-xl shadow-lg">
-            <h3 class="text-2xl font-bold mb-4 text-blue-600">Standard Plan</h3>
-            <p class="text-gray-700 mb-4">For growing businesses looking for more advanced features and scalability.</p>
-            <p class="text-xl font-semibold text-blue-600">$49.99 / month</p>
-            <button class="mt-4 bg-blue-600 text-white py-2 px-6 rounded-full shadow-md hover:bg-blue-700">Sign Up</button>
-          </div>
-
-          <!-- Plan 3 -->
-          <div class="plan bg-white p-8 rounded-xl shadow-lg">
-            <h3 class="text-2xl font-bold mb-4 text-blue-600">Premium Plan</h3>
-            <p class="text-gray-700 mb-4">For enterprises needing full-scale support and advanced analytics.</p>
-            <p class="text-xl font-semibold text-blue-600">$99.99 / month</p>
-            <button class="mt-4 bg-blue-600 text-white py-2 px-6 rounded-full shadow-md hover:bg-blue-700">Sign Up</button>
-          </div>
-        </div>
-      </div>
-    </section>
   </div>
 </template>
 

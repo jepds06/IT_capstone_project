@@ -1,6 +1,6 @@
 import { $fetch } from 'ofetch';
 
-const BASE_URL = process.env.API_BASE_URL || 'http://127.0.0.1:8000/api';
+const BASE_URL = process.env.API_BASE_URL || 'https://phplaravel-1366078-5040069.cloudwaysapps.com/api';
 
 export class ApiService {
   private readonly baseUrl: string;

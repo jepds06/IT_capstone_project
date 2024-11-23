@@ -127,10 +127,15 @@
             </td>
             <td class="px-6 py-3">{{ report.salesDate }}</td>
             <td class="px-6 py-3">
-              <i
+              <UIcon 
+                :name="getStatusIcon(report.sales_deliveries.deliveryStatus)"
+                class="w-5 h-5"
+                :title="report.sales_deliveries.deliveryStatus"
+                />
+              <!-- <i
                 :class="getStatusIcon(report.sales_deliveries.deliveryStatus)"
                 :title="report.sales_deliveries.deliveryStatus"
-              ></i>
+              ></i> -->
             </td>
             <td class="px-6 py-3 flex gap-2">
                 <!-- <button @click="viewReport(report.salesID)" class="text-blue-500 hover:text-blue-700">
@@ -515,12 +520,22 @@ const end = computed(() =>
 );
 
 const getStatusIcon = (status) => {
-  return {
-    ["Completed"]: "fa-solid fa-check-circle text-green-500",
-    ["To be pickup"]: "fa-solid fa-hourglass-half text-blue-500",
-    ["Out for delivery"]: "fa-solid fa-hourglass-half text-yellow-500",
-    ["Pending"]: "fa-solid fa-times-circle text-red-500",
-  }[status];
+  // return {
+  //   ["Completed"]: "fa-solid fa-check-circle text-green-500",
+  //   ["To be pickup"]: "fa-solid fa-hourglass-half text-blue-500",
+  //   ["Out for delivery"]: "fa-solid fa-hourglass-half text-yellow-500",
+  //   ["Pending"]: "fa-solid fa-times-circle text-red-500",
+  // }[status];
+  switch(status){
+  case "Completed":
+    return "material-symbols:check-circle-outline"
+  case "To be pickup":
+    return "pepicons-print:bank-circle"
+  case "Out for delivery":
+    return "pepicons-pop:hourglass-circle"
+  default:
+      return "proicons:cancel-circle"
+  }
 };
 
 const viewReport = (salesID) => {

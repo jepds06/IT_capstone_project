@@ -53,14 +53,19 @@
               }}
             </td>
             <td class="px-6 py-3">
-              <span
+              <!-- <span
                 :class="{
                   'text-green-500': payment.paymentStatus === 'completed',
                   'text-yellow-500': payment.paymentStatus === 'pending',
                   'text-red-500': payment.paymentStatus === 'cancelled',
                 }"
-              >
-                <i
+              >  -->
+                <UIcon 
+                :name="statusIcon(payment.paymentStatus)"
+                class="w-5 h-5"
+                :title="payment.paymentStatus"
+                />
+                <!-- <i
                   :class="{
                     'fa-solid fa-check-circle':
                       payment.paymentStatus === 'completed',
@@ -69,8 +74,8 @@
                     'fa-solid fa-times-circle':
                       payment.paymentStatus === 'cancelled',
                   }"
-                ></i>
-              </span>
+                ></i> -->
+              <!-- </span> -->
             </td>
             <td class="px-6 py-3 flex gap-3">
               <!-- View and Edit Button Icons -->
@@ -274,6 +279,18 @@ const openModal = (type, adminPayID) => {
 
 const closeModal = () => {
   modalType.value = null;
+};
+
+const statusIcon = (status) => {
+  switch(status){
+  case "completed":
+    return "material-symbols:check-circle-outline"
+  case "pending":
+    return "pepicons-pop:hourglass-circle"
+  default:
+      return "proicons:cancel-circle"
+  }
+
 };
 
 const statusClass = (status) => {

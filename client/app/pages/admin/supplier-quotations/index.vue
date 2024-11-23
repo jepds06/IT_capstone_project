@@ -174,7 +174,7 @@
               </td>
               <td class="py-2 px-4">
                   <UIcon name="emojione:bookmark" v-if="material.quotePriceRemarks" title="Lowest Price"/>
-                {{ this.getMaterialProductName(material?.prodtnMtrlID) }}
+                {{ getMaterialProductName(material?.prodtnMtrlID) }}
               </td>
               <td class="py-2 px-4">{{ material?.quantity }}</td>
               <td class="py-2 px-4">
@@ -413,8 +413,8 @@ export default {
         return value;
       })
       this.selectedSupplier = {...this.selectedSupplier, quotation_details: quotationDetail}
-      this.showSupplierDetailsModal = true;
       await this.fetchAdminOrders()
+      this.showSupplierDetailsModal = true;
     },
     getTotalPrice(supplier) {
       const totalPrice = supplier.reduce(
@@ -493,7 +493,7 @@ export default {
       const material = this.materials?.find(
         (val) => val.prodtnMtrlID == prodtnMtrlID
       );
-      return `${material?.productName} -> ${material?.description}`;
+      return material ? `${material?.productName} -> ${material?.description}` : 'Unknown';
     },
     async fetchMaterialsByProductionID(productionID) {
       const result = await apiService.get(

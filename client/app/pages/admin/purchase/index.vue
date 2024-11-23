@@ -49,7 +49,7 @@
             <UButton
             class="mr-2"
             icon="lets-icons:view-alt-duotone"
-            @click="viewDetails(po)"
+            @click="async() => await viewDetails(po)"
             rounded="false"
             title="View details PO"
             color="white"
@@ -112,7 +112,7 @@
               >
                 <td class="py-2 px-4">{{ index + 1 }}</td>
                 <td class="py-2 px-4">
-                  {{ this.getMaterialProductName(material?.prodtnMtrlID) }}
+                  {{ getMaterialProductName(material?.prodtnMtrlID) }}
                 </td>
                 <td class="py-2 px-4">{{ material.qtyOrdered }}</td>
                 <td class="py-2 px-4">
@@ -295,7 +295,7 @@ export default {
       const material = this.materials?.find(
         (val) => val.prodtnMtrlID == prodtnMtrlID
       );
-      return `${material?.productName} -> ${material?.description}`;
+      return material ? `${material?.productName} -> ${material?.description}` : 'Unknown';
     },
     async fetchMaterialsByProductionID(productionID) {
       const result = await apiService.get(

@@ -240,9 +240,11 @@
       class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
       <div class="bg-white p-6 rounded-lg shadow-lg w-1/2 relative">
         <!-- Close Button -->
-        <button @click="closeProductionInfo" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
+        <UButton class="absolute top-2 right-2" icon="material-symbols:close-small-rounded" @click="closeProductionInfo" :padded="false" color="gray"
+        variant="link"/>
+        <!-- <button @click="closeProductionInfo" class="absolute top-2 right-2 text-gray-500 hover:text-gray-800">
           <i class="fas fa-times"></i>
-        </button>
+        </button> -->
         <div class="flex justify-between">
           <h2 class="text-lg text-black font-semibold mb-4">
             Production Details
@@ -309,9 +311,16 @@
                 <td>{{ prodDetail.status }}</td>
                 <td>{{ prodDetail.remarks }}</td>
                 <td class="p-2 border-b text-center flex justify-center space-x-2">
-                  <button @click="editProductionDetail(prodDetail)" class="text-yellow-500 hover:underline">
-                    <i class="fas fa-edit"></i>
-                  </button>
+                    <UButton
+                      class="mr-2"
+                      icon="heroicons:pencil-square"
+                      @click="editProductionDetail(prodDetail)" 
+                      rounded="false"
+                      title="edit production"
+                      color="white"
+                      square
+                      :disabled="isQuotationRequested"
+                    />
                   <!-- <button @click="removeMaterial(material)" class="text-red-500 hover:underline">
                     <i class="fas fa-trash"></i>
                   </button> -->
