@@ -153,7 +153,7 @@
       <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
         <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
         <p class="text-black">
-          Production has been {{ isEditMode ? 'updated' : 'created' }} successfully!
+          {{ successMessageType }}
         </p>
         <div class="flex justify-end mt-4">
           <button class="bg-blue-500 text-white py-1 px-3 rounded-md" @click="closeProductionConfirmation">
@@ -620,8 +620,10 @@ const closeProductionConfirmation = () => {
 };
 
 const showSuccessProductionMessage = (message) => {
+  successMessageType.value = message;
   isSuccessProductionVisible.value = true;
   setTimeout(() => {
+    isSuccessProductionVisible.value = false;
   }, 3000); // Automatically close after 3 seconds
 };
 
@@ -869,6 +871,9 @@ const saveProductionDetail = async () => {
       // Display a generic error message if no response from the backend
       errorMessage.value = 'No Material added in the Product';
     }
+    setTimeout(() => {
+      errorMessage.value = ''
+    }, 2000);
   }
 };
 
