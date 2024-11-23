@@ -710,8 +710,10 @@ const completeAnOrder = async() => {
 
   showOrderSuccessMessage();
 
-  store.isOpenCart = false;
-  store.addedToCart = filteredProducts.value?.filter((val) => !val.selected)
+  setTimeout(() => {
+    store.isOpenCart = false;
+    store.addedToCart = filteredProducts.value?.filter((val) => !val.selected)
+  }, 2000);
 }
 
 onMounted(async() => {

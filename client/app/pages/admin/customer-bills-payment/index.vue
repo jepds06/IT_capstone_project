@@ -133,16 +133,28 @@
               ></i>
             </td>
             <td class="px-6 py-3 flex gap-2">
-                <button @click="viewReport(report.salesID)" class="text-blue-500 hover:text-blue-700">
+                <!-- <button @click="viewReport(report.salesID)" class="text-blue-500 hover:text-blue-700">
                   <i class="fa-solid fa-eye"></i>
-                </button>
-              
-                <button @click="exportInvoicePDF(report)" class="text-red-500 hover:text-red-700">
-                  <i class="fas fa-file-pdf"></i>
-                </button>
-                <!-- <button @click="editReport(report.salesID)" class="text-yellow-500 hover:text-yellow-700">
-                  <i class="fa-solid fa-edit"></i>
                 </button> -->
+                
+                <UButton
+            class="mr-2"
+            icon="lets-icons:view-alt-duotone"
+            @click="viewReport(report.salesID)"
+            rounded="false"
+            title="View report"
+            color="white"
+            square
+          />
+          <UButton
+            class="mr-2"
+            icon="prime:receipt"
+            @click="exportInvoicePDF(report)"
+            rounded="false"
+            title="View report"
+            color="white"
+            square
+          />
               </td>
           </tr>
         </tbody>

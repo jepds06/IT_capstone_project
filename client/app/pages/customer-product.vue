@@ -6,7 +6,7 @@
         v-model="searchTerm" 
         @input="filterProducts" 
         type="text" 
-        placeholder="What are you looking for?" 
+        placeholder="What are you looking fore?" 
         class="p-2 rounded w-full max-w-md"
       />
     </div>

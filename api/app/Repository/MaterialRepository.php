@@ -11,7 +11,7 @@ class MaterialRepository implements MaterialRepositoryInterface
 {
     public function findMany()
     {
-        return Material::paginate(10);
+        return Material::paginate(100);
     }
 
     public function findOneById(int $materialId)

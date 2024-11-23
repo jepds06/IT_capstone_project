@@ -10,17 +10,17 @@
       }"
       @click="activeTab = 'To Pickup'"
     >
-      To Pickup
+      For Pickup
     </button>
       <button
-        class="px-6 py-3 text-xl font-semibold rounded-lg transition-all duration-300"
+        class="px-6 py-3 text-xl font-semibold rounded-lg ml-4 transition-all duration-300"
         :class="{
           'bg-blue-500 text-white shadow-md': activeTab === 'To Receive',
           'bg-white text-gray-600 border-gray-300': activeTab !== 'To Receive',
         }"
         @click="activeTab = 'To Receive'"
       >
-        To Receive
+        For Delivery
       </button>
       <button
         class="px-6 py-3 text-xl font-semibold rounded-lg ml-4 transition-all duration-300"
