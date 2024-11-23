@@ -152,13 +152,22 @@
   </div>
 </template>
 
-<script>
-import { apiService } from "~/api/apiService";
+<script setup>
+import auth from "~/middleware/auth";
 
 useSeoMeta({
   title: 'Purchase',
   description: 'Admin Dashboard'
 })
+definePageMeta({
+  middleware: [auth],
+});
+
+</script>
+<script>
+import { apiService } from "~/api/apiService";
+
+
 
 export default {
   data() {

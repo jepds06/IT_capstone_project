@@ -5,14 +5,12 @@ export default defineNuxtConfig({
   // extends: ['@nuxt/ui-pro'],
 
   modules: [
-    '@nuxt/content',
     '@nuxt/eslint',
     '@nuxt/fonts',
     '@nuxt/image',
     '@nuxt/ui',
     '@nuxthq/studio',
     '@vueuse/nuxt',
-    'nuxt-og-image',
     
   ],
   hooks: {
@@ -36,7 +34,6 @@ export default defineNuxtConfig({
   devtools: {
     enabled: true
   },
-
   typescript: {
     strict: false
   },

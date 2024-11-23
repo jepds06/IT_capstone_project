@@ -6,7 +6,7 @@ return [
 
     'allowed_methods' => ['*'], // Allow all methods
 
-    'allowed_origins' => ['http://localhost:3000'], // Your Nuxt.js frontend URL
+    'allowed_origins' => ['http://localhost:3000', 'https://floralwhite-toad-859859.hostingersite.com'], // Your Nuxt.js frontend URL
 
     'allowed_headers' => ['*'], // Allow all headers
 

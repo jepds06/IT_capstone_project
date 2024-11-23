@@ -37,11 +37,15 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { apiService } from '~/api/apiService';
+import auth from "~/middleware/auth";
 
 useSeoMeta({
   title: 'Stock Overview',
   description: 'Admin Dashboard'
 })
+definePageMeta({
+  middleware: [auth],
+});
 
 const products = ref([]);
 const categories = ref([]);

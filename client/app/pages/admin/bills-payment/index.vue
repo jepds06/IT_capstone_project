@@ -218,7 +218,7 @@
 
 <script setup>
 import { apiService } from "~/api/apiService";
-import auth from "../../../../middleware/auth";
+import auth from "~/middleware/auth";
 
 useSeoMeta({
   title: 'Supplier Bills Payment',

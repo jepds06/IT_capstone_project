@@ -99,14 +99,22 @@
   </div>
 </template>
 
-<script>
-import { apiService } from '~/api/apiService';
-import { format } from "date-fns";
-
+<script setup>
+import auth from '~/middleware/auth'
 useSeoMeta({
   title: 'Delivery',
   description: 'Admin Dashboard'
 })
+
+definePageMeta({
+  middleware: [auth],
+});
+</script>
+
+<script>
+import { apiService } from '~/api/apiService';
+import { format } from "date-fns";
+
 
 export default {
   data() {

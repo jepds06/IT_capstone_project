@@ -151,9 +151,9 @@
     </div>
   </template>
   
-<script>
+<script setup>
 import { apiService } from '~/api/apiService';
-import auth from '../../../../middleware/auth'
+import auth from '~/middleware/auth'
 // This page requires authentication
 definePageMeta({
   middleware: [auth],
@@ -163,8 +163,9 @@ useSeoMeta({
   title: 'Finished Product',
   description: 'Admin Dashboard'
 })
-
-  export default {
+</script>
+<script>
+export default {
     data() {
       return {
         finishedProducts: [

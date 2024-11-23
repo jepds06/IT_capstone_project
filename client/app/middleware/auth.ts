@@ -6,10 +6,8 @@ export default defineNuxtRouteMiddleware(() => {
 
   // Use setTimeout or similar to allow localStorage access to be complete
   setTimeout(() => {
-    console.log('isAuthenticated-----', isAuthenticated.value)
     if (!isAuthenticated.value) {
-      console.log('isAuthenticated', isAuthenticated.value)
       return navigateTo('/');
     }
-  }, 2000);
+  }, 1000);
 });

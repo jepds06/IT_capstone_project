@@ -60,6 +60,7 @@ async function onSubmit(form: any) {
 
     try {
         console.log("Submitted", form.data);
+        if(process.client){
         
         // Login API call
         const result = await apiService.post("/api/login", form.data);
@@ -103,6 +104,7 @@ async function onSubmit(form: any) {
         } else {
             navigateTo("/admin");
         }
+      }
     } catch (error) {
       console.log('Error:', error);
         console.error(error); // Log the error for debugging

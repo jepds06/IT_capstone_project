@@ -76,9 +76,11 @@ const token = ref(null);
 
 const logout = async () => {
   await apiService.post("/api/logout", userInfo.value, token.value);
+  if(process.client){
   localStorage.removeItem("userInfo");
   localStorage.removeItem("userPermission");
   localStorage.removeItem("authToken");
+}
   navigateTo("/");
 };
 onMounted(() => {

@@ -198,9 +198,8 @@
   </div>
 </template>
 
-<script>
-import { apiService } from '~/api/apiService';
-import auth from '../../../../middleware/auth'
+<script setup>
+import auth from '~/middleware/auth'
 // This page requires authentication
 
 useSeoMeta({
@@ -211,6 +210,9 @@ useSeoMeta({
 definePageMeta({
   middleware: [auth],
 });
+</script>
+<script>
+import { apiService } from '~/api/apiService';
 
 export default {
   data() {

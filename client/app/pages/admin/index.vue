@@ -2,8 +2,8 @@
   <AdminWidget />
 </template>
 
-<script setup lang="ts">
-import auth from '../../../middleware/auth'
+<script setup>
+import auth from '~/middleware/auth'
 // This page requires authentication
 
 useSeoMeta({

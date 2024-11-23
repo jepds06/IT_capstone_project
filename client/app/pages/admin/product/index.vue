@@ -498,7 +498,7 @@
 
 <script setup>
 import { ref } from "vue";
-import auth from "../../../../middleware/auth";
+import auth from "~/middleware/auth";
 
 import { apiService } from "~/api/apiService";
 // This page requires authentication

@@ -60,10 +60,9 @@
       </modal>
     </div>
   </template>
-  
-  <script>
-import { apiService } from "~/api/apiService";
-import auth from "../../../../middleware/auth";
+
+<script setup>
+import auth from "~/middleware/auth";
 // This page requires authentication
 definePageMeta({
   middleware: [auth],
@@ -73,7 +72,8 @@ useSeoMeta({
   title: 'Delivery Orders',
   description: 'Admin Dashboard'
 })
-
+</script>
+<script>
 import { ref, computed } from "vue";
   export default {
     data() {

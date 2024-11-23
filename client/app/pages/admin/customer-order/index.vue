@@ -143,11 +143,17 @@
 import { ref, onMounted, computed, watchEffect } from "vue";
 import { apiService } from "~/api/apiService";
 import { store } from "~/composables/store";
+import auth from "~/middleware/auth";
 
 useSeoMeta({
   title: "Customers",
   description: "Customer Dashboard",
 });
+
+definePageMeta({
+  middleware: [auth],
+});
+
 
 const products = ref([]);
 const categories = ref([]);

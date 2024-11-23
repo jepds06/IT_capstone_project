@@ -79,11 +79,17 @@
 
 <script setup>
 import { ref } from "vue";
+import auth from "~/middleware/auth";
 
 useSeoMeta({
   title: 'Supplier',
   description: 'Admin Dashboard'
 })
+
+definePageMeta({
+  middleware: [auth],
+});
+
 
 // State variables
 const activeMainTab = ref("quotations"); // Active main tab

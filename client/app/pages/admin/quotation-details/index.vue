@@ -73,12 +73,18 @@
 
 <script setup>
 // The script for managing the quotations remains unchanged
+import auth from "~/middleware/auth";
 import { ref, computed, watch } from 'vue';
 
 useSeoMeta({
   title: 'Quotation Details',
   description: 'Admin Dashboard'
 })
+
+definePageMeta({
+  middleware: [auth],
+});
+
 
 // Mock data for quotations
 const quotations = ref([

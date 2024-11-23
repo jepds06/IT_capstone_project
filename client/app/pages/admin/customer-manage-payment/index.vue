@@ -346,14 +346,22 @@
   </div>
 </template>
 
-<script>
-import { format } from "date-fns";
-import { apiService } from "~/api/apiService";
-
+<script setup>
+import auth from "~/middleware/auth";
 useSeoMeta({
   title: 'Customer Manage Payment',
   description: 'Admin Dashboard'
 })
+
+definePageMeta({
+  middleware: [auth],
+});
+</script>
+<script>
+import { format } from "date-fns";
+import { apiService } from "~/api/apiService";
+
+
 
 export default {
   data() {

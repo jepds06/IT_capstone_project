@@ -11,7 +11,11 @@ export class ApiService {
 
   // Helper to get the auth token from localStorage
   private getAuthToken(): string | null {
+    if(process.client){
     return localStorage.getItem('authToken');
+  } else {
+    return '';
+  }
   }
 
   private constructUrl(endpoint: string, params?: Record<string, any>): string {

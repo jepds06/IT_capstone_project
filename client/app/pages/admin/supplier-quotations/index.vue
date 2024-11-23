@@ -298,13 +298,8 @@
   </div>
 </template>
 
-<script>
-import { jsPDF } from "jspdf";
-import auth from "../../../../middleware/auth";
-import { apiService } from "~/api/apiService";
-import { format } from "date-fns";
-import "jspdf-autotable";
-
+<script setup>
+import auth from "~/middleware/auth";
 useSeoMeta({
   title: 'Supplier Quotation',
   description: 'Admin Dashboard'
@@ -314,6 +309,14 @@ useSeoMeta({
 definePageMeta({
   middleware: [auth],
 });
+</script>
+<script>
+import { jsPDF } from "jspdf";
+import { apiService } from "~/api/apiService";
+import { format } from "date-fns";
+import "jspdf-autotable";
+
+
 
 export default {
   data() {
