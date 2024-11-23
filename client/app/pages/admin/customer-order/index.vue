@@ -2,7 +2,7 @@
   <div class="m-8">
     <div class="flex justify-between mb-4">
       <div class="w-2/5">
-        <label class="block font-semibold text-lg mb-2">Customer</label>
+        <label class="block font-extrabold text-2xl mb-2">Customer</label>
         <USelectMenu
           v-model="store.selectedCustomer"
           :options="customer"
@@ -38,7 +38,7 @@
         @input="filterProducts"
         type="text"
         placeholder="What are you looking for?"
-        class="p-2 rounded w-full max-w-md"
+        class="p-2 rounded w-full max-w-md bg-gray-100"
       />
     </div>
     <!-- Category Filter -->
@@ -127,6 +127,27 @@
           />
         </div>
       </UCard>
+
+            <!-- Success/Error Message for  AddtoCart -->
+            <div
+            v-if="isCartMessageVisible"
+            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+            >
+          <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+          <h3 class="text-xl font-bold mb-4" :class="cartMessageType === 'success' ? 'text-green-600' : 'text-red-600'">
+            {{ cartMessageType === 'success' ? 'Success!' : 'Error!' }}
+          </h3>
+          <p class="text-black">{{ cartMessage }}</p>
+          <div class="flex justify-end mt-4">
+            <button
+              class="bg-blue-500 text-white py-1 px-3 rounded-md"
+              @click="closeCartMessage"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -161,12 +182,25 @@ const selectedCategory = ref("");
 const searchTerm = ref("");
 const customer = ref([]);
 
+const isCartMessageVisible = ref(false);
+const cartMessage = ref("");
+const cartMessageType = ref("success");
+const showCartMessage = (message, type = "success") => {
+  cartMessage.value = message;
+  cartMessageType.value = type;
+  isCartMessageVisible.value = true;
+};
+const closeCartMessage = () => {
+  isCartMessageVisible.value = false;
+};
+
 const addToCart = (product) => {
   const alreadyAddedProduct = store.addedToCart?.find(
     (value) => value.productID === product.productID
   );
   if (alreadyAddedProduct) {
-    alert("Already added on the cart!");
+    //alert("Already added on the cart!");
+    showCartMessage("Already added on the cart!");
   } else {
     store.addedToCart.push({ ...product, quantity: 1 });
   }

@@ -1,24 +1,34 @@
 <template>
   <div class="m-8">
-    <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl text-color font-extrabold">Modules</h1>
-      <button
+    <h1 class="text-2xl text-color font-extrabold mb-4">Modules</h1>
+    <div class="flex justify-between mb-4">
+   
+      <input
+      type="text"
+      v-model="searchQuery"
+      placeholder="Search Modules"
+      class="w-1/3 p-2 border rounded-lg"
+    />
+      <!-- <button
         @click="openForm('add')"
         class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
       >
         Add Module
-      </button>
+      </button> -->
+      <UButton
+        icon="material-symbols:add-2-rounded"
+        size="sm"
+        color="primary"
+        variant="solid"
+        label="Module"
+        title="Add Module"
+        @click="openForm('add')"
+        :trailing="false"
+      />
     </div>
-    
-    <input
-      type="text"
-      v-model="searchQuery"
-      placeholder="Search Modules"
-      class="border p-2 mb-4 w-full"
-    />
-    
+  
     <table class="min-w-full bg-white border">
-      <thead>
+      <thead class="bg-gray-200">
         <tr>
           <th class="border px-4 py-2 text-black">Module No.</th>
           <th class="border px-4 py-2 text-black">Module Name</th>
@@ -30,18 +40,27 @@
           <td class="border px-4 py-2 text-black text-center">{{ module.moduleID }}</td>
           <td class="border px-4 py-2 text-black text-center">{{ module.moduleName }}</td>
           <td class="p-2 border-b flex justify-center space-x-2">
-            <button
+            <!-- <button
               @click="viewModule(module)"
               class="text-blue-500 hover:underline"
             > 
               <i class="fas fa-eye"></i>
-            </button>
-            <button
+            </button> -->
+            <!-- <button
               @click="editModule(module)"
               class="text-yellow-500 hover:underline"
             >
               <i class="fas fa-edit"></i>
-            </button>
+            </button> -->
+            <UButton
+            class="mr-2"
+            icon="heroicons:pencil-square"
+            @click="editModule(module)"
+            rounded="false"
+            title="edit module"
+            color="white"
+            square
+          />
           </td>
         </tr>
       </tbody>
@@ -281,6 +300,14 @@ onMounted(() => {
 
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+.fixed {
+  position: fixed;
+  background-color: rgba(0, 0, 0, 0.5);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
 
 </style>

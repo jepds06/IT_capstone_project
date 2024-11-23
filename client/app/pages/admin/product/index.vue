@@ -1,11 +1,11 @@
 <template>
-  <div class="p-6">
+  <div class="m-8">
     <!-- Title and Add Button -->
     <div class="flex justify-between items-center mb-4">
-      <h1 class="text-xl font-bold">Products</h1>
+      <h1 class="text-2xl font-extrabold">Products</h1>
       <UButton
         icon="material-symbols:add-2-rounded"
-        size="sm"
+        size="md"
         color="primary"
         variant="solid"
         label="Product"
@@ -301,7 +301,7 @@
           </tbody>
         </table>
         <div class="mb-4">
-          <table class="min-w-full border border-gray-300 rounded-lg">
+          <table class="min-w-full border border-gray-300 rounded-lg  ">
             <thead class="bg-gray-100">
               <tr class="p-2 border-b text-black text-center">
                 <th>Material Id</th>
@@ -325,18 +325,39 @@
                   class="p-2 border-b text-center flex justify-center space-x-2"
                 >
                   <!-- Placeholder for actions, e.g., edit or delete material -->
-                  <button
+                  <!-- <button
                     class="text-yellow-500 hover:underline"
                     @click="editMaterial(material)"
                   >
                     <i class="fas fa-edit" />
-                  </button>
-                  <button
+                  </button> -->
+
+                  <UButton
+            class="mr-2"
+            icon="heroicons:pencil-square"
+            @click="editMaterial(material)"
+            rounded="false"
+            title="edit material"
+            color="white"
+            square
+          />
+                  <!-- <button
                     class="text-red-500 hover:underline"
                     @click="removeMaterial(material)"
                   >
                     <i class="fas fa-trash" />
-                  </button>
+                  </button> -->
+                  <UButton
+            class="mr-2"
+            icon="heroicons:trash"
+            @click="removeMaterial(material)"
+            rounded="false"
+            title="remove material"
+            color="white"
+            square
+          />
+
+                  
                 </td>
               </tr>
             </tbody>
@@ -449,7 +470,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="product in products" :key="product.productID">
+        <tr v-for="product in paginatedProducts" :key="product.productID">
           <td class="p-2 border-b text-center">
             {{ product.productID }}
           </td>
@@ -471,28 +492,42 @@
             {{ getCategoryDescription(product.prodCatID) }}
           </td>
           <td class="p-2 border-b text-center flex justify-center space-x-2">
-            <!-- <button
-              class="text-blue-500 hover:underline"
-              @click="viewProduct(product)"
-            >
-              <i class="fas fa-eye" />
-            </button> -->
-            <button
-              class="text-yellow-500 hover:underline"
-              @click="openModal('edit', product)"
-            >
-              <i class="fas fa-edit" />
-            </button>
-            <button
-              class="text-green-500 hover:underline"
-              @click="showMaterials(product)"
-            >
-              <i class="fas fa-cogs" />
-            </button>
+
+            <UButton
+            class="mr-2"
+            icon="heroicons:pencil-square"
+            @click="openModal('edit', product)"
+            rounded="false"
+            title="edit product"
+            color="white"
+            square
+          />
+            <UButton
+            class="mr-2"
+            icon="heroicons:adjustments-horizontal"
+            @click="showMaterials(product)"
+            rounded="false"
+            title="show material"
+            color="white"
+            square
+          />
           </td>
         </tr>
       </tbody>
     </table>
+
+    <!-- Pagination Controls -->
+    <div class="mt-4 flex justify-between">
+      <button @click="prevPage" :disabled="currentPage === 1" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+        Previous
+      </button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button @click="nextPage" :disabled="currentPage === totalPages"
+        class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">
+        Next
+      </button>
+    </div>
+
   </div>
 </template>
 
@@ -518,6 +553,8 @@ const isProductConfirmationVisible = ref(false);
 const isMaterialConfirmationVisible = ref(false);
 const imageError = ref(null);
 const unitPriceError = ref(null);
+const currentPage = ref(1);
+const itemsPerPage = ref(10);
 
 const products = ref([]);
 const categories = ref([]);
@@ -550,6 +587,19 @@ const materialForm = ref({
   quantity: "",
   productMatsID: "",
 });
+const totalPages = computed(() => Math.ceil(products.value.length / itemsPerPage.value));
+const paginatedProducts = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return products.value.slice(start, end);
+});
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) currentPage.value++;
+};
+
+const prevPage = () => {
+  if (currentPage.value > 1) currentPage.value--;
+};
 
 function onFileChange(event) {
   form.value.image = event.target.files[0];
@@ -570,6 +620,7 @@ function previewImage() {
     imagePreview.value = null; // Reset if no file is selected
   }
 }
+
 
 async function openModal(mode = "add", product = null) {
   setTimeout(async() => {

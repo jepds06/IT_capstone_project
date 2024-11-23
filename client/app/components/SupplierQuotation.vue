@@ -181,6 +181,26 @@
             )
           }}</span>
         </div>
+
+        <!-- Success Message For Save Quoatation Detail -->
+        <div
+            v-if="isSuccessQuotationVisible"
+            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+>
+            <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+              <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
+              <p class="text-black">{{ successQuotationMessage }}</p>
+              <div class="flex justify-end mt-4">
+                <button
+                  class="bg-blue-500 text-white py-1 px-3 rounded-md"
+                  @click="closeSuccessQuotation"
+                >
+                  OK
+                </button>
+              </div>
+            </div>
+          </div>
+
         <div class="flex justify-between mt-2">
           <UButton
             @click="closeQuotationDetailInfo"
@@ -203,6 +223,25 @@
         </div>
       </div>
     </div>
+
+     <!-- Success Message For Complete Quoation -->
+     <div
+        v-if="isSuccessQuotationCompleteVisible"
+        class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
+>
+        <div class="bg-white p-6 rounded-md w-1/3 shadow-lg">
+          <h3 class="text-xl font-bold mb-4 text-green-600">Success!</h3>
+          <p class="text-black">{{ successQuotationCompleteMessage }}</p>
+          <div class="flex justify-end mt-4">
+            <button
+              class="bg-blue-500 text-white py-1 px-3 rounded-md"
+              @click="closeCompleteQuotation"
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
 
     <!-- Pagination Controls -->
     <div class="mt-4 flex justify-between">
@@ -339,6 +378,10 @@ const quotations = ref([]);
 const quotationDetails = ref([
   // Add more quotations as needed...
 ]);
+const isSuccessQuotationVisible = ref(false);
+const successQuotationMessage = ref("");
+const isSuccessQuotationCompleteVisible = ref(false);
+const successQuotationCompleteMessage = ref("");
 
 // State variables
 const isCompleteLoading = ref(false);
@@ -393,6 +436,20 @@ const nextPage = () => {
     currentPage.value++;
   }
 };
+const showSuccessQuotationMessage = (message) => {
+  successQuotationMessage.value = message;
+  isSuccessQuotationVisible.value = true;
+  };
+  const closeSuccessQuotation = () => {
+  isSuccessQuotationVisible.value = false;
+  };
+  const showSuccessQuotationCompleteMessage = (message) => {
+  successQuotationCompleteMessage.value = message;
+  isSuccessQuotationCompleteVisible.value = true;
+  };
+  const closeCompleteQuotation = () => {
+    isSuccessQuotationCompleteVisible.value = false;
+  };
 
 const openQuotationDetailEditModal = (quotation) => {
   selectedQuotationDetail.value = quotation;
@@ -464,7 +521,10 @@ const transformationDataForQuotation = async (quotation) =>{
         id: index + 1,
       };
     })
-    .filter((value) => value.qtyNeeded !== 0);
+    .filter((value) => value.qtyNeeded !== 0)?.map((v, index) => {
+    
+    return {...v, id: index + 1}
+});
   materialQuotation.value = materialTransform;
 }
 const openQuotationDetailInfo = async (quotation) => {
@@ -491,7 +551,7 @@ const completeQuotation = async () => {
   isCompleteLoading.value = false;
   closeQuotationDetailInfo();
   fetchQuotations();
-  alert("Quotation successfully completed");
+  showSuccessQuotationCompleteMessage("Quotation successfully completed");
 };
 
 const closQuoDetailModal = () => {
@@ -529,7 +589,7 @@ const saveQuotationDetail = async () => {
         return value;
       })
     );
-    alert("Quotation detail edited successfully!");
+    showSuccessQuotationMessage("Quotation detail edited successfully!");
   } else {
     if (isQuoDetailEditMode.value) {
       // Update existing quotation detaiil
@@ -545,7 +605,7 @@ const saveQuotationDetail = async () => {
           );
         })
       );
-      alert("Quotation detail edited successfully!");
+      showSuccessQuotationMessage("Quotation detail edited successfully!");
     } else {
       // Add new quotation detail
       await Promise.all(
@@ -558,7 +618,7 @@ const saveQuotationDetail = async () => {
         })
       );
 
-      alert("Quotation detail added successfully!");
+      showSuccessQuotationMessage("Quotation detail added successfully!");
     }
   }
   const index = materialQuotation.value?.findIndex(

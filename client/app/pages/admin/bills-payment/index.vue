@@ -74,12 +74,16 @@
             </td>
             <td class="px-6 py-3 flex gap-3">
               <!-- View and Edit Button Icons -->
-              <button
-                @click="openModal('view', payment.adminPayID)"
-                class="text-blue-500 hover:text-blue-700"
-              >
-                <i class="fa-solid fa-eye"></i>
-              </button>
+      
+              <UButton
+            class="mr-2"
+            icon="lets-icons:view-alt-duotone"
+            @click="openModal('view', payment.adminPayID)"
+            rounded="false"
+            title="View user"
+            color="white"
+            square
+          />
               <!-- <button @click="openModal('edit', payment.adminPayID)" class="text-yellow-500 hover:text-yellow-700">
                   <i class="fa-solid fa-edit"></i>
                 </button> -->

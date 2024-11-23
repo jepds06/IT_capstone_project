@@ -1,18 +1,18 @@
 <template>
-  <div class="mx-auto py-10">
+  <div class="m-8">
     <!-- Quotation Table -->
-    <h2 class="text-2xl font-bold mb-6">Purchase Orders</h2>
+    <h2 class="text-2xl font-extrabold mb-6">Purchase Orders</h2>
 
     <!-- Search Bar -->
     <input
       v-model="searchQuery"
       type="text"
       placeholder="Search..."
-      class="p-2 border border-gray-300 rounded w-48 mb-4"
+      class="w-1/3 p-2 border rounded-lg mb-4"
     />
     <table class="table-auto w-full bg-white shadow-lg rounded-lg">
       <thead>
-        <tr class="bg-gray-200">
+        <tr class="bg-gray-100">
           <th class="p-4 text-center">PO ID</th>
           <th class="p-4 text-center">Supplier</th>
           <th class="p-4 text-center">Quotation ID</th>
@@ -45,10 +45,16 @@
             </span>
           </td>
           <td class="p-4 text-center">
-            <button @click="viewDetails(po)" class="text-blue-600 mr-2">
-              <i class="fas fa-eye"></i>
-              <!-- View Icon -->
-            </button>
+        
+            <UButton
+            class="mr-2"
+            icon="lets-icons:view-alt-duotone"
+            @click="viewDetails(po)"
+            rounded="false"
+            title="View details PO"
+            color="white"
+            square
+          />
             <!-- Mark as Delivered Icon -->
             <!-- <button @click="updateStatus(po, 'Waiting for Delivery')" class="text-yellow-600 mr-2">
               <i class="fas fa-truck"></i> 

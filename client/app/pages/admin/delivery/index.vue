@@ -47,7 +47,7 @@
           <td class="p-4 text-center">
             <UButton
             :disabled="delivery.deliveryStatus === 'Delivered'"
-            icon="emojione:ballot-box-with-check"
+            icon="prime:check-square"
             @click="updateStatus(delivery, 'Delivered')"
             rounded="false"
             title="Delivery Complete"

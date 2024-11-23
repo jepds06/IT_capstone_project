@@ -58,14 +58,18 @@
           </template>
         </UPopover> -->
           <UButton
+           icon="material-symbols:add-2-rounded"
             :disabled="!selectedProduction"
+            size="xs"
             class="ml-2"
             title="Filter"
             label="Filter  "
-            color="blue"
+            color="primary"
             @click="applyFilter"
           />
           <UButton
+           icon="material-symbols:add-2-rounded"
+           size="xs"
             class="ml-2"
             title="Clear"
             label="Clear"
@@ -83,6 +87,7 @@
         <div class="flex justify-between items-center mb-4">
           <span class="font-semibold whitespace-nowrap">Unpaid Bills</span>
         </div>
+        
 
         <table class="w-full bg-white shadow-md rounded mb-4">
           <thead>
@@ -245,12 +250,22 @@
       <!-- Add Cheque Button on the Left -->
       <div class="flex justify-between mb-4">
         <div class="flex-1"></div>
-        <button
+        <!-- <button
           @click="addCheque"
           class="bg-blue-500 text-white text-base px-2 py-2 rounded hover:bg-blue-600"
         >
           Add Cheque
-        </button>
+        </button> -->
+        <UButton
+        icon="material-symbols:add-2-rounded"
+        size="md"
+        color="primary"
+        variant="solid"
+        label="Cheque"
+        title="Add Cheque"
+        @click="addCheque"
+        :trailing="false"
+      />
       </div>
 
       <table class="w-full bg-white shadow-md rounded mb-4">
