@@ -9,11 +9,9 @@
       <!-- Left: Logo -->
       <div class="flex-1 flex justify-center items-center">
         <!-- SUPPLYEASE Logo with scroll behavior -->
-        <h1 class="logo transition-all duration-80 centered-text_logo"
-          :class="{
-              'header-text_logo' : isScrolled,
-              'centered-text_logo': !isScrolled
-          }">
+        <h1 
+          v-show="isScrolled"
+          class="logo transition-all duration-80 header-text_logo">
           S U P P L Y E A S E
           <span class="se-raised">
               <UBadge label="SE" variant="subtle" class="mb-0.5" />

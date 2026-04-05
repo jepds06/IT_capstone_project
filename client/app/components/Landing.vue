@@ -14,7 +14,12 @@
 
       <!-- Decorative Overlay Element -->
       <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
-        <div class="w-3/4 h-[50%] rounded-lg border-4 border-opacity-50 border-white shadow-lg flex items-center justify-center">
+        <div class="w-3/4 h-[50%] rounded-lg border-4 border-opacity-50 border-white shadow-lg flex flex-col items-center justify-center gap-3">
+          <h1 class="text-white font-black drop-shadow-lg select-none"
+              style="font-size: 4.3rem; letter-spacing: 5px; font-weight: 900;">
+            S U P P L Y E A S E
+          </h1>
+          <p class="text-white text-lg font-light tracking-wide opacity-80">Smarter Supply Chain Management</p>
         </div>
       </div>
       <!-- Call to Action Button -->
@@ -100,7 +105,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { heroImageUrl } from '../utils/image.js';
 
@@ -110,12 +115,19 @@ const navigateToLearnMore = () => {
   router.push('/learn-more'); // Update with your actual route
 };
 const scrollDown = () => {
-  // Scroll to a specific section, e.g., "why-choose" section
   const section = document.querySelector('.why-choose');
   if (section) {
     section.scrollIntoView({ behavior: 'smooth' });
   }
 };
+
+// Track scroll position to toggle hero height
+const isScrolled = ref(false);
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > 50;
+};
+onMounted(() => window.addEventListener('scroll', handleScroll));
+onUnmounted(() => window.removeEventListener('scroll', handleScroll));
 </script>
 
 <style scoped>
